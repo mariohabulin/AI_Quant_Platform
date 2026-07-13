@@ -1,7 +1,0 @@
-yfinance
-pandas
-numpy
-matplotlib
-scikit-learn
-python-dotenv
-requests
