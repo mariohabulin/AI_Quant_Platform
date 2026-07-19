@@ -1,0 +1,9 @@
+# Trading Configuration
+
+TICKER = "AAPL"
+PERIOD = "1y"
+
+INITIAL_CAPITAL = 10000
+
+FAST_EMA = 20
+SLOW_EMA = 50
