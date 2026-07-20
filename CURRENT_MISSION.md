@@ -10,51 +10,45 @@ Cilj ovog dokumenta je jasno odrediti na čemu trenutno radimo, zašto to radimo
 
 # Trenutna faza
 
-**Phase 1 – Data Foundation**
-Napomena:
+**Phase 2 – Research Engine**
 
-Data Foundation je funkcionalno dovršena.
+Phase 1 – Data Foundation službeno je završena.
 
-Trenutna misija predstavlja završnu validaciju sustava prije prelaska na Phase 2 – Research Engine.
+Sustav može pouzdano prikupljati, obrađivati, spremati i vizualizirati tržišne podatke.
 
+Početna implementacija Backtesting Enginea već postoji i koristila se za validaciju cjelokupnog pipelinea. Njegov daljnji razvoj nastavlja se u Phase 2.
 ---
+
+
 
 # Trenutni modul
 
-**EMA Strategy**
+**Research Engine**
 
----
+Prvi cilj Phase 2 je izgraditi pouzdan okvir za razvoj, testiranje i objektivnu evaluaciju trading strategija.
 
-Dovršiti razvoj EMA Strategy modula koji generira BUY i SELL signale.
+Početna EMA Strategy ostaje referentna (baseline) strategija koja će služiti za usporedbu svih budućih strategija.
 
-Strategija mora ispravno generirati Signal stupac koji će koristiti Backtest i Data Visualization.
+Prvi modul koji razvijamo u ovoj fazi je:
 
-Cilj je dovršiti cijeli razvojni lanac:
-
-Data Loader
-→ EMA Strategy
-→ Data Visualization
-
+**Feature Engine**
 ---
 
 # Zašto je ova faza važna?
 
-Kvalitetne odluke ovise o kvalitetnim podacima.
+Nakon što je Data Foundation uspješno dovršena, AI Alpha Engine sada može prijeći na istraživanje tržišta i razvoj strategija.
 
-Prije nego AI može pronaći statistički održiv edge, mora imati potpuno pouzdane podatke i mogućnost njihove analize.
+Cilj ove faze je objektivno razvijati, testirati i uspoređivati različite trading strategije koristeći pouzdane tržišne podatke.
 
-Data Foundation predstavlja temelj cijelog AI Alpha Enginea.
-
+Research Engine predstavlja početak procesa pronalaženja statistički održivog edgea.
 ---
 
 # Trenutni zadaci
 
-- implementirati BUY signale
-- implementirati SELL signale
-- generirati Signal stupac
-- provjeriti ispravnost EMA strategije
-- potvrditi prikaz BUY/SELL markera u Data Visualization
-
+- definirati arhitekturu Feature Enginea
+- implementirati prvu verziju Feature Engine modula
+- odrediti skup početnih tržišnih značajki (features)
+- pripremiti podatke za razvoj i usporedbu trading strategija
 ---
 
 # Što trenutno NE radimo
@@ -69,25 +63,18 @@ Sve nove ideje bilježimo u LOG.md i vraćamo im se kada dođu na red prema ROAD
 
 ---
 
-# Kriterij završetka
+# Kriterij završetka trenutne misije
 
 Misija je završena kada:
 
-- EMA Strategy generira ispravne BUY signale
-- EMA Strategy generira ispravne SELL signale
-- Signal stupac je ispravno spremljen
-- Data Visualization prikazuje BUY/SELL markere
+- Feature Engine pouzdano generira definirane tržišne značajke
+- Feature Engine je integriran s postojećim pipelineom
+- EMA Strategy može koristiti generirane featurese
 - nema poznatih kritičnih grešaka
 
 ---
 
-# Sljedeća faza
 
-**Phase 2 – Research Engine**
-
-Prvi korak:
-
-**Feature Engine**
 
 ---
 

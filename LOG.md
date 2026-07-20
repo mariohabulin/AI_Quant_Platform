@@ -85,7 +85,7 @@ Tek nakon toga slijedi implementacija.
 
 ### Datum
 
-(današnji ili jučerašnji datum)
+19.07/26
 
 ## Završeno
 
@@ -115,7 +115,7 @@ Provjeriti BUY/SELL markere u Data Visualization.
 
 ### Datum
 
-(upiši današnji datum)
+19.07/26
 
 ---
 
@@ -173,4 +173,55 @@ Review EMA Strategy architecture.
 
 Decide whether EMA calculations should remain inside the strategy module or be refactored as part of the Data Foundation.
 
-Continue preparing Phase 1 for completion.
+Continue preparing Phase 1 for completion
+# Session 004
+
+### Datum
+
+20.07/26
+
+---
+
+## Završeno
+
+- Reviewed complete project documentation.
+- Updated CURRENT_MISSION.md to reflect the current state of the project.
+- Officially closed Phase 1 – Data Foundation.
+- Officially started Phase 2 – Research Engine.
+- Confirmed Backtesting Engine will continue its development during Phase 2.
+
+---
+
+## Ključni zaključak
+
+Phase 1 successfully established a stable foundation for the AI Alpha Engine.
+
+The project now has:
+
+- reliable data collection
+- data processing
+- data visualization
+- baseline EMA strategy
+- validated end-to-end development pipeline
+
+The focus now shifts from building the data foundation to researching, testing and objectively evaluating trading strategies.
+
+---
+
+## Status projekta
+
+Current Phase:
+
+✅ Phase 2 – Research Engine
+
+Current Module:
+
+Feature Engine → In Development
+
+---
+
+## Sljedeća sesija
+
+Design and implement the first version of the Feature Engine.
+
+Define which market features will be generated for future trading strategies..

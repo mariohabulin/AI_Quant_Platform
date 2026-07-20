@@ -27,39 +27,7 @@ def download_data(ticker=TICKER, period=PERIOD):
     if data.empty:
         raise ValueError(f"No data found for {ticker}")
 
-    # Simple Moving Averages
-    data["SMA20"] = data["Close"].rolling(window=20).mean()
-    data["SMA50"] = data["Close"].rolling(window=50).mean()
-
-    # Exponential Moving Averages
-    data[f"EMA{FAST_EMA}"] = data["Close"].ewm(
-        span=FAST_EMA,
-        adjust=False
-    ).mean()
-
-    data[f"EMA{SLOW_EMA}"] = data["Close"].ewm(
-        span=SLOW_EMA,
-        adjust=False
-    ).mean()
-
-    # Daily Returns
-    data["Returns"] = data["Close"].pct_change()
-
-    # Volatility
-    data["Volatility"] = data["Returns"].rolling(window=20).std()
-
-    # RSI
-    delta = data["Close"].diff()
-
-    gain = delta.where(delta > 0, 0)
-    loss = -delta.where(delta < 0, 0)
-
-    avg_gain = gain.rolling(window=14).mean()
-    avg_loss = loss.rolling(window=14).mean()
-
-    rs = avg_gain / avg_loss
-
-    data["RSI"] = 100 - (100 / (1 + rs))
+   
 
     file_path = DATA_DIR / f"{ticker}.csv"
 

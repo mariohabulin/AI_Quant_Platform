@@ -46,20 +46,8 @@ def generate_signals(df, fast_ema=20, slow_ema=50):
 
     df = df.copy()
 
-    fast_column = f"EMA{fast_ema}"
-    slow_column = f"EMA{slow_ema}"
-
-    df[fast_column] = (
-        df["Close"]
-        .ewm(span=fast_ema, adjust=False)
-        .mean()
-    )
-
-    df[slow_column] = (
-        df["Close"]
-        .ewm(span=slow_ema, adjust=False)
-        .mean()
-    )
+    fast_column = "EMA_20"
+    slow_column = "EMA_50"
 
     df["Signal"] = 0
 
