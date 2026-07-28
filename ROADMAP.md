@@ -27,6 +27,12 @@ Izgraditi pouzdanu osnovu za prikupljanje, obradu i vizualizaciju tržišnih pod
 
 ✅ Sustav može pouzdano prikupljati, spremati i prikazivati tržišne podatke.
 
+# Phase 1 – Data Foundation
+
+Status
+
+✅ Completed
+
 ---
 
 # Phase 2 – Research Engine
@@ -38,13 +44,66 @@ Omogućiti razvoj, testiranje i evaluaciju trading strategija.
 ## Glavne komponente
 
 - Feature Engine
+- Strategy Engine
 - Strategy Library
 - Backtesting Engine
 - Performance Analysis
 
+## Trenutni napredak
+
+✅ Feature Engine
+
+✅ Strategy Library (Implemented & Validated)
+
+✅ Strategy Engine (Integrated & Validated)
+
+✅ Backtesting Engine
+
+    ✅ Architecture
+    ✅ Portfolio State
+    ✅ BUY / SELL Simulation
+    ✅ Trade History (v1)
+    ✅ Equity Curve (v1)
+
+✅ Performance Analysis
+
+    ✅ Architecture
+    ✅ Input Validation
+    ✅ Total Return
+    ✅ Number of Trades
+    ✅ Winning Trades
+    ✅ Losing Trades
+    ✅ Win Rate
+    ✅ Average Win
+    ✅ Average Loss
+    ✅ Profit Factor
+    ✅ Max Drawdown
+    ✅ Expectancy
+    ✅ Sharpe Ratio
+
 ## Završetak faze
 
-✅ Strategije se mogu razvijati, testirati i objektivno uspoređivati.
+✅ Strategije se mogu razvijati, izvršavati, backtestirati i objektivno uspoređivati kroz jedinstveni Research Engine.
+
+# Phase 2 – Research Engine
+
+Status
+
+🟡 In Progress
+
+Research Engine sada sadrži potpuno funkcionalne i validirane module:
+
+✅ Feature Engine
+
+✅ Strategy Library
+
+✅ Strategy Engine
+
+✅ Backtesting Engine
+
+✅ Performance Analysis
+
+Sljedeći razvojni korak određuje se prema prioritetima definiranim za Phase 2.
 
 ---
 
@@ -61,9 +120,21 @@ Poboljšati kvalitetu strategija i smanjiti rizik od overfittinga.
 - Robustness Testing
 - Parameter Evaluation
 
+Napomena
+
+Strategy Library predstavlja centralno mjesto za registraciju i upravljanje svim dostupnim trading strategijama.
+
+Strategy Engine dohvaća registriranu strategiju iz Strategy Library i izvršava je.
+
+Alpha Decision Engine će u budućnosti odlučivati koju registriranu strategiju koristiti.
+
 ## Završetak faze
 
-✅ Sustav može pronaći stabilnije i pouzdanije strategije.
+Svaka komponenta Research Enginea mora imati odgovarajuće automatizirane testove prije nego što se smatra dovršenom.
+
+✅ Sustav može pronaći stabilnije i pouzdanije strategije
+
+⬜ Planned.
 
 ---
 
@@ -84,6 +155,8 @@ Osigurati dugoročnu održivost trgovanja.
 
 ✅ Sustav upravlja rizikom i portfeljem prema definiranim pravilima.
 
+⬜ Planned
+
 ---
 
 # Phase 5 – Market Intelligence
@@ -102,6 +175,8 @@ Razumjeti trenutno stanje tržišta i prilagoditi ponašanje sustava.
 
 ✅ Sustav prepoznaje tržišne uvjete i identificira potencijalne prilike.
 
+⬜ Planned
+
 ---
 
 # Phase 6 – Alpha Decision Engine
@@ -117,9 +192,17 @@ Povezati sve prethodne komponente u jedinstveni sustav za donošenje odluka.
 - Decision Engine
 - Trade Validation
 
+Napomena
+
+Alpha Decision Engine odabire strategiju.
+
+Strategy Engine izvršava odabranu strategiju.
+
 ## Završetak faze
 
 ✅ Sustav samostalno donosi odluke temeljene na statističkoj prednosti.
+
+⬜ Planned
 
 ---
 
@@ -140,6 +223,8 @@ Omogućiti kontinuirano učenje i poboljšavanje sustava.
 
 ✅ Sustav uči iz vlastitih rezultata i postupno poboljšava kvalitetu svojih odluka.
 
+⬜ Planned
+
 ---
 
 # Phase 8 – Live Trading
@@ -157,7 +242,9 @@ Primjena AI Alpha Enginea na stvarnim financijskim tržištima.
 
 ## Završetak faze
 
-✅ AI Alpha Engine može sigurno i pouzdano djelovati na stvarnim tržištima.
+✅ AI Alpha Engine može sigurno i pouzdano djelovati na stvarnim tržištima
+
+⬜ Planned.
 
 ---
 
@@ -174,11 +261,20 @@ Na kraju razvoja AI Alpha Engine predstavlja jedinstveni inteligentni sustav koj
 - donosi odluke
 - uči iz vlastitih rezultata
 - kontinuirano poboljšava svoje performanse
+- validira statističku održivost strategija
+
+⬜ Planned
 
 ---
 
 # Razvojno načelo
 
 Fokus nije na broju implementiranih funkcionalnosti.
+
+Svaka nova funkcionalnost razvija se u malim, jasno definiranim koracima.
+
+Nakon svake implementacije odmah se izrađuju i izvršavaju automatizirani testovi.
+
+Na sljedeći korak prelazi se tek nakon uspješno završenih testova.
 
 Fokus je na tome da svaka završena faza povećava sposobnost AI Alpha Enginea da pronađe, potvrdi i dugoročno iskorištava statistički održiv edge na stvarnim financijskim tržištima.

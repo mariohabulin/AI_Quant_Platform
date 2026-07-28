@@ -1,76 +1,80 @@
 import pandas as pd
 
 
-def generate_signals(df, fast_ema=20, slow_ema=50):
+class EMAStrategy:
     """
-    Generate BUY and SELL signals using an EMA crossover strategy.
+    EMA Crossover trading strategy.
 
-    Parameters
-    ----------
-    df : pandas.DataFrame
-        Market data containing a Close column.
-    fast_ema : int, default 20
-        Period used for the fast exponential moving average.
-    slow_ema : int, default 50
-        Period used for the slow exponential moving average.
+    Generates BUY and SELL signals using precomputed EMA features.
 
-    Returns
-    -------
-    pandas.DataFrame
-        Copy of the input DataFrame containing fast EMA, slow EMA,
-        and Signal columns.
-
-        Signal values:
-        1  = BUY
-        0  = no signal
-        -1 = SELL
-
-    Raises
-    ------
-    TypeError
-        If df is not a pandas DataFrame.
-    ValueError
-        If the Close column is missing or EMA periods are invalid.
+    BUY  -> EMA_20 crosses above EMA_50
+    SELL -> EMA_20 crosses below EMA_50
     """
-    if not isinstance(df, pd.DataFrame):
-        raise TypeError("Input data must be a pandas DataFrame.")
 
-    if "Close" not in df.columns:
-        raise ValueError("Input DataFrame must contain a 'Close' column.")
+    name = "ema_crossover"
 
-    if fast_ema <= 0 or slow_ema <= 0:
-        raise ValueError("EMA periods must be positive integers.")
+    def generate_signals(self, df):
+        """
+        Generate trading signals.
 
-    if fast_ema >= slow_ema:
-        raise ValueError("fast_ema must be smaller than slow_ema.")
+        Parameters
+        ----------
+        df : pandas.DataFrame
+            DataFrame containing EMA_20 and EMA_50 columns.
 
-    df = df.copy()
+        Returns
+        -------
+        pandas.DataFrame
+            DataFrame containing the Signal column.
+        """
 
-    fast_column = "EMA_20"
-    slow_column = "EMA_50"
+        self._validate_input(df)
 
-    df["Signal"] = 0
+        df = df.copy()
 
-    buy = (
-        (df[fast_column] > df[slow_column])
-        & (df[fast_column].shift(1) <= df[slow_column].shift(1))
+        df["Signal"] = 0
+
+        buy = (
+            (df["EMA_20"] > df["EMA_50"])
+            & (df["EMA_20"].shift(1) <= df["EMA_50"].shift(1))
+        )
+
+        sell = (
+            (df["EMA_20"] < df["EMA_50"])
+            & (df["EMA_20"].shift(1) >= df["EMA_50"].shift(1))
+        )
+
+        df.loc[buy, "Signal"] = 1
+        df.loc[sell, "Signal"] = -1
+
+        return df
+
+    @staticmethod
+    def _validate_input(df):
+        if not isinstance(df, pd.DataFrame):
+            raise TypeError("Input data must be a pandas DataFrame.")
+
+        required_columns = [
+            "Close",
+            "EMA_20",
+            "EMA_50"
+        ]
+
+        missing = [col for col in required_columns if col not in df.columns]
+
+        if missing:
+         raise ValueError(
+        f"Missing required columns: {missing}"
     )
 
-    sell = (
-        (df[fast_column] < df[slow_column])
-        & (df[fast_column].shift(1) >= df[slow_column].shift(1))
-    )
 
-    df.loc[buy, "Signal"] = 1
-    df.loc[sell, "Signal"] = -1
-
-    return df
 if __name__ == "__main__":
     df = pd.read_csv("data/AAPL.csv", index_col=0)
 
-    result = generate_signals(df)
+    strategy = EMAStrategy()
 
-    result.to_csv("data/AAPL.csv")
+    result = strategy.generate_signals(df)
 
-    print(result[["Close", "EMA20", "EMA50", "Signal"]].tail())
+    print(result[["Close", "EMA_20", "EMA_50", "Signal"]].tail())
     print(result["Signal"].value_counts())
+         

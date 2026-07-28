@@ -100,6 +100,16 @@ Ako je ne pronađe — čeka.
 
 To je filozofija AI Alpha Enginea.
 
----
+# Kako razvijamo AI Alpha Engine
+
+AI Alpha Engine razvijamo postupno.
+
+Svaka faza mora biti dovršena, testirana i dokumentirana prije prelaska na sljedeću.
+
+Svaka nova funkcionalnost implementira se u malim, jasno definiranim koracima.
+
+Nakon svake implementacije odmah se izrađuju i izvršavaju automatizirani testovi kako bi sustav ostao stabilan tijekom cijelog razvoja.
+
+Na taj način gradimo stabilan sustav čiji se razvoj temelji na provjerenim komponentama, a ne na pretpostavkama.
 
 Ovaj dokument predstavlja temeljnu viziju projekta i služi kao kompas tijekom cijelog razvoja AI Alpha Enginea.

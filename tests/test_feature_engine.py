@@ -1,19 +1,35 @@
+import os
+import sys
+
 import pandas as pd
 
-from src.feature_engine import generate_features
-from src.strategies.ema_strategy import generate_signals
+sys.path.append(
+    os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "src"))
+)
+
+from feature_engine import generate_features
 
 
-data = pd.read_csv("data/AAPL.csv")
+def test_generate_features():
+    data = pd.DataFrame({
+        "Open": [99, 100, 101],
+        "High": [101, 102, 103],
+        "Low": [98, 99, 100],
+        "Close": [100, 101, 102],
+        "Volume": [1000, 1100, 1200],
+    })
 
-feature_data = generate_features(data)
+    result = generate_features(data)
 
-result = generate_signals(feature_data)
+    assert isinstance(result, pd.DataFrame)
 
-print(result[["Date", "Close", "EMA_20", "EMA_50", "Signal"]].tail(20))
+    expected_columns = {
+        "EMA_20",
+        "EMA_50",
+        "RETURN_1",
+        "VOLATILITY_20",
+        "RSI_14",
+        "VOLUME_MA_20",
+    }
 
-print("\nSignal counts:")
-print(result["Signal"].value_counts())
-
-print("\nDataset shape:")
-print(result.shape)
+    assert expected_columns.issubset(result.columns)

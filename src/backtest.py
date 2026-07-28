@@ -1,169 +1,108 @@
 import pandas as pd
 
-from chart import plot_chart
-from performance import calculate_performance
-from strategy import generate_signals
 
+class BacktestingEngine:
+    """
+    Executes a trading strategy through StrategyEngine.
 
-def run_backtest(df, show_chart=False):
+    This first version only connects the Backtesting Engine
+    with the existing strategy execution pipeline.
+    """
 
-    initial_capital = 10000.0
+    def __init__(self, strategy_engine, initial_capital=10000.0):
+        self.strategy_engine = strategy_engine
 
-    capital = initial_capital
+        self.initial_capital = initial_capital
+        self.capital = initial_capital
+        self.shares = 0.0
+        self.position = 0
+        self.entry_price = 0.0
+        self.entry_index = None
+        self.trade_history = []
+        self.equity_curve = []
 
-    shares = 0.0
+    def _calculate_equity(self, price):
+        return self.capital + self.shares * price
 
-    position = 0
-
-    entry_price = 0.0
-
-    trades = []
-
-    equity_curve = []
-
-    trade_history = []
-
-    position_history = []
-
-    for index, row in df.iterrows():
-
-        price = float(row["Close"])
-
-        signal = int(row["Signal"])
-
-        if position == 0:
-
-            equity = capital
-
-        else:
-
-            equity = shares * price
-
-        equity_curve.append(equity)
-
-        position_history.append(position)
-
-        # BUY
-
-        if signal == 1 and position == 0:
-
-            shares = capital / price
-
-            capital = 0.0
-
-            position = 1
-
-            entry_price = price
-
-            continue
-                # SELL
-
-        if signal == -1 and position == 1:
-
-            exit_price = price
-
-            capital = shares * exit_price
-
-            trade_return = (
-                (exit_price - entry_price)
-                / entry_price
-                * 100
-            )
-
-            trades.append(trade_return)
-
-            trade_history.append({
-
-                "entry_price": entry_price,
-
-                "exit_price": exit_price,
-
-                "return": trade_return,
-
-                "shares": shares
-
-            })
-
-            shares = 0.0
-
-            position = 0
-
-            entry_price = 0.0
-
-    if position == 1:
-
-        last_price = float(df.iloc[-1]["Close"])
-
-        capital = shares * last_price
-
-        trade_return = (
-            (last_price - entry_price)
-            / entry_price
-            * 100
-        )
-
-        trades.append(trade_return)
-
-        trade_history.append({
-
-            "entry_price": entry_price,
-
-            "exit_price": last_price,
-
-            "return": trade_return,
-
-            "shares": shares
-
-        })
-            # PERFORMANCE METRICS
-
-    winning_trades = [t for t in trades if t > 0]
-    losing_trades = [t for t in trades if t <= 0]
-
-    total_trades = len(trades)
-
-    if total_trades > 0:
-        win_rate = len(winning_trades) / total_trades * 100
-    else:
-        win_rate = 0
-    result = {
-        "initial_capital": initial_capital,
-        "final_capital": capital,
-        "profit": capital - initial_capital,
-        "return": (capital / initial_capital - 1) * 100,
-        "trades": total_trades,
-        "winning_trades": len(winning_trades),
-        "losing_trades": len(losing_trades),
-        "win_rate": win_rate,
-    }
-    performance = calculate_performance(
-        trades,
-        equity_curve,
-        result["return"]
+    def _record_equity(self, price, index):
+        self.equity_curve.append(
+        {
+            "index": index,
+            "equity": self._calculate_equity(price),
+        }
     )
 
-    result.update(performance)
-    if show_chart:
-        plot_chart("data/AAPL.csv")
+    def _buy(self, price, index):
+        self.shares = self.capital / price
+        self.capital = 0.0
+        self.position = 1
+        self.entry_price = price
+        self.entry_index = index
 
-    return result
-if __name__ == "__main__":
+    def _sell(self, price, index):
+        profit_loss = self.shares * (price - self.entry_price)
 
-    df = pd.read_csv("data/AAPL.csv", index_col=0)
-    df = generate_signals(df)
+        self.capital = self.shares * price
 
-    result = run_backtest(df)
+        self.trade_history.append(
+        {
+            "entry_index": self.entry_index,
+            "exit_index": index,
+            "entry_price": self.entry_price,
+            "exit_price": price,
+            "profit_loss": profit_loss,
+        }
+    )
 
-    print("\n==============================")
-    print("PERFORMANCE REPORT")
-    print("==============================")
+        self.shares = 0.0
+        self.position = 0
+        self.entry_price = 0.0
+        self.entry_index = None
+        
 
-    print(f"Initial Capital : ${result['initial_capital']:.2f}")
-    print(f"Final Capital   : ${result['final_capital']:.2f}")
-    print(f"Profit          : ${result['profit']:.2f}")
-    print(f"Return          : {result['return']:.2f}%")
+    def _process_signals(self, data):
+       for index, row in data.iterrows():
+        price = float(row["Close"])
+        signal = int(row["Signal"])
 
-    print(f"Trades          : {result['trades']}")
-    print(f"Winning Trades  : {result['winning_trades']}")
-    print(f"Losing Trades   : {result['losing_trades']}")
-    print(f"Win Rate        : {result['win_rate']:.2f}%")
+        if signal == 1 and self.position == 0:
+            self._buy(price, index)
+
+        elif signal == -1 and self.position == 1:
+            self._sell(price, index)
+
+        self._record_equity(price, index)
+
+    def _close_open_position(self, data):
+        if self.position == 1:
+            final_index = data.index[-1]
+            final_price = float(data.iloc[-1]["Close"])
+
+            self._sell(final_price, final_index)
+
+    def run(self, data):
+        """
+        Execute the selected strategy on market data.
+
+        Parameters
+        ----------
+        data : pandas.DataFrame
+            Raw OHLCV market data.
+
+        Returns
+        -------
+        pandas.DataFrame
+            Market data containing generated features and Signal column.
+        """
+        if not isinstance(data, pd.DataFrame):
+            raise TypeError("Input data must be a pandas DataFrame.")
+
+        if data.empty:
+            raise ValueError("Input DataFrame cannot be empty.")
+
+        result = self.strategy_engine.run(data)
+
+        self._process_signals(result)
+        self._close_open_position(result)
+
+        return result
