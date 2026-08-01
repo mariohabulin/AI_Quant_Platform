@@ -289,3 +289,32 @@ def test_end_of_backtest_does_not_create_duplicate_trade():
 
     assert len(engine.trade_history) == 1
 
+def test_repeated_runs_reset_backtesting_state():
+    class SignalStrategyEngine:
+        def run(self, data):
+            result = data.copy()
+            result["Signal"] = [1, 0, -1]
+            return result
+
+    data = pd.DataFrame({
+        "Close": [100, 105, 110],
+        "Open": [100, 105, 110],
+        "High": [100, 105, 110],
+        "Low": [100, 105, 110],
+        "Volume": [1000, 1000, 1000],
+    })
+
+    engine = BacktestingEngine(SignalStrategyEngine())
+
+    engine.run(data)
+
+    first_capital = engine.capital
+    first_trade_history = engine.trade_history.copy()
+    first_equity_curve = engine.equity_curve.copy()
+
+    engine.run(data)
+
+    assert engine.capital == first_capital
+    assert engine.trade_history == first_trade_history
+    assert engine.equity_curve == first_equity_curve
+

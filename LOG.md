@@ -1213,3 +1213,555 @@ Performance Analysis remains fully separated from trade execution.
 All performance metrics are calculated exclusively from validated Trade History and Equity Curve data.
 
 Future metrics will extend the module without changing existing validated behaviour.
+
+Session 014
+
+Datum
+
+29.07.2026
+
+Završeno
+
+Razvoj
+
+BacktestingEngine state isolation
+
+Identificiran problem zadržavanja internog stanja između uzastopnih poziva run().
+
+Dodan regresijski test test_repeated_runs_reset_backtesting_state.
+
+Implementirana privatna metoda _reset_state().
+
+run() sada resetira portfolio stanje prije svakog novog backtesta.
+
+Potvrđeno da se Trade History i Equity Curve ne prenose između backtestova.
+
+Uklonjeno dupliciranje inicijalizacije internog stanja.
+
+Nakon ovog koraka:
+
+✅ 71 / 71 unit tests passed
+
+Parametrizirana EMAStrategy
+
+Uvedeni konfigurabilni parametri fast_period i slow_period.
+
+Zadržane zadane vrijednosti 20 i 50.
+
+Dodana validacija tipova parametara.
+
+Dodana validacija pozitivnih vrijednosti.
+
+Dodana validacija pravila fast_period < slow_period.
+
+Uklonjena ovisnost o hardkodiranim stupcima EMA_20 i EMA_50.
+
+Strategija sada dinamički koristi stupce oblika EMA_<period>.
+
+Postojeće ponašanje EMA 20/50 strategije ostalo je nepromijenjeno.
+
+Nakon dovršetka oba koraka:
+
+✅ 79 / 79 unit tests passed
+
+Verifikacija
+
+BacktestingEngine successfully passed:
+
+State reset between repeated runs
+
+Repeated backtest isolation
+
+Clean portfolio state at the beginning of every execution
+
+Independent Trade History
+
+Independent Equity Curve
+
+EMAStrategy successfully passed:
+
+Default parameter validation
+
+Custom parameter validation
+
+Parameter type validation
+
+Positive value validation
+
+fast_period < slow_period validation
+
+Dynamic EMA feature column usage
+
+Backward compatibility with default EMA 20/50 behaviour
+
+Total:
+
+✅ 79 / 79 unit tests passed
+
+Ključni zaključak
+
+Research Engine sada podržava sigurno ponavljanje backtestova i parametrizirano izvršavanje EMA strategije.
+
+BacktestingEngine može se ponovno koristiti bez prijenosa portfolio stanja, Trade Historyja ili Equity Curvea iz prethodnog izvođenja.
+
+EMAStrategy više nije vezana uz fiksne EMA 20/50 periode, nego može koristiti proizvoljne validirane periode.
+
+Time su završena prva dva koraka Optimizer Readiness misije i postavljen je temelj za parametrizaciju Feature Enginea, budući Strategy Optimizer i Walk Forward Analysis.
+
+Status projekta
+
+Current Phase:
+
+✅ Phase 2 – Research Engine
+
+Current Module:
+
+🟡 Optimizer Readiness → In Progress
+
+Completed:
+
+✅ BacktestingEngine state isolation
+
+✅ Parametrizirana EMAStrategy
+
+⏳ Feature Engine parameterization
+
+⏳ Strategy ↔ Feature integration
+
+⏳ Optimizer readiness validation
+
+✅ 79 / 79 unit tests passing
+
+Sljedeća sesija
+
+Goal
+
+Parametrizirati Feature Engine kako bi mogao generirati EMA featuree za proizvoljne periode.
+
+Planned Tasks
+
+Pregledati postojeću implementaciju Feature Enginea.
+
+Definirati javno sučelje za dinamičko generiranje EMA featurea.
+
+Napisati prvi RED test.
+
+Implementirati minimalni GREEN.
+
+Potvrditi kompatibilnost s parametriziranom EMAStrategy.
+
+Pripremiti buduću integraciju putem required_features.
+
+Naučena lekcija
+
+Priprema arhitekture prije razvoja Optimizera smanjuje rizik netočnih i međusobno pomiješanih rezultata.
+
+Mali test-driven koraci omogućuju da se postojeći execution pipeline postupno pripremi za optimizaciju bez narušavanja već validirane funkcionalnosti.
+
+Arhitektonske odluke
+
+BacktestingEngine mora svako izvođenje započeti iz potpuno čistog internog stanja.
+
+Trading strategije moraju biti parametrizirane bez izmjene njihove implementacije.
+
+Feature generation mora se postupno razvijati prema zahtjevima odabrane strategije, umjesto ostati vezan uz hardkodirane indikatore.
+
+Postojeći execution pipeline ostaje sačuvan dok se priprema za budući Strategy Optimizer.
+
+# Session 015
+
+**Date:** 30.07.2026
+
+## Objective
+
+Parameterize the Feature Engine to support dynamic EMA generation as preparation for Optimizer Readiness.
+
+---
+
+## Development
+
+### Dynamic EMA Generation
+
+Implemented a reusable `generate_ema()` function capable of generating EMA features for any valid period.
+
+Implemented:
+
+- Dynamic EMA column naming (`EMA_<period>`)
+- Reusable EMA generation logic
+- Preservation of original DataFrame (no mutation)
+
+---
+
+### Input Validation
+
+Added explicit validation for EMA period.
+
+Validation rules:
+
+- Period must be an integer
+- Period must be greater than zero
+
+Exceptions:
+
+- `TypeError`
+- `ValueError`
+
+The Feature Engine now follows the Fail Fast validation principle.
+
+---
+
+### Refactoring
+
+Refactored `generate_features()` to reuse `generate_ema()` instead of duplicating EMA calculation logic.
+
+Benefits:
+
+- Reduced code duplication
+- Improved maintainability
+- Single source of truth for EMA calculation
+
+---
+
+## Testing
+
+New unit tests added:
+
+- Dynamic EMA generation
+- Invalid EMA type
+- Invalid EMA period
+- Original DataFrame immutability
+
+Result:
+
+84 / 84 tests passed
+
+---
+
+## Architecture Impact
+
+The Feature Engine is now capable of generating parameterized EMA features.
+
+This completes the technical foundation required before implementing Strategy ↔ Feature integration through `required_features`.
+
+---
+
+## Next Session
+
+Implement Strategy ↔ Feature integration.
+
+Introduce the `required_features` interface allowing strategies to declare exactly which features they require.
+
+---
+
+## Lessons Learned
+
+Small TDD iterations significantly reduce implementation risk.
+
+Extracting reusable functionality before optimizer development simplifies future architecture.
+
+
+# Session 016
+
+**Date:** 31.07.2026
+
+## Objective
+
+Complete the Strategy ↔ Feature integration by introducing a formal feature requirement contract and preparing the execution pipeline for future Strategy Optimizer development.
+
+---
+
+## Development
+
+### Strategy Feature Contract
+
+Implemented a structured `required_features` interface.
+
+Strategies can now explicitly declare the market features they require.
+
+The chosen format is:
+
+```python
+[
+    {
+        "name": "EMA",
+        "parameters": {
+            "period": 20,
+        },
+    },
+]
+```
+
+This architecture supports future indicators requiring multiple parameters while remaining easily extensible.
+
+---
+
+### Feature Engine
+
+Refactored `generate_features()` to support explicit feature requests.
+
+Implemented:
+
+- selective feature generation
+- backward compatibility when `required_features` is omitted
+- validation of the request structure
+- validation of unsupported feature names
+
+Feature Engine now generates only the features requested by the selected strategy.
+
+---
+
+### EMA Strategy
+
+Introduced the `required_features` property.
+
+The strategy now dynamically exposes the EMA periods required for execution based on its configured parameters.
+
+---
+
+### Strategy Engine
+
+Integrated Strategy Engine with Feature Engine.
+
+Strategy Engine now forwards each strategy's `required_features` to Feature Engine before signal generation.
+
+This removes the remaining hardcoded assumptions about feature generation.
+
+---
+
+### Strategy Library
+
+Extended strategy registration validation.
+
+Every registered strategy must now provide:
+
+- `name`
+- `required_features`
+- callable `generate_signals()`
+
+Validation responsibility is now centralized inside StrategyLibrary.
+
+Duplicate strategy validation was removed from StrategyEngine.
+
+---
+
+## Refactoring
+
+Completed the first architecture cleanup after implementing the new feature contract.
+
+Responsibilities are now clearly separated:
+
+- Strategy → declares required features
+- StrategyLibrary → validates strategies
+- StrategyEngine → executes strategies
+- FeatureEngine → generates requested features
+
+This reduces coupling and prepares the execution pipeline for future optimization modules.
+
+---
+
+## Testing
+
+New automated tests added for:
+
+- required feature generation
+- invalid feature requests
+- dynamic strategy requirements
+- Strategy ↔ Feature integration
+- StrategyLibrary contract validation
+- callable `generate_signals()` validation
+
+Result:
+
+✅ 93 / 93 automated tests passed
+
+---
+
+## Architecture Impact
+
+The execution pipeline now follows the architecture:
+
+Market Data
+
+↓
+
+FeatureEngine
+
+↓
+
+StrategyLibrary
+
+↓
+
+StrategyEngine
+
+↓
+
+Trading Strategy
+
+↓
+
+Trading Signals
+
+Feature ownership now belongs entirely to the strategy.
+
+This architecture prepares the Research Engine for:
+
+- Strategy Optimizer
+- Walk Forward Analysis
+- Multi-strategy evaluation
+- AI Alpha Trading Agent
+
+without requiring changes to the existing execution pipeline.
+
+---
+
+## Next Session
+
+Begin platform expansion by implementing the first additional indicator.
+
+Planned tasks:
+
+- implement RSI Feature
+- implement RSI Strategy
+- validate the complete Strategy ↔ Feature architecture with a second independent strategy
+
+---
+
+## Lessons Learned
+
+Allowing strategies to declare their own feature requirements significantly improves modularity and reduces coupling between the execution pipeline and feature generation.
+
+Strengthening architectural contracts before expanding functionality provides a more reliable foundation for future development.
+
+# Session 017
+
+**Date:** 01.08.2026
+
+## Objective
+
+Complete the final end-to-end validation of the Optimizer Readiness architecture before beginning Research Engine expansion.
+
+---
+
+## Development
+
+### End-to-End Pipeline Validation
+
+Validated the complete parameterized Research Engine execution pipeline.
+
+Successfully executed two independent EMA strategy configurations through the same execution pipeline:
+
+- EMA(20,50)
+- EMA(10,30)
+
+The complete execution flow now follows:
+
+Market Data
+
+↓
+
+FeatureEngine
+
+↓
+
+StrategyLibrary
+
+↓
+
+StrategyEngine
+
+↓
+
+Trading Strategy
+
+↓
+
+BacktestingEngine
+
+↓
+
+PerformanceAnalyzer
+
+↓
+
+Research Result
+
+---
+
+### Integration Validation
+
+Verified:
+
+- correct dynamic feature generation
+- correct signal generation
+- isolated Trade History
+- isolated Equity Curve
+- independent Performance Analysis results
+- compatibility with parameterized strategies
+
+No architectural changes were required to execute different EMA configurations.
+
+---
+
+## Testing
+
+Added the first complete end-to-end integration test covering the entire Research Engine pipeline.
+
+Validated:
+
+- Strategy ↔ Feature integration
+- Backtesting integration
+- Performance Analysis integration
+- multiple parameterized strategy execution
+
+Result:
+
+✅ 94 / 94 automated tests passed
+
+---
+
+## Architecture Impact
+
+Optimizer Readiness is now fully validated.
+
+The execution pipeline supports:
+
+- parameterized strategies
+- explicit feature ownership
+- isolated backtests
+- deterministic research
+- reusable execution pipeline
+
+The architecture is now prepared for:
+
+- Strategy Optimizer
+- Walk Forward Analysis
+- Multi-strategy research
+- future AI Alpha Trading Agent
+
+without requiring structural changes to the existing pipeline.
+
+---
+
+## Next Session
+
+Begin expanding the Research Engine by introducing additional trading strategies.
+
+The first planned implementation is:
+
+- RSI Strategy
+
+The objective is to validate that new strategies integrate into the existing architecture without requiring changes to:
+
+- FeatureEngine
+- StrategyEngine
+- BacktestingEngine
+- PerformanceAnalyzer
+
+---
+
+## Lessons Learned
+
+Building architectural flexibility before adding new functionality significantly reduces future development complexity.
+
+A parameterized execution pipeline provides a stable foundation for future optimization, research and autonomous trading capabilities.

@@ -27,13 +27,85 @@ def validate_input(data: pd.DataFrame) -> None:
         missing = ", ".join(sorted(missing_columns))
         raise ValueError(f"Missing required columns: {missing}")
 
-
-def generate_features(data: pd.DataFrame) -> pd.DataFrame:
+def generate_ema(data: pd.DataFrame, period: int) -> pd.DataFrame:
     """
-    Generate market features from validated OHLCV market data.
+    Generate a single EMA feature for the requested period.
 
     Parameters:
         data (pd.DataFrame): Validated OHLCV market data.
+        period (int): EMA period.
+
+    Returns:
+        pd.DataFrame: Original market data with the generated EMA feature.
+    """
+    validate_input(data)
+
+    if isinstance(period, bool) or not isinstance(period, int):
+        raise TypeError("EMA period must be an integer.")
+
+    if period <= 0:
+        raise ValueError("EMA period must be greater than zero.")
+
+    feature_data = data.copy()
+
+    column_name = f"EMA_{period}"
+
+    feature_data[column_name] = feature_data["Close"].ewm(
+        span=period,
+        adjust=False,
+    ).mean()
+
+    return feature_data
+
+def _validate_required_features(
+    required_features: list[dict],
+) -> None:
+    """
+    Validate the structure of required feature requests.
+
+    Parameters:
+        required_features (list[dict]):
+            Feature requirements to validate.
+
+    Raises:
+        TypeError: If required_features is not a list or if a feature
+            requirement is not a dictionary.
+        ValueError: If a feature requirement is missing a required key.
+    """
+    if not isinstance(required_features, list):
+        raise TypeError("required_features must be a list.")
+
+    for feature_requirement in required_features:
+        if not isinstance(feature_requirement, dict):
+            raise TypeError(
+                "Each feature requirement must be a dictionary."
+            )
+
+        if "name" not in feature_requirement:
+            raise ValueError(
+                "Feature requirement must include 'name'."
+            )
+
+        if "parameters" not in feature_requirement:
+            raise ValueError(
+                "Feature requirement must include 'parameters'."
+            )
+
+
+def generate_features(
+    data: pd.DataFrame,
+    required_features: list[dict] | None = None,
+) -> pd.DataFrame:
+    """
+    Generate market features from validated OHLCV market data.
+
+    When required_features is not provided, generate the default
+    feature set for backward compatibility.
+
+    Parameters:
+        data (pd.DataFrame): Validated OHLCV market data.
+        required_features (list[dict] | None):
+            Optional feature requirements.
 
     Returns:
         pd.DataFrame: Original market data with generated features.
@@ -42,15 +114,27 @@ def generate_features(data: pd.DataFrame) -> pd.DataFrame:
 
     feature_data = data.copy()
 
-    feature_data["EMA_20"] = feature_data["Close"].ewm(
-        span=20,
-        adjust=False,
-    ).mean()
+    if required_features is not None:
+        _validate_required_features(required_features)
 
-    feature_data["EMA_50"] = feature_data["Close"].ewm(
-        span=50,
-        adjust=False,
-    ).mean()
+        for feature_requirement in required_features:
+            feature_name = feature_requirement["name"]
+            parameters = feature_requirement["parameters"]
+
+            if feature_name == "EMA":
+                feature_data = generate_ema(
+                    feature_data,
+                    period=parameters["period"],
+                )
+            else:
+                raise ValueError(
+                    f"Unsupported feature: {feature_name}"
+                )
+
+        return feature_data
+
+    feature_data = generate_ema(feature_data, period=20)
+    feature_data = generate_ema(feature_data, period=50)
 
     feature_data["RETURN_1"] = feature_data["Close"].pct_change()
 

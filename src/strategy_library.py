@@ -12,7 +12,12 @@ class StrategyLibrary:
         if not hasattr(strategy, "name"):
             raise ValueError("Strategy must have a 'name' attribute.")
 
-        if not hasattr(strategy, "generate_signals"):
+        if not hasattr(strategy, "required_features"):
+            raise ValueError(
+                "Strategy must have a 'required_features' attribute."
+            )
+
+        if not callable(getattr(strategy, "generate_signals", None)):
             raise ValueError(
                 "Strategy must implement 'generate_signals()'."
             )

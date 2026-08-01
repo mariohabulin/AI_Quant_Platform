@@ -13,33 +13,25 @@ class StrategyEngine:
     """
 
     def __init__(self, strategy_library, strategy_name):
-        strategy = strategy_library.get(strategy_name)
-
-        self._validate_strategy(strategy)
-
-        self.strategy = strategy
+        self.strategy = strategy_library.get(strategy_name)
 
     @property
     def strategy_name(self):
         return self.strategy.name
 
     def run(self, data):
-        """
-        Generate features and execute the selected strategy.
-
-        Parameters
-        ----------
-        data : pandas.DataFrame
-            Raw OHLCV market data.
-
-        Returns
-        -------
-        pandas.DataFrame
-            Market data containing generated features and Signal column.
-        """
         self._validate_data(data)
 
-        featured_data = generate_features(data)
+        required_features = getattr(
+            self.strategy,
+            "required_features",
+            None,
+    )
+
+        featured_data = generate_features(
+             data,
+             required_features=required_features,
+    )
 
         result = self.strategy.generate_signals(featured_data)
 
@@ -47,18 +39,7 @@ class StrategyEngine:
 
         return result
 
-    @staticmethod
-    def _validate_strategy(strategy):
-        if strategy is None:
-            raise ValueError("Strategy cannot be None.")
-
-        if not hasattr(strategy, "name"):
-            raise TypeError("Strategy must contain a 'name' attribute.")
-
-        if not callable(getattr(strategy, "generate_signals", None)):
-            raise TypeError(
-                "Strategy must contain a callable 'generate_signals' method."
-            )
+    
 
     @staticmethod
 

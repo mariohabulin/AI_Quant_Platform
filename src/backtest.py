@@ -21,6 +21,15 @@ class BacktestingEngine:
         self.trade_history = []
         self.equity_curve = []
 
+    def _reset_state(self):
+        self.capital = self.initial_capital
+        self.shares = 0.0
+        self.position = 0
+        self.entry_price = 0.0
+        self.entry_index = None
+        self.trade_history = []
+        self.equity_curve = []
+
     def _calculate_equity(self, price):
         return self.capital + self.shares * price
 
@@ -99,6 +108,8 @@ class BacktestingEngine:
 
         if data.empty:
             raise ValueError("Input DataFrame cannot be empty.")
+
+        self._reset_state()
 
         result = self.strategy_engine.run(data)
 

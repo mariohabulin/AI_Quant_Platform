@@ -71,6 +71,8 @@ class StrategyWithoutGenerateSignals:
 
 class StrategyWithoutSignalColumn:
     name = "dummy_strategy"
+    required_features = []
+
 
     def generate_signals(self, data):
         return pd.DataFrame({"Close": [100, 101, 102]})
@@ -93,6 +95,7 @@ def test_strategy_without_signal_column_raises_error():
 
 class StrategyWithInvalidSignals:
     name = "dummy_strategy"
+    required_features = []
 
     def generate_signals(self, data):
         return pd.DataFrame({
@@ -131,6 +134,7 @@ def test_non_dataframe_input_raises_error():
 
 class StrategyReturningNonDataFrame:
     name = "dummy_strategy"
+    required_features = []
 
     def generate_signals(self, data):
         return [0, 1, -1]
@@ -181,4 +185,43 @@ if __name__ == "__main__":
 
     test_non_dataframe_result_raises_error()
     print("✅ test_non_dataframe_result_raises_error PASSED")
+
+def test_run_uses_strategy_required_features(monkeypatch):
+    data = pd.DataFrame(
+        {
+            "Close": [100, 101, 102],
+        }
+    )
+
+    library = StrategyLibrary()
+
+    strategy = EMAStrategy(
+        fast_period=10,
+        slow_period=30,
+    )
+    library.register(strategy)
+
+    captured_required_features = None
+
+    def fake_generate_features(data, required_features=None):
+        nonlocal captured_required_features
+
+        captured_required_features = required_features
+
+        result = data.copy()
+        result["EMA_10"] = [99, 100, 101]
+        result["EMA_30"] = [101, 100, 99]
+
+        return result
+
+    monkeypatch.setattr(
+        "strategy_engine.generate_features",
+        fake_generate_features,
+    )
+
+    engine = StrategyEngine(library, strategy.name)
+
+    engine.run(data)
+
+    assert captured_required_features == strategy.required_features
   

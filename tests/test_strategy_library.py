@@ -1,5 +1,17 @@
+import pytest
+
 from src.strategy_library import StrategyLibrary
 from src.strategies.ema_strategy import EMAStrategy
+
+
+class StrategyWithoutRequiredFeatures:
+    name = "strategy_without_required_features"
+
+    def generate_signals(self, data):
+        return data
+
+
+
 
 
 def test_register_strategy():
@@ -65,4 +77,29 @@ def test_get_unknown_strategy():
 
     with pytest.raises(ValueError):
         library.get("UnknownStrategy")
- 
+
+def test_strategy_without_required_features_cannot_be_registered():
+    library = StrategyLibrary()
+    strategy = StrategyWithoutRequiredFeatures()
+
+    with pytest.raises(
+        ValueError,
+        match="Strategy must have a 'required_features' attribute.",
+    ):
+        library.register(strategy) 
+
+class StrategyWithNonCallableGenerateSignals:
+    name = "non_callable_strategy"
+    required_features = []
+    generate_signals = "not a method"
+
+
+def test_strategy_generate_signals_must_be_callable():
+    library = StrategyLibrary()
+    strategy = StrategyWithNonCallableGenerateSignals()
+
+    with pytest.raises(
+        ValueError,
+        match=r"Strategy must implement 'generate_signals\(\)'.",
+    ):
+        library.register(strategy)

@@ -8,6 +8,10 @@ Njegova svrha nije opisivati implementaciju pojedinih Python modula, već prikaz
 
 Svaka faza mora biti dovoljno stabilna prije prelaska na sljedeću.
 
+Roadmap opisuje kako AI Alpha Engine postupno evoluira od sustava za istraživanje tržišta do potpuno autonomnog AI Alpha Trading Agenta koji djeluje na stvarnim financijskim tržištima.
+
+Svaka faza predstavlja novi skup sposobnosti koje zajedno grade konačni sustav.
+
 ---
 
 # Phase 1 – Data Foundation
@@ -84,6 +88,7 @@ Omogućiti razvoj, testiranje i evaluaciju trading strategija.
 ## Završetak faze
 
 ✅ Strategije se mogu razvijati, izvršavati, backtestirati i objektivno uspoređivati kroz jedinstveni Research Engine.
+Research Engine predstavlja stabilnu istraživačku platformu na kojoj se mogu razvijati, testirati i objektivno uspoređivati nove trading strategije prije prelaska na optimizaciju.
 
 # Phase 2 – Research Engine
 
@@ -103,7 +108,17 @@ Research Engine sada sadrži potpuno funkcionalne i validirane module:
 
 ✅ Performance Analysis
 
+✅ Optimizer Readiness
+
+    ✅ Backtesting Engine State Reset
+    ✅ Parameterized EMA Strategy
+    ✅ Feature Engine Parameterization
+    ✅ Strategy ↔ Feature Integration
+    ⏳ End-to-End Optimizer Validation
+
 Sljedeći razvojni korak određuje se prema prioritetima definiranim za Phase 2.
+
+Research Engine mora biti potpuno parametriziran prije razvoja Strategy Optimizera.
 
 ---
 
@@ -116,9 +131,9 @@ Poboljšati kvalitetu strategija i smanjiti rizik od overfittinga.
 ## Glavne komponente
 
 - Strategy Optimizer
-- Walk-Forward Testing
-- Robustness Testing
 - Parameter Evaluation
+- Walk Forward Analysis
+- Robustness Testing
 
 Napomena
 
@@ -170,6 +185,7 @@ Razumjeti trenutno stanje tržišta i prilagoditi ponašanje sustava.
 - Market Scanner
 - Market Regime Detection
 - Opportunity Detection
+- Strategy Selection Preparation
 
 ## Završetak faze
 
@@ -187,10 +203,11 @@ Povezati sve prethodne komponente u jedinstveni sustav za donošenje odluka.
 
 ## Glavne komponente
 
-- Signal Evaluation
 - Strategy Selection
-- Decision Engine
-- Trade Validation
+- Market Regime Integration
+- Risk Validation
+- Portfolio Validation
+- Trade Decision
 
 Napomena
 
@@ -262,6 +279,7 @@ Na kraju razvoja AI Alpha Engine predstavlja jedinstveni inteligentni sustav koj
 - uči iz vlastitih rezultata
 - kontinuirano poboljšava svoje performanse
 - validira statističku održivost strategija
+- automatski odabire najprikladniju strategiju za trenutno tržišno okruženje
 
 ⬜ Planned
 
@@ -278,3 +296,41 @@ Nakon svake implementacije odmah se izrađuju i izvršavaju automatizirani testo
 Na sljedeći korak prelazi se tek nakon uspješno završenih testova.
 
 Fokus je na tome da svaka završena faza povećava sposobnost AI Alpha Enginea da pronađe, potvrdi i dugoročno iskorištava statistički održiv edge na stvarnim financijskim tržištima.
+
+Phase 1
+Know the Market
+
+↓
+
+Phase 2
+Test Ideas
+
+↓
+
+Phase 3
+Optimize Ideas
+
+↓
+
+Phase 4
+Protect Capital
+
+↓
+
+Phase 5
+Understand the Market
+
+↓
+
+Phase 6
+Choose the Best Strategy
+
+↓
+
+Phase 7
+Learn
+
+↓
+
+Phase 8
+Trade Live

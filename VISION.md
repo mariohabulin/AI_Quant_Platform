@@ -1,6 +1,7 @@
 # VISION
 
 > **Gradimo AI Alpha Engine čija je svrha pronaći, potvrditi i dugoročno iskorištavati statistički održiv edge na stvarnim financijskim tržištima.**
+AI Alpha Engine is the quantitative intelligence core that will ultimately power the fully autonomous AI Alpha Trading Agent.
 
 ---
 
@@ -46,6 +47,40 @@ Svaka komponenta projekta mora imati jednu svrhu:
 
 Ako neka funkcionalnost tome ne doprinosi, nije prioritet.
 
+Toolbox filozofija
+
+AI Alpha Engine nije zamišljen kao sustav koji pokušava pronaći jednu "savršenu" trading strategiju.
+
+Različiti tržišni uvjeti zahtijevaju različite pristupe.
+
+Zbog toga AI Alpha Engine razvijamo kao inteligentnu kutiju alata (toolbox)
+
+Svaka strategija predstavlja jedan specijalizirani alat.
+
+Neke strategije bolje rade u trendu.
+
+Neke bolje rade u konsolidaciji.
+
+Neke bolje rade pri visokoj volatilnosti.
+
+Neke bolje rade pri niskoj volatilnosti.
+
+Zadatak AI Alpha Enginea nije dokazati da je jedna strategija najbolja.
+
+Njegov zadatak je:
+
+- razumjeti trenutno tržišno okruženje
+- odabrati najprikladniju strategiju za taj režim
+- upravljati rizikom
+- upravljati portfeljem
+- odlučiti postoji li dovoljno statističke prednosti za ulazak u tržište
+
+Drugim riječima:
+
+Ne tražimo savršen čekić. Gradimo cijelu kutiju alata i inteligenciju koja zna koji alat upotrijebiti u pravom trenutku.
+
+Strategije nisu konkurenti jedna drugoj. One su specijalizirani alati koji zajedno čine inteligenciju AI Alpha Enginea.
+
 ---
 
 # Dugoročna vizija
@@ -57,7 +92,9 @@ To je inteligentan proizvod koji:
 - istražuje financijska tržišta
 - prikuplja i analizira podatke
 - generira značajke (features)
-- razvija i upravlja strategijama
+- razvija biblioteku strategija
+- prepoznaje tržišne režime
+- odabire najprikladniju strategiju
 - testira i optimizira strategije
 - upravlja rizikom
 - upravlja portfeljem
@@ -113,3 +150,26 @@ Nakon svake implementacije odmah se izrađuju i izvršavaju automatizirani testo
 Na taj način gradimo stabilan sustav čiji se razvoj temelji na provjerenim komponentama, a ne na pretpostavkama.
 
 Ovaj dokument predstavlja temeljnu viziju projekta i služi kao kompas tijekom cijelog razvoja AI Alpha Enginea.
+
+AI Alpha Engine nije razvijen da uvijek trguje. Razvijen je da zna kada ne treba trgovati jednako dobro kao što zna kada treba. Dugoročna uspješnost proizlazi iz kvalitete odluka, a ne iz količine aktivnosti.
+
+---
+
+# Relationship to Other Documents
+
+This document defines **why** the AI Alpha Engine exists.
+
+The remaining project documents define:
+
+- `ROADMAP.md` — what will be built.
+- `CURRENT_MISSION.md` — what is currently being developed.
+- `ARCHITECTURE.md` — how the system is designed.
+- `LOG.md` — what has already been implemented.
+
+Together these documents provide the long-term direction, architecture and development history of the project.
+
+
+
+
+
+
