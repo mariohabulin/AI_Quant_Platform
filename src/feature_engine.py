@@ -26,6 +26,7 @@ def validate_input(data: pd.DataFrame) -> None:
     if missing_columns:
         missing = ", ".join(sorted(missing_columns))
         raise ValueError(f"Missing required columns: {missing}")
+    
 
 def generate_ema(data: pd.DataFrame, period: int) -> pd.DataFrame:
     """
@@ -56,6 +57,47 @@ def generate_ema(data: pd.DataFrame, period: int) -> pd.DataFrame:
     ).mean()
 
     return feature_data
+
+
+def generate_rsi(data: pd.DataFrame, period: int) -> pd.DataFrame:
+    """
+    Generate a single RSI feature for the requested period.
+
+    Parameters:
+        data (pd.DataFrame): Validated OHLCV market data.
+        period (int): RSI period.
+
+    Returns:
+        pd.DataFrame: Original market data with the generated RSI feature.
+    """
+    validate_input(data)
+
+    if isinstance(period, bool) or not isinstance(period, int):
+        raise TypeError("RSI period must be an integer.")
+
+    if period <= 0:
+        raise ValueError("RSI period must be greater than zero.")
+
+    feature_data = data.copy()
+
+    price_change = feature_data["Close"].diff()
+
+    gains = price_change.clip(lower=0)
+    losses = -price_change.clip(upper=0)
+
+    average_gain = gains.rolling(window=period).mean()
+    average_loss = losses.rolling(window=period).mean()
+
+    relative_strength = average_gain / average_loss
+
+    column_name = f"RSI_{period}"
+
+    feature_data[column_name] = (
+        100 - (100 / (1 + relative_strength))
+    )
+
+    return feature_data
+
 
 def _validate_required_features(
     required_features: list[dict],
@@ -126,6 +168,13 @@ def generate_features(
                     feature_data,
                     period=parameters["period"],
                 )
+
+            elif feature_name == "RSI":
+                feature_data = generate_rsi(
+                    feature_data,
+                    period=parameters["period"],
+                )
+
             else:
                 raise ValueError(
                     f"Unsupported feature: {feature_name}"
@@ -144,18 +193,9 @@ def generate_features(
         .std()
     )
 
-    price_change = feature_data["Close"].diff()
-
-    gains = price_change.clip(lower=0)
-    losses = -price_change.clip(upper=0)
-
-    average_gain = gains.rolling(window=14).mean()
-    average_loss = losses.rolling(window=14).mean()
-
-    relative_strength = average_gain / average_loss
-
-    feature_data["RSI_14"] = (
-        100 - (100 / (1 + relative_strength))
+    feature_data = generate_rsi(
+        feature_data,
+        period=14,
     )
 
     feature_data["VOLUME_MA_20"] = (

@@ -114,11 +114,18 @@ Research Engine sada sadrži potpuno funkcionalne i validirane module:
     ✅ Parameterized EMA Strategy
     ✅ Feature Engine Parameterization
     ✅ Strategy ↔ Feature Integration
-    ⏳ End-to-End Optimizer Validation
+    ✅ End-to-End Optimizer Validation
 
-Sljedeći razvojni korak određuje se prema prioritetima definiranim za Phase 2.
+The next development milestone is expanding the Strategy Library with additional parameterized trading strategies.
 
-Research Engine mora biti potpuno parametriziran prije razvoja Strategy Optimizera.
+The first planned implementation is RSI Strategy.
+
+Each new strategy must integrate into the existing execution pipeline without requiring architectural changes to:
+
+- Feature Engine
+- Strategy Engine
+- Backtesting Engine
+- Performance Analyzer
 
 ---
 

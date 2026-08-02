@@ -391,3 +391,16 @@ generate_signals()
 The Strategy Engine communicates with strategies exclusively through this interface.
 
 Strategies may differ internally, but their public contract must remain consistent.
+
+
+## Strategy Independence
+
+Every trading strategy must be completely independent from every other strategy.
+
+Strategies must never:
+
+- depend on another strategy
+- modify another strategy
+- assume the existence of another strategy
+
+The only shared communication point is the public execution pipeline provided by the Research Engine.

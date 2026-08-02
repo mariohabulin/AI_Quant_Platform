@@ -2,12 +2,19 @@ import os
 import sys
 
 import pandas as pd
+import pytest
 
 sys.path.append(
-    os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "src"))
+    os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "..", "src")
+    )
 )
 
-from feature_engine import generate_features
+from feature_engine import (
+    generate_ema,
+    generate_features,
+    generate_rsi,
+)
 
 
 def test_generate_features():
@@ -33,6 +40,7 @@ def test_generate_features():
     }
 
     assert expected_columns.issubset(result.columns)
+
 
 def test_generate_dynamic_ema_feature():
     data = pd.DataFrame({
@@ -60,8 +68,6 @@ def test_generate_dynamic_ema_feature():
         check_names=False,
     )
 
-import pytest
-
 
 def test_generate_dynamic_ema_invalid_type():
     data = pd.DataFrame({
@@ -76,6 +82,7 @@ def test_generate_dynamic_ema_invalid_type():
 
     with pytest.raises(TypeError, match="EMA period must be an integer."):
         generate_ema(data, period="10")
+
 
 def test_generate_dynamic_ema_invalid_period():
     data = pd.DataFrame({
@@ -100,6 +107,7 @@ def test_generate_dynamic_ema_invalid_period():
     ):
         generate_ema(data, period=-10)
 
+
 def test_generate_dynamic_ema_does_not_modify_original_dataframe():
     data = pd.DataFrame({
         "Open": [99, 100, 101],
@@ -119,6 +127,7 @@ def test_generate_dynamic_ema_does_not_modify_original_dataframe():
 
     assert "EMA_10" in result.columns
     assert "EMA_10" not in data.columns
+
 
 def test_generate_features_generates_only_required_ema_features():
     data = pd.DataFrame({
@@ -158,6 +167,7 @@ def test_generate_features_generates_only_required_ema_features():
     assert "VOLATILITY_20" not in result.columns
     assert "VOLUME_MA_20" not in result.columns
 
+
 def test_generate_features_rejects_unknown_feature():
     data = pd.DataFrame({
         "Open": [99, 100, 101],
@@ -182,6 +192,7 @@ def test_generate_features_rejects_unknown_feature():
             data,
             required_features=required_features,
         )
+
 
 def test_generate_features_rejects_non_list_required_features():
     data = pd.DataFrame({
@@ -271,3 +282,49 @@ def test_generate_features_rejects_missing_feature_parameters():
             data,
             required_features=required_features,
         )
+
+
+def test_generate_dynamic_rsi_feature():
+    data = pd.DataFrame({
+        "Open": [99, 100, 101, 102, 103],
+        "High": [101, 102, 103, 104, 105],
+        "Low": [98, 99, 100, 101, 102],
+        "Close": [100, 101, 102, 101, 103],
+        "Volume": [1000, 1100, 1200, 1300, 1400],
+    })
+
+    from feature_engine import generate_rsi
+
+    result = generate_rsi(data, period=3)
+
+    assert "RSI_3" in result.columns
+
+
+def test_generate_features_generates_required_rsi_feature():
+    data = pd.DataFrame({
+        "Open": [99, 100, 101, 102, 103],
+        "High": [101, 102, 103, 104, 105],
+        "Low": [98, 99, 100, 101, 102],
+        "Close": [100, 101, 102, 101, 103],
+        "Volume": [1000, 1100, 1200, 1300, 1400],
+    })
+
+    required_features = [
+        {
+            "name": "RSI",
+            "parameters": {
+                "period": 3,
+            },
+        },
+    ]
+
+    result = generate_features(
+        data,
+        required_features=required_features,
+    )
+
+    assert "RSI_3" in result.columns
+
+    assert "EMA_20" not in result.columns
+    assert "EMA_50" not in result.columns
+    assert "RSI_14" not in result.columns
