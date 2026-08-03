@@ -1,343 +1,339 @@
 # ROADMAP
 
-## AI Alpha Engine Development Roadmap
+# AI Alpha Engine Development Roadmap
 
-Ovaj dokument definira dugoročni plan razvoja AI Alpha Enginea.
+## Purpose
 
-Njegova svrha nije opisivati implementaciju pojedinih Python modula, već prikazati logičan redoslijed razvoja proizvoda.
+This document defines the long-term development plan of the AI Alpha Engine.
 
-Svaka faza mora biti dovoljno stabilna prije prelaska na sljedeću.
+Its purpose is not to describe individual Python implementations, but to present the logical evolution of the system from a quantitative research platform into a fully autonomous AI Alpha Trading Agent.
 
-Roadmap opisuje kako AI Alpha Engine postupno evoluira od sustava za istraživanje tržišta do potpuno autonomnog AI Alpha Trading Agenta koji djeluje na stvarnim financijskim tržištima.
+Each development phase introduces new capabilities while preserving the stability of previously validated modules.
 
-Svaka faza predstavlja novi skup sposobnosti koje zajedno grade konačni sustav.
+Every phase must be completed, validated and documented before development proceeds to the next stage.
 
 ---
 
-# Phase 1 – Data Foundation
+# Phase 1 — Data Foundation
 
-## Cilj
+## Objective
 
-Izgraditi pouzdanu osnovu za prikupljanje, obradu i vizualizaciju tržišnih podataka.
+Build a reliable foundation for collecting, validating and visualising market data.
 
-## Glavne komponente
+## Core Components
 
 - Data Collection
 - Data Storage
 - Data Cleaning
 - Data Visualization
 
-## Završetak faze
+## Status
 
-✅ Sustav može pouzdano prikupljati, spremati i prikazivati tržišne podatke.
+🟢 Completed
 
-# Phase 1 – Data Foundation
+## Result
 
-Status
-
-✅ Completed
+The system can reliably collect, validate, store and visualise historical market data.
 
 ---
 
-# Phase 2 – Research Engine
+# Phase 2 — Research Engine
 
-## Cilj
+## Objective
 
-Omogućiti razvoj, testiranje i evaluaciju trading strategija.
+Build a modular quantitative research platform capable of developing, executing, backtesting and objectively evaluating independent trading strategies.
 
-## Glavne komponente
+## Completed Components
 
-- Feature Engine
-- Strategy Engine
-- Strategy Library
-- Backtesting Engine
-- Performance Analysis
+### Feature Engine
 
-## Trenutni napredak
+- Dynamic feature generation
+- EMA generation
+- RSI generation
+- Return calculation
+- Volatility calculation
+- Volume moving average
+- Input validation
 
-✅ Feature Engine
+### Strategy Library
 
-✅ Strategy Library (Implemented & Validated)
+- Strategy registration
+- Strategy validation
+- Duplicate protection
+- Strategy lookup
 
-✅ Strategy Engine (Integrated & Validated)
+### Strategy Engine
 
-✅ Backtesting Engine
+- Common strategy contract
+- Strategy execution
+- Required feature integration
+- Signal validation
 
-    ✅ Architecture
-    ✅ Portfolio State
-    ✅ BUY / SELL Simulation
-    ✅ Trade History (v1)
-    ✅ Equity Curve (v1)
+### Trading Strategies
 
-✅ Performance Analysis
+Validated strategies:
 
-    ✅ Architecture
-    ✅ Input Validation
-    ✅ Total Return
-    ✅ Number of Trades
-    ✅ Winning Trades
-    ✅ Losing Trades
-    ✅ Win Rate
-    ✅ Average Win
-    ✅ Average Loss
-    ✅ Profit Factor
-    ✅ Max Drawdown
-    ✅ Expectancy
-    ✅ Sharpe Ratio
+- EMA Strategy
+- RSI Strategy
 
-## Završetak faze
+Both strategies execute through the same architecture.
 
-✅ Strategije se mogu razvijati, izvršavati, backtestirati i objektivno uspoređivati kroz jedinstveni Research Engine.
-Research Engine predstavlja stabilnu istraživačku platformu na kojoj se mogu razvijati, testirati i objektivno uspoređivati nove trading strategije prije prelaska na optimizaciju.
+### Backtesting Engine
 
-# Phase 2 – Research Engine
+- Trade simulation
+- Portfolio management
+- Trade history
+- Equity curve
+- Stateless execution
 
-Status
+### Performance Analyzer
 
-🟡 In Progress
-
-Research Engine sada sadrži potpuno funkcionalne i validirane module:
-
-✅ Feature Engine
-
-✅ Strategy Library
-
-✅ Strategy Engine
-
-✅ Backtesting Engine
-
-✅ Performance Analysis
-
-✅ Optimizer Readiness
-
-    ✅ Backtesting Engine State Reset
-    ✅ Parameterized EMA Strategy
-    ✅ Feature Engine Parameterization
-    ✅ Strategy ↔ Feature Integration
-    ✅ End-to-End Optimizer Validation
-
-The next development milestone is expanding the Strategy Library with additional parameterized trading strategies.
-
-The first planned implementation is RSI Strategy.
-
-Each new strategy must integrate into the existing execution pipeline without requiring architectural changes to:
-
-- Feature Engine
-- Strategy Engine
-- Backtesting Engine
-- Performance Analyzer
+- Performance metrics
+- Strategy evaluation
+- Deterministic performance analysis
 
 ---
 
-# Phase 3 – Optimization
+## Research Engine Validation
 
-## Cilj
+Successfully validated:
 
-Poboljšati kvalitetu strategija i smanjiti rizik od overfittinga.
+- Dynamic Feature Engine
+- Parameterized strategies
+- Required Features contract
+- Common Strategy contract
+- Strategy-independent execution pipeline
+- End-to-End Research Pipeline
 
-## Glavne komponente
+Current automated test status:
+
+✅ **112 / 112 automated tests passing**
+
+---
+
+## Status
+
+🟢 Completed
+
+The Research Engine is now a stable modular platform capable of supporting multiple independent trading strategies through a single reusable execution pipeline.
+
+Future strategies should integrate without requiring architectural changes.
+
+---
+
+# Phase 3 — Strategy Optimization
+
+## Objective
+
+Develop the optimisation layer responsible for discovering robust strategy configurations while reducing overfitting.
+
+## Planned Components
 
 - Strategy Optimizer
-- Parameter Evaluation
+- Parameter Search
+- Strategy Ranking
 - Walk Forward Analysis
 - Robustness Testing
 
-Napomena
+## Completion Criteria
 
-Strategy Library predstavlja centralno mjesto za registraciju i upravljanje svim dostupnim trading strategijama.
+The system can objectively compare parameter combinations and identify statistically robust strategies.
 
-Strategy Engine dohvaća registriranu strategiju iz Strategy Library i izvršava je.
-
-Alpha Decision Engine će u budućnosti odlučivati koju registriranu strategiju koristiti.
-
-## Završetak faze
-
-Svaka komponenta Research Enginea mora imati odgovarajuće automatizirane testove prije nego što se smatra dovršenom.
-
-✅ Sustav može pronaći stabilnije i pouzdanije strategije
-
-⬜ Planned.
-
----
-
-# Phase 4 – Risk & Portfolio Management
-
-## Cilj
-
-Osigurati dugoročnu održivost trgovanja.
-
-## Glavne komponente
-
-- Risk Manager
-- Position Sizing
-- Portfolio Manager
-- Capital Allocation
-
-## Završetak faze
-
-✅ Sustav upravlja rizikom i portfeljem prema definiranim pravilima.
+## Status
 
 ⬜ Planned
 
 ---
 
-# Phase 5 – Market Intelligence
+# Phase 4 — Risk & Portfolio Management
 
-## Cilj
+## Objective
 
-Razumjeti trenutno stanje tržišta i prilagoditi ponašanje sustava.
+Protect capital through systematic risk and portfolio management.
 
-## Glavne komponente
+## Planned Components
+
+- Risk Engine
+- Position Sizing
+- Portfolio Engine
+- Capital Allocation
+
+## Completion Criteria
+
+The system manages risk and capital independently from trading strategies.
+
+## Status
+
+⬜ Planned
+
+---
+
+# Phase 5 — Market Intelligence
+
+## Objective
+
+Understand current market conditions and identify the most appropriate trading opportunities.
+
+## Planned Components
 
 - Market Scanner
 - Market Regime Detection
 - Opportunity Detection
-- Strategy Selection Preparation
+- Strategy Recommendation
 
-## Završetak faze
+## Completion Criteria
 
-✅ Sustav prepoznaje tržišne uvjete i identificira potencijalne prilike.
+The system recognises changing market conditions and recommends appropriate trading strategies.
+
+## Status
 
 ⬜ Planned
 
 ---
 
-# Phase 6 – Alpha Decision Engine
+# Phase 6 — Alpha Decision Engine
 
-## Cilj
+## Objective
 
-Povezati sve prethodne komponente u jedinstveni sustav za donošenje odluka.
+Combine research, market intelligence and risk management into a unified decision-making system.
 
-## Glavne komponente
+## Planned Components
 
 - Strategy Selection
+- Strategy Confidence Evaluation
 - Market Regime Integration
 - Risk Validation
 - Portfolio Validation
 - Trade Decision
 
-Napomena
+## Completion Criteria
 
-Alpha Decision Engine odabire strategiju.
+The system autonomously selects the most appropriate strategy based on statistical evidence.
 
-Strategy Engine izvršava odabranu strategiju.
-
-## Završetak faze
-
-✅ Sustav samostalno donosi odluke temeljene na statističkoj prednosti.
+## Status
 
 ⬜ Planned
 
 ---
 
-# Phase 7 – AI Learning Engine
+# Phase 7 — AI Learning Engine
 
-## Cilj
+## Objective
 
-Omogućiti kontinuirano učenje i poboljšavanje sustava.
+Enable continuous improvement through learning from historical performance.
 
-## Glavne komponente
+## Planned Components
 
 - Performance Learning
 - Strategy Ranking
 - Adaptive Optimization
 - Continuous Improvement
 
-## Završetak faze
+## Completion Criteria
 
-✅ Sustav uči iz vlastitih rezultata i postupno poboljšava kvalitetu svojih odluka.
+The system continuously improves decision quality using historical research results.
+
+## Status
 
 ⬜ Planned
 
 ---
 
-# Phase 8 – Live Trading
+# Phase 8 — Live Trading
 
-## Cilj
+## Objective
 
-Primjena AI Alpha Enginea na stvarnim financijskim tržištima.
+Deploy the AI Alpha Engine to real financial markets.
 
-## Glavne komponente
+## Planned Components
 
 - Execution Engine
 - Broker Integration
 - Live Monitoring
 - Safety Controls
 
-## Završetak faze
+## Completion Criteria
 
-✅ AI Alpha Engine može sigurno i pouzdano djelovati na stvarnim tržištima
+The AI Alpha Trading Agent operates safely and autonomously on live financial markets.
 
-⬜ Planned.
-
----
-
-# Dugoročni cilj
-
-Na kraju razvoja AI Alpha Engine predstavlja jedinstveni inteligentni sustav koji:
-
-- istražuje financijska tržišta
-- analizira podatke
-- pronalazi statistički održiv edge
-- razvija i evaluira strategije
-- upravlja rizikom
-- upravlja portfeljem
-- donosi odluke
-- uči iz vlastitih rezultata
-- kontinuirano poboljšava svoje performanse
-- validira statističku održivost strategija
-- automatski odabire najprikladniju strategiju za trenutno tržišno okruženje
+## Status
 
 ⬜ Planned
 
 ---
 
-# Razvojno načelo
+# Long-Term Objective
 
-Fokus nije na broju implementiranih funkcionalnosti.
+When completed, the AI Alpha Engine will:
 
-Svaka nova funkcionalnost razvija se u malim, jasno definiranim koracima.
+- research financial markets
+- generate market features
+- develop trading strategies
+- optimise strategy parameters
+- evaluate statistical robustness
+- manage portfolio risk
+- understand market regimes
+- recommend appropriate strategies
+- select the highest-confidence opportunity
+- learn from historical performance
+- continuously improve decision quality
+- power the AI Alpha Trading Agent
 
-Nakon svake implementacije odmah se izrađuju i izvršavaju automatizirani testovi.
+---
 
-Na sljedeći korak prelazi se tek nakon uspješno završenih testova.
+# Development Principle
 
-Fokus je na tome da svaka završena faza povećava sposobnost AI Alpha Enginea da pronađe, potvrdi i dugoročno iskorištava statistički održiv edge na stvarnim financijskim tržištima.
+Every phase follows the same development process:
 
+- Architecture Review
+- Design
+- Test Driven Development
+- Validation
+- Documentation
+- Git Integration
+
+Progress is measured by architectural quality, deterministic behaviour and automated validation rather than implementation speed.
+
+---
+
+# Development Evolution
+
+```text
 Phase 1
-Know the Market
+Data Foundation
 
 ↓
 
 Phase 2
-Test Ideas
+Research Engine
 
 ↓
 
 Phase 3
-Optimize Ideas
+Strategy Optimization
 
 ↓
 
 Phase 4
-Protect Capital
+Risk & Portfolio Management
 
 ↓
 
 Phase 5
-Understand the Market
+Market Intelligence
 
 ↓
 
 Phase 6
-Choose the Best Strategy
+Alpha Decision Engine
 
 ↓
 
 Phase 7
-Learn
+AI Learning Engine
 
 ↓
 
 Phase 8
-Trade Live
+Live Trading
+```

@@ -99,6 +99,95 @@ def generate_rsi(data: pd.DataFrame, period: int) -> pd.DataFrame:
     return feature_data
 
 
+def generate_macd(
+    data: pd.DataFrame,
+    fast_period: int,
+    slow_period: int,
+    signal_period: int,
+) -> pd.DataFrame:
+    """
+    Generate MACD line, signal line, and histogram.
+
+    Parameters:
+        data (pd.DataFrame): Validated OHLCV market data.
+        fast_period (int): Fast EMA period.
+        slow_period (int): Slow EMA period.
+        signal_period (int): Signal EMA period.
+
+    Returns:
+        pd.DataFrame: Original market data with MACD features.
+    """
+    validate_input(data)
+
+    if isinstance(fast_period, bool) or not isinstance(fast_period, int):
+        raise TypeError("MACD fast period must be an integer.")
+
+    if fast_period <= 0:
+        raise ValueError(
+            "MACD fast period must be greater than zero."
+        )
+
+    if isinstance(slow_period, bool) or not isinstance(slow_period, int):
+        raise TypeError("MACD slow period must be an integer.")
+
+    if slow_period <= 0:
+        raise ValueError(
+            "MACD slow period must be greater than zero."
+        )
+
+    if (
+        isinstance(signal_period, bool)
+        or not isinstance(signal_period, int)
+    ):
+        raise TypeError(
+            "MACD signal period must be an integer."
+       )
+
+    if signal_period <= 0:
+        raise ValueError(
+            "MACD signal period must be greater than zero."
+        )
+
+    if fast_period >= slow_period:
+        raise ValueError(
+            "MACD fast period must be less than slow period."
+        )
+
+    feature_data = data.copy()
+
+    fast_ema = feature_data["Close"].ewm(
+        span=fast_period,
+        adjust=False,
+    ).mean()
+
+    slow_ema = feature_data["Close"].ewm(
+        span=slow_period,
+        adjust=False,
+    ).mean()
+
+    macd_column = f"MACD_{fast_period}_{slow_period}"
+    signal_column = (
+        f"MACD_SIGNAL_{fast_period}_{slow_period}_{signal_period}"
+    )
+    histogram_column = (
+        f"MACD_HISTOGRAM_{fast_period}_{slow_period}_{signal_period}"
+    )
+
+    feature_data[macd_column] = fast_ema - slow_ema
+
+    feature_data[signal_column] = feature_data[macd_column].ewm(
+        span=signal_period,
+        adjust=False,
+    ).mean()
+
+    feature_data[histogram_column] = (
+        feature_data[macd_column]
+        - feature_data[signal_column]
+    )
+
+    return feature_data
+
+
 def _validate_required_features(
     required_features: list[dict],
 ) -> None:
@@ -173,6 +262,14 @@ def generate_features(
                 feature_data = generate_rsi(
                     feature_data,
                     period=parameters["period"],
+                )
+
+            elif feature_name == "MACD":
+                feature_data = generate_macd(
+                    feature_data,
+                    fast_period=parameters["fast_period"],
+                    slow_period=parameters["slow_period"],
+                    signal_period=parameters["signal_period"],
                 )
 
             else:

@@ -2,28 +2,22 @@
 
 ## Purpose
 
-The AI Alpha Engine is being designed as a modular quantitative trading architecture whose ultimate purpose is to power a fully autonomous AI Alpha Trading Agent.
+The AI Alpha Engine is a modular quantitative research and decision-making system designed to power a fully autonomous AI Alpha Trading Agent.
 
-The final objective of this project is not simply to build a backtesting framework or a collection of trading modules.
+The objective of this project is not simply to build a backtesting framework or a collection of trading strategies.
 
-The objective is to create an intelligent trading system capable of operating continuously on real financial markets, making objective decisions based on quantitative research, and continuously improving through data-driven analysis.
+The objective is to build an intelligent system capable of:
 
-The completed AI Alpha Trading Agent is expected to:
+- researching financial markets
+- discovering statistically sustainable trading edges
+- validating strategies objectively
+- managing risk
+- selecting appropriate strategies
+- continuously improving through quantitative research
 
-- operate 24 hours a day without supervision
-- analyse multiple financial markets simultaneously
-- scan thousands of potential trading opportunities
-- generate trading signals using validated quantitative strategies
-- automatically execute trades when predefined conditions are satisfied
-- objectively evaluate every completed trade
-- continuously improve through research, optimisation and AI-assisted learning
-- remain reliable, scalable and maintainable throughout its lifetime
+The AI Alpha Trading Agent will combine the AI Alpha Engine with live market connectivity, trade execution and operational infrastructure required for autonomous 24/7 trading.
 
-Every module developed within this project is one building block of that long-term objective.
-
-For this reason, architectural decisions are evaluated not only against current implementation requirements, but also against their ability to support the future autonomous trading ecosystem.
-
-
+```text
 AI Alpha Trading Agent
 │
 ├── Live Market Data
@@ -40,20 +34,23 @@ AI Alpha Trading Agent
 ├── Broker Integration
 ├── Live Monitoring
 └── Safety Controls
+```
 
-The AI Alpha Engine is the quantitative intelligence core of the AI Alpha Trading Agent. While the Engine is responsible for research, analysis and decision-making, the Trading Agent combines the Engine with live market connectivity, trade execution and operational infrastructure required for autonomous 24/7 trading.
+The AI Alpha Engine is the quantitative intelligence core of the AI Alpha Trading Agent.
 
 ---
 
 # 1. Architectural Philosophy
 
-The AI Alpha Engine is built from small, independent modules.
+The architecture is built from independent modules.
 
-Each module has one clearly defined responsibility and communicates with other modules only through documented public interfaces.
+Each module owns one clearly defined responsibility.
 
-The architecture intentionally favours modularity, maintainability and long-term scalability over short-term implementation speed.
+Modules communicate only through documented public interfaces.
 
-Every architectural decision should move the project one step closer to a fully autonomous, trustworthy and continuously improving AI trading system.
+Long-term maintainability, scalability and deterministic behaviour always have priority over short-term implementation speed.
+
+Every architectural decision should move the project closer to a trustworthy autonomous trading system.
 
 ---
 
@@ -65,10 +62,12 @@ Each module owns exactly one responsibility.
 
 Examples:
 
-- Feature Engine generates market features.
-- Strategy Engine executes strategies.
+- Feature Engine generates features.
+- Strategy Library stores strategies.
+- Strategy Engine orchestrates strategy execution.
+- Trading Strategies generate trading signals.
 - Backtesting Engine simulates trading.
-- Performance Analyzer evaluates trading performance.
+- Performance Analyzer evaluates results.
 
 Responsibilities must never overlap.
 
@@ -76,39 +75,37 @@ Responsibilities must never overlap.
 
 ## Fail Fast
 
-Every public interface validates its input before performing calculations.
+Every public interface validates its inputs before performing calculations.
 
-Invalid input should immediately raise clear and predictable exceptions.
+Invalid input must immediately produce predictable exceptions.
 
 ---
 
 ## Parameterize Before Optimize
 
-No optimizer should depend on hardcoded values.
-
 Every configurable component must expose explicit parameters before optimization begins.
+
+No optimizer should depend on hardcoded values.
 
 ---
 
 ## Composition Over Duplication
 
-Reusable functionality should be extracted into dedicated functions or modules.
+Reusable behaviour should be extracted into dedicated modules or functions.
 
-Code duplication should be eliminated whenever practical.
+Business logic should never be duplicated unnecessarily.
 
 ---
 
 ## Backward Compatibility
 
-New functionality should preserve existing public behaviour whenever possible.
-
-Existing validated functionality should continue working unless behaviour is intentionally changed.
+Existing validated behaviour should continue working unless intentionally changed.
 
 ---
 
 ## Architecture Before Features
 
-Long-term architecture always has priority over short-term implementation convenience.
+Architecture always has priority over implementation convenience.
 
 Temporary shortcuts that reduce future extensibility should be avoided.
 
@@ -116,9 +113,7 @@ Temporary shortcuts that reduce future extensibility should be avoided.
 
 # 3. High-Level Architecture
 
-The Research Engine is composed of independent modules connected through well-defined interfaces.
-
-Current modules include:
+Current Research Engine modules:
 
 - Feature Engine
 - Strategy Library
@@ -126,14 +121,17 @@ Current modules include:
 - Backtesting Engine
 - Performance Analyzer
 
-Future modules include:
+Future AI Alpha Engine modules:
 
 - Strategy Optimizer
 - Walk Forward Analysis
+- Market Intelligence
 - Risk Engine
 - Portfolio Engine
 - Alpha Decision Engine
-- AI Alpha Trading Agent
+- AI Learning Engine
+
+The AI Alpha Trading Agent is the final autonomous system built around these modules.
 
 No module should bypass another module without explicit architectural justification.
 
@@ -154,7 +152,10 @@ Responsible for:
 
 Responsible for:
 
-- storing trading strategy implementations
+- registering strategies
+- validating strategy registration
+- retrieving strategies by name
+- preventing duplicate registration
 
 ---
 
@@ -162,7 +163,19 @@ Responsible for:
 
 Responsible for:
 
-- executing trading strategies
+- retrieving the selected strategy
+- requesting required features
+- executing the selected strategy
+- validating strategy output
+
+---
+
+## Trading Strategies
+
+Responsible for:
+
+- exposing configurable parameters
+- declaring required features
 - generating trading signals
 
 ---
@@ -172,9 +185,13 @@ Responsible for:
 Responsible for:
 
 - trade simulation
-- portfolio management
+- simulated portfolio state management
 - trade history generation
 - equity curve generation
+
+The Backtesting Engine manages portfolio state only during historical simulation.
+
+Future portfolio allocation decisions belong to the Portfolio Engine.
 
 ---
 
@@ -188,33 +205,35 @@ Responsible for:
 
 ---
 
-# 5. Data Flow
+# 5. Research Execution Pipeline
 
-The standard execution pipeline follows this order:
-
+```text
 Market Data
-
-↓
-
-Feature Engine
-
-↓
-
+      │
+      ▼
+Strategy Library
+      │
+      ▼
 Strategy Engine
-
-↓
-
+      │
+      ├── reads required_features
+      ├── requests Feature Engine
+      └── executes Trading Strategy
+      │
+      ▼
+Trading Signals
+      │
+      ▼
 Backtesting Engine
-
-↓
-
+      │
+      ▼
 Performance Analyzer
-
-↓
-
+      │
+      ▼
 Research Result
+```
 
-Every future module should integrate into this pipeline instead of bypassing it whenever possible.
+Every future component should integrate into this pipeline instead of creating alternative execution paths.
 
 ---
 
@@ -268,25 +287,21 @@ Development never skips validation.
 
 The project follows strict Test Driven Development.
 
-Every new feature begins with a failing test.
+Every feature begins with a failing automated test.
 
 Implementation should be the minimum required to satisfy the test.
 
-Refactoring begins only after all automated tests successfully pass.
+Refactoring begins only after all automated tests pass.
 
-The complete automated test suite is executed after every completed implementation.
+Every completed implementation is validated by the complete automated test suite.
 
 ---
 
 # 8. Permanent Architectural Decisions
 
-The following architectural decisions apply across the entire project.
-
 ## Stateless Backtesting
 
-Every backtest execution begins from a clean portfolio state.
-
-No execution may retain state from previous runs.
+Every execution begins from a clean portfolio state.
 
 ---
 
@@ -294,31 +309,87 @@ No execution may retain state from previous runs.
 
 Strategies expose configurable parameters through their public interface.
 
-Hardcoded strategy values should be avoided.
+---
+
+## Strategy Contract
+
+Every strategy exposes:
+
+- `name`
+- `required_features`
+- `generate_signals()`
+
+The Strategy Engine communicates exclusively through this contract.
 
 ---
 
-## Required Features
+## Strategy Independence
 
-Strategies declare which market features they require.
+Strategies must never:
 
-The Feature Engine is responsible only for generating those requested features
+- depend on another strategy
+- modify another strategy
+- assume another strategy exists
+
+Strategies communicate only through the Research Engine execution pipeline.
+
+---
+
+## Feature Requirement Contract
+
+Strategies request features through structured feature requirements.
+
+Example:
+
+```python
+[
+    {
+        "name": "RSI",
+        "parameters": {
+            "period": 14,
+        },
+    },
+]
+```
+
+Every feature request must contain:
+
+- `name`
+- `parameters`
+
+The Feature Engine validates every request before generation.
+
+---
+
+## Signal Contract
+
+Every strategy must return a `Signal` column.
+
+Allowed values:
+
+- `1` → BUY
+- `0` → HOLD
+- `-1` → SELL
+
+Signal generation belongs exclusively to trading strategies.
+
+Signal execution belongs to the Backtesting Engine or future Execution Engine.
+
+---
 
 ## Deterministic Research
 
 Given identical input data and identical parameters, every module must produce identical output.
 
-Research results should always be reproducible.
-
-Randomness may only be introduced explicitly and must always be controllable..
+Randomness may only be introduced explicitly and must always remain controllable.
 
 ---
 
 ## Single Execution Pipeline
 
-All strategy execution should follow the same pipeline.
+Every strategy executes through the same Research Engine pipeline.
 
-Future optimizers, AI modules and live trading components should reuse the existing execution pipeline instead of creating alternative implementations.
+Future optimizers, AI modules and live trading components must reuse the existing execution pipeline whenever possible.
 
 ---
 
@@ -326,39 +397,39 @@ Future optimizers, AI modules and live trading components should reuse the exist
 
 Performance evaluation always occurs after completed backtesting.
 
-Performance metrics remain independent from trading logic.
+Trading logic and performance analysis remain independent.
 
 ---
 
 # 9. Future Extension Principles
 
-Future major modules should extend the architecture rather than replace it.
+Future modules should extend the architecture rather than replace it.
 
 Whenever possible they should:
 
 - reuse existing public interfaces
 - minimise coupling
-- maximise module independence
+- maximise independence
 - preserve backward compatibility
 - avoid duplicate business logic
 
-Every new module should strengthen the architecture instead of increasing complexity.
+Every new module should simplify the system rather than increase complexity.
 
 ---
 
 # 10. Architecture Review Checklist
 
-Before implementing any new module, verify:
+Before implementing any new module verify:
 
-- Is the design consistent with VISION.md?
+- Is it consistent with VISION.md?
 - Is it aligned with ROADMAP.md?
 - Does it satisfy CURRENT_MISSION.md?
-- Does it follow the principles defined in this document?
+- Does it follow this architecture?
 - Does it preserve module responsibilities?
 - Does it introduce unnecessary coupling?
-- Can future modules reuse this design?
-- Does it move the project closer to the autonomous AI Alpha Trading Agent?
-- Will the existing automated test suite remain valid?
+- Can future modules reuse it?
+- Does it move the AI Alpha Engine closer to autonomous trading?
+- Will existing automated tests remain valid?
 
 ---
 
@@ -370,37 +441,10 @@ Permanent architectural principles belong here.
 
 Development history belongs in LOG.md.
 
-Current implementation objectives belong in CURRENT_MISSION.md.
+Current objectives belong in CURRENT_MISSION.md.
 
-Long-term project goals belong in VISION.md.
+Long-term goals belong in VISION.md.
 
-Project milestones belong in ROADMAP.md.
+Project evolution belongs in ROADMAP.md.
 
-Whenever a permanent architectural decision is made, this document should be updated before continuing development.
-
-Strategy Contract
-
-Every trading strategy must expose the same public interface.
-
-Minimum required interface:
-
-name
-required_features
-generate_signals()
-
-The Strategy Engine communicates with strategies exclusively through this interface.
-
-Strategies may differ internally, but their public contract must remain consistent.
-
-
-## Strategy Independence
-
-Every trading strategy must be completely independent from every other strategy.
-
-Strategies must never:
-
-- depend on another strategy
-- modify another strategy
-- assume the existence of another strategy
-
-The only shared communication point is the public execution pipeline provided by the Research Engine.
+Whenever a permanent architectural decision is made, this document should be updated before further development continues.
