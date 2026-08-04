@@ -11,6 +11,7 @@ sys.path.append(
 )
 
 from feature_engine import (
+    generate_bollinger_bands,
     generate_ema,
     generate_features,
     generate_macd,
@@ -621,3 +622,224 @@ def test_generate_macd_calculates_expected_values():
         expected_histogram,
         check_names=False,
     )
+
+
+def test_generate_dynamic_bollinger_feature():
+    data = pd.DataFrame({
+        "Open": [99, 100, 101, 102, 103],
+        "High": [101, 102, 103, 104, 105],
+        "Low": [98, 99, 100, 101, 102],
+        "Close": [100, 101, 103, 102, 105],
+        "Volume": [1000, 1100, 1200, 1300, 1400],
+    })
+
+    result = generate_bollinger_bands(
+        data,
+        period=3,
+        standard_deviations=2.0,
+    )
+
+    assert "BOLLINGER_MIDDLE_3" in result.columns
+    assert "BOLLINGER_UPPER_3_2.0" in result.columns
+    assert "BOLLINGER_LOWER_3_2.0" in result.columns
+
+
+def test_generate_bollinger_period_must_be_integer():
+    data = pd.DataFrame({
+        "Open": [99, 100, 101],
+        "High": [101, 102, 103],
+        "Low": [98, 99, 100],
+        "Close": [100, 101, 102],
+        "Volume": [1000, 1100, 1200],
+    })
+
+    with pytest.raises(
+        TypeError,
+        match="Bollinger period must be an integer.",
+    ):
+        generate_bollinger_bands(
+            data,
+            period="20",
+            standard_deviations=2.0,
+        )
+
+
+def test_generate_bollinger_period_must_be_positive():
+    data = pd.DataFrame({
+        "Open": [99, 100, 101],
+        "High": [101, 102, 103],
+        "Low": [98, 99, 100],
+        "Close": [100, 101, 102],
+        "Volume": [1000, 1100, 1200],
+    })
+
+    with pytest.raises(
+        ValueError,
+        match="Bollinger period must be greater than zero.",
+    ):
+        generate_bollinger_bands(
+            data,
+            period=0,
+            standard_deviations=2.0,
+        )
+
+    with pytest.raises(
+        ValueError,
+        match="Bollinger period must be greater than zero.",
+    ):
+        generate_bollinger_bands(
+            data,
+            period=-20,
+            standard_deviations=2.0,
+        )
+
+
+def test_generate_bollinger_standard_deviations_must_be_number():
+    data = pd.DataFrame({
+        "Open": [99, 100, 101],
+        "High": [101, 102, 103],
+        "Low": [98, 99, 100],
+        "Close": [100, 101, 102],
+        "Volume": [1000, 1100, 1200],
+    })
+
+    with pytest.raises(
+        TypeError,
+        match="Bollinger standard deviations must be a number.",
+    ):
+        generate_bollinger_bands(
+            data,
+            period=20,
+            standard_deviations="2.0",
+        )
+
+
+def test_generate_bollinger_standard_deviations_must_be_positive():
+    data = pd.DataFrame({
+        "Open": [99, 100, 101],
+        "High": [101, 102, 103],
+        "Low": [98, 99, 100],
+        "Close": [100, 101, 102],
+        "Volume": [1000, 1100, 1200],
+    })
+
+    with pytest.raises(
+        ValueError,
+        match="Bollinger standard deviations must be greater than zero.",
+    ):
+        generate_bollinger_bands(
+            data,
+            period=20,
+            standard_deviations=0,
+        )
+
+    with pytest.raises(
+        ValueError,
+        match="Bollinger standard deviations must be greater than zero.",
+    ):
+        generate_bollinger_bands(
+            data,
+            period=20,
+            standard_deviations=-2.0,
+        )
+
+
+def test_generate_bollinger_does_not_modify_original_dataframe():
+    data = pd.DataFrame({
+        "Open": [99, 100, 101, 102, 103],
+        "High": [101, 102, 103, 104, 105],
+        "Low": [98, 99, 100, 101, 102],
+        "Close": [100, 101, 103, 102, 105],
+        "Volume": [1000, 1100, 1200, 1300, 1400],
+    })
+
+    original_data = data.copy(deep=True)
+
+    result = generate_bollinger_bands(
+        data,
+        period=3,
+        standard_deviations=2.0,
+    )
+
+    pd.testing.assert_frame_equal(data, original_data)
+
+    assert "BOLLINGER_MIDDLE_3" in result.columns
+    assert "BOLLINGER_MIDDLE_3" not in data.columns
+
+
+def test_generate_bollinger_calculates_expected_values():
+    data = pd.DataFrame({
+        "Open": [99, 100, 101, 102, 103],
+        "High": [101, 102, 103, 104, 105],
+        "Low": [98, 99, 100, 101, 102],
+        "Close": [100, 101, 103, 102, 105],
+        "Volume": [1000, 1100, 1200, 1300, 1400],
+    })
+
+    result = generate_bollinger_bands(
+        data,
+        period=3,
+        standard_deviations=2.0,
+    )
+
+    expected_middle = data["Close"].rolling(
+        window=3,
+    ).mean()
+
+    expected_std = data["Close"].rolling(
+        window=3,
+    ).std()
+
+    expected_upper = expected_middle + 2.0 * expected_std
+    expected_lower = expected_middle - 2.0 * expected_std
+
+    pd.testing.assert_series_equal(
+        result["BOLLINGER_MIDDLE_3"],
+        expected_middle,
+        check_names=False,
+    )
+
+    pd.testing.assert_series_equal(
+        result["BOLLINGER_UPPER_3_2.0"],
+        expected_upper,
+        check_names=False,
+    )
+
+    pd.testing.assert_series_equal(
+        result["BOLLINGER_LOWER_3_2.0"],
+        expected_lower,
+        check_names=False,
+    )
+
+
+def test_generate_features_generates_required_bollinger_feature():
+    data = pd.DataFrame({
+        "Open": [99, 100, 101, 102, 103],
+        "High": [101, 102, 103, 104, 105],
+        "Low": [98, 99, 100, 101, 102],
+        "Close": [100, 101, 103, 102, 105],
+        "Volume": [1000, 1100, 1200, 1300, 1400],
+    })
+
+    required_features = [
+        {
+            "name": "BOLLINGER_BANDS",
+            "parameters": {
+                "period": 3,
+                "standard_deviations": 2.0,
+            },
+        },
+    ]
+
+    result = generate_features(
+        data,
+        required_features=required_features,
+    )
+
+    assert "BOLLINGER_MIDDLE_3" in result.columns
+    assert "BOLLINGER_UPPER_3_2.0" in result.columns
+    assert "BOLLINGER_LOWER_3_2.0" in result.columns
+
+    assert "EMA_20" not in result.columns
+    assert "EMA_50" not in result.columns
+    assert "RSI_14" not in result.columns

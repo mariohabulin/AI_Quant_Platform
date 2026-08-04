@@ -188,6 +188,80 @@ def generate_macd(
     return feature_data
 
 
+def generate_bollinger_bands(
+    data: pd.DataFrame,
+    period: int,
+    standard_deviations: float,
+) -> pd.DataFrame:
+    """
+    Generate Bollinger Bands features.
+
+    Parameters:
+        data (pd.DataFrame): Validated OHLCV market data.
+        period (int): Rolling window period.
+        standard_deviations (float): Number of standard deviations.
+
+    Returns:
+        pd.DataFrame: Original market data with Bollinger Bands features.
+    """
+    validate_input(data)
+
+    if isinstance(period, bool) or not isinstance(period, int):
+        raise TypeError(
+            "Bollinger period must be an integer."
+        )
+
+    if period <= 0:
+        raise ValueError(
+            "Bollinger period must be greater than zero."
+        )
+
+    if (
+        isinstance(standard_deviations, bool)
+        or not isinstance(standard_deviations, (int, float))
+    ):
+        raise TypeError(
+            "Bollinger standard deviations must be a number."
+        )
+
+    if standard_deviations <= 0:
+        raise ValueError(
+            "Bollinger standard deviations must be greater than zero."
+        )
+
+    feature_data = data.copy()
+
+    middle_column = f"BOLLINGER_MIDDLE_{period}"
+    upper_column = (
+        f"BOLLINGER_UPPER_{period}_{standard_deviations}"
+    )
+    lower_column = (
+        f"BOLLINGER_LOWER_{period}_{standard_deviations}"
+    )
+
+    middle_band = feature_data["Close"].rolling(
+        window=period,
+    ).mean()
+
+    rolling_std = feature_data["Close"].rolling(
+        window=period,
+    ).std()
+
+    feature_data[middle_column] = middle_band
+
+    feature_data[upper_column] = (
+        middle_band
+        + standard_deviations * rolling_std
+    )
+
+    feature_data[lower_column] = (
+        middle_band
+        - standard_deviations * rolling_std
+    )
+
+    return feature_data
+
+
 def _validate_required_features(
     required_features: list[dict],
 ) -> None:
@@ -270,6 +344,15 @@ def generate_features(
                     fast_period=parameters["fast_period"],
                     slow_period=parameters["slow_period"],
                     signal_period=parameters["signal_period"],
+                )
+
+            elif feature_name == "BOLLINGER_BANDS":
+                feature_data = generate_bollinger_bands(
+                    feature_data,
+                    period=parameters["period"],
+                    standard_deviations=parameters[
+                        "standard_deviations"
+                    ],
                 )
 
             else:
