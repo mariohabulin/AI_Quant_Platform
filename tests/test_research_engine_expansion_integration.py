@@ -16,6 +16,7 @@ from strategy_engine import StrategyEngine
 from strategy_library import StrategyLibrary
 from strategies.macd_strategy import MACDStrategy
 from strategies.bollinger_strategy import BollingerStrategy
+from strategies.donchian_strategy import DonchianStrategy
 
 
 def create_market_data():
@@ -192,6 +193,65 @@ def test_bollinger_strategy_executes_complete_research_pipeline():
     assert "EMA_50" not in result.columns
     assert "RSI_14" not in result.columns
     assert "MACD_12_26" not in result.columns
+
+    assert set(result["Signal"].unique()).issubset(
+        {-1, 0, 1}
+    )
+
+    assert len(backtesting_engine.equity_curve) == len(data)
+    assert isinstance(
+        backtesting_engine.trade_history,
+        list,
+    )
+
+    assert isinstance(metrics, dict)
+    assert "total_return" in metrics
+    assert "number_of_trades" in metrics
+    assert "max_drawdown" in metrics
+    assert "sharpe_ratio" in metrics
+
+
+def test_donchian_strategy_executes_complete_research_pipeline():
+    data = create_market_data()
+
+    library = StrategyLibrary()
+
+    strategy = DonchianStrategy(
+        period=20,
+    )
+    library.register(strategy)
+
+    strategy_engine = StrategyEngine(
+        library,
+        strategy.name,
+    )
+
+    backtesting_engine = BacktestingEngine(
+        strategy_engine,
+        initial_capital=10000.0,
+    )
+
+    result = backtesting_engine.run(data)
+
+    performance_analyzer = PerformanceAnalyzer(
+        initial_capital=10000.0,
+    )
+
+    metrics = performance_analyzer.calculate(
+        backtesting_engine.trade_history,
+        backtesting_engine.equity_curve,
+    )
+
+    assert "DONCHIAN_UPPER_20" in result.columns
+    assert "DONCHIAN_LOWER_20" in result.columns
+    assert "DONCHIAN_MIDDLE_20" in result.columns
+    assert "Signal" in result.columns
+
+    assert "EMA_20" not in result.columns
+    assert "EMA_50" not in result.columns
+    assert "RSI_14" not in result.columns
+    assert "MACD_12_26" not in result.columns
+    assert "BOLLINGER_MIDDLE_20" not in result.columns
 
     assert set(result["Signal"].unique()).issubset(
         {-1, 0, 1}

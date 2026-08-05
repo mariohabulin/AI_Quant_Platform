@@ -262,6 +262,60 @@ def generate_bollinger_bands(
     return feature_data
 
 
+def generate_donchian_channels(
+    data: pd.DataFrame,
+    period: int,
+) -> pd.DataFrame:
+    """
+    Generate Donchian Channel features.
+
+    Parameters:
+        data (pd.DataFrame): Validated OHLCV market data.
+        period (int): Rolling window period.
+
+    Returns:
+        pd.DataFrame: Original market data with Donchian Channel features.
+    """
+    validate_input(data)
+
+    if isinstance(period, bool) or not isinstance(period, int):
+        raise TypeError(
+            "Donchian period must be an integer."
+        )
+
+    if period <= 0:
+        raise ValueError(
+            "Donchian period must be greater than zero."
+        )
+
+    feature_data = data.copy()
+
+    upper_column = f"DONCHIAN_UPPER_{period}"
+    lower_column = f"DONCHIAN_LOWER_{period}"
+    middle_column = f"DONCHIAN_MIDDLE_{period}"
+
+    feature_data[upper_column] = (
+        feature_data["High"]
+        .rolling(window=period)
+        .max()
+        .shift(1)
+    )
+
+    feature_data[lower_column] = (
+        feature_data["Low"]
+        .rolling(window=period)
+        .min()
+        .shift(1)
+    )
+
+    feature_data[middle_column] = (
+        feature_data[upper_column]
+        + feature_data[lower_column]
+    ) / 2
+
+    return feature_data
+
+
 def _validate_required_features(
     required_features: list[dict],
 ) -> None:
@@ -355,6 +409,13 @@ def generate_features(
                     ],
                 )
 
+            elif feature_name == "DONCHIAN_CHANNELS":
+                feature_data = generate_donchian_channels(
+                    feature_data,
+                    period=parameters["period"],
+                )
+
+       
             else:
                 raise ValueError(
                     f"Unsupported feature: {feature_name}"

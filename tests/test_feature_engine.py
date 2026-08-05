@@ -16,6 +16,7 @@ from feature_engine import (
     generate_features,
     generate_macd,
     generate_rsi,
+    generate_donchian_channels
 )
 
 
@@ -843,3 +844,215 @@ def test_generate_features_generates_required_bollinger_feature():
     assert "EMA_20" not in result.columns
     assert "EMA_50" not in result.columns
     assert "RSI_14" not in result.columns
+
+
+def test_generate_dynamic_donchian_feature():
+    data = pd.DataFrame({
+        "Open": [99, 100, 101],
+        "High": [101, 102, 103],
+        "Low": [98, 99, 100],
+        "Close": [100, 101, 102],
+        "Volume": [1000, 1100, 1200],
+    })
+
+    result = generate_donchian_channels(
+        data,
+        period=20,
+    )
+
+    assert "DONCHIAN_UPPER_20" in result.columns
+    assert "DONCHIAN_LOWER_20" in result.columns
+    assert "DONCHIAN_MIDDLE_20" in result.columns
+
+
+def test_generate_donchian_period_must_be_integer():
+    data = pd.DataFrame({
+        "Open": [99, 100, 101],
+        "High": [101, 102, 103],
+        "Low": [98, 99, 100],
+        "Close": [100, 101, 102],
+        "Volume": [1000, 1100, 1200],
+    })
+
+    with pytest.raises(
+        TypeError,
+        match="Donchian period must be an integer.",
+    ):
+        generate_donchian_channels(
+            data,
+            period="20",
+        )
+
+
+def test_generate_donchian_period_must_be_positive():
+    data = pd.DataFrame({
+        "Open": [99, 100, 101],
+        "High": [101, 102, 103],
+        "Low": [98, 99, 100],
+        "Close": [100, 101, 102],
+        "Volume": [1000, 1100, 1200],
+    })
+
+    with pytest.raises(
+        ValueError,
+        match="Donchian period must be greater than zero.",
+    ):
+        generate_donchian_channels(
+            data,
+            period=0,
+        )
+
+    with pytest.raises(
+        ValueError,
+        match="Donchian period must be greater than zero.",
+    ):
+        generate_donchian_channels(
+            data,
+            period=-20,
+        )
+
+
+def test_generate_donchian_does_not_modify_original_dataframe():
+    data = pd.DataFrame({
+        "Open": [99, 100, 101],
+        "High": [101, 102, 103],
+        "Low": [98, 99, 100],
+        "Close": [100, 101, 102],
+        "Volume": [1000, 1100, 1200],
+    })
+
+    original_data = data.copy(deep=True)
+
+    result = generate_donchian_channels(
+        data,
+        period=2,
+    )
+
+    pd.testing.assert_frame_equal(data, original_data)
+
+    assert "DONCHIAN_UPPER_2" in result.columns
+    assert "DONCHIAN_UPPER_2" not in data.columns
+
+
+def test_generate_donchian_calculates_expected_values():
+    data = pd.DataFrame({
+        "Open": [99, 100, 101, 102],
+        "High": [101, 103, 102, 105],
+        "Low": [98, 99, 97, 100],
+        "Close": [100, 102, 101, 104],
+        "Volume": [1000, 1100, 1200, 1300],
+    })
+
+    result = generate_donchian_channels(
+        data,
+        period=2,
+    )
+
+    expected_upper = data["High"].rolling(
+        window=2,
+    ).max().shift(1)
+
+    expected_lower = data["Low"].rolling( 
+        window=2,
+    ).min().shift(1)
+
+    expected_middle = (
+        expected_upper + expected_lower
+    ) / 2
+
+    pd.testing.assert_series_equal(
+        result["DONCHIAN_UPPER_2"],
+        expected_upper,
+        check_names=False,
+    )
+
+    pd.testing.assert_series_equal(
+        result["DONCHIAN_LOWER_2"],
+        expected_lower,
+        check_names=False,
+    )
+
+    pd.testing.assert_series_equal(
+        result["DONCHIAN_MIDDLE_2"],
+        expected_middle,
+        check_names=False,
+    )
+
+
+def test_generate_features_generates_required_donchian_feature():
+    data = pd.DataFrame({
+        "Open": [99, 100, 101, 102],
+        "High": [101, 103, 102, 105],
+        "Low": [98, 99, 97, 100],
+        "Close": [100, 102, 101, 104],
+        "Volume": [1000, 1100, 1200, 1300],
+    })
+
+    required_features = [
+        {
+            "name": "DONCHIAN_CHANNELS",
+            "parameters": {
+                "period": 2,
+            },
+        },
+    ]
+
+    result = generate_features(
+        data,
+        required_features=required_features,
+    )
+
+    assert "DONCHIAN_UPPER_2" in result.columns
+    assert "DONCHIAN_LOWER_2" in result.columns
+    assert "DONCHIAN_MIDDLE_2" in result.columns
+
+    assert "EMA_20" not in result.columns
+    assert "EMA_50" not in result.columns
+    assert "RSI_14" not in result.columns
+    assert "MACD_12_26" not in result.columns
+    assert "BOLLINGER_MIDDLE_20" not in result.columns
+
+
+def test_generate_donchian_uses_previous_candles_only():
+    data = pd.DataFrame({
+        "Open": [99, 100, 101, 102],
+        "High": [101, 103, 102, 105],
+        "Low": [98, 99, 97, 100],
+        "Close": [100, 102, 101, 104],
+        "Volume": [1000, 1100, 1200, 1300],
+    })
+
+    result = generate_donchian_channels(
+        data,
+        period=2,
+    )
+
+    expected_upper = data["High"].rolling(
+        window=2,
+    ).max().shift(1)
+
+    expected_lower = data["Low"].rolling(
+        window=2,
+    ).min().shift(1)
+
+    expected_middle = (
+        expected_upper + expected_lower
+    ) / 2
+
+    pd.testing.assert_series_equal(
+        result["DONCHIAN_UPPER_2"],
+        expected_upper,
+        check_names=False,
+    )
+
+    pd.testing.assert_series_equal(
+        result["DONCHIAN_LOWER_2"],
+        expected_lower,
+        check_names=False,
+    )
+
+    pd.testing.assert_series_equal(
+        result["DONCHIAN_MIDDLE_2"],
+        expected_middle,
+        check_names=False,
+    )
