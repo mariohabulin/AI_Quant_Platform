@@ -21,7 +21,7 @@ When the current mission is completed, this document should be updated to reflec
 ## Phase 2 — Research Engine
 
 Status
-🟢 Research Engine Expansion v4 Completed
+🟢 Research Engine Expansion v5 Completed
 
 The Research Engine now supports multiple independent trading strategies executing through a single reusable research pipeline.
 
@@ -32,6 +32,7 @@ Current validated strategies:
 - MACD Strategy
 - Bollinger Bands Strategy
 - Donchian Breakout Strategy
+- ATR Volatility Breakout Strategy
 
 All strategies successfully reuse the same:
 
@@ -39,7 +40,7 @@ All strategies successfully reuse the same:
 - Strategy Engine
 - Backtesting Engine
 - Performance Analyzer
-The architecture has now been validated across five independent trading strategies without requiring architectural changes.
+The architecture has now been validated across six independent trading strategies without requiring architectural changes.
 
 ---
 
@@ -80,11 +81,14 @@ Successfully completed:
 - Donchian Channel feature generation
 - Donchian Breakout Strategy implementation
 - Donchian breakout signal generation
+- ATR feature generation using Wilder smoothing
+- ATR Volatility Breakout Strategy implementation
+- Previous-candle ATR breakout signal generation
 - Research Engine multi-strategy validation
 - End-to-End execution pipeline validation
 
 Current automated test status:
-✅ 178 / 178 tests passing
+✅ 194 / 194 tracked-project tests passing
 
 ---
 
@@ -164,7 +168,6 @@ Continue expanding the Strategy Library.
 Planned strategy candidates include:
 
 
-- ATR Strategy
 - Supertrend Strategy
 
 Each new implementation must integrate into the existing Research Engine without architectural modifications.

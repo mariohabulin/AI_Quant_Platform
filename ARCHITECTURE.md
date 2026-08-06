@@ -448,3 +448,13 @@ Long-term goals belong in VISION.md.
 Project evolution belongs in ROADMAP.md.
 
 Whenever a permanent architectural decision is made, this document should be updated before further development continues.
+
+---
+
+# Research and Production Principle
+
+> **Autonomy in analysis. Discipline in production.**
+
+The Research Engine may explore, compare, learn and propose improvements.
+
+Production behaviour must remain deterministic, validated and bounded by explicit risk and safety controls. No learned change may bypass backtesting, paper trading and production approval.

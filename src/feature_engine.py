@@ -316,6 +316,50 @@ def generate_donchian_channels(
     return feature_data
 
 
+
+def generate_atr(
+    data: pd.DataFrame,
+    period: int,
+) -> pd.DataFrame:
+    """
+    Generate Average True Range using Wilder smoothing.
+
+    Parameters:
+        data (pd.DataFrame): Validated OHLCV market data.
+        period (int): ATR smoothing period.
+
+    Returns:
+        pd.DataFrame: Original market data with the ATR feature.
+    """
+    validate_input(data)
+
+    if isinstance(period, bool) or not isinstance(period, int):
+        raise TypeError("ATR period must be an integer.")
+
+    if period <= 0:
+        raise ValueError("ATR period must be greater than zero.")
+
+    feature_data = data.copy()
+    previous_close = feature_data["Close"].shift(1)
+
+    true_range = pd.concat(
+        [
+            feature_data["High"] - feature_data["Low"],
+            (feature_data["High"] - previous_close).abs(),
+            (feature_data["Low"] - previous_close).abs(),
+        ],
+        axis=1,
+    ).max(axis=1)
+
+    column_name = f"ATR_{period}"
+    feature_data[column_name] = true_range.ewm(
+        alpha=1 / period,
+        adjust=False,
+        min_periods=period,
+    ).mean()
+
+    return feature_data
+
 def _validate_required_features(
     required_features: list[dict],
 ) -> None:
@@ -415,7 +459,12 @@ def generate_features(
                     period=parameters["period"],
                 )
 
-       
+            elif feature_name == "ATR":
+                feature_data = generate_atr(
+                    feature_data,
+                    period=parameters["period"],
+                )
+
             else:
                 raise ValueError(
                     f"Unsupported feature: {feature_name}"

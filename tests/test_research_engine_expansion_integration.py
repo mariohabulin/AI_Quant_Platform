@@ -268,3 +268,42 @@ def test_donchian_strategy_executes_complete_research_pipeline():
     assert "number_of_trades" in metrics
     assert "max_drawdown" in metrics
     assert "sharpe_ratio" in metrics
+
+def test_atr_strategy_executes_complete_research_pipeline():
+    from strategies.atr_strategy import ATRStrategy
+
+    data = create_market_data()
+    library = StrategyLibrary()
+    strategy = ATRStrategy(period=14, multiplier=1.0)
+    library.register(strategy)
+
+    strategy_engine = StrategyEngine(library, strategy.name)
+    backtesting_engine = BacktestingEngine(
+        strategy_engine,
+        initial_capital=10000.0,
+    )
+
+    result = backtesting_engine.run(data)
+    performance_analyzer = PerformanceAnalyzer(
+        initial_capital=10000.0,
+    )
+    metrics = performance_analyzer.calculate(
+        backtesting_engine.trade_history,
+        backtesting_engine.equity_curve,
+    )
+
+    assert "ATR_14" in result.columns
+    assert "Signal" in result.columns
+    assert "EMA_20" not in result.columns
+    assert "RSI_14" not in result.columns
+    assert "MACD_12_26" not in result.columns
+    assert "BOLLINGER_MIDDLE_20" not in result.columns
+    assert "DONCHIAN_UPPER_20" not in result.columns
+    assert set(result["Signal"].unique()).issubset({-1, 0, 1})
+    assert len(backtesting_engine.equity_curve) == len(data)
+    assert isinstance(backtesting_engine.trade_history, list)
+    assert isinstance(metrics, dict)
+    assert "total_return" in metrics
+    assert "number_of_trades" in metrics
+    assert "max_drawdown" in metrics
+    assert "sharpe_ratio" in metrics

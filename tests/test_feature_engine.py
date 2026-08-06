@@ -1056,3 +1056,96 @@ def test_generate_donchian_uses_previous_candles_only():
         expected_middle,
         check_names=False,
     )
+
+def test_generate_atr_adds_requested_feature():
+    from feature_engine import generate_atr
+
+    data = pd.DataFrame({
+        "Open": [100, 101, 105, 104],
+        "High": [102, 106, 107, 108],
+        "Low": [99, 100, 103, 102],
+        "Close": [101, 105, 104, 107],
+        "Volume": [1000, 1000, 1000, 1000],
+    })
+
+    result = generate_atr(data, period=2)
+
+    assert "ATR_2" in result.columns
+    assert "ATR_2" not in data.columns
+
+
+def test_generate_atr_uses_true_range_and_wilder_smoothing():
+    from feature_engine import generate_atr
+
+    data = pd.DataFrame({
+        "Open": [100, 101, 105, 104],
+        "High": [102, 106, 107, 108],
+        "Low": [99, 100, 103, 102],
+        "Close": [101, 105, 104, 107],
+        "Volume": [1000, 1000, 1000, 1000],
+    })
+
+    result = generate_atr(data, period=2)
+
+    expected = pd.Series([float("nan"), 4.5, 4.25, 5.125])
+    pd.testing.assert_series_equal(
+        result["ATR_2"].reset_index(drop=True),
+        expected,
+        check_names=False,
+    )
+
+
+def test_generate_atr_rejects_invalid_period_type():
+    from feature_engine import generate_atr
+
+    data = pd.DataFrame({
+        "Open": [100],
+        "High": [101],
+        "Low": [99],
+        "Close": [100],
+        "Volume": [1000],
+    })
+
+    with pytest.raises(TypeError, match="ATR period must be an integer."):
+        generate_atr(data, period="14")
+
+
+def test_generate_atr_rejects_non_positive_period():
+    from feature_engine import generate_atr
+
+    data = pd.DataFrame({
+        "Open": [100],
+        "High": [101],
+        "Low": [99],
+        "Close": [100],
+        "Volume": [1000],
+    })
+
+    with pytest.raises(
+        ValueError,
+        match="ATR period must be greater than zero.",
+    ):
+        generate_atr(data, period=0)
+
+
+def test_generate_features_supports_atr_requirement():
+    data = pd.DataFrame({
+        "Open": [100, 101, 102],
+        "High": [102, 103, 104],
+        "Low": [99, 100, 101],
+        "Close": [101, 102, 103],
+        "Volume": [1000, 1000, 1000],
+    })
+
+    result = generate_features(
+        data,
+        required_features=[
+            {
+                "name": "ATR",
+                "parameters": {"period": 2},
+            },
+        ],
+    )
+
+    assert "ATR_2" in result.columns
+    assert "EMA_20" not in result.columns
