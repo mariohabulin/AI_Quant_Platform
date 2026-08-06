@@ -26,7 +26,7 @@ def validate_input(data: pd.DataFrame) -> None:
     if missing_columns:
         missing = ", ".join(sorted(missing_columns))
         raise ValueError(f"Missing required columns: {missing}")
-    
+
 
 def generate_ema(data: pd.DataFrame, period: int) -> pd.DataFrame:
     """
@@ -529,6 +529,43 @@ def generate_adx(
     return feature_data
 
 
+
+def generate_stochastic(
+    data: pd.DataFrame,
+    k_period: int,
+    d_period: int,
+) -> pd.DataFrame:
+    """Generate Stochastic Oscillator %K and %D features."""
+    validate_input(data)
+
+    if isinstance(k_period, bool) or not isinstance(k_period, int):
+        raise TypeError("Stochastic %K period must be an integer.")
+
+    if k_period <= 0:
+        raise ValueError("Stochastic %K period must be greater than zero.")
+
+    if isinstance(d_period, bool) or not isinstance(d_period, int):
+        raise TypeError("Stochastic %D period must be an integer.")
+
+    if d_period <= 0:
+        raise ValueError("Stochastic %D period must be greater than zero.")
+
+    feature_data = data.copy()
+    lowest_low = feature_data["Low"].rolling(window=k_period).min()
+    highest_high = feature_data["High"].rolling(window=k_period).max()
+    price_range = highest_high - lowest_low
+
+    k_column = f"STOCHASTIC_K_{k_period}"
+    d_column = f"STOCHASTIC_D_{k_period}_{d_period}"
+
+    stochastic_k = 100 * (feature_data["Close"] - lowest_low) / price_range
+    feature_data[k_column] = stochastic_k.where(price_range != 0, 0.0)
+    feature_data[d_column] = feature_data[k_column].rolling(
+        window=d_period,
+    ).mean()
+
+    return feature_data
+
 def _validate_required_features(
     required_features: list[dict],
 ) -> None:
@@ -645,6 +682,13 @@ def generate_features(
                 feature_data = generate_adx(
                     feature_data,
                     period=parameters["period"],
+                )
+
+            elif feature_name == "STOCHASTIC":
+                feature_data = generate_stochastic(
+                    feature_data,
+                    k_period=parameters["k_period"],
+                    d_period=parameters["d_period"],
                 )
 
             else:

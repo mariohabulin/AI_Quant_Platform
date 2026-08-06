@@ -19,6 +19,7 @@ from strategies.bollinger_strategy import BollingerStrategy
 from strategies.donchian_strategy import DonchianStrategy
 from strategies.supertrend_strategy import SupertrendStrategy
 from strategies.adx_strategy import ADXStrategy
+from strategies.stochastic_strategy import StochasticStrategy
 
 
 def create_market_data():
@@ -364,6 +365,41 @@ def test_adx_strategy_executes_complete_research_pipeline():
     assert "ADX_14" in result.columns
     assert "PLUS_DI_14" in result.columns
     assert "MINUS_DI_14" in result.columns
+    assert "Signal" in result.columns
+    assert "EMA_20" not in result.columns
+    assert set(result["Signal"].unique()).issubset({-1, 0, 1})
+    assert len(backtesting_engine.equity_curve) == len(data)
+    assert isinstance(metrics, dict)
+    assert "total_return" in metrics
+
+
+def test_stochastic_strategy_executes_complete_research_pipeline():
+    data = create_market_data()
+    library = StrategyLibrary()
+    strategy = StochasticStrategy(
+        k_period=14,
+        d_period=3,
+        oversold=20.0,
+        overbought=80.0,
+    )
+    library.register(strategy)
+    strategy_engine = StrategyEngine(library, strategy.name)
+    backtesting_engine = BacktestingEngine(
+        strategy_engine,
+        initial_capital=10000.0,
+    )
+
+    result = backtesting_engine.run(data)
+    performance_analyzer = PerformanceAnalyzer(
+        initial_capital=10000.0,
+    )
+    metrics = performance_analyzer.calculate(
+        backtesting_engine.trade_history,
+        backtesting_engine.equity_curve,
+    )
+
+    assert "STOCHASTIC_K_14" in result.columns
+    assert "STOCHASTIC_D_14_3" in result.columns
     assert "Signal" in result.columns
     assert "EMA_20" not in result.columns
     assert set(result["Signal"].unique()).issubset({-1, 0, 1})

@@ -952,7 +952,7 @@ def test_generate_donchian_calculates_expected_values():
         window=2,
     ).max().shift(1)
 
-    expected_lower = data["Low"].rolling( 
+    expected_lower = data["Low"].rolling(
         window=2,
     ).min().shift(1)
 
@@ -1291,4 +1291,84 @@ def test_generate_features_supports_adx_requirement():
     assert "ADX_2" in result.columns
     assert "PLUS_DI_2" in result.columns
     assert "MINUS_DI_2" in result.columns
+    assert "EMA_20" not in result.columns
+
+
+def test_generate_stochastic_adds_k_and_d_features():
+    from feature_engine import generate_stochastic
+
+    data = pd.DataFrame({
+        "Open": [10, 11, 12, 13, 14, 15],
+        "High": [12, 13, 14, 15, 16, 17],
+        "Low": [8, 9, 10, 11, 12, 13],
+        "Close": [11, 12, 13, 14, 15, 16],
+        "Volume": [1000] * 6,
+    })
+
+    result = generate_stochastic(data, k_period=3, d_period=2)
+
+    assert "STOCHASTIC_K_3" in result.columns
+    assert "STOCHASTIC_D_3_2" in result.columns
+    assert result["STOCHASTIC_K_3"].dropna().between(0, 100).all()
+    assert "STOCHASTIC_K_3" not in data.columns
+
+
+def test_generate_stochastic_rejects_invalid_periods():
+    from feature_engine import generate_stochastic
+
+    data = pd.DataFrame({
+        "Open": [100],
+        "High": [101],
+        "Low": [99],
+        "Close": [100],
+        "Volume": [1000],
+    })
+
+    with pytest.raises(
+        TypeError,
+        match="Stochastic %K period must be an integer.",
+    ):
+        generate_stochastic(data, k_period="14", d_period=3)
+
+    with pytest.raises(
+        ValueError,
+        match="Stochastic %K period must be greater than zero.",
+    ):
+        generate_stochastic(data, k_period=0, d_period=3)
+
+    with pytest.raises(
+        TypeError,
+        match="Stochastic %D period must be an integer.",
+    ):
+        generate_stochastic(data, k_period=14, d_period="3")
+
+    with pytest.raises(
+        ValueError,
+        match="Stochastic %D period must be greater than zero.",
+    ):
+        generate_stochastic(data, k_period=14, d_period=0)
+
+
+def test_generate_features_supports_stochastic_requirement():
+    data = pd.DataFrame({
+        "Open": [10, 11, 12, 13, 14, 15],
+        "High": [12, 13, 14, 15, 16, 17],
+        "Low": [8, 9, 10, 11, 12, 13],
+        "Close": [11, 12, 13, 14, 15, 16],
+        "Volume": [1000] * 6,
+    })
+
+    result = generate_features(
+        data,
+        required_features=[{
+            "name": "STOCHASTIC",
+            "parameters": {
+                "k_period": 3,
+                "d_period": 2,
+            },
+        }],
+    )
+
+    assert "STOCHASTIC_K_3" in result.columns
+    assert "STOCHASTIC_D_3_2" in result.columns
     assert "EMA_20" not in result.columns

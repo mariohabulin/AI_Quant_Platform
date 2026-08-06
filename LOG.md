@@ -639,3 +639,31 @@ The Research Engine now supports eight independent strategies through the same e
 Testing
 
 222 / 222 tracked-project automated tests passing.
+
+
+---
+
+# Research Engine Expansion v8 — Stochastic Strategy
+
+## Status
+
+Completed.
+
+## Delivered
+
+- Stochastic %K and %D feature generation
+- configurable %K period, %D period, oversold and overbought thresholds
+- bullish crossover BUY signals from the oversold zone
+- bearish crossover SELL signals from the overbought zone
+- dynamic Feature Engine integration
+- isolated strategy tests and end-to-end research pipeline validation
+- formal closure of Research Strategy Expansion
+- Strategy Library Version 1 frozen with nine validated strategies
+
+## Validation
+
+243 / 243 tracked-project automated tests passing.
+
+## Outcome
+
+The planned Research Strategy Expansion is complete. Future strategy additions must be justified by backtesting or paper-trading evidence rather than indicator count.
