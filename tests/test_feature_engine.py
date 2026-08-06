@@ -1252,3 +1252,43 @@ def test_generate_features_supports_supertrend_requirement():
     assert "SUPERTREND_2_1.0" in result.columns
     assert "SUPERTREND_DIRECTION_2_1.0" in result.columns
     assert "EMA_20" not in result.columns
+
+
+def test_generate_adx_adds_directional_and_strength_features():
+    from feature_engine import generate_adx
+    close = [100, 102, 104, 106, 108, 106, 104, 102, 100, 98]
+    data = pd.DataFrame({
+        "Open": close, "High": [v + 1 for v in close],
+        "Low": [v - 1 for v in close], "Close": close,
+        "Volume": [1000] * len(close),
+    })
+    result = generate_adx(data, period=3)
+    assert "PLUS_DI_3" in result.columns
+    assert "MINUS_DI_3" in result.columns
+    assert "ADX_3" in result.columns
+    assert result["ADX_3"].dropna().between(0, 100).all()
+    assert "ADX_3" not in data.columns
+
+
+def test_generate_adx_rejects_invalid_period():
+    from feature_engine import generate_adx
+    data = pd.DataFrame({"Open": [100], "High": [101], "Low": [99], "Close": [100], "Volume": [1000]})
+    with pytest.raises(TypeError, match="ADX period must be an integer."):
+        generate_adx(data, period="14")
+    with pytest.raises(ValueError, match="ADX period must be greater than zero."):
+        generate_adx(data, period=0)
+
+
+def test_generate_features_supports_adx_requirement():
+    data = pd.DataFrame({
+        "Open": [100, 101, 102, 103, 104, 105],
+        "High": [102, 103, 104, 105, 106, 107],
+        "Low": [99, 100, 101, 102, 103, 104],
+        "Close": [101, 102, 103, 104, 105, 106],
+        "Volume": [1000] * 6,
+    })
+    result = generate_features(data, required_features=[{"name": "ADX", "parameters": {"period": 2}}])
+    assert "ADX_2" in result.columns
+    assert "PLUS_DI_2" in result.columns
+    assert "MINUS_DI_2" in result.columns
+    assert "EMA_20" not in result.columns

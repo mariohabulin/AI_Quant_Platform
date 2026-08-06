@@ -459,6 +459,76 @@ def generate_supertrend(
 
     return feature_data
 
+
+def generate_adx(
+    data: pd.DataFrame,
+    period: int,
+) -> pd.DataFrame:
+    """Generate +DI, -DI, and ADX using Wilder smoothing."""
+    validate_input(data)
+
+    if isinstance(period, bool) or not isinstance(period, int):
+        raise TypeError("ADX period must be an integer.")
+
+    if period <= 0:
+        raise ValueError("ADX period must be greater than zero.")
+
+    feature_data = data.copy()
+    previous_close = feature_data["Close"].shift(1)
+    high_change = feature_data["High"].diff()
+    low_change = -feature_data["Low"].diff()
+
+    positive_dm = high_change.where(
+        (high_change > low_change) & (high_change > 0),
+        0.0,
+    )
+    negative_dm = low_change.where(
+        (low_change > high_change) & (low_change > 0),
+        0.0,
+    )
+
+    true_range = pd.concat(
+        [
+            feature_data["High"] - feature_data["Low"],
+            (feature_data["High"] - previous_close).abs(),
+            (feature_data["Low"] - previous_close).abs(),
+        ],
+        axis=1,
+    ).max(axis=1)
+
+    smoothed_tr = true_range.ewm(
+        alpha=1 / period,
+        adjust=False,
+        min_periods=period,
+    ).mean()
+    smoothed_positive_dm = positive_dm.ewm(
+        alpha=1 / period,
+        adjust=False,
+        min_periods=period,
+    ).mean()
+    smoothed_negative_dm = negative_dm.ewm(
+        alpha=1 / period,
+        adjust=False,
+        min_periods=period,
+    ).mean()
+
+    positive_di = 100 * smoothed_positive_dm / smoothed_tr
+    negative_di = 100 * smoothed_negative_dm / smoothed_tr
+    denominator = positive_di + negative_di
+    dx = 100 * (positive_di - negative_di).abs() / denominator
+    dx = dx.where(denominator != 0, 0.0)
+
+    feature_data[f"PLUS_DI_{period}"] = positive_di
+    feature_data[f"MINUS_DI_{period}"] = negative_di
+    feature_data[f"ADX_{period}"] = dx.ewm(
+        alpha=1 / period,
+        adjust=False,
+        min_periods=period,
+    ).mean()
+
+    return feature_data
+
+
 def _validate_required_features(
     required_features: list[dict],
 ) -> None:
@@ -569,6 +639,12 @@ def generate_features(
                     feature_data,
                     period=parameters["period"],
                     multiplier=parameters["multiplier"],
+                )
+
+            elif feature_name == "ADX":
+                feature_data = generate_adx(
+                    feature_data,
+                    period=parameters["period"],
                 )
 
             else:

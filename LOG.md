@@ -613,3 +613,29 @@ Testing
 Environment Note
 
 The Git archive excludes the ignored `data/AAPL.csv` fixture. In the isolated archive environment, four pre-existing Strategy Engine tests therefore cannot run; all 204 runnable tests pass. The full local repository with its data fixture is expected to run all 208 tests.
+
+
+---
+
+# Research Engine Expansion v7
+
+## Objective
+
+Add trend-strength confirmation through ADX while preserving the reusable Research Engine pipeline.
+
+Completed:
+
+- Wilder-smoothed +DI, -DI and ADX feature generation
+- configurable ADX period and strength threshold
+- BUY signals for newly confirmed strong bullish trends
+- SELL signals for newly confirmed strong bearish trends
+- dynamic Feature Engine integration
+- unit and end-to-end pipeline tests
+
+Architecture Impact
+
+The Research Engine now supports eight independent strategies through the same execution pipeline.
+
+Testing
+
+222 / 222 tracked-project automated tests passing.
