@@ -360,6 +360,105 @@ def generate_atr(
 
     return feature_data
 
+
+def generate_supertrend(
+    data: pd.DataFrame,
+    period: int,
+    multiplier: float,
+) -> pd.DataFrame:
+    """Generate Supertrend line and direction features."""
+    validate_input(data)
+
+    if isinstance(period, bool) or not isinstance(period, int):
+        raise TypeError("Supertrend period must be an integer.")
+
+    if period <= 0:
+        raise ValueError("Supertrend period must be greater than zero.")
+
+    if (
+        isinstance(multiplier, bool)
+        or not isinstance(multiplier, (int, float))
+    ):
+        raise TypeError("Supertrend multiplier must be a number.")
+
+    if multiplier <= 0:
+        raise ValueError(
+            "Supertrend multiplier must be greater than zero."
+        )
+
+    feature_data = generate_atr(data, period=period)
+    atr_column = f"ATR_{period}"
+    suffix = f"{period}_{multiplier}"
+    line_column = f"SUPERTREND_{suffix}"
+    direction_column = f"SUPERTREND_DIRECTION_{suffix}"
+
+    midpoint = (feature_data["High"] + feature_data["Low"]) / 2
+    basic_upper = midpoint + multiplier * feature_data[atr_column]
+    basic_lower = midpoint - multiplier * feature_data[atr_column]
+
+    final_upper = basic_upper.copy()
+    final_lower = basic_lower.copy()
+    supertrend = pd.Series(index=feature_data.index, dtype=float)
+    direction = pd.Series(0, index=feature_data.index, dtype=int)
+
+    for position in range(len(feature_data)):
+        if pd.isna(feature_data[atr_column].iloc[position]):
+            continue
+
+        if position > 0:
+            previous_close = feature_data["Close"].iloc[position - 1]
+
+            if (
+                pd.isna(final_upper.iloc[position - 1])
+                or basic_upper.iloc[position] < final_upper.iloc[position - 1]
+                or previous_close > final_upper.iloc[position - 1]
+            ):
+                final_upper.iloc[position] = basic_upper.iloc[position]
+            else:
+                final_upper.iloc[position] = final_upper.iloc[position - 1]
+
+            if (
+                pd.isna(final_lower.iloc[position - 1])
+                or basic_lower.iloc[position] > final_lower.iloc[position - 1]
+                or previous_close < final_lower.iloc[position - 1]
+            ):
+                final_lower.iloc[position] = basic_lower.iloc[position]
+            else:
+                final_lower.iloc[position] = final_lower.iloc[position - 1]
+
+        if position == 0 or direction.iloc[position - 1] == 0:
+            direction.iloc[position] = (
+                1
+                if feature_data["Close"].iloc[position]
+                >= final_lower.iloc[position]
+                else -1
+            )
+        elif direction.iloc[position - 1] == 1:
+            direction.iloc[position] = (
+                -1
+                if feature_data["Close"].iloc[position]
+                < final_lower.iloc[position]
+                else 1
+            )
+        else:
+            direction.iloc[position] = (
+                1
+                if feature_data["Close"].iloc[position]
+                > final_upper.iloc[position]
+                else -1
+            )
+
+        supertrend.iloc[position] = (
+            final_lower.iloc[position]
+            if direction.iloc[position] == 1
+            else final_upper.iloc[position]
+        )
+
+    feature_data[line_column] = supertrend
+    feature_data[direction_column] = direction
+
+    return feature_data
+
 def _validate_required_features(
     required_features: list[dict],
 ) -> None:
@@ -463,6 +562,13 @@ def generate_features(
                 feature_data = generate_atr(
                     feature_data,
                     period=parameters["period"],
+                )
+
+            elif feature_name == "SUPERTREND":
+                feature_data = generate_supertrend(
+                    feature_data,
+                    period=parameters["period"],
+                    multiplier=parameters["multiplier"],
                 )
 
             else:

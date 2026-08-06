@@ -22,4 +22,5 @@ venv/
 *.db
 
 # Logs
-*.log
+*.log# Temporary project archives
+*.zip

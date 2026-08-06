@@ -561,3 +561,55 @@ Environment Note
 
 The Git archive excludes the ignored `data/AAPL.csv` fixture. In the isolated archive environment, four pre-existing Strategy Engine tests therefore cannot run; all 190 runnable tests pass. The full local repository with its data fixture is expected to run all 194 tests.
 
+
+
+---
+
+# Research Engine Expansion v6
+
+## Objective
+
+Add an ATR-based trend-following strategy that identifies confirmed trend reversals while preserving the existing reusable Research Engine pipeline.
+
+Completed
+
+### Supertrend Feature
+
+- ATR-based adaptive upper and lower bands
+- Configurable ATR period and multiplier
+- Deterministic Supertrend line generation
+- Explicit trend direction feature
+- Strict parameter validation
+- Dynamic Feature Engine integration
+
+### Supertrend Strategy
+
+- Configurable period and multiplier
+- BUY signal on bearish-to-bullish trend reversal
+- SELL signal on bullish-to-bearish trend reversal
+- HOLD while the current trend remains unchanged
+- Required Features integration
+- Missing feature validation
+
+### Pipeline Validation
+
+Validated complete execution of:
+
+- Feature Engine
+- Strategy Engine
+- Backtesting Engine
+- Performance Analyzer
+
+using the Supertrend Strategy without modifying the execution architecture.
+
+Architecture Impact
+
+The Research Engine now supports seven independent trading strategies through the same reusable pipeline.
+
+Testing
+
+208 / 208 tracked-project automated tests passing.
+
+Environment Note
+
+The Git archive excludes the ignored `data/AAPL.csv` fixture. In the isolated archive environment, four pre-existing Strategy Engine tests therefore cannot run; all 204 runnable tests pass. The full local repository with its data fixture is expected to run all 208 tests.

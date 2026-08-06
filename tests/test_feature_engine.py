@@ -1149,3 +1149,106 @@ def test_generate_features_supports_atr_requirement():
 
     assert "ATR_2" in result.columns
     assert "EMA_20" not in result.columns
+
+
+def test_generate_supertrend_adds_line_direction_and_atr_features():
+    from feature_engine import generate_supertrend
+
+    data = pd.DataFrame({
+        "Open": [100, 101, 102, 103, 104],
+        "High": [102, 103, 104, 105, 106],
+        "Low": [99, 100, 101, 102, 103],
+        "Close": [101, 102, 103, 104, 105],
+        "Volume": [1000] * 5,
+    })
+
+    result = generate_supertrend(data, period=2, multiplier=1.0)
+
+    assert "ATR_2" in result.columns
+    assert "SUPERTREND_2_1.0" in result.columns
+    assert "SUPERTREND_DIRECTION_2_1.0" in result.columns
+    assert "SUPERTREND_2_1.0" not in data.columns
+
+
+def test_generate_supertrend_direction_is_bounded():
+    from feature_engine import generate_supertrend
+
+    close = [100, 102, 104, 106, 103, 100, 97, 100, 104]
+    data = pd.DataFrame({
+        "Open": close,
+        "High": [value + 1 for value in close],
+        "Low": [value - 1 for value in close],
+        "Close": close,
+        "Volume": [1000] * len(close),
+    })
+
+    result = generate_supertrend(data, period=2, multiplier=1.0)
+
+    assert set(
+        result["SUPERTREND_DIRECTION_2_1.0"].unique()
+    ).issubset({-1, 0, 1})
+    assert result["SUPERTREND_DIRECTION_2_1.0"].eq(1).any()
+    assert result["SUPERTREND_DIRECTION_2_1.0"].eq(-1).any()
+
+
+def test_generate_supertrend_rejects_invalid_parameters():
+    from feature_engine import generate_supertrend
+
+    data = pd.DataFrame({
+        "Open": [100],
+        "High": [101],
+        "Low": [99],
+        "Close": [100],
+        "Volume": [1000],
+    })
+
+    with pytest.raises(
+        TypeError,
+        match="Supertrend period must be an integer.",
+    ):
+        generate_supertrend(data, period="10", multiplier=3.0)
+
+    with pytest.raises(
+        ValueError,
+        match="Supertrend period must be greater than zero.",
+    ):
+        generate_supertrend(data, period=0, multiplier=3.0)
+
+    with pytest.raises(
+        TypeError,
+        match="Supertrend multiplier must be a number.",
+    ):
+        generate_supertrend(data, period=10, multiplier="3.0")
+
+    with pytest.raises(
+        ValueError,
+        match="Supertrend multiplier must be greater than zero.",
+    ):
+        generate_supertrend(data, period=10, multiplier=0)
+
+
+def test_generate_features_supports_supertrend_requirement():
+    data = pd.DataFrame({
+        "Open": [100, 101, 102, 103],
+        "High": [102, 103, 104, 105],
+        "Low": [99, 100, 101, 102],
+        "Close": [101, 102, 103, 104],
+        "Volume": [1000] * 4,
+    })
+
+    result = generate_features(
+        data,
+        required_features=[
+            {
+                "name": "SUPERTREND",
+                "parameters": {
+                    "period": 2,
+                    "multiplier": 1.0,
+                },
+            },
+        ],
+    )
+
+    assert "SUPERTREND_2_1.0" in result.columns
+    assert "SUPERTREND_DIRECTION_2_1.0" in result.columns
+    assert "EMA_20" not in result.columns
