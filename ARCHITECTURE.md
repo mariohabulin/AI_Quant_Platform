@@ -556,3 +556,19 @@ It must:
 - summarize repeated out-of-sample persistence rather than relying on one historical split
 
 No parameter optimization is performed by this layer. Optimizer integration remains a later, separately validated responsibility.
+
+---
+
+# Phase 3 Statistical Falsification Contract
+
+Statistical falsification is a separate research layer that consumes completed net trade P&L without changing strategy, execution or signal logic.
+
+It provides:
+
+- bootstrap confidence intervals for expectancy
+- Monte Carlo trade-order stress testing for path-dependent drawdown
+- permutation/sign-flip testing against a zero-edge null hypothesis
+- explicit random seeds for reproducible experiments
+- a conservative pass flag that requires both bootstrap and permutation evidence
+
+A falsification pass is research evidence, not production approval. Market coverage, walk-forward persistence, risk controls and paper trading remain separate gates.

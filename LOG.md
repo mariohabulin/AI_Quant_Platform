@@ -787,3 +787,20 @@ Walk-forward validation is implemented as a separate validation layer that compo
 ## Validation
 
 The milestone adds dedicated unit coverage for chronology, expanding/rolling behavior, leakage prevention, execution costs, benchmark integration and repeated OOS summaries.
+
+---
+
+## Phase 3 — Statistical Falsification Layer
+
+Added a reproducible statistical robustness layer for completed trade histories.
+
+Implemented:
+
+- bootstrap expectancy confidence intervals
+- Monte Carlo trade-order drawdown stress testing
+- permutation/sign-flip zero-edge testing
+- deterministic random-seed support
+- conservative combined falsification result
+- fail-fast trade-history validation
+
+This layer intentionally does not optimize strategy parameters or alter trading logic.
