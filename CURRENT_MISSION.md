@@ -1,32 +1,29 @@
-# CURRENT MISSION — Phase 3 Multi-Asset Validation
+# CURRENT MISSION — Phase 3 Market Regime Detection
 
 ## Objective
 
-Test whether a frozen strategy's validated edge generalizes across multiple independent assets rather than depending on one instrument.
+Explain where a frozen strategy's unseen performance occurs by detecting causal market regimes and conditioning OOS trade evidence on those regimes.
 
 ## Current Priorities
 
-- run the existing Strategy Validation Pipeline independently per asset
-- preserve identical execution, OOS, walk-forward and falsification assumptions
-- keep asset-level evidence visible and auditable
-- summarize cross-asset OOS return, excess return and persistence
-- classify cross-asset evidence with explicit configurable thresholds
-- preserve deterministic results and full backward compatibility
+- detect trend state as BULLISH / BEARISH / SIDEWAYS
+- detect volatility state as LOW / NORMAL / HIGH
+- guarantee causal labels with no future leakage
+- preserve an explicit UNKNOWN warm-up state
+- attribute unseen OOS trades to the regime at trade entry
+- report regime-level trade count, net P&L, average P&L and win rate
+- keep regime evidence diagnostic; do not select strategies yet
+- preserve deterministic behavior and full backward compatibility
 - keep all automated tests passing
 
-## Multi-Asset Policy v1
+## Regime Detection v1
 
-Default requirements:
+Trend uses ATR-normalized fast/slow EMA separation. Volatility uses normalized ATR relative to its trailing median. Thresholds are explicit and configurable.
 
-- at least 2 assets
-- `VALIDATED`: at least 60% of assets individually `VALIDATED` and at most 20% `REJECTED`
-- `REJECTED`: more than 50% of assets individually `REJECTED`
-- otherwise: `CONDITIONAL`
-
-This policy measures breadth of evidence. It does not replace future market-regime analysis, portfolio correlation analysis or Risk Engine limits.
+This layer answers *where* evidence appears. It does not yet claim causality, optimize parameters, allocate capital, or authorize live trading.
 
 ## Next Mission
 
-After multi-asset validation is proven, add Market Regime Detection and regime-conditioned validation before Risk Engine and paper trading.
+After regime detection is proven, connect regime-conditioned evidence across strategies/assets, then define the Risk Engine before paper trading.
 
 Do not introduce the Strategy Optimizer yet.

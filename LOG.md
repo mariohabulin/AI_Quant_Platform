@@ -839,3 +839,14 @@ Implemented:
 - input immutability and execution-cost propagation tests
 
 The layer intentionally does not pool trades across assets or introduce portfolio weighting. Correlation, allocation and portfolio risk remain responsibilities of the future Risk Engine.
+
+## Phase 3 — Market Regime Detection v1
+
+- Added causal two-dimensional market regime detection.
+- Trend states: BULLISH / BEARISH / SIDEWAYS using ATR-normalized EMA separation.
+- Volatility states: LOW / NORMAL / HIGH using normalized ATR versus trailing median baseline.
+- Added explicit UNKNOWN warm-up state; no future backfilling.
+- Added regime-conditioned unseen OOS trade attribution by entry regime.
+- Added per-regime trade count, net P&L, average P&L and win rate.
+- Kept regime evidence diagnostic: no strategy selection or validation-policy mutation.
+- Added dedicated Market Regime test coverage.

@@ -606,3 +606,18 @@ It must:
 - remain deterministic for a fixed random seed
 
 Default policy: at least two assets are required; `VALIDATED` requires at least 60% of assets individually validated and no more than 20% rejected; more than 50% rejected produces `REJECTED`; other mixed evidence is `CONDITIONAL`.
+
+---
+
+# Phase 3 Market Regime Detection Contract
+
+Market-regime analysis is a causal research layer. It describes market state without changing strategy signals, parameters, execution assumptions or validation policy.
+
+Regime Detection v1 uses two independent dimensions:
+
+- trend: `BULLISH`, `BEARISH`, `SIDEWAYS`
+- volatility: `LOW`, `NORMAL`, `HIGH`
+
+Trend is derived from ATR-normalized fast/slow EMA separation. Volatility is derived from normalized ATR relative to its trailing median baseline. All calculations are causal: a label at time t may use only information available at or before t. Warm-up observations are explicitly `UNKNOWN` rather than backfilled from the future.
+
+Regime-conditioned analysis attributes unseen OOS trades by the regime present at trade entry and reports trade count, net P&L, average P&L and win rate per observed regime. Regime evidence is diagnostic in v1; it does not yet select strategies or alter `VALIDATED / CONDITIONAL / REJECTED` classifications.
