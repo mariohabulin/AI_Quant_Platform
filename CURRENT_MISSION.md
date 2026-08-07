@@ -21,7 +21,7 @@ When the current mission is completed, this document should be updated to reflec
 ## Phase 3 — Strategy Validation
 
 Status
-🟡 Out-of-Sample Validation Infrastructure In Progress
+🟡 Walk-Forward Validation Infrastructure In Progress
 
 The Research Engine now supports multiple independent trading strategies executing through a single reusable research pipeline.
 
@@ -51,9 +51,9 @@ The architecture has now been validated across nine independent trading strategi
 
 Upgrade the historical simulation layer so strategy validation is based on realistic, reproducible execution assumptions before any optimizer, walk-forward engine, Monte Carlo analysis or paper trading is introduced.
 
-The Realistic Execution Layer and Benchmark Engine are validated.
+The Realistic Execution Layer, Benchmark Engine and Out-of-Sample Validation are validated.
 
-The active Phase 3 milestone is Out-of-Sample Validation. It must split market data chronologically, prevent time-series leakage and evaluate the same strategy independently on unseen data using identical execution-cost and benchmark assumptions.
+The active Phase 3 milestone is Walk-Forward Validation. It must evaluate a fixed strategy across repeated chronological train/test windows, prevent time-series leakage, preserve identical execution assumptions and expose whether out-of-sample performance persists through time.
 
 ---
 
@@ -94,7 +94,7 @@ Successfully completed:
 - End-to-End execution pipeline validation
 
 Current automated test baseline before this milestone:
-✅ 265 / 265 tracked-project tests passing
+✅ 276 / 276 tracked-project tests passing
 
 ---
 
@@ -132,11 +132,11 @@ All validated strategies execute through this pipeline without strategy-specific
 
 The current priorities are:
 
-- split research data chronologically into in-sample and out-of-sample partitions
-- forbid random shuffling and reject non-chronological input
-- evaluate strategy and benchmark independently on both partitions
-- preserve identical execution-cost assumptions across validation partitions
-- expose in-sample vs out-of-sample strategy and excess returns
+- generate deterministic expanding and rolling walk-forward windows
+- preserve strict chronology and prevent train/test leakage
+- evaluate strategy and benchmark independently in every window
+- preserve identical execution-cost assumptions across all windows
+- summarize repeated out-of-sample return and excess-return persistence
 - keep Strategy Library Version 1 frozen
 - keep all automated tests passing
 
@@ -147,7 +147,6 @@ The current priorities are:
 The following remain intentionally postponed until OOS validation is complete:
 
 - Strategy Optimizer
-- Walk Forward Analysis
 - Monte Carlo / bootstrap / permutation analysis
 - Market Regime Detection
 - Risk Engine
@@ -158,21 +157,22 @@ The following remain intentionally postponed until OOS validation is complete:
 
 # Completion Criteria
 
-The Out-of-Sample Validation milestone is complete when:
+The Walk-Forward Validation milestone is complete when:
 
-- market data is split chronologically with no overlap
-- invalid or non-chronological input fails fast
-- in-sample and out-of-sample runs start from identical fresh capital
-- both partitions reuse the same commission, slippage and spread assumptions
-- both partitions are compared against buy-and-hold
-- generalization results expose strategy return and excess return for IS and OOS
+- repeated chronological train/test windows are generated deterministically
+- expanding and rolling windows are supported
+- train and test data never overlap within a window
+- invalid, duplicate or non-chronological indexes fail fast
+- every window reuses identical commission, slippage and spread assumptions
+- every test window is compared against buy-and-hold
+- summary results expose repeated OOS return and excess-return persistence
 - the complete automated test suite passes locally
 
 ---
 
 # Next Mission
 
-After OOS validation is validated, introduce Walk-Forward Analysis, then statistical falsification infrastructure including Monte Carlo, bootstrap and permutation testing.
+After Walk-Forward Validation is validated, introduce statistical falsification infrastructure including Monte Carlo, bootstrap and permutation testing.
 
 Do not introduce the Strategy Optimizer yet.
 

@@ -537,3 +537,22 @@ The Research Engine now supports nine independent strategies through the same ex
 Testing
 
 243 / 243 tracked-project automated tests passing.
+
+
+---
+
+# Phase 3 Walk-Forward Validation Contract
+
+Walk-forward validation is a separate research layer that composes existing backtesting, benchmark and performance components without changing strategy logic.
+
+It must:
+
+- preserve strict chronological ordering
+- prevent train/test overlap within each window
+- support deterministic expanding and rolling windows
+- start every partition from fresh capital
+- apply identical execution-cost assumptions in every window
+- compare every evaluated partition against the same buy-and-hold baseline
+- summarize repeated out-of-sample persistence rather than relying on one historical split
+
+No parameter optimization is performed by this layer. Optimizer integration remains a later, separately validated responsibility.

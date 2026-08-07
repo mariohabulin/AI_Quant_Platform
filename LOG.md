@@ -757,3 +757,33 @@ Out-of-sample validation is implemented as a separate validation layer that comp
 88 / 88 OOS, Benchmark, Backtesting and Performance Analyzer tests pass in the isolated snapshot environment.
 
 The full isolated snapshot reports 272 passing tests and four pre-existing Strategy Engine fixture failures because the Git archive excludes the ignored `data/AAPL.csv` file. The complete local repository is expected to run 276 / 276 tracked-project tests.
+
+
+---
+
+# Phase 3 — Walk-Forward Validation
+
+## Objective
+
+Extend chronological validation from one IS/OOS split to repeated train/test windows so strategy generalization can be evaluated through time.
+
+## Delivered
+
+- deterministic expanding walk-forward windows
+- optional fixed-length rolling windows
+- configurable train, test and step sizes
+- strict chronology and duplicate-index rejection
+- non-overlapping train/test partitions within every window
+- independent fresh-capital strategy evaluation for every partition
+- identical commission, slippage and spread assumptions across windows
+- buy-and-hold benchmark comparison in every window
+- summary of mean OOS strategy/excess return and positive-window persistence
+- no optimizer coupling or parameter fitting
+
+## Architecture Impact
+
+Walk-forward validation is implemented as a separate validation layer that composes the existing Out-of-Sample, Backtesting, Benchmark and Performance components. Strategy logic remains frozen and unchanged.
+
+## Validation
+
+The milestone adds dedicated unit coverage for chronology, expanding/rolling behavior, leakage prevention, execution costs, benchmark integration and repeated OOS summaries.
