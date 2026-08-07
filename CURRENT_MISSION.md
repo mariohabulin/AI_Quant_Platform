@@ -1,41 +1,32 @@
-# CURRENT MISSION — Phase 3 Strategy Validation Pipeline v1
+# CURRENT MISSION — Phase 3 Multi-Asset Validation
 
 ## Objective
 
-Unify the completed Phase 3 validation components into one deterministic research pipeline with an explicit and inspectable strategy-classification policy.
+Test whether a frozen strategy's validated edge generalizes across multiple independent assets rather than depending on one instrument.
 
 ## Current Priorities
 
-- orchestrate OOS, walk-forward and statistical falsification without changing strategy logic
-- use only unseen walk-forward test trades for statistical falsification
-- expose one structured research result per strategy
-- classify evidence as `VALIDATED`, `CONDITIONAL` or `REJECTED`
-- keep classification thresholds explicit and configurable
-- preserve realistic execution and benchmark assumptions throughout validation
+- run the existing Strategy Validation Pipeline independently per asset
+- preserve identical execution, OOS, walk-forward and falsification assumptions
+- keep asset-level evidence visible and auditable
+- summarize cross-asset OOS return, excess return and persistence
+- classify cross-asset evidence with explicit configurable thresholds
+- preserve deterministic results and full backward compatibility
 - keep all automated tests passing
 
-## Validation Policy v1
+## Multi-Asset Policy v1
 
-Hard gates:
+Default requirements:
 
-- positive OOS strategy return
-- positive OOS excess return versus buy-and-hold
-- successful statistical falsification
+- at least 2 assets
+- `VALIDATED`: at least 60% of assets individually `VALIDATED` and at most 20% `REJECTED`
+- `REJECTED`: more than 50% of assets individually `REJECTED`
+- otherwise: `CONDITIONAL`
 
-Persistence gate:
-
-- positive excess return in at least 60% of walk-forward test windows by default
-
-Classification:
-
-- any failed hard gate -> `REJECTED`
-- hard gates pass but persistence gate fails -> `CONDITIONAL`
-- all gates pass -> `VALIDATED`
-
-Monte Carlo drawdown is reported but is not yet a classification gate. The future Risk Engine must define normalized drawdown tolerances before drawdown can safely determine approval status.
+This policy measures breadth of evidence. It does not replace future market-regime analysis, portfolio correlation analysis or Risk Engine limits.
 
 ## Next Mission
 
-After the single-strategy validation pipeline is proven, build multi-asset strategy validation. Market-regime detection, Risk Engine, paper trading and live trading remain later phases.
+After multi-asset validation is proven, add Market Regime Detection and regime-conditioned validation before Risk Engine and paper trading.
 
 Do not introduce the Strategy Optimizer yet.

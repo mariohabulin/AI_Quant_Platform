@@ -821,3 +821,21 @@ Implemented:
 - transparent per-gate classification output
 - Monte Carlo drawdown retained as diagnostic evidence pending Risk Engine tolerances
 - isolated tests for policy boundaries, orchestration, reproducibility and execution-cost propagation
+
+---
+
+## Phase 3 — Multi-Asset Validation
+
+Added a cross-market validation layer that reuses the complete Strategy Validation Pipeline independently for each asset.
+
+Implemented:
+
+- deterministic named-asset validation
+- isolated per-asset OOS, walk-forward and falsification evidence
+- cross-asset return/excess-return/persistence summaries
+- explicit Multi-Asset Policy v1
+- `VALIDATED`, `CONDITIONAL` and `REJECTED` aggregate classification
+- configurable breadth and rejection thresholds
+- input immutability and execution-cost propagation tests
+
+The layer intentionally does not pool trades across assets or introduce portfolio weighting. Correlation, allocation and portfolio risk remain responsibilities of the future Risk Engine.

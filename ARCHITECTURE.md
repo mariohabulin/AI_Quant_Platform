@@ -589,3 +589,20 @@ Validation Policy v1 uses explicit, inspectable gates:
 If any of the first three hard gates fails, status is `REJECTED`. If all hard gates pass but walk-forward persistence is below the configured threshold, status is `CONDITIONAL`. If all gates pass, status is `VALIDATED`.
 
 Monte Carlo drawdown remains diagnostic evidence rather than a classification gate until the Risk Engine defines normalized portfolio drawdown tolerances. Statistical falsification consumes only repeated unseen walk-forward test trades so in-sample trades cannot strengthen the evidence.
+
+---
+
+# Phase 3 Multi-Asset Validation Contract
+
+Multi-asset validation is a portfolio-of-evidence research layer. It runs one frozen strategy through the existing Strategy Validation Pipeline independently on multiple named assets.
+
+It must:
+
+- preserve identical strategy logic and validation configuration across assets
+- keep each asset's OOS, walk-forward and falsification evidence inspectable
+- aggregate cross-asset coverage without pooling trades across unrelated markets
+- report mean unseen return, mean unseen excess return and positive-excess coverage
+- use an explicit configurable cross-asset classification policy
+- remain deterministic for a fixed random seed
+
+Default policy: at least two assets are required; `VALIDATED` requires at least 60% of assets individually validated and no more than 20% rejected; more than 50% rejected produces `REJECTED`; other mixed evidence is `CONDITIONAL`.
