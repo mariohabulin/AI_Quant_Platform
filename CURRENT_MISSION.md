@@ -21,7 +21,7 @@ When the current mission is completed, this document should be updated to reflec
 ## Phase 3 — Strategy Validation
 
 Status
-🟡 Benchmark Validation Infrastructure In Progress
+🟡 Out-of-Sample Validation Infrastructure In Progress
 
 The Research Engine now supports multiple independent trading strategies executing through a single reusable research pipeline.
 
@@ -51,9 +51,9 @@ The architecture has now been validated across nine independent trading strategi
 
 Upgrade the historical simulation layer so strategy validation is based on realistic, reproducible execution assumptions before any optimizer, walk-forward engine, Monte Carlo analysis or paper trading is introduced.
 
-The Realistic Execution Layer is validated.
+The Realistic Execution Layer and Benchmark Engine are validated.
 
-The active Phase 3 milestone is the Benchmark Engine. It must provide a deterministic buy-and-hold baseline using the same execution-cost assumptions as strategy backtests and expose strategy return, benchmark return and excess return for objective comparison.
+The active Phase 3 milestone is Out-of-Sample Validation. It must split market data chronologically, prevent time-series leakage and evaluate the same strategy independently on unseen data using identical execution-cost and benchmark assumptions.
 
 ---
 
@@ -94,7 +94,7 @@ Successfully completed:
 - End-to-End execution pipeline validation
 
 Current automated test baseline before this milestone:
-✅ 255 / 255 tracked-project tests passing
+✅ 265 / 265 tracked-project tests passing
 
 ---
 
@@ -132,19 +132,19 @@ All validated strategies execute through this pipeline without strategy-specific
 
 The current priorities are:
 
-- add a deterministic buy-and-hold benchmark
-- reuse realistic commission, slippage and spread assumptions
-- compare strategy return with benchmark return and excess return
-- preserve Backtesting Engine and Strategy Engine responsibilities
+- split research data chronologically into in-sample and out-of-sample partitions
+- forbid random shuffling and reject non-chronological input
+- evaluate strategy and benchmark independently on both partitions
+- preserve identical execution-cost assumptions across validation partitions
+- expose in-sample vs out-of-sample strategy and excess returns
 - keep Strategy Library Version 1 frozen
 - keep all automated tests passing
-- prepare objective baselines for Backtesting Protocol v1
 
 ---
 
 # Out of Scope
 
-The following remain intentionally postponed until benchmark validation is complete:
+The following remain intentionally postponed until OOS validation is complete:
 
 - Strategy Optimizer
 - Walk Forward Analysis
@@ -158,21 +158,21 @@ The following remain intentionally postponed until benchmark validation is compl
 
 # Completion Criteria
 
-The Benchmark Engine milestone is complete when:
+The Out-of-Sample Validation milestone is complete when:
 
-- buy-and-hold can be evaluated deterministically on the same market data
-- benchmark execution uses explicit commission, slippage and spread assumptions
-- benchmark results expose gross P&L, total costs, net P&L and total return
-- strategy return can be compared directly with benchmark return
-- excess return is calculated explicitly
-- invalid benchmark inputs fail fast
+- market data is split chronologically with no overlap
+- invalid or non-chronological input fails fast
+- in-sample and out-of-sample runs start from identical fresh capital
+- both partitions reuse the same commission, slippage and spread assumptions
+- both partitions are compared against buy-and-hold
+- generalization results expose strategy return and excess return for IS and OOS
 - the complete automated test suite passes locally
 
 ---
 
 # Next Mission
 
-After the Benchmark Engine is validated, formalize Backtesting Protocol v1 and introduce out-of-sample validation before walk-forward and falsification infrastructure.
+After OOS validation is validated, introduce Walk-Forward Analysis, then statistical falsification infrastructure including Monte Carlo, bootstrap and permutation testing.
 
 Do not introduce the Strategy Optimizer yet.
 

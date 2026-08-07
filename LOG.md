@@ -725,3 +725,35 @@ Benchmark evaluation is kept separate from Strategy Engine signal generation and
 ## Validation
 
 77 / 77 Benchmark Engine, Backtesting Engine and Performance Analyzer tests pass in the isolated snapshot environment.
+
+
+---
+
+# Phase 3 — Out-of-Sample Validation
+
+## Objective
+
+Introduce chronological in-sample / out-of-sample validation so strategy performance must generalize to unseen data rather than relying on development-period results.
+
+## Delivered
+
+- deterministic chronological data splitting
+- configurable in-sample fraction
+- explicit rejection of non-chronological indexes
+- non-overlapping in-sample and out-of-sample partitions
+- independent fresh-capital backtests for IS and OOS
+- identical commission, slippage and spread assumptions across both partitions
+- buy-and-hold benchmark comparison on both partitions
+- generalization summary for strategy return and excess return
+- fail-fast validation for invalid split and execution assumptions
+- isolated unit coverage for chronology, leakage prevention, costs and benchmark integration
+
+## Architecture Impact
+
+Out-of-sample validation is implemented as a separate validation layer that composes the existing Backtesting Engine, Benchmark Engine and Performance Analyzer. It does not modify strategy logic or introduce optimization.
+
+## Validation
+
+88 / 88 OOS, Benchmark, Backtesting and Performance Analyzer tests pass in the isolated snapshot environment.
+
+The full isolated snapshot reports 272 passing tests and four pre-existing Strategy Engine fixture failures because the Git archive excludes the ignored `data/AAPL.csv` file. The complete local repository is expected to run 276 / 276 tracked-project tests.

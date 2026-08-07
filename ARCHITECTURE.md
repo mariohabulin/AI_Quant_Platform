@@ -208,6 +208,25 @@ Future portfolio allocation decisions belong to the Portfolio Engine. Live order
 
 ---
 
+## Out-of-Sample Validation
+
+The Out-of-Sample Validation layer owns chronological research-data separation and independent validation on unseen data.
+
+It must:
+
+- preserve temporal ordering
+- forbid random shuffling of time-series observations
+- keep in-sample and out-of-sample partitions non-overlapping
+- evaluate both partitions from the same initial-capital and execution-cost assumptions
+- compare each partition against the same passive benchmark
+- expose generalization results without introducing parameter optimization
+
+Out-of-sample evaluation starts from fresh capital and is independent from in-sample profits. This prevents capital carry-over from disguising generalization failure.
+
+Walk-forward orchestration, statistical falsification and parameter optimization remain separate future responsibilities.
+
+---
+
 ## Performance Analyzer
 
 Responsible for:
