@@ -18,10 +18,10 @@ When the current mission is completed, this document should be updated to reflec
 
 # Current Phase
 
-## Phase 2 — Research Engine
+## Phase 3 — Strategy Validation
 
 Status
-🟢 Research Strategy Expansion Completed
+🟡 Backtesting Infrastructure Upgrade In Progress
 
 The Research Engine now supports multiple independent trading strategies executing through a single reusable research pipeline.
 
@@ -49,18 +49,11 @@ The architecture has now been validated across nine independent trading strategi
 
 # Mission Objective
 
-Continue expanding the Strategy Library while preserving a single reusable execution pipeline.
+Upgrade the historical simulation layer so strategy validation is based on realistic, reproducible execution assumptions before any optimizer, walk-forward engine, Monte Carlo analysis or paper trading is introduced.
 
-Every new strategy must integrate through the existing architecture without requiring changes to:
+The first Phase 3 milestone is the Realistic Execution Layer.
 
-- Feature Engine
-- Strategy Engine
-- Backtesting Engine
-- Performance Analyzer
-
-The objective is not simply to add strategies.
-
-The objective is to continuously validate that the Research Engine architecture scales as the Strategy Library grows.
+It must add explicit execution costs while preserving the validated Research Engine pipeline and backward compatibility when all cost parameters are zero.
 
 ---
 
@@ -139,50 +132,50 @@ All validated strategies execute through this pipeline without strategy-specific
 
 The current priorities are:
 
-- maintain Research Engine stability
-- freeze Strategy Library Version 1
-- preserve backward compatibility
+- implement realistic commission, slippage and spread assumptions
+- preserve deterministic backtesting
+- record gross P&L, execution costs and net P&L explicitly
+- preserve zero-cost backward compatibility
+- keep Strategy Library Version 1 frozen
 - keep all automated tests passing
-- avoid architectural duplication
-- review Research Engine completion criteria
+- define Backtesting Protocol v1 after the execution layer is validated
 
 ---
 
 # Out of Scope
 
-The following components remain intentionally postponed until the Strategy Library reaches sufficient maturity:
+The following remain intentionally postponed until the realistic execution layer is validated:
 
 - Strategy Optimizer
 - Walk Forward Analysis
-- Market Intelligence
-- Alpha Decision Engine
-- AI Learning Engine
+- Monte Carlo / bootstrap / permutation analysis
+- Market Regime Detection
+- Risk Engine
+- Paper Trading
 - Live Trading
 
 ---
 
 # Completion Criteria
 
-The current mission continues successfully because:
+The Realistic Execution Layer is complete when:
 
-- multiple independent strategies execute through the same architecture
-- strategy-specific features are generated dynamically
-- strategies expose a common public interface
-- the execution pipeline remains unchanged
-- architecture scales without modification
-- all automated tests pass successfully
+- commission is explicitly configurable
+- slippage is explicitly configurable
+- spread is explicitly configurable
+- BUY and SELL execution prices reflect configured market friction
+- trade history records gross P&L, execution costs and net P&L
+- invalid execution-cost parameters fail fast
+- zero-cost configuration preserves legacy backtest results
+- the complete automated test suite passes locally
 
 ---
 
 # Next Mission
 
-The planned Phase 2 Research Strategy Expansion is complete.
+After the Realistic Execution Layer is validated, define Backtesting Protocol v1 and add objective benchmark comparison before moving into out-of-sample, walk-forward and falsification infrastructure.
 
-Strategy Library Version 1 is frozen with nine validated strategies.
-
-Before moving to Phase 3, review Research Engine completion criteria and explicitly confirm the next project mission.
-
-Do not introduce the Strategy Optimizer until that transition is discussed and approved.
+Do not introduce the Strategy Optimizer yet.
 
 ---
 

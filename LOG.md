@@ -667,3 +667,36 @@ Completed.
 ## Outcome
 
 The planned Research Strategy Expansion is complete. Future strategy additions must be justified by backtesting or paper-trading evidence rather than indicator count.
+
+
+---
+
+# Phase 3 — Realistic Execution Layer
+
+## Objective
+
+Upgrade the Backtesting Engine from frictionless historical execution to explicit, deterministic execution-cost modelling without changing the Research Engine pipeline.
+
+## Delivered
+
+- configurable commission rate
+- configurable slippage rate
+- configurable bid/ask spread rate
+- side-aware BUY and SELL execution prices
+- all-in sizing that reserves entry commission and never drives cash negative
+- explicit entry and exit market prices
+- explicit entry and exit execution prices
+- gross P&L, commission, execution cost, total cost and net P&L in trade history
+- fail-fast validation for invalid execution-cost assumptions
+- zero-cost backward compatibility with legacy backtest behaviour
+
+## Architecture Impact
+
+The existing Strategy Engine → Backtesting Engine → Performance Analyzer pipeline is preserved. The Backtesting Engine now owns historical execution friction while future live execution remains the responsibility of the Execution Engine.
+
+## Validation
+
+All 67 Backtesting Engine and Performance Analyzer tests pass in the isolated snapshot environment.
+
+The full isolated snapshot reports 251 passing tests and four pre-existing Strategy Engine fixture failures because the Git archive excludes the ignored `data/AAPL.csv` file. The complete local repository is expected to run 255 / 255 tracked-project tests.
+

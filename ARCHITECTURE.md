@@ -184,14 +184,19 @@ Responsible for:
 
 Responsible for:
 
-- trade simulation
+- deterministic historical trade simulation
 - simulated portfolio state management
+- explicit execution-price modelling
+- commission, slippage and spread modelling
+- gross and net trade P&L accounting
 - trade history generation
 - equity curve generation
 
-The Backtesting Engine manages portfolio state only during historical simulation.
+The Backtesting Engine manages portfolio state and historical execution assumptions only during simulation.
 
-Future portfolio allocation decisions belong to the Portfolio Engine.
+Execution-cost assumptions must be explicit, validated and reproducible. Zero-cost defaults preserve backward compatibility for existing research tests.
+
+Future portfolio allocation decisions belong to the Portfolio Engine. Live order execution belongs to the future Execution Engine.
 
 ---
 

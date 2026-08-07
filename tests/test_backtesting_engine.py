@@ -318,3 +318,139 @@ def test_repeated_runs_reset_backtesting_state():
     assert engine.trade_history == first_trade_history
     assert engine.equity_curve == first_equity_curve
 
+
+
+def test_backtesting_engine_accepts_execution_cost_configuration():
+    engine = BacktestingEngine(
+        DummyStrategyEngine(),
+        commission_rate=0.001,
+        slippage_rate=0.002,
+        spread_rate=0.004,
+    )
+
+    assert engine.commission_rate == 0.001
+    assert engine.slippage_rate == 0.002
+    assert engine.spread_rate == 0.004
+
+
+@pytest.mark.parametrize(
+    "parameter_name",
+    ["commission_rate", "slippage_rate", "spread_rate"],
+)
+def test_backtesting_engine_rejects_negative_execution_cost_rates(parameter_name):
+    kwargs = {parameter_name: -0.001}
+
+    with pytest.raises(ValueError, match="cannot be negative"):
+        BacktestingEngine(DummyStrategyEngine(), **kwargs)
+
+
+@pytest.mark.parametrize(
+    "parameter_name",
+    ["commission_rate", "slippage_rate", "spread_rate"],
+)
+def test_backtesting_engine_rejects_execution_cost_rates_at_or_above_one(parameter_name):
+    kwargs = {parameter_name: 1.0}
+
+    with pytest.raises(ValueError, match="must be less than 1.0"):
+        BacktestingEngine(DummyStrategyEngine(), **kwargs)
+
+
+def test_execution_price_applies_slippage_and_half_spread_by_side():
+    engine = BacktestingEngine(
+        DummyStrategyEngine(),
+        slippage_rate=0.01,
+        spread_rate=0.02,
+    )
+
+    assert engine._calculate_execution_price(100.0, "buy") == pytest.approx(102.0)
+    assert engine._calculate_execution_price(100.0, "sell") == pytest.approx(98.0)
+
+
+def test_buy_reserves_commission_without_negative_capital():
+    engine = BacktestingEngine(
+        DummyStrategyEngine(),
+        initial_capital=10000.0,
+        commission_rate=0.01,
+    )
+
+    engine._buy(100.0, 0)
+
+    assert engine.capital == pytest.approx(0.0)
+    assert engine.shares == pytest.approx(10000.0 / 101.0)
+    assert engine.entry_commission == pytest.approx(
+        engine.shares * 100.0 * 0.01
+    )
+
+
+def test_trade_history_records_realistic_execution_cost_breakdown():
+    engine = BacktestingEngine(
+        DummyStrategyEngine(),
+        initial_capital=10000.0,
+        commission_rate=0.001,
+        slippage_rate=0.002,
+        spread_rate=0.004,
+    )
+
+    engine._buy(100.0, 0)
+    engine._sell(110.0, 1)
+
+    trade = engine.trade_history[0]
+
+    assert trade["entry_market_price"] == 100.0
+    assert trade["exit_market_price"] == 110.0
+    assert trade["entry_price"] == pytest.approx(100.4)
+    assert trade["exit_price"] == pytest.approx(109.56)
+    assert trade["total_commission"] > 0.0
+    assert trade["execution_cost"] > 0.0
+    assert trade["total_costs"] == pytest.approx(
+        trade["total_commission"] + trade["execution_cost"]
+    )
+    assert trade["profit_loss"] == pytest.approx(
+        trade["gross_profit_loss"] - trade["total_costs"]
+    )
+
+
+def test_realistic_execution_costs_reduce_final_capital():
+    class SignalStrategyEngine:
+        def run(self, data):
+            result = data.copy()
+            result["Signal"] = [1, 0, -1]
+            return result
+
+    data = pd.DataFrame({
+        "Close": [100, 105, 110],
+        "Open": [100, 105, 110],
+        "High": [100, 105, 110],
+        "Low": [100, 105, 110],
+        "Volume": [1000, 1000, 1000],
+    })
+
+    zero_cost_engine = BacktestingEngine(SignalStrategyEngine())
+    realistic_engine = BacktestingEngine(
+        SignalStrategyEngine(),
+        commission_rate=0.001,
+        slippage_rate=0.001,
+        spread_rate=0.002,
+    )
+
+    zero_cost_engine.run(data)
+    realistic_engine.run(data)
+
+    assert realistic_engine.capital < zero_cost_engine.capital
+    assert realistic_engine.trade_history[0]["total_costs"] > 0.0
+
+
+def test_zero_cost_configuration_preserves_legacy_trade_results():
+    engine = BacktestingEngine(DummyStrategyEngine())
+
+    engine._buy(100.0, 0)
+    engine._sell(110.0, 1)
+
+    trade = engine.trade_history[0]
+
+    assert engine.capital == pytest.approx(11000.0)
+    assert trade["entry_price"] == 100.0
+    assert trade["exit_price"] == 110.0
+    assert trade["gross_profit_loss"] == pytest.approx(1000.0)
+    assert trade["total_costs"] == pytest.approx(0.0)
+    assert trade["profit_loss"] == pytest.approx(1000.0)
