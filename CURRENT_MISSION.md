@@ -21,7 +21,7 @@ When the current mission is completed, this document should be updated to reflec
 ## Phase 3 — Strategy Validation
 
 Status
-🟡 Backtesting Infrastructure Upgrade In Progress
+🟡 Benchmark Validation Infrastructure In Progress
 
 The Research Engine now supports multiple independent trading strategies executing through a single reusable research pipeline.
 
@@ -51,9 +51,9 @@ The architecture has now been validated across nine independent trading strategi
 
 Upgrade the historical simulation layer so strategy validation is based on realistic, reproducible execution assumptions before any optimizer, walk-forward engine, Monte Carlo analysis or paper trading is introduced.
 
-The first Phase 3 milestone is the Realistic Execution Layer.
+The Realistic Execution Layer is validated.
 
-It must add explicit execution costs while preserving the validated Research Engine pipeline and backward compatibility when all cost parameters are zero.
+The active Phase 3 milestone is the Benchmark Engine. It must provide a deterministic buy-and-hold baseline using the same execution-cost assumptions as strategy backtests and expose strategy return, benchmark return and excess return for objective comparison.
 
 ---
 
@@ -93,8 +93,8 @@ Successfully completed:
 - Research Engine multi-strategy validation
 - End-to-End execution pipeline validation
 
-Current automated test status:
-✅ 243 / 243 tracked-project tests passing
+Current automated test baseline before this milestone:
+✅ 255 / 255 tracked-project tests passing
 
 ---
 
@@ -132,19 +132,19 @@ All validated strategies execute through this pipeline without strategy-specific
 
 The current priorities are:
 
-- implement realistic commission, slippage and spread assumptions
-- preserve deterministic backtesting
-- record gross P&L, execution costs and net P&L explicitly
-- preserve zero-cost backward compatibility
+- add a deterministic buy-and-hold benchmark
+- reuse realistic commission, slippage and spread assumptions
+- compare strategy return with benchmark return and excess return
+- preserve Backtesting Engine and Strategy Engine responsibilities
 - keep Strategy Library Version 1 frozen
 - keep all automated tests passing
-- define Backtesting Protocol v1 after the execution layer is validated
+- prepare objective baselines for Backtesting Protocol v1
 
 ---
 
 # Out of Scope
 
-The following remain intentionally postponed until the realistic execution layer is validated:
+The following remain intentionally postponed until benchmark validation is complete:
 
 - Strategy Optimizer
 - Walk Forward Analysis
@@ -158,22 +158,21 @@ The following remain intentionally postponed until the realistic execution layer
 
 # Completion Criteria
 
-The Realistic Execution Layer is complete when:
+The Benchmark Engine milestone is complete when:
 
-- commission is explicitly configurable
-- slippage is explicitly configurable
-- spread is explicitly configurable
-- BUY and SELL execution prices reflect configured market friction
-- trade history records gross P&L, execution costs and net P&L
-- invalid execution-cost parameters fail fast
-- zero-cost configuration preserves legacy backtest results
+- buy-and-hold can be evaluated deterministically on the same market data
+- benchmark execution uses explicit commission, slippage and spread assumptions
+- benchmark results expose gross P&L, total costs, net P&L and total return
+- strategy return can be compared directly with benchmark return
+- excess return is calculated explicitly
+- invalid benchmark inputs fail fast
 - the complete automated test suite passes locally
 
 ---
 
 # Next Mission
 
-After the Realistic Execution Layer is validated, define Backtesting Protocol v1 and add objective benchmark comparison before moving into out-of-sample, walk-forward and falsification infrastructure.
+After the Benchmark Engine is validated, formalize Backtesting Protocol v1 and introduce out-of-sample validation before walk-forward and falsification infrastructure.
 
 Do not introduce the Strategy Optimizer yet.
 

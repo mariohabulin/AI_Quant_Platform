@@ -194,6 +194,14 @@ Responsible for:
 
 The Backtesting Engine manages portfolio state and historical execution assumptions only during simulation.
 
+## Benchmark Engine
+
+The Benchmark Engine provides passive reference performance for objective strategy validation.
+
+It must remain independent from trading-strategy signal generation and must use the same historical execution-cost assumptions when comparing a strategy against buy-and-hold.
+
+Its first responsibility is to expose benchmark return and excess return without introducing optimization logic.
+
 Execution-cost assumptions must be explicit, validated and reproducible. Zero-cost defaults preserve backward compatibility for existing research tests.
 
 Future portfolio allocation decisions belong to the Portfolio Engine. Live order execution belongs to the future Execution Engine.

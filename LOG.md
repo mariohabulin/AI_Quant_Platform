@@ -700,3 +700,28 @@ All 67 Backtesting Engine and Performance Analyzer tests pass in the isolated sn
 
 The full isolated snapshot reports 251 passing tests and four pre-existing Strategy Engine fixture failures because the Git archive excludes the ignored `data/AAPL.csv` file. The complete local repository is expected to run 255 / 255 tracked-project tests.
 
+
+---
+
+# Phase 3 — Benchmark Engine
+
+## Objective
+
+Add an objective passive baseline so strategy performance is evaluated relative to a simple alternative rather than absolute return alone.
+
+## Delivered
+
+- deterministic buy-and-hold benchmark
+- the same commission, slippage and spread assumptions used by historical execution
+- explicit benchmark gross P&L, execution costs, commissions and net P&L
+- strategy return, benchmark return and excess-return comparison
+- fail-fast validation for benchmark inputs and execution assumptions
+- isolated unit coverage for profitable, flat, cost-adjusted and underperforming cases
+
+## Architecture Impact
+
+Benchmark evaluation is kept separate from Strategy Engine signal generation and Backtesting Engine portfolio simulation. This preserves single responsibility while giving Phase 3 validation an objective baseline.
+
+## Validation
+
+77 / 77 Benchmark Engine, Backtesting Engine and Performance Analyzer tests pass in the isolated snapshot environment.
