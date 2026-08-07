@@ -804,3 +804,20 @@ Implemented:
 - fail-fast trade-history validation
 
 This layer intentionally does not optimize strategy parameters or alter trading logic.
+
+---
+
+## Phase 3 — Strategy Validation Pipeline v1
+
+Added an orchestration layer that turns the completed Phase 3 validation components into one deterministic research result.
+
+Implemented:
+
+- unified OOS, walk-forward and statistical-falsification execution
+- statistical falsification based only on repeated unseen walk-forward test trades
+- explicit Validation Policy v1
+- `VALIDATED`, `CONDITIONAL` and `REJECTED` classifications
+- configurable walk-forward persistence threshold
+- transparent per-gate classification output
+- Monte Carlo drawdown retained as diagnostic evidence pending Risk Engine tolerances
+- isolated tests for policy boundaries, orchestration, reproducibility and execution-cost propagation

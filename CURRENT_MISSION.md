@@ -1,40 +1,41 @@
-# CURRENT MISSION — Phase 3 Statistical Falsification
+# CURRENT MISSION — Phase 3 Strategy Validation Pipeline v1
 
 ## Objective
 
-Build a reproducible statistical robustness layer that actively attempts to falsify apparent strategy edge after realistic execution, benchmark, out-of-sample and walk-forward validation.
+Unify the completed Phase 3 validation components into one deterministic research pipeline with an explicit and inspectable strategy-classification policy.
 
 ## Current Priorities
 
-- bootstrap confidence intervals for net trade expectancy
-- Monte Carlo trade-order stress testing for drawdown risk
-- permutation testing against a zero-edge null hypothesis
-- deterministic experiments through explicit random seeds
-- fail-fast validation of research inputs
-- preserve Strategy Library Version 1 and existing execution contracts
+- orchestrate OOS, walk-forward and statistical falsification without changing strategy logic
+- use only unseen walk-forward test trades for statistical falsification
+- expose one structured research result per strategy
+- classify evidence as `VALIDATED`, `CONDITIONAL` or `REJECTED`
+- keep classification thresholds explicit and configurable
+- preserve realistic execution and benchmark assumptions throughout validation
 - keep all automated tests passing
 
-## Architectural Rule
+## Validation Policy v1
 
-The falsification layer consumes completed trade history. It must not generate signals, optimize parameters, alter execution assumptions or mutate strategy logic.
+Hard gates:
 
-## Completion Criteria
+- positive OOS strategy return
+- positive OOS excess return versus buy-and-hold
+- successful statistical falsification
 
-The milestone is complete when:
+Persistence gate:
 
-- bootstrap expectancy intervals are reproducible
-- Monte Carlo drawdown distributions are reproducible
-- permutation p-values are reproducible
-- malformed or empty trade histories fail fast
-- a conservative combined statistical-falsification result is exposed
-- the complete automated test suite passes locally
+- positive excess return in at least 60% of walk-forward test windows by default
+
+Classification:
+
+- any failed hard gate -> `REJECTED`
+- hard gates pass but persistence gate fails -> `CONDITIONAL`
+- all gates pass -> `VALIDATED`
+
+Monte Carlo drawdown is reported but is not yet a classification gate. The future Risk Engine must define normalized drawdown tolerances before drawdown can safely determine approval status.
 
 ## Next Mission
 
-After statistical falsification is validated, build multi-asset strategy validation and formal strategy classification (`VALIDATED`, `CONDITIONAL`, `REJECTED`). Market-regime detection, Risk Engine, paper trading and live trading remain later phases.
+After the single-strategy validation pipeline is proven, build multi-asset strategy validation. Market-regime detection, Risk Engine, paper trading and live trading remain later phases.
 
 Do not introduce the Strategy Optimizer yet.
-
-## Relationship to Other Documents
-
-`VISION.md` defines why the platform exists. `ROADMAP.md` defines long-term development. `ARCHITECTURE.md` defines permanent design principles. `LOG.md` records completed development history.

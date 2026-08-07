@@ -572,3 +572,20 @@ It provides:
 - a conservative pass flag that requires both bootstrap and permutation evidence
 
 A falsification pass is research evidence, not production approval. Market coverage, walk-forward persistence, risk controls and paper trading remain separate gates.
+
+---
+
+# Phase 3 Strategy Validation Pipeline Contract
+
+The Strategy Validation Pipeline is an orchestration layer. It composes existing OOS, walk-forward and statistical-falsification components without changing strategy signals, execution assumptions or feature generation.
+
+Validation Policy v1 uses explicit, inspectable gates:
+
+- unseen OOS strategy return must be positive
+- unseen OOS excess return versus buy-and-hold must be positive
+- bootstrap/permutation statistical falsification must pass
+- at least 60% of walk-forward test windows must have positive excess return for `VALIDATED`
+
+If any of the first three hard gates fails, status is `REJECTED`. If all hard gates pass but walk-forward persistence is below the configured threshold, status is `CONDITIONAL`. If all gates pass, status is `VALIDATED`.
+
+Monte Carlo drawdown remains diagnostic evidence rather than a classification gate until the Risk Engine defines normalized portfolio drawdown tolerances. Statistical falsification consumes only repeated unseen walk-forward test trades so in-sample trades cannot strengthen the evidence.
