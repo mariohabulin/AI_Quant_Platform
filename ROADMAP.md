@@ -55,13 +55,13 @@ The gate classifies representative comparisons as `MATCH`, `INTENDED`, `DEFECT` 
 
 # NEXT — Real-Time Paper Trading Path
 
-## Milestone 1 — Real-Time Market Data Adapter + Feed Health — IMPLEMENTED / VALIDATION PENDING
+## Milestone 1 — Real-Time Market Data Adapter + Feed Health — COMPLETED
 
 First provider contract: Alpaca crypto websocket bars, controlled `BTC/USD` 1-minute scope. Provider normalization plus stale/duplicate/out-of-order/future/missing-gap health gates emit only the existing `MarketDataEvent` contract. Authenticated network transport and reconnect/backoff stay in the runtime milestone so transport failure handling is tested at the operational boundary.
 
-## Milestone 2 — Operational Safety / Paper Runtime
+## Milestone 2 — Operational Safety / Paper Runtime — IMPLEMENTED / VALIDATION PENDING
 
-Add controlled runtime loop, graceful shutdown, exception isolation, heartbeat/health state, structured logging and minimal durable checkpoint/restart recovery. Basic restart recovery is promoted from deferred work because unattended multi-hour/day paper sessions must not forget open paper state after a process restart.
+Controlled runtime loop, graceful shutdown, exception isolation, heartbeat/health state, bounded feed-failure halt policy, Alpaca websocket authentication/subscription with reconnect/backoff, and minimal durable checkpoint/restart recovery are implemented. Basic restart recovery preserves broker/open-position, Risk Engine protection and session/feed continuity state so a restarted paper process does not wake up with trading amnesia.
 
 ## Milestone 3 — First Controlled Real-Time Paper Run
 

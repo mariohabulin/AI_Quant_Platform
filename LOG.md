@@ -959,3 +959,7 @@ Added a diagnostic bridge between `BacktestingEngine` and event-driven `PaperTra
 - Added explicit feed health state and mutation-safe accepted history.
 - Kept network transport/authentication/reconnect outside the adapter; those belong to the Operational Safety / Paper Runtime milestone.
 - Kept provider/asset expansion deferred until one controlled real-time path is stable.
+
+## Operational Safety / Paper Runtime v1
+
+Implemented the final MUST-HAVE operational boundary before the first controlled real-time paper run: health-aware runtime loop, fail-closed exception isolation, graceful shutdown, heartbeat state, atomic JSON checkpoint/restart recovery, and injected Alpaca websocket transport with authentication/subscription plus bounded reconnect/backoff. Recovery intentionally persists only minimum trading continuity state; richer durable audit/event storage, distributed supervision and provider failover remain deferred until forward operation demonstrates the need.
