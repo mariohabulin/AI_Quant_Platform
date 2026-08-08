@@ -775,3 +775,9 @@ The validator remains outside Strategy, Risk and Broker responsibilities. Its jo
 Each scenario retains the complete `ReplayConsistencyReport` and is classified as `MATCH`, `INTENDED`, `DEFECT` or `CONFIGURATION_MISMATCH`. A divergent scenario may pass only when it is explicitly classified `INTENDED` and the observed difference fields exactly match the scenario's expected allow-list. Any new/unexpected difference blocks the gate. A stale allow-list also blocks the gate if a previously expected divergence disappears, forcing documentation/evidence to be updated rather than silently carrying obsolete exceptions.
 
 This boundary is intentionally diagnostic/governance logic. It must never rewrite fills, signals, risk decisions or account state to manufacture consistency.
+
+## Real-Time Market Data Adapter + Feed Health v1
+
+External provider schemas terminate at a dedicated adapter boundary. The first controlled provider contract is Alpaca crypto minute bars for `BTC/USD`, selected because the same provider supports websocket market data for both crypto and equities while crypto avoids stock-session gaps during initial 24/7 feed-health testing. `AlpacaCryptoBarAdapter` normalizes provider bar messages into the existing OHLCV/`MarketDataEvent` contract; Strategy, Risk and Paper layers remain provider-agnostic.
+
+`RealTimeMarketDataFeed` is a safety gate, not trading intelligence. It rejects stale, future-dated, duplicate, out-of-order and excessive-gap bars before they can become trading events, preserves accepted cumulative history and exposes explicit `WAITING / HEALTHY / UNHEALTHY` health state. Network transport, authentication, reconnect/backoff and runtime supervision remain outside the adapter so connection concerns do not leak into market-data normalization.

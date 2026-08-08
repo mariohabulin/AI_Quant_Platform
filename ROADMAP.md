@@ -32,7 +32,7 @@ Paper Broker v1, Paper Trading Engine v1, stateful Session v2, provider-neutral 
 
 ---
 
-# CURRENT — Paper Readiness Gate
+# COMPLETED READINESS GATE
 
 ## Objective
 
@@ -55,9 +55,9 @@ The gate classifies representative comparisons as `MATCH`, `INTENDED`, `DEFECT` 
 
 # NEXT — Real-Time Paper Trading Path
 
-## Milestone 1 — Real-Time Market Data Adapter + Feed Health
+## Milestone 1 — Real-Time Market Data Adapter + Feed Health — IMPLEMENTED / VALIDATION PENDING
 
-Connect one selected provider and one controlled asset/timeframe through the existing normalized `MarketDataEvent` boundary. Add stale/duplicate/out-of-order/missing-bar handling and reconnect/feed-health evidence without leaking provider schemas into Strategy/Risk/Paper layers.
+First provider contract: Alpaca crypto websocket bars, controlled `BTC/USD` 1-minute scope. Provider normalization plus stale/duplicate/out-of-order/future/missing-gap health gates emit only the existing `MarketDataEvent` contract. Authenticated network transport and reconnect/backoff stay in the runtime milestone so transport failure handling is tested at the operational boundary.
 
 ## Milestone 2 — Operational Safety / Paper Runtime
 

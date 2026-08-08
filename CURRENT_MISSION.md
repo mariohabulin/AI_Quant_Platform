@@ -1,34 +1,41 @@
 # CURRENT MISSION
 
-## Paper Readiness Gate v1 — Representative Replay Consistency + Roadmap Reconciliation
+## Real-Time Market Data Adapter + Feed Health v1
 
 **Status:** IMPLEMENTED / VALIDATION PENDING
 
 ### Objective
 
-Convert Backtest ↔ Paper Replay consistency diagnostics into an explicit readiness decision before external real-time market connectivity is introduced, while reconciling project documentation with the implementation that already exists.
+Open the first controlled external-market-data boundary without allowing provider schemas or unhealthy data to leak into Strategy, Risk, Paper Broker or PaperTradingSession.
+
+### Selected first provider / scope
+
+- provider contract: Alpaca Market Data websocket bars
+- asset class: crypto
+- controlled symbol: `BTC/USD`
+- initial bar cadence: 1 minute
+- rationale: Alpaca supports websocket market data across crypto and equities, while 24/7 crypto gives the cleanest first environment for validating continuous feed health without stock-session gaps
 
 ### Implemented
 
-- `PaperReadinessGate` aggregates named representative consistency scenarios
-- evidence classifications: `MATCH`, `INTENDED`, `DEFECT`, `CONFIGURATION_MISMATCH`
-- only exact, explicitly expected `INTENDED` semantic differences may pass
-- unexpected difference fields block readiness
-- stale allow-lists block readiness when an expected divergence disappears
-- defect and configuration-mismatch classifications remain blocking even when their fields are known
-- structured per-scenario evidence and aggregate `READY / BLOCKED` result
-- ROADMAP reorganized into COMPLETED / CURRENT / NEXT / SHOULD HAVE / DEFERRED
-- basic restart recovery promoted into the pre-unattended-paper runtime milestone
+- `AlpacaCryptoBarAdapter` for provider-specific bar normalization
+- provider-neutral output through the existing `MarketDataEvent` contract
+- strict OHLCV and symbol validation
+- stale and future-timestamp rejection
+- duplicate and out-of-order rejection
+- configurable missing-bar gap detection
+- explicit `WAITING / HEALTHY / UNHEALTHY` feed-health state
+- accepted cumulative history protected from consumer mutation
+- deterministic unit tests with no network/API-key dependency
 
 ### Definition of Done
 
-- readiness-gate tests pass
+- adapter/feed-health tests pass
 - full regression remains green
-- matched representative scenarios pass as `MATCH`
-- known forced-close semantics can be explicitly classified without hiding new divergence
-- execution/configuration drift blocks the gate
-- documentation matches actual project state
+- malformed/unhealthy provider data cannot reach paper trading as a `MarketDataEvent`
+- no provider-specific schema enters Strategy/Risk/Paper layers
+- documentation records transport/runtime work that remains intentionally separate
 
 ### Next after validation
 
-Build the Real-Time Market Data Adapter + Feed Health boundary for one selected provider and one controlled asset/timeframe. External connectivity must continue to emit the existing normalized `MarketDataEvent` contract.
+Build Operational Safety / Paper Runtime: authenticated websocket transport, reconnect/backoff, controlled runtime loop, graceful shutdown, exception isolation, heartbeat/structured logging and minimal durable checkpoint/restart recovery. Then perform the first controlled real-time paper run.

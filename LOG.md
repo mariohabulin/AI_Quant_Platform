@@ -950,3 +950,12 @@ Added a diagnostic bridge between `BacktestingEngine` and event-driven `PaperTra
 - Reconciled ROADMAP with actual completed Research/Validation, Risk Engine and Paper Trading work.
 - Promoted minimal checkpoint/restart recovery into the required operational-runtime milestone before unattended paper sessions.
 - Kept provider expansion, optimizer/AI learning, advanced portfolio risk and microstructure complexity deferred with explicit reasons.
+
+## Real-Time Market Data Adapter + Feed Health v1
+
+- Selected Alpaca crypto websocket bar schema as the first provider contract, initially scoped to `BTC/USD` 1-minute bars.
+- Added provider-specific normalization without leaking Alpaca fields into the existing `MarketDataEvent` boundary.
+- Added feed-health rejection for stale, future-dated, duplicate, out-of-order and excessive-gap bars.
+- Added explicit feed health state and mutation-safe accepted history.
+- Kept network transport/authentication/reconnect outside the adapter; those belong to the Operational Safety / Paper Runtime milestone.
+- Kept provider/asset expansion deferred until one controlled real-time path is stable.
