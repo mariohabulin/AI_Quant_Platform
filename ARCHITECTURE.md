@@ -804,3 +804,6 @@ The transport subscribes only to public `market_trades` and `heartbeats`; no acc
 
 ### Coinbase dry-run boundary
 `CoinbasePublicWebSocketTransport -> CoinbaseOneMinuteTradeAggregator -> CoinbaseOneMinuteBarAdapter -> RealTimeMarketDataFeed`. The dry-run runner intentionally has no PaperBroker/PaperTradingSession dependency; execution is structurally unavailable.
+
+### Coinbase Live Paper Bridge
+The bounded live-paper path is Coinbase public WebSocket -> 1m trade aggregator -> Coinbase bar adapter / Feed Health -> PaperOperationalRuntime -> accumulating PaperTradingSession -> Strategy Engine -> Risk Engine -> PaperBroker. No real broker execution adapter is reachable from this runner. Historical strategy context is accumulated only from health-accepted completed bars.

@@ -25,3 +25,6 @@ Next after validation: run a short supervised real-time dry-run, inspect feed/ru
 Alpaca onboarding/MFA is parked after repeated provider-side setup failures. The first controlled real-time dry-run now uses Coinbase Advanced Trade public `BTC-USD` market trades with no account/API credentials. Trades are aggregated into completed 1-minute OHLCV bars before entering the existing Feed Health / MarketDataEvent boundary. Execution remains hard-disabled until public connectivity, subscription, bar completion and runtime health are observed successfully.
 
 - Coinbase public connectivity dry-run runner added: bounded BTC-USD observation, Feed Health gated, execution hard-OFF.
+
+### Current checkpoint — Coinbase Live Paper Bridge v1
+Prove a bounded BTC-USD live-data path through Feed Health, Operational Runtime, Strategy Engine, Risk Engine and PaperBroker. Real order execution remains structurally unavailable. After the bounded probe is proven, evaluate observed behavior before expanding duration or execution scope.

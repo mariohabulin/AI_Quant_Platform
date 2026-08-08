@@ -139,3 +139,9 @@ Architecture Review → Design → TDD → Validation → Documentation → Git 
 - [ ] Only then authorize a supervised simulated-execution paper session.
 
 - [x] Coinbase public market-data connectivity dry-run runner (bounded, execution OFF)
+
+### Live Paper Bridge v1
+- [x] Public Coinbase BTC-USD live market-data dry-run
+- [x] Real-world trade-batch ordering regression protection
+- [ ] Bounded live-data -> Operational Runtime -> PaperTradingSession -> Risk Engine -> PaperBroker proof
+- Deferred until bounded proof: real exchange execution, API credentials, multi-asset live trading, long-running cloud deployment, production monitoring, calibrated transaction costs. These add operational/capital risk without helping prove the current boundary.

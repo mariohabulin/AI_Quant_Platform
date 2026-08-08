@@ -1,6 +1,9 @@
 import pandas as pd
 
-from feature_engine import generate_features
+try:
+    from src.feature_engine import generate_features
+except ImportError:  # legacy direct-module execution
+    from feature_engine import generate_features
 
 
 class StrategyEngine:

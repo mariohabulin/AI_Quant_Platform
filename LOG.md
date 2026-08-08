@@ -973,3 +973,10 @@ Added `src/preflight.py` as the final explicit safety/configuration gate before 
 After Alpaca account/MFA onboarding blocked the first external dry-run, the provider-neutral boundary was exercised by adding Coinbase Advanced Trade public market data as a replaceable source. Added an unauthenticated `BTC-USD` market-trades WebSocket transport, heartbeat subscription, deterministic 1-minute OHLCV aggregation from trades, a Coinbase completed-bar adapter, bounded reconnect behavior, and public-provider pre-flight support that does not require credentials. Order execution remains hard-disabled for the connectivity/dry-run stage. Alpaca remains a deferred provider option rather than an architectural dependency.
 
 - Added Coinbase public connectivity dry-run runner and deterministic tests; runner has no broker/session dependency and cannot submit orders.
+
+## 2026-08-08 — Coinbase Live Paper Bridge v1
+- Added bounded live-paper runner: Coinbase completed 1m bars -> Feed Health -> Operational Runtime -> accumulating PaperTradingSession -> EMA Strategy -> Risk Engine -> PaperBroker.
+- Real broker/order transport is structurally absent from this runner; only PaperBroker can execute simulated orders.
+- Live strategy history is accumulated across accepted bars; risk policy uses 1% stop distance and 3R target for paper authorization.
+- Corrected StrategyEngine package import compatibility so `python -m src...` runners can reuse the tested engine.
+- Deferred: exchange execution adapter/API credentials, persistence hardening, multi-asset live orchestration, production stop/target policy, fees/slippage calibration, monitoring/alerts. Reason: first prove bounded end-to-end live-data paper behavior before increasing operational or capital risk.
