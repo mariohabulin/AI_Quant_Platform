@@ -971,3 +971,5 @@ Added `src/preflight.py` as the final explicit safety/configuration gate before 
 ## Coinbase Public Market Data Adapter v1
 
 After Alpaca account/MFA onboarding blocked the first external dry-run, the provider-neutral boundary was exercised by adding Coinbase Advanced Trade public market data as a replaceable source. Added an unauthenticated `BTC-USD` market-trades WebSocket transport, heartbeat subscription, deterministic 1-minute OHLCV aggregation from trades, a Coinbase completed-bar adapter, bounded reconnect behavior, and public-provider pre-flight support that does not require credentials. Order execution remains hard-disabled for the connectivity/dry-run stage. Alpaca remains a deferred provider option rather than an architectural dependency.
+
+- Added Coinbase public connectivity dry-run runner and deterministic tests; runner has no broker/session dependency and cannot submit orders.

@@ -137,3 +137,5 @@ Architecture Review → Design → TDD → Validation → Documentation → Git 
 - [ ] Run real network connectivity/subscription dry-run with execution hard-disabled.
 - [ ] Observe completed real 1-minute bars through Feed Health and Operational Runtime.
 - [ ] Only then authorize a supervised simulated-execution paper session.
+
+- [x] Coinbase public market-data connectivity dry-run runner (bounded, execution OFF)

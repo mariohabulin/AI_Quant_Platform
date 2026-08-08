@@ -96,7 +96,12 @@ class CoinbaseOneMinuteTradeAggregator:
 
         completed = []
         for event in message.get("events", []):
-            for trade in event.get("trades", []):
+            trades = event.get("trades", [])
+            # Coinbase batches market trades over a short interval. Normalize provider
+            # ordering before feeding the strict stateful minute aggregator because a
+            # batch can straddle a minute boundary and need not arrive oldest-first.
+            trades = sorted(trades, key=lambda trade: self._timestamp(trade.get("time")))
+            for trade in trades:
                 bar = self.ingest_trade(trade)
                 if bar is not None:
                     completed.append(bar)

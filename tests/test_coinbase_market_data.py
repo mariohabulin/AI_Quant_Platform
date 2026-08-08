@@ -91,3 +91,27 @@ def test_transport_uses_injected_websocket_without_credentials():
     iterator = iter(transport)
     assert next(iterator)["channel"] == "heartbeats"
     assert sock.sent == list(transport.subscription_messages)
+
+
+def test_market_trades_batch_is_normalized_chronologically_across_minute_boundary():
+    aggregator = CoinbaseOneMinuteTradeAggregator(product_id="BTC-USD")
+    message = {
+        "channel": "market_trades",
+        "events": [
+            {
+                "type": "update",
+                "trades": [
+                    {"product_id": "BTC-USD", "price": "101", "size": "0.2", "time": "2026-08-08T12:01:00.100Z"},
+                    {"product_id": "BTC-USD", "price": "100", "size": "0.1", "time": "2026-08-08T12:00:59.900Z"},
+                ],
+            }
+        ],
+    }
+
+    bars = aggregator.ingest_message(message)
+
+    assert len(bars) == 1
+    assert bars[0].timestamp == pd.Timestamp("2026-08-08T12:00:00Z")
+    assert bars[0].open == 100.0
+    assert bars[0].close == 100.0
+    assert bars[0].volume == 0.1
