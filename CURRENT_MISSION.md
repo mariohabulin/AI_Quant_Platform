@@ -1,24 +1,24 @@
-# CURRENT MISSION — Phase 3 Risk Engine v1
+# CURRENT MISSION — Phase 3 Risk Engine v2
 
 ## Objective
 
-Replace all-in-only research execution with an optional, deterministic risk-based position-sizing foundation while preserving full backward compatibility.
+Add deterministic account-protection guards on top of proven risk-based position sizing, without allowing the Risk Engine to become a strategy or execution engine.
 
 ## Current Priorities
 
-- calculate risk budget from account equity and risk-per-trade
-- size long positions from entry price and protective stop distance
-- enforce a configurable maximum position fraction
-- expose explicit ALLOW / REDUCE / REJECT risk decisions
-- integrate approved sizing into Backtesting Engine execution
-- retain all-in behavior when Risk Engine is disabled
-- preserve realistic commission, spread and slippage handling
+- track peak mark-to-market equity causally
+- reject new risk after maximum drawdown is reached
+- latch the drawdown kill switch for the remainder of the backtest run
+- enforce configurable daily and weekly loss limits
+- reset daily/weekly baselines at calendar boundaries
+- reset all protection state between independent backtests
+- preserve Risk Engine v1 sizing and legacy no-risk-engine behavior
 - keep all automated tests passing
 
-## Risk Engine v1 Boundary
+## Risk Engine v2 Boundary
 
-This milestone sizes one long position at a time. It does not yet implement portfolio exposure, drawdown guards, loss limits, kill switches, correlation controls, dynamic strategy allocation or live-broker authorization.
+Protection guards authorize or reject **new positions**. They do not generate BUY/SELL signals and do not force-liquidate existing positions. Portfolio correlation, multi-position aggregate exposure, broker authorization and live emergency liquidation remain later milestones.
 
 ## Next Mission
 
-After position sizing is proven, add account/portfolio protection guards before paper trading.
+After account protection is proven, review portfolio-level risk requirements and prepare the research stack for paper-trading integration.

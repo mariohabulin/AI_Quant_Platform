@@ -640,3 +640,19 @@ Risk Engine v1 must:
 - keep execution costs and affordability constraints inside the Backtesting Engine
 
 Portfolio exposure, drawdown guards, daily/weekly loss limits, kill switches and portfolio correlation remain later Risk Engine milestones.
+
+# Phase 3 Risk Engine v2 — Account Protection Layer Contract
+
+Risk Engine v2 extends sizing with stateful account-protection guards while preserving strategy/execution separation. The Backtesting Engine reports current mark-to-market equity before considering a new entry; the Risk Engine may ALLOW or REJECT new risk.
+
+Protection controls:
+
+- maximum peak-to-current equity drawdown, implemented as a latched kill switch
+- daily loss limit measured from the first observed equity of each calendar day
+- weekly loss limit measured from the first observed equity of each ISO week
+- deterministic reset of protection state at the start of every independent backtest run
+- explicit protection evidence (`drawdown`, `daily_loss`, `weekly_loss`, `kill_switch_active`)
+
+Protection guards block **new entries**. They do not create trading signals, modify strategy exits, or force-liquidate an already open position. Forced liquidation, portfolio-wide multi-position exposure/correlation controls and live-broker authorization remain later execution/risk milestones.
+
+When all protection limits are disabled, Risk Engine v1 behavior is preserved and non-datetime backtests remain backward compatible.

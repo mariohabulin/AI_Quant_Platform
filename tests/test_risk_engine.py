@@ -109,3 +109,91 @@ def test_existing_backtester_remains_all_in_without_risk_engine():
     assert engine.capital == 11000
     assert engine.trade_history[0]["shares"] == 100
     assert engine.trade_history[0]["risk_status"] is None
+
+
+def test_drawdown_guard_latches_kill_switch():
+    engine = RiskEngine(max_drawdown_fraction=0.10)
+    assert engine.observe_equity(10000, "2026-01-05").status == "ALLOW"
+    decision = engine.observe_equity(9000, "2026-01-06")
+    assert decision.status == "REJECT"
+    assert decision.kill_switch_active is True
+    assert decision.drawdown == pytest.approx(0.10)
+    assert engine.observe_equity(9500, "2026-01-07").status == "REJECT"
+
+
+def test_new_equity_high_updates_drawdown_peak():
+    engine = RiskEngine(max_drawdown_fraction=0.10)
+    engine.observe_equity(10000, "2026-01-05")
+    engine.observe_equity(12000, "2026-01-06")
+    decision = engine.observe_equity(11000, "2026-01-07")
+    assert decision.status == "ALLOW"
+    assert decision.drawdown == pytest.approx(1 / 12)
+
+
+def test_daily_loss_guard_resets_on_new_day():
+    engine = RiskEngine(daily_loss_limit=0.02)
+    engine.observe_equity(10000, "2026-01-05 09:00")
+    assert engine.observe_equity(9800, "2026-01-05 15:00").status == "REJECT"
+    assert engine.observe_equity(9800, "2026-01-06 09:00").status == "ALLOW"
+
+
+def test_weekly_loss_guard_resets_on_new_iso_week():
+    engine = RiskEngine(weekly_loss_limit=0.05)
+    engine.observe_equity(10000, "2026-01-05")
+    assert engine.observe_equity(9500, "2026-01-09").status == "REJECT"
+    assert engine.observe_equity(9500, "2026-01-12").status == "ALLOW"
+
+
+def test_invalid_protection_limits_are_rejected():
+    with pytest.raises(ValueError):
+        RiskEngine(max_drawdown_fraction=0)
+    with pytest.raises(ValueError):
+        RiskEngine(daily_loss_limit=1.1)
+    with pytest.raises(TypeError):
+        RiskEngine(weekly_loss_limit=True)
+
+
+def test_protection_guards_require_datetime_index_when_enabled():
+    with pytest.raises(TypeError, match="datetime-like"):
+        RiskEngine(max_drawdown_fraction=0.1).observe_equity(10000, object())
+
+
+def test_disabled_protection_does_not_require_datetime_index():
+    decision = RiskEngine().observe_equity(10000, object())
+    assert decision.status == "ALLOW"
+
+
+class TwoTradeSignalEngine:
+    def run(self, data):
+        result = data.copy()
+        result["Signal"] = [1, -1, 1, -1]
+        return result
+
+
+def test_backtester_blocks_new_trade_after_drawdown_kill_switch():
+    data = pd.DataFrame({
+        "Open": [100, 90, 90, 95], "High": [101, 91, 91, 96],
+        "Low": [99, 89, 89, 94], "Close": [100, 90, 90, 95],
+        "Volume": [1000] * 4, "Stop": [98, 88, 88, 93],
+    }, index=pd.to_datetime(["2026-01-05", "2026-01-06", "2026-01-07", "2026-01-08"]))
+    risk = RiskEngine(risk_per_trade=0.10, max_drawdown_fraction=0.05)
+    engine = BacktestingEngine(TwoTradeSignalEngine(), risk_engine=risk)
+    engine.run(data)
+    assert len(engine.trade_history) == 1
+    assert risk.kill_switch_active is True
+
+
+def test_protection_state_resets_between_backtest_runs():
+    risk = RiskEngine(max_drawdown_fraction=0.05)
+    risk.observe_equity(10000, "2026-01-05")
+    risk.observe_equity(9000, "2026-01-06")
+    assert risk.kill_switch_active is True
+    data = pd.DataFrame({
+        "Open": [100, 105, 110], "High": [101, 106, 111],
+        "Low": [99, 104, 109], "Close": [100, 105, 110],
+        "Volume": [1000] * 3, "Stop": [98, 98, 98],
+    }, index=pd.to_datetime(["2026-02-02", "2026-02-03", "2026-02-04"]))
+    engine = BacktestingEngine(SignalEngine(), risk_engine=risk)
+    engine.run(data)
+    assert risk.kill_switch_active is False
+    assert len(engine.trade_history) == 1

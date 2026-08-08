@@ -193,10 +193,16 @@ class BacktestingEngine:
             price = float(row["Close"])
             signal = int(row["Signal"])
 
+            protection = None
+            if self.risk_engine is not None:
+                protection = self.risk_engine.observe_equity(
+                    self._calculate_equity(price), index
+                )
+
             if signal == 1 and self.position == 0:
                 if self.risk_engine is None:
                     self._buy(price, index)
-                else:
+                elif protection.status != "REJECT":
                     if self.risk_stop_column not in data.columns:
                         raise ValueError(
                             f"Risk-managed backtest requires '{self.risk_stop_column}' column."
@@ -247,6 +253,8 @@ class BacktestingEngine:
             raise ValueError("Input DataFrame cannot be empty.")
 
         self._reset_state()
+        if self.risk_engine is not None:
+            self.risk_engine.reset_protection_state()
 
         result = self.strategy_engine.run(data)
 

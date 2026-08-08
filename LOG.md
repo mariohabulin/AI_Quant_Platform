@@ -861,3 +861,15 @@ The layer intentionally does not pool trades across assets or introduce portfoli
 - Added risk decision evidence to completed trade history.
 - Kept execution affordability and trading costs inside Backtesting Engine.
 - Added dedicated Risk Engine and integration test coverage.
+
+## Phase 3 — Risk Engine v2: Account Protection Layer
+
+- Added causal peak-equity drawdown tracking.
+- Added configurable maximum-drawdown kill switch that latches for the current backtest run.
+- Added configurable daily loss guard with calendar-day reset.
+- Added configurable weekly loss guard with ISO-week reset.
+- Added explicit protection decisions and diagnostic loss/drawdown evidence.
+- Integrated protection authorization before new Backtesting Engine entries.
+- Reset Risk Engine protection state between independent backtest runs.
+- Preserved Risk Engine v1 position sizing and legacy behavior when guards are disabled.
+- Kept forced liquidation and portfolio-wide correlation/exposure outside this milestone.
