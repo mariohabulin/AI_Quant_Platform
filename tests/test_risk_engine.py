@@ -197,3 +197,85 @@ def test_protection_state_resets_between_backtest_runs():
     engine.run(data)
     assert risk.kill_switch_active is False
     assert len(engine.trade_history) == 1
+
+
+def test_minimum_reward_risk_is_configurable_and_not_enabled_by_default():
+    assert RiskEngine().min_reward_risk is None
+    assert RiskEngine(min_reward_risk=3.0).min_reward_risk == 3.0
+
+
+def test_invalid_minimum_reward_risk_is_rejected():
+    with pytest.raises(ValueError):
+        RiskEngine(min_reward_risk=0)
+    with pytest.raises(TypeError):
+        RiskEngine(min_reward_risk=True)
+
+
+def test_reward_risk_policy_accepts_trade_at_threshold():
+    decision = RiskEngine(min_reward_risk=3.0).assess_long(
+        10000, entry_price=100, stop_price=98, target_price=106
+    )
+    assert decision.status == "ALLOW"
+    assert decision.reward_risk_ratio == pytest.approx(3.0)
+    assert decision.stop_price == 98
+    assert decision.target_price == 106
+
+
+def test_reward_risk_policy_rejects_trade_below_threshold():
+    decision = RiskEngine(min_reward_risk=3.0).assess_long(
+        10000, entry_price=100, stop_price=98, target_price=104
+    )
+    assert decision.status == "REJECT"
+    assert decision.position_size == 0
+    assert decision.reward_risk_ratio == pytest.approx(2.0)
+    assert "requirement not met" in decision.reason
+
+
+def test_reward_risk_policy_requires_target():
+    decision = RiskEngine(min_reward_risk=3.0).assess_long(10000, 100, 98)
+    assert decision.status == "REJECT"
+    assert "requires a target" in decision.reason
+
+
+def test_invalid_long_target_is_rejected():
+    decision = RiskEngine(min_reward_risk=2.0).assess_long(10000, 100, 98, 100)
+    assert decision.status == "REJECT"
+    assert "target must be above entry" in decision.reason
+
+
+def test_backtester_requires_target_column_when_reward_risk_policy_enabled():
+    data = pd.DataFrame({
+        "Open": [100, 105, 110], "High": [101, 106, 111],
+        "Low": [99, 104, 109], "Close": [100, 105, 110],
+        "Volume": [1000] * 3, "Stop": [98, 98, 98],
+    })
+    engine = BacktestingEngine(SignalEngine(), risk_engine=RiskEngine(min_reward_risk=3.0))
+    with pytest.raises(ValueError, match="requires 'Target' column"):
+        engine.run(data)
+
+
+def test_backtester_records_trade_risk_policy_evidence():
+    data = pd.DataFrame({
+        "Open": [100, 105, 110], "High": [101, 106, 111],
+        "Low": [99, 104, 109], "Close": [100, 105, 110],
+        "Volume": [1000] * 3, "Stop": [98, 98, 98], "Target": [106, 106, 106],
+    })
+    engine = BacktestingEngine(
+        SignalEngine(), risk_engine=RiskEngine(risk_per_trade=0.01, min_reward_risk=3.0)
+    )
+    engine.run(data)
+    trade = engine.trade_history[0]
+    assert trade["planned_stop_price"] == 98
+    assert trade["planned_target_price"] == 106
+    assert trade["planned_reward_risk_ratio"] == pytest.approx(3.0)
+
+
+def test_reward_risk_policy_rejection_does_not_open_trade():
+    data = pd.DataFrame({
+        "Open": [100, 105, 110], "High": [101, 106, 111],
+        "Low": [99, 104, 109], "Close": [100, 105, 110],
+        "Volume": [1000] * 3, "Stop": [98, 98, 98], "Target": [104, 104, 104],
+    })
+    engine = BacktestingEngine(SignalEngine(), risk_engine=RiskEngine(min_reward_risk=3.0))
+    engine.run(data)
+    assert engine.trade_history == []

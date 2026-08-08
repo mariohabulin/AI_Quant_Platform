@@ -10,6 +10,9 @@ class RiskDecision:
     risk_budget: float
     position_notional: float
     reason: str
+    stop_price: float = None
+    target_price: float = None
+    reward_risk_ratio: float = None
 
 
 @dataclass(frozen=True)
@@ -28,6 +31,7 @@ class RiskEngine:
     def __init__(
         self, risk_per_trade=0.01, max_position_fraction=1.0,
         max_drawdown_fraction=None, daily_loss_limit=None, weekly_loss_limit=None,
+        min_reward_risk=None,
     ):
         self.risk_per_trade = self._validate_fraction(
             risk_per_trade, "Risk per trade", allow_zero=False
@@ -38,6 +42,7 @@ class RiskEngine:
         self.max_drawdown_fraction = self._optional_fraction(max_drawdown_fraction, "Max drawdown fraction")
         self.daily_loss_limit = self._optional_fraction(daily_loss_limit, "Daily loss limit")
         self.weekly_loss_limit = self._optional_fraction(weekly_loss_limit, "Weekly loss limit")
+        self.min_reward_risk = self._optional_positive(min_reward_risk, "Minimum reward/risk")
         self.reset_protection_state()
 
     @staticmethod
@@ -50,6 +55,12 @@ class RiskEngine:
             raise ValueError(f"{name} must be greater than zero and at most 1.0.")
         return value
 
+
+    @classmethod
+    def _optional_positive(cls, value, name):
+        if value is None:
+            return None
+        return cls._positive(value, name)
 
     @classmethod
     def _optional_fraction(cls, value, name):
@@ -122,14 +133,43 @@ class RiskEngine:
             raise ValueError(f"{name} must be greater than zero.")
         return value
 
-    def assess_long(self, equity, entry_price, stop_price):
+    def assess_long(self, equity, entry_price, stop_price, target_price=None):
         equity = self._positive(equity, "Equity")
         entry_price = self._positive(entry_price, "Entry price")
         stop_price = self._positive(stop_price, "Stop price")
 
         if stop_price >= entry_price:
-            return RiskDecision("REJECT", 0.0, 0.0, equity * self.risk_per_trade,
-                                0.0, "Long stop must be below entry price.")
+            return RiskDecision(
+                "REJECT", 0.0, 0.0, equity * self.risk_per_trade, 0.0,
+                "Long stop must be below entry price.", stop_price=stop_price,
+            )
+
+        reward_risk_ratio = None
+        validated_target = None
+        if target_price is not None:
+            validated_target = self._positive(target_price, "Target price")
+            if validated_target <= entry_price:
+                return RiskDecision(
+                    "REJECT", 0.0, 0.0, equity * self.risk_per_trade, 0.0,
+                    "Long target must be above entry price.",
+                    stop_price=stop_price, target_price=validated_target,
+                )
+            reward_risk_ratio = (validated_target - entry_price) / (entry_price - stop_price)
+
+        if self.min_reward_risk is not None:
+            if validated_target is None:
+                return RiskDecision(
+                    "REJECT", 0.0, 0.0, equity * self.risk_per_trade, 0.0,
+                    "Minimum reward/risk policy requires a target price.",
+                    stop_price=stop_price,
+                )
+            if reward_risk_ratio < self.min_reward_risk:
+                return RiskDecision(
+                    "REJECT", 0.0, 0.0, equity * self.risk_per_trade, 0.0,
+                    "Minimum reward/risk requirement not met.",
+                    stop_price=stop_price, target_price=validated_target,
+                    reward_risk_ratio=reward_risk_ratio,
+                )
 
         risk_budget = equity * self.risk_per_trade
         risk_per_unit = entry_price - stop_price
@@ -147,5 +187,8 @@ class RiskEngine:
         reason = "Position reduced by exposure cap." if capped else "Risk sizing approved."
         monetary_risk = position_size * risk_per_unit
         notional = position_size * entry_price
-        return RiskDecision(status, position_size, monetary_risk, risk_budget,
-                            notional, reason)
+        return RiskDecision(
+            status, position_size, monetary_risk, risk_budget, notional, reason,
+            stop_price=stop_price, target_price=validated_target,
+            reward_risk_ratio=reward_risk_ratio,
+        )

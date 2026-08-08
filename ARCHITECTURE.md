@@ -656,3 +656,20 @@ Protection controls:
 Protection guards block **new entries**. They do not create trading signals, modify strategy exits, or force-liquidate an already open position. Forced liquidation, portfolio-wide multi-position exposure/correlation controls and live-broker authorization remain later execution/risk milestones.
 
 When all protection limits are disabled, Risk Engine v1 behavior is preserved and non-datetime backtests remain backward compatible.
+
+# Phase 3 Risk Engine v3 — Trade Risk Policy Contract
+
+Risk Engine v3 completes the pre-paper-trading risk scope with an explicit pre-trade policy. Strategy logic still decides when a trade is desired; Risk Engine validates whether the proposed long trade has a structurally valid stop/target and sufficient configured reward relative to risk.
+
+Trade Risk Policy v1:
+
+- long stop must be strictly below entry
+- optional long target must be strictly above entry
+- configurable `min_reward_risk`; disabled by default for backward compatibility
+- when `min_reward_risk` is enabled, a target is mandatory
+- reward/risk is computed from planned market prices as `(target - entry) / (entry - stop)`
+- trades below the configured threshold are `REJECT` decisions before execution
+- approved trade history records planned stop, target and reward/risk evidence
+- execution costs remain the Backtesting Engine's responsibility and are not silently folded into the strategy's planned R:R
+
+Risk Engine v1-v3 is the minimum risk-control scope required before paper trading. More advanced portfolio and live-emergency controls are deliberately deferred rather than forgotten; see the ROADMAP deferred backlog.

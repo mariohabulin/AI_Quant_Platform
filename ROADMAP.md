@@ -337,3 +337,36 @@ AI Learning Engine
 Phase 8
 Live Trading
 ```
+---
+
+# Deferred / Post-Paper-Trading Enhancements
+
+These items are intentionally deferred, **not rejected**. They remain on the roadmap so the project can reach evidence-producing paper trading without uncontrolled scope growth. Their priority will be reassessed using backtest and forward/paper-trading evidence.
+
+## Risk and Portfolio
+
+- portfolio correlation and concentration risk controls
+- aggregate multi-position / multi-asset exposure limits
+- portfolio allocation and weighting policies
+- volatility targeting
+- Value at Risk (VaR) and Expected Shortfall where evidence shows they add decision value
+- Kelly sizing or a deliberately conservative fractional-Kelly variant
+- Monte Carlo drawdown evidence as a possible hard risk gate after acceptable drawdown policy is empirically defined
+- broker-aware authorization, margin/leverage constraints and live buying-power checks
+- emergency forced liquidation / live execution kill-switch path
+
+## Strategy Intelligence
+
+- regime-based strategy selection only after regime-conditioned evidence is sufficiently robust
+- additional strategies only when backtesting or paper trading demonstrates a real coverage gap
+- Strategy Optimizer / adaptive parameter optimization only after the validation stack can control overfitting risk and evidence shows optimization is necessary
+
+## Research / Validation Extensions
+
+- portfolio-level cross-asset correlation and diversification validation
+- richer stress/scenario testing if paper-trading discrepancies justify it
+- recalibration of Validation Policy and Multi-Asset Policy thresholds from accumulated evidence rather than arbitrary expansion
+
+## Deferral Principle
+
+The current objective is not to build every institutional risk feature before the first forward test. The objective is to enter paper trading with a deterministic, testable and conservative core, measure where simulation and reality diverge, and use that evidence to decide which deferred capabilities earn implementation priority.

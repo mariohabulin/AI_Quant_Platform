@@ -1,24 +1,24 @@
-# CURRENT MISSION — Phase 3 Risk Engine v2
+# CURRENT MISSION — Phase 3 Risk Engine v3
 
 ## Objective
 
-Add deterministic account-protection guards on top of proven risk-based position sizing, without allowing the Risk Engine to become a strategy or execution engine.
+Complete the pre-paper-trading Risk Engine with an explicit, configurable Trade Risk Policy while preserving strategy, risk and execution boundaries.
 
 ## Current Priorities
 
-- track peak mark-to-market equity causally
-- reject new risk after maximum drawdown is reached
-- latch the drawdown kill switch for the remainder of the backtest run
-- enforce configurable daily and weekly loss limits
-- reset daily/weekly baselines at calendar boundaries
-- reset all protection state between independent backtests
-- preserve Risk Engine v1 sizing and legacy no-risk-engine behavior
+- validate long stop and target structure before entry
+- support configurable minimum reward/risk without hardcoding 1:3
+- reject trades that fail the configured reward/risk policy
+- preserve v1 sizing and v2 account-protection guards
+- persist planned stop/target/R:R evidence in completed trade history
+- keep execution costs and affordability inside Backtesting Engine
+- document deliberately deferred post-paper-trading risk enhancements
 - keep all automated tests passing
 
-## Risk Engine v2 Boundary
+## Definition of Done
 
-Protection guards authorize or reject **new positions**. They do not generate BUY/SELL signals and do not force-liquidate existing positions. Portfolio correlation, multi-position aggregate exposure, broker authorization and live emergency liquidation remain later milestones.
+Risk Engine v1-v3 provides position sizing, exposure caps, account-protection guards and explicit pre-trade structural/R:R authorization with deterministic evidence and backward compatibility.
 
 ## Next Mission
 
-After account protection is proven, review portfolio-level risk requirements and prepare the research stack for paper-trading integration.
+Close the current Risk Engine scope and begin Paper Trading Engine design/integration. Deferred portfolio and advanced risk controls remain explicitly tracked in ROADMAP.md.

@@ -873,3 +873,14 @@ The layer intentionally does not pool trades across assets or introduce portfoli
 - Reset Risk Engine protection state between independent backtest runs.
 - Preserved Risk Engine v1 position sizing and legacy behavior when guards are disabled.
 - Kept forced liquidation and portfolio-wide correlation/exposure outside this milestone.
+
+## Phase 3 — Risk Engine v3: Trade Risk Policy
+
+- Added configurable minimum reward/risk policy; disabled by default for backward compatibility.
+- Kept 1:3 available as configuration rather than hardcoded trading truth.
+- Added explicit long target validation and mandatory target when minimum R:R is enabled.
+- Added pre-trade rejection for structurally invalid or insufficient-R:R proposals.
+- Added planned stop, target and reward/risk evidence to completed risk-managed trades.
+- Preserved v1 position sizing, v2 account-protection guards and legacy no-risk-engine behavior.
+- Kept execution costs and actual fill simulation inside Backtesting Engine.
+- Documented advanced portfolio/risk capabilities as deferred work rather than expanding the pre-paper-trading scope.

@@ -21,10 +21,12 @@ class BacktestingEngine:
         spread_rate=0.0,
         risk_engine=None,
         risk_stop_column="Stop",
+        risk_target_column="Target",
     ):
         self.strategy_engine = strategy_engine
         self.risk_engine = risk_engine
         self.risk_stop_column = risk_stop_column
+        self.risk_target_column = risk_target_column
 
         self.initial_capital = self._validate_positive_number(
             initial_capital,
@@ -177,6 +179,18 @@ class BacktestingEngine:
                     self.entry_risk_decision.monetary_risk
                     if self.entry_risk_decision is not None else None
                 ),
+                "planned_stop_price": (
+                    self.entry_risk_decision.stop_price
+                    if self.entry_risk_decision is not None else None
+                ),
+                "planned_target_price": (
+                    self.entry_risk_decision.target_price
+                    if self.entry_risk_decision is not None else None
+                ),
+                "planned_reward_risk_ratio": (
+                    self.entry_risk_decision.reward_risk_ratio
+                    if self.entry_risk_decision is not None else None
+                ),
             }
         )
 
@@ -208,10 +222,21 @@ class BacktestingEngine:
                             f"Risk-managed backtest requires '{self.risk_stop_column}' column."
                         )
                     stop_price = float(row[self.risk_stop_column])
+                    target_price = None
+                    if self.risk_engine.min_reward_risk is not None:
+                        if self.risk_target_column not in data.columns:
+                            raise ValueError(
+                                f"Reward/risk policy requires '{self.risk_target_column}' column."
+                            )
+                        target_price = float(row[self.risk_target_column])
+                    elif self.risk_target_column in data.columns:
+                        target_price = float(row[self.risk_target_column])
+
                     decision = self.risk_engine.assess_long(
                         equity=self._calculate_equity(price),
                         entry_price=price,
                         stop_price=stop_price,
+                        target_price=target_price,
                     )
                     if decision.status != "REJECT":
                         self._buy(
