@@ -401,3 +401,8 @@ The previously documented deferred portfolio, risk and strategy-intelligence ite
 ## Deferral Rule
 
 A deferred capability moves into active development only when one of three conditions is met: it is required for safe unattended paper/live operation; forward evidence exposes a material model gap; or the next architectural boundary cannot be completed safely without it. This prevents forgotten work without allowing the backlog to become uncontrolled scope creep.
+
+### Market-data boundary note
+
+- **Provider selection and real streaming connectivity remain deferred until deterministic replay/backtest consistency is measured.** The normalized `MarketDataEvent` boundary is implemented first so provider-specific schemas, reconnect behavior and API failures cannot contaminate Strategy/Risk/Paper Trading logic. Once a provider is selected, its adapter must translate external payloads into this internal contract.
+- **Replay performance optimization / bounded rolling-history buffers are deferred until real session duration and strategy warm-up requirements are measured.** Replay v1 intentionally favors transparent cumulative data views over premature memory/performance optimization.

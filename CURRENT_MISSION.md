@@ -1,31 +1,32 @@
 # CURRENT MISSION
 
-## Paper Trading v2 — Session & State Foundation
+## Market Data Boundary + Historical Replay Feed v1
 
 **Status:** IMPLEMENTED / VALIDATION PENDING
 
 ### Objective
 
-Prove that paper trading can operate across an ordered sequence of market events while preserving account, position, risk-protection and audit state between events.
+Create a provider-neutral market-event boundary and prove that historical OHLCV bars can be replayed deterministically through the stateful PaperTradingSession without future-data leakage.
 
 ### Implemented
 
-- stateful deterministic PaperTradingSession
-- strictly increasing event-time guard
-- mark-to-market session snapshots
-- persistent in-memory cash, position, realized P&L and equity across events
-- preserved RiskEngine protection / kill-switch state across the session
-- deterministic multi-event run boundary
-- immutable session snapshot history
-- no external market-data or persistence dependency
+- immutable normalized `MarketDataEvent`
+- deterministic `HistoricalReplayFeed`
+- required OHLCV schema and numeric/integrity validation
+- unique, strictly increasing event-time enforcement
+- cumulative data-available-so-far views for strategy execution
+- repeatable replay with consumer-isolated event copies
+- integration proof from replay feed into PaperTradingSession
+- no external API/network dependency
 
 ### Definition of Done
 
-- session/state tests pass
+- market-data feed tests pass
 - full regression remains green
-- existing Paper Trading Engine and Paper Broker responsibilities remain unchanged
-- deferred persistence, streaming and monitoring work remains explicitly tracked in ROADMAP
+- replay never exposes future bars to the current event
+- Strategy, Risk Engine, Paper Broker and PaperTradingSession responsibilities remain unchanged
+- real streaming connectivity remains provider-adapter work, not core trading-engine logic
 
 ### Next after validation
 
-Design the market-data/event-feed adapter boundary, then connect a deterministic feed before selecting and attaching a real market-data provider.
+Add replay/backtest consistency evidence and then select/attach a real market-data provider behind the normalized event boundary.

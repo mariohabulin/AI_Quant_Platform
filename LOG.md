@@ -927,3 +927,11 @@ Added a deterministic `PaperTradingEngine` that connects Strategy Engine, Risk E
 A deterministic session boundary now coordinates ordered market events across time while preserving PaperTradingEngine, RiskEngine and PaperBroker state. Session snapshots record mark-to-market equity, cash, position, realized P&L and the associated orchestration outcome. Timestamps must be strictly increasing, preventing accidental replay/out-of-order processing in the deterministic forward loop.
 
 The session deliberately remains in-memory. Durable persistence, restart recovery, external streaming feeds and watchdog/monitoring remain deferred in ROADMAP until the deterministic continuous lifecycle is validated.
+
+## Market Data Boundary + Historical Replay Feed v1
+
+- Added provider-neutral `MarketDataEvent` contract.
+- Added deterministic `HistoricalReplayFeed` with strict OHLCV, timestamp and price-geometry validation.
+- Replay emits cumulative data available only up to each event, preventing future-bar leakage by construction.
+- Proved replay events can drive the existing stateful PaperTradingSession without changing Strategy, Risk or Paper Broker boundaries.
+- External streaming/API connectivity remains deferred until deterministic replay and consistency evidence are green.
