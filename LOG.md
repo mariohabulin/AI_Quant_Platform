@@ -967,3 +967,7 @@ Implemented the final MUST-HAVE operational boundary before the first controlled
 ## Pre-Flight Gate v1
 
 Added `src/preflight.py` as the final explicit safety/configuration gate before the first controlled real-time paper run. The gate produces a structured PASS/FAIL report and never submits orders. It checks credential presence with redacted reporting, BTC/USD 1-minute scope, explicit risk protections, paper-account cleanliness, checkpoint writability, execution lock, injected provider connectivity/subscription, and runtime startability. Failures block progression rather than being silently tolerated.
+
+## Coinbase Public Market Data Adapter v1
+
+After Alpaca account/MFA onboarding blocked the first external dry-run, the provider-neutral boundary was exercised by adding Coinbase Advanced Trade public market data as a replaceable source. Added an unauthenticated `BTC-USD` market-trades WebSocket transport, heartbeat subscription, deterministic 1-minute OHLCV aggregation from trades, a Coinbase completed-bar adapter, bounded reconnect behavior, and public-provider pre-flight support that does not require credentials. Order execution remains hard-disabled for the connectivity/dry-run stage. Alpaca remains a deferred provider option rather than an architectural dependency.

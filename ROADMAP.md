@@ -126,3 +126,14 @@ Evolve the validated research/risk/paper foundation into a safely operated AI Al
 # Development Principle
 
 Architecture Review → Design → TDD → Validation → Documentation → Git Integration. Progress is measured by evidence, deterministic behavior and safe boundaries rather than feature count.
+
+## Provider Substitution — Coinbase Public Feed v1
+
+- [x] Keep market-data provider replaceable; Alpaca is not a hard dependency.
+- [x] Add public Coinbase `BTC-USD` market-trades transport without credentials.
+- [x] Aggregate trades into completed 1-minute OHLCV bars before Feed Health.
+- [x] Subscribe to heartbeats and bound reconnect attempts.
+- [x] Allow pre-flight credential check to PASS explicitly for public providers.
+- [ ] Run real network connectivity/subscription dry-run with execution hard-disabled.
+- [ ] Observe completed real 1-minute bars through Feed Health and Operational Runtime.
+- [ ] Only then authorize a supervised simulated-execution paper session.

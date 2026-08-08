@@ -120,3 +120,9 @@ def test_halted_runtime_fails_preflight(tmp_path):
     runtime._stop_requested = True
     report = gate(tmp_path, runtime=runtime).run()
     assert next(c for c in report.checks if c.name == "runtime_state").status == "FAIL"
+
+
+def test_public_provider_can_pass_without_credentials(tmp_path):
+    report = gate(tmp_path, credentials={}, provider_name="Coinbase", credentials_required=False).run()
+    check = next(c for c in report.checks if c.name == "credentials")
+    assert report.passed and check.status == "PASS" and "no credentials" in check.reason

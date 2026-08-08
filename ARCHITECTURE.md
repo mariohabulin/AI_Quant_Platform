@@ -795,3 +795,9 @@ The checkpoint is intentionally not a general database or event store. Durable l
 Before any controlled real-time paper session, `PaperPreFlightGate` validates the operational boundary without submitting orders. The gate verifies redacted credential presence, the controlled BTC/USD 1-minute scope, explicit conservative Risk Engine guards, clean/reconciled paper-account state, writable checkpoint storage, hard-disabled execution, provider connectivity/subscription through an injected probe, and a startable runtime state. Any failed check blocks readiness. Credential values are never emitted in the report.
 
 Pre-flight is intentionally separate from trading execution: passing the gate is permission to proceed to a supervised dry-run/forward session, not permission for live-money execution.
+
+## Coinbase Public Market Data Boundary v1
+
+`CoinbasePublicWebSocketTransport -> CoinbaseOneMinuteTradeAggregator -> CoinbaseOneMinuteBarAdapter -> RealTimeMarketDataFeed -> MarketDataEvent`
+
+The transport subscribes only to public `market_trades` and `heartbeats`; no account credentials are required for this first dry-run. The aggregator emits only completed 1-minute buckets, so partial current-minute candles never cross the trading boundary. Coinbase product symbology (`BTC-USD`) is translated at the provider boundary to the platform's internal symbol (`BTC/USD`). Existing Feed Health, Operational Runtime, Risk Engine and Paper Trading boundaries remain provider-neutral and unchanged.

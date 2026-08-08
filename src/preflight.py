@@ -36,7 +36,7 @@ class PaperPreFlightGate:
 
     def __init__(self, runtime, credentials=None, connectivity_probe=None,
                  expected_symbol="BTC/USD", expected_timeframe="1min",
-                 execution_enabled=False):
+                 execution_enabled=False, provider_name="Alpaca", credentials_required=True):
         if runtime is None:
             raise ValueError("runtime is required.")
         self.runtime = runtime
@@ -45,19 +45,23 @@ class PaperPreFlightGate:
         self.expected_symbol = str(expected_symbol).upper()
         self.expected_timeframe = pd.Timedelta(expected_timeframe)
         self.execution_enabled = bool(execution_enabled)
+        self.provider_name = str(provider_name)
+        self.credentials_required = bool(credentials_required)
 
     @staticmethod
     def _check(name, ok, success, failure):
         return PreFlightCheck(name, "PASS" if ok else "FAIL", success if ok else failure)
 
     def _credentials_check(self):
+        if not self.credentials_required:
+            return self._check("credentials", True, f"{self.provider_name} public market data requires no credentials.", "")
         key = str(self.credentials.get("ALPACA_API_KEY", "")).strip()
         secret = str(self.credentials.get("ALPACA_API_SECRET", "")).strip()
         ok = key.lower() not in self.PLACEHOLDERS and secret.lower() not in self.PLACEHOLDERS
         return self._check(
             "credentials", ok,
-            "Required Alpaca credentials are present (values redacted).",
-            "Required Alpaca credentials are missing or placeholder values.",
+            f"Required {self.provider_name} credentials are present (values redacted).",
+            f"Required {self.provider_name} credentials are missing or placeholder values.",
         )
 
     def _scope_check(self):

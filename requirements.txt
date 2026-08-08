@@ -7,3 +7,4 @@ scikit-learn
 sqlalchemy
 requests
 python-dotenv
+websocket-client
