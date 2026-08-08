@@ -31,3 +31,6 @@ Prove a bounded BTC-USD live-data path through Feed Health, Operational Runtime,
 
 ### Forward Paper Session v1
 Next controlled boundary: extend the proven live-paper bridge into a supervised bounded forward session with append-only JSONL audit evidence. The runner remains BTC-USD/1m, paper-only, and structurally unable to send real orders. Crash-transparent strategy-history recovery is intentionally deferred: current runtime checkpoints preserve account/risk/feed continuity but do not yet preserve the accumulating EMA history needed to claim exact strategy continuity after restart.
+
+### Forward Paper Continuity / Recovery v1
+Promoted to MUST-HAVE after the first live forward-paper BUY ended with an open paper position. Persist and restore broker/risk/feed/session state together with accumulated strategy history and the in-progress Coinbase 1m bucket. A one-time audited bootstrap migrates the proven v1 open position into the new continuity state. Runtime state/audit files are local operational artifacts and are no longer committed; the first live audit is retained under `docs/evidence/` as milestone evidence.

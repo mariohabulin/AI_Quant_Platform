@@ -153,3 +153,10 @@ Architecture Review → Design → TDD → Validation → Documentation → Git 
 - [ ] Prove a naturally occurring paper entry and exit over forward data; do not manufacture signals merely to demonstrate orders.
 - [ ] Add crash-transparent strategy-history/aggregator recovery before claiming unattended restart continuity. Reason: existing checkpoint state restores broker/risk/feed/session continuity, but not the accumulating EMA history or an in-progress 1m trade bucket.
 - [ ] Add unattended/cloud operation only after forward-session evidence, restart continuity and operational alerting are proven.
+
+### Forward Paper Continuity / Recovery v1
+- [x] Add atomic forward continuity state covering runtime checkpoint, EMA input history and in-progress Coinbase 1m aggregation bucket.
+- [x] Add one-time bootstrap from the first v1 live audit so the existing open paper position is not forgotten.
+- [x] Keep mutable `runtime/*.json` and `runtime/*.jsonl` artifacts out of Git; retain the first live audit as immutable milestone evidence under `docs/evidence/`.
+- [ ] Prove continuity live: bootstrap the audited position, restart, and confirm cash/position/order sequence before processing additional bars.
+- [ ] Longer unattended/cloud sessions remain deferred until live restart continuity is proven.

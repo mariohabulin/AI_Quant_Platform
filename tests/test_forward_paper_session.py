@@ -37,6 +37,7 @@ def test_forward_runner_is_bounded_and_audited(tmp_path):
         audit_path=audit_path,
         output=output.append,
         now_fn=lambda: pd.Timestamp("2026-08-08T18:01:20Z"),
+        state_path=tmp_path / "state.json",
     )
     assert result.processed_events == 1
     assert result.paper_orders == 0
@@ -50,3 +51,91 @@ def test_forward_runner_is_bounded_and_audited(tmp_path):
 def test_forward_runner_rejects_invalid_bound(tmp_path):
     with pytest.raises(ValueError, match="positive integer"):
         run_forward_paper(transport=[], max_processed_bars=0, audit_path=tmp_path / "x.jsonl")
+
+
+def test_continuity_store_round_trip_preserves_position_history_and_bucket(tmp_path):
+    from src.coinbase_live_paper import build_live_paper_runtime
+    from src.coinbase_market_data import CoinbaseOneMinuteTradeAggregator
+    from src.forward_paper_session import ForwardContinuityStore
+
+    runtime = build_live_paper_runtime()
+    broker = runtime.session.engine.paper_broker
+    broker.cash = 3750.0
+    broker.position_quantity = 0.02
+    broker.average_entry_price = 62500.0
+    broker.position_cost_basis = 1250.0
+    runtime.session._history = pd.DataFrame(
+        [{"Open": 62500.0, "High": 62500.0, "Low": 62500.0, "Close": 62500.0, "Volume": 1.0}],
+        index=pd.DatetimeIndex([pd.Timestamp("2026-08-08T19:24:00Z")]),
+    )
+    aggregator = CoinbaseOneMinuteTradeAggregator()
+    aggregator.ingest_trade({"product_id": "BTC-USD", "price": "62501", "size": "0.1", "time": "2026-08-08T19:25:10Z"})
+
+    store = ForwardContinuityStore(tmp_path / "state.json")
+    store.save(runtime, aggregator)
+    restored = build_live_paper_runtime()
+    restored_agg = CoinbaseOneMinuteTradeAggregator()
+    assert store.load_into(restored, restored_agg) is True
+    assert restored.session.engine.paper_broker.cash == pytest.approx(3750.0)
+    assert restored.session.engine.paper_broker.position_quantity == pytest.approx(0.02)
+    assert restored.session._history.iloc[-1]["Close"] == pytest.approx(62500.0)
+    assert restored_agg._bucket == pd.Timestamp("2026-08-08T19:25:00Z")
+
+
+def test_bootstrap_continuity_from_v1_audit_preserves_open_position(tmp_path):
+    from src.forward_paper_session import ForwardContinuityStore, bootstrap_continuity_from_audit
+    from src.coinbase_live_paper import build_live_paper_runtime
+    from src.coinbase_market_data import CoinbaseOneMinuteTradeAggregator
+
+    audit = tmp_path / "audit.jsonl"
+    records = [
+        {"type":"PAPER_EVENT","paper_orders":0,"snapshot":{"timestamp":"2026-08-08T19:23:00+00:00","market_price":64970.01,"cash":5000.0,"position_quantity":0.0,"average_entry_price":0.0,"realized_pnl":0.0,"equity":5000.0}},
+        {"type":"PAPER_EVENT","paper_orders":1,"snapshot":{"timestamp":"2026-08-08T19:24:00+00:00","market_price":64972.84,"cash":3750.0,"position_quantity":0.019238808092735364,"average_entry_price":64972.84,"realized_pnl":0.0,"equity":5000.0}},
+        {"type":"PAPER_EVENT","paper_orders":1,"snapshot":{"timestamp":"2026-08-08T19:25:00+00:00","market_price":64972.53,"cash":3750.0,"position_quantity":0.019238808092735364,"average_entry_price":64972.84,"realized_pnl":0.0,"equity":4999.994035969491}},
+    ]
+    audit.write_text("\n".join(json.dumps(x) for x in records)+"\n", encoding="utf-8")
+    state = tmp_path / "state.json"
+    account = bootstrap_continuity_from_audit(audit, state)
+    assert account["cash"] == pytest.approx(3750.0)
+    assert account["position_quantity"] == pytest.approx(0.019238808092735364)
+
+    runtime = build_live_paper_runtime()
+    agg = CoinbaseOneMinuteTradeAggregator()
+    assert ForwardContinuityStore(state).load_into(runtime, agg)
+    assert runtime.session.engine.paper_broker._next_order_number == 2
+    assert runtime.session.session._last_timestamp == pd.Timestamp("2026-08-08T19:25:00Z")
+    assert len(runtime.session._history) == 3
+
+
+def test_cli_bootstrap_uses_evidence_audit_by_default(monkeypatch, tmp_path, capsys):
+    import src.forward_paper_session as module
+
+    seen = {}
+
+    def fake_bootstrap(audit_path, state_path):
+        seen["audit"] = str(audit_path)
+        seen["state"] = str(state_path)
+        return {"cash": 3750.0, "position_quantity": 0.019238808, "equity": 4999.99}
+
+    monkeypatch.setattr(module, "bootstrap_continuity_from_audit", fake_bootstrap)
+    state = tmp_path / "state.json"
+    assert module.main(["--bootstrap-from-audit", "--state", str(state)]) == 0
+    assert seen["audit"] == module.DEFAULT_BOOTSTRAP_AUDIT
+    assert seen["state"] == str(state)
+    assert "Continuity bootstrap complete" in capsys.readouterr().out
+
+
+def test_cli_bootstrap_keeps_legacy_explicit_audit_override(monkeypatch, tmp_path):
+    import src.forward_paper_session as module
+
+    seen = {}
+
+    def fake_bootstrap(audit_path, state_path):
+        seen["audit"] = str(audit_path)
+        return {"cash": 3750.0, "position_quantity": 0.019238808, "equity": 4999.99}
+
+    monkeypatch.setattr(module, "bootstrap_continuity_from_audit", fake_bootstrap)
+    audit = tmp_path / "legacy.jsonl"
+    state = tmp_path / "state.json"
+    assert module.main(["--bootstrap-from-audit", "--audit", str(audit), "--state", str(state)]) == 0
+    assert seen["audit"] == str(audit)

@@ -986,3 +986,6 @@ After Alpaca account/MFA onboarding blocked the first external dry-run, the prov
 - Added append-only JSONL audit evidence for session boundaries, rejected bars, paper events, strategy/risk/order outcomes and account snapshots.
 - Real order execution remains structurally unavailable.
 - Explicitly deferred crash-transparent strategy-history and in-progress 1m aggregator recovery; current operational checkpoints alone are insufficient to claim exact EMA continuity after restart.
+
+## Forward Paper Continuity / Recovery v1
+The first supervised forward-paper run produced a real-data BUY and ended with an open paper BTC position. That promoted exact restart continuity from deferred work to MUST-HAVE. Added atomic continuity persistence for broker/risk/feed/session state plus accumulated EMA history and the in-progress Coinbase minute bucket, and added a one-time bootstrap path from the preserved first-live audit. Mutable runtime artifacts are now ignored by Git; the first live audit is retained as evidence.

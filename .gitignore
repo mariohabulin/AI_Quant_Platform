@@ -24,3 +24,7 @@ venv/
 # Logs
 *.log# Temporary project archives
 *.zip
+
+# Runtime paper-trading state (local operational artifacts)
+runtime/*.json
+runtime/*.jsonl

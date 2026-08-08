@@ -47,6 +47,14 @@ class AccumulatingPaperSession:
     def snapshot_history(self):
         return self.session.snapshot_history
 
+    @property
+    def _last_timestamp(self):
+        return self.session._last_timestamp
+
+    @_last_timestamp.setter
+    def _last_timestamp(self, value):
+        self.session._last_timestamp = value
+
     def process(self, data, stop_price=None, target_price=None, timestamp=None):
         if data is None or getattr(data, "empty", True):
             raise ValueError("Live paper market data cannot be empty.")

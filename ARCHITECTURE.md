@@ -810,3 +810,6 @@ The bounded live-paper path is Coinbase public WebSocket -> 1m trade aggregator 
 
 ## Forward Paper Observation Boundary
 `src/forward_paper_session.py` reuses the Coinbase live-paper composition and adds only bounded duration plus append-only JSONL audit evidence. It has no real broker/exchange execution adapter. Audit persistence is evidence/observability, not a substitute for runtime checkpoint recovery. Exact restart continuity remains deferred until strategy history and in-progress market-data aggregation can be restored deterministically.
+
+## Forward Paper Continuity Boundary
+Forward-paper restart state is broader than the generic operational checkpoint because the live composition owns state outside `PaperOperationalRuntime`. `ForwardContinuityStore` atomically persists the runtime checkpoint, `AccumulatingPaperSession` strategy input history, and the Coinbase aggregator's in-progress minute bucket. This prevents a restart from forgetting an open paper position or recomputing EMA decisions from an empty history. Mutable runtime state/audit files are operational artifacts, not source code; milestone evidence is stored separately under `docs/evidence/`.
