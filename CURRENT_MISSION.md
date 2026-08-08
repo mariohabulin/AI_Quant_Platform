@@ -1,24 +1,25 @@
-# CURRENT MISSION — Phase 3 Risk Engine v3
+# CURRENT MISSION — Paper Trading Foundation
 
 ## Objective
 
-Complete the pre-paper-trading Risk Engine with an explicit, configurable Trade Risk Policy while preserving strategy, risk and execution boundaries.
+Build a deterministic Paper Broker boundary that can execute already-authorized market orders, maintain account/position state and preserve auditable order lifecycle evidence without mixing strategy or risk responsibilities into execution.
 
 ## Current Priorities
 
-- validate long stop and target structure before entry
-- support configurable minimum reward/risk without hardcoding 1:3
-- reject trades that fail the configured reward/risk policy
-- preserve v1 sizing and v2 account-protection guards
-- persist planned stop/target/R:R evidence in completed trade history
-- keep execution costs and affordability inside Backtesting Engine
-- document deliberately deferred post-paper-trading risk enhancements
+- add deterministic long-only market BUY/SELL execution
+- model commission, slippage and spread consistently with research execution assumptions
+- separate order submission from fill/cancel lifecycle
+- maintain cash, position quantity, average entry price, realized P&L and account equity
+- reject unaffordable BUY orders and oversized SELL orders without mutating account state
+- preserve explicit `SUBMITTED / FILLED / REJECTED / CANCELLED` order evidence
+- keep Strategy Engine and Risk Engine outside Paper Broker responsibilities
+- document deferred paper/live execution capabilities and the reason each is deferred
 - keep all automated tests passing
 
 ## Definition of Done
 
-Risk Engine v1-v3 provides position sizing, exposure caps, account-protection guards and explicit pre-trade structural/R:R authorization with deterministic evidence and backward compatibility.
+Paper Broker v1 provides deterministic market-order lifecycle, execution-cost modelling and auditable account state through a standalone execution boundary suitable for later orchestration by Paper Trading Engine v1.
 
 ## Next Mission
 
-Close the current Risk Engine scope and begin Paper Trading Engine design/integration. Deferred portfolio and advanced risk controls remain explicitly tracked in ROADMAP.md.
+Build Paper Trading Engine v1 to orchestrate deterministic market events through Strategy Engine → Risk Engine → Paper Broker. Real streaming data and live broker adapters remain deliberately deferred until the deterministic orchestration path is validated.

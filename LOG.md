@@ -884,3 +884,34 @@ The layer intentionally does not pool trades across assets or introduce portfoli
 - Preserved v1 position sizing, v2 account-protection guards and legacy no-risk-engine behavior.
 - Kept execution costs and actual fill simulation inside Backtesting Engine.
 - Documented advanced portfolio/risk capabilities as deferred work rather than expanding the pre-paper-trading scope.
+
+---
+
+# Paper Trading — Paper Broker v1
+
+## Objective
+
+Create the first deterministic paper-execution boundary without coupling live connectivity, strategy logic or risk authorization into broker state management.
+
+## Delivered
+
+- standalone Paper Broker module
+- long-only market BUY/SELL order lifecycle
+- deterministic sequential order IDs
+- explicit `SUBMITTED / FILLED / REJECTED / CANCELLED` statuses
+- commission, slippage and spread execution modelling
+- cash, position quantity, weighted average entry price and open cost-basis accounting
+- realized P&L and mark-to-market equity snapshots
+- insufficient-cash and insufficient-position rejection paths
+- deterministic cancel-before-fill behaviour
+- auditable in-memory order history
+- fail-fast validation for malformed order and market-price inputs
+- dedicated Paper Broker unit tests
+
+## Architecture Impact
+
+Paper Broker is intentionally separate from Backtesting Engine, Strategy Engine and Risk Engine. It executes already-authorized orders and owns only order lifecycle, fills and paper account state. This keeps the future transition from `PaperBroker` to a live broker adapter isolated from trading intelligence.
+
+## Deferred Work
+
+Real streaming market data, Paper Trading Engine orchestration, persistence/restart recovery, richer order types, partial fills, latency/microstructure modelling and live broker integration are deliberately deferred. Each item is tracked in ROADMAP.md together with the reason for deferral so future scope is explicit rather than forgotten.

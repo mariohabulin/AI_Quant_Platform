@@ -370,3 +370,34 @@ These items are intentionally deferred, **not rejected**. They remain on the roa
 ## Deferral Principle
 
 The current objective is not to build every institutional risk feature before the first forward test. The objective is to enter paper trading with a deterministic, testable and conservative core, measure where simulation and reality diverge, and use that evidence to decide which deferred capabilities earn implementation priority.
+
+---
+
+# Deferred Paper / Live Execution Backlog
+
+These items are intentionally deferred to protect the current objective: validate a deterministic Paper Broker and then a deterministic Paper Trading Engine before introducing external connectivity or execution complexity. They are **not rejected**.
+
+## Deferred to Later Paper-Trading Milestones
+
+- **Real streaming market-data adapter** — deferred until deterministic Paper Trading Engine orchestration is proven, so API/network failures are not debugged at the same time as strategy/risk/execution logic.
+- **Persistent account/order state and restart recovery** — deferred until the in-memory lifecycle is stable; required before unattended or long-duration paper trading so a process restart cannot lose broker state.
+- **Operational monitoring, alerts and heartbeat/watchdog controls** — deferred until the continuous paper loop exists; required before unattended paper or live operation.
+- **Order/event audit persistence** — in-memory evidence is sufficient for Broker v1 unit validation; durable audit storage is required before extended forward testing and live deployment.
+- **Limit and stop order types** — deferred until market-order lifecycle is validated because adding order-type branching now would expand execution complexity without proving the basic boundary first.
+- **Partial-fill and liquidity simulation** — deferred until paper results show that simple deterministic fills materially overstate execution quality; implementation priority should be evidence-driven.
+- **Latency, queue position and richer market-microstructure models** — deferred because they are venue/timeframe dependent and should be added only if paper/live discrepancies show that the simpler slippage/spread model is insufficient.
+
+## Deferred Until After Stable Paper Trading
+
+- **Live broker/exchange adapter** — deferred until Paper Broker and Paper Trading Engine demonstrate stable order lifecycle, risk authorization, state handling and auditability. Live connectivity must replace the broker boundary, not force changes into Strategy or Risk Engine.
+- **Broker-specific margin/leverage/buying-power rules** — deferred until a real broker/exchange target is selected because rules differ materially by venue and account type.
+- **Emergency forced-liquidation execution path** — deferred until the live/paper execution state machine and broker adapter exist; Risk Engine currently blocks new risk but does not secretly become an execution engine.
+- **Advanced broker reconciliation** — deferred until live connectivity exists; later required to compare internal state against broker/exchange positions, fills and balances.
+
+## Existing Post-Paper Research / Risk Backlog
+
+The previously documented deferred portfolio, risk and strategy-intelligence items remain active: portfolio correlation/concentration risk, aggregate exposure, portfolio allocation/weighting, volatility targeting, VaR/Expected Shortfall, fractional Kelly, Monte Carlo drawdown hard-gate policy, regime-based strategy selection, evidence-justified additional strategies and Strategy Optimizer/adaptive optimization.
+
+## Deferral Rule
+
+A deferred capability moves into active development only when one of three conditions is met: it is required for safe unattended paper/live operation; forward evidence exposes a material model gap; or the next architectural boundary cannot be completed safely without it. This prevents forgotten work without allowing the backlog to become uncontrolled scope creep.

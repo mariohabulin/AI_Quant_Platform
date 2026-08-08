@@ -673,3 +673,43 @@ Trade Risk Policy v1:
 - execution costs remain the Backtesting Engine's responsibility and are not silently folded into the strategy's planned R:R
 
 Risk Engine v1-v3 is the minimum risk-control scope required before paper trading. More advanced portfolio and live-emergency controls are deliberately deferred rather than forgotten; see the ROADMAP deferred backlog.
+
+---
+
+# Paper Trading — Paper Broker v1 Contract
+
+Paper Broker is the deterministic execution boundary for paper trading. It receives already-authorized orders and owns order lifecycle, simulated fills and account state. It must not generate strategy signals, alter strategy parameters or repeat Risk Engine authorization.
+
+Paper Broker v1 responsibilities:
+
+- long-only market-order submission
+- deterministic sequential order IDs
+- explicit `SUBMITTED`, `FILLED`, `REJECTED` and `CANCELLED` lifecycle states
+- side-aware commission, slippage and spread execution modelling
+- cash and long-position quantity management
+- weighted average entry-price tracking
+- open-position cost-basis tracking
+- realized P&L accounting
+- mark-to-market account equity snapshots
+- fail-fast validation for malformed orders and market prices
+- rejection of unaffordable BUY orders and SELL quantities larger than the held position
+
+The intended paper-trading boundary is:
+
+```text
+Market Event
+    ↓
+Strategy Engine
+    ↓
+Signal / Trade Intent
+    ↓
+Risk Engine
+    ↓
+Authorized Order
+    ↓
+Paper Broker
+    ↓
+Order Lifecycle + Fill + Account State
+```
+
+Backtesting Engine remains responsible for deterministic historical simulation. Paper Broker remains responsible for forward paper execution. Neither module should absorb the other's orchestration responsibilities.
