@@ -915,3 +915,9 @@ Paper Broker is intentionally separate from Backtesting Engine, Strategy Engine 
 ## Deferred Work
 
 Real streaming market data, Paper Trading Engine orchestration, persistence/restart recovery, richer order types, partial fills, latency/microstructure modelling and live broker integration are deliberately deferred. Each item is tracked in ROADMAP.md together with the reason for deferral so future scope is explicit rather than forgotten.
+
+---
+
+## Paper Trading Engine v1 — Orchestration Foundation
+
+Added a deterministic `PaperTradingEngine` that connects Strategy Engine, Risk Engine and Paper Broker without duplicating their responsibilities. Each market event uses only the data explicitly supplied to the engine, the latest strategy signal is risk-authorized before a BUY order reaches the broker, SELL closes the current long position, and HOLD/rejected/no-position outcomes remain auditable without creating phantom orders. Added deterministic event history for forward-test diagnostics. Real streaming data, persistence/restart recovery and unattended monitoring remain deferred per ROADMAP until this in-memory orchestration boundary is validated.

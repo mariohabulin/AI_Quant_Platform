@@ -1,25 +1,30 @@
-# CURRENT MISSION — Paper Trading Foundation
+# CURRENT MISSION
 
-## Objective
+## Paper Trading Engine v1 — Orchestration Foundation
 
-Build a deterministic Paper Broker boundary that can execute already-authorized market orders, maintain account/position state and preserve auditable order lifecycle evidence without mixing strategy or risk responsibilities into execution.
+**Status:** IMPLEMENTED / VALIDATION PENDING
 
-## Current Priorities
+### Objective
 
-- add deterministic long-only market BUY/SELL execution
-- model commission, slippage and spread consistently with research execution assumptions
-- separate order submission from fill/cancel lifecycle
-- maintain cash, position quantity, average entry price, realized P&L and account equity
-- reject unaffordable BUY orders and oversized SELL orders without mutating account state
-- preserve explicit `SUBMITTED / FILLED / REJECTED / CANCELLED` order evidence
-- keep Strategy Engine and Risk Engine outside Paper Broker responsibilities
-- document deferred paper/live execution capabilities and the reason each is deferred
-- keep all automated tests passing
+Prove a deterministic paper-trading orchestration path that connects existing Strategy, Risk and Paper Broker boundaries without introducing live connectivity or duplicating domain logic.
 
-## Definition of Done
+### Implemented
 
-Paper Broker v1 provides deterministic market-order lifecycle, execution-cost modelling and auditable account state through a standalone execution boundary suitable for later orchestration by Paper Trading Engine v1.
+- market-event → Strategy Engine → signal orchestration
+- pre-trade protection and long risk authorization
+- authorized BUY → Paper Broker market order/fill
+- SELL → full close of current long position
+- HOLD, duplicate BUY, rejected risk and empty-position SELL as explicit no-order outcomes
+- deterministic immutable audit-event history
+- no external market-data dependency
 
-## Next Mission
+### Definition of Done
 
-Build Paper Trading Engine v1 to orchestrate deterministic market events through Strategy Engine → Risk Engine → Paper Broker. Real streaming data and live broker adapters remain deliberately deferred until the deterministic orchestration path is validated.
+- new orchestration tests pass
+- full regression suite remains green
+- documentation reflects the new boundary
+- deferred live/persistence/monitoring work remains explicitly tracked in ROADMAP
+
+### Next after validation
+
+Design the deterministic market-data/event-feed boundary and continuous paper loop before attaching a real streaming provider.

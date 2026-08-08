@@ -713,3 +713,25 @@ Order Lifecycle + Fill + Account State
 ```
 
 Backtesting Engine remains responsible for deterministic historical simulation. Paper Broker remains responsible for forward paper execution. Neither module should absorb the other's orchestration responsibilities.
+
+---
+
+## Paper Trading Engine v1 — Orchestration Boundary
+
+Paper trading now has an explicit orchestration layer:
+
+```text
+Market data available so far
+        ↓
+Strategy Engine
+        ↓
+Signal
+        ↓
+Risk Engine (protection + pre-trade authorization)
+        ↓
+Paper Broker (order + fill + account state)
+        ↓
+Paper Trading audit event
+```
+
+`PaperTradingEngine` contains no strategy-selection or sizing intelligence of its own. It coordinates existing boundaries, prevents duplicate long entries in the current long-only model, closes the current long position on a SELL signal, and records deterministic evidence for every processed event. External streaming connectivity remains outside this boundary so deterministic orchestration can be proven before network/API complexity is introduced.
