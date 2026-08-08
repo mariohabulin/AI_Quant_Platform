@@ -850,3 +850,14 @@ The layer intentionally does not pool trades across assets or introduce portfoli
 - Added per-regime trade count, net P&L, average P&L and win rate.
 - Kept regime evidence diagnostic: no strategy selection or validation-policy mutation.
 - Added dedicated Market Regime test coverage.
+
+## Phase 3 — Risk Engine v1: Position Sizing Foundation
+
+- Added deterministic risk-per-trade position sizing from equity and stop distance.
+- Added configurable maximum position exposure cap.
+- Added explicit ALLOW / REDUCE / REJECT risk decisions.
+- Integrated optional risk-managed sizing into Backtesting Engine.
+- Preserved legacy all-in behavior when no Risk Engine is configured.
+- Added risk decision evidence to completed trade history.
+- Kept execution affordability and trading costs inside Backtesting Engine.
+- Added dedicated Risk Engine and integration test coverage.

@@ -621,3 +621,22 @@ Regime Detection v1 uses two independent dimensions:
 Trend is derived from ATR-normalized fast/slow EMA separation. Volatility is derived from normalized ATR relative to its trailing median baseline. All calculations are causal: a label at time t may use only information available at or before t. Warm-up observations are explicitly `UNKNOWN` rather than backfilled from the future.
 
 Regime-conditioned analysis attributes unseen OOS trades by the regime present at trade entry and reports trade count, net P&L, average P&L and win rate per observed regime. Regime evidence is diagnostic in v1; it does not yet select strategies or alter `VALIDATED / CONDITIONAL / REJECTED` classifications.
+
+---
+
+# Phase 3 Risk Engine v1 — Position Sizing Foundation Contract
+
+Risk sizing is a separate decision layer between a strategy signal and execution. Strategy logic decides *when* to trade; the Risk Engine decides *how much* may be traded; the Backtesting Engine remains responsible for execution simulation.
+
+Risk Engine v1 must:
+
+- derive a monetary risk budget from current equity and configurable risk-per-trade
+- size long positions from entry-to-stop distance
+- cap position notional with a configurable maximum position fraction
+- return explicit `ALLOW`, `REDUCE`, or `REJECT` decisions
+- fail fast on invalid configuration and malformed numeric inputs
+- reject invalid long stops at or above entry
+- preserve the original all-in backtester when no Risk Engine is supplied
+- keep execution costs and affordability constraints inside the Backtesting Engine
+
+Portfolio exposure, drawdown guards, daily/weekly loss limits, kill switches and portfolio correlation remain later Risk Engine milestones.

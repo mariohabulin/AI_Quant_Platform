@@ -19,8 +19,12 @@ class BacktestingEngine:
         commission_rate=0.0,
         slippage_rate=0.0,
         spread_rate=0.0,
+        risk_engine=None,
+        risk_stop_column="Stop",
     ):
         self.strategy_engine = strategy_engine
+        self.risk_engine = risk_engine
+        self.risk_stop_column = risk_stop_column
 
         self.initial_capital = self._validate_positive_number(
             initial_capital,
@@ -76,6 +80,7 @@ class BacktestingEngine:
         self.entry_market_price = 0.0
         self.entry_commission = 0.0
         self.entry_index = None
+        self.entry_risk_decision = None
         self.trade_history = []
         self.equity_curve = []
 
@@ -101,14 +106,17 @@ class BacktestingEngine:
             }
         )
 
-    def _buy(self, price, index):
+    def _buy(self, price, index, position_size=None, risk_decision=None):
         execution_price = self._calculate_execution_price(price, "buy")
 
-        # All-in sizing is preserved for backward compatibility. Commission is
-        # reserved as part of the purchase so capital never becomes negative.
-        self.shares = self.capital / (
+        # All-in sizing is preserved when no Risk Engine is configured.
+        affordable_shares = self.capital / (
             execution_price * (1.0 + self.commission_rate)
         )
+        self.shares = affordable_shares if position_size is None else min(
+            float(position_size), affordable_shares
+        )
+        self.entry_risk_decision = risk_decision
         entry_notional = self.shares * execution_price
         self.entry_commission = entry_notional * self.commission_rate
 
@@ -161,6 +169,14 @@ class BacktestingEngine:
                 "execution_cost": execution_cost,
                 "total_costs": total_costs,
                 "profit_loss": profit_loss,
+                "risk_status": (
+                    self.entry_risk_decision.status
+                    if self.entry_risk_decision is not None else None
+                ),
+                "planned_monetary_risk": (
+                    self.entry_risk_decision.monetary_risk
+                    if self.entry_risk_decision is not None else None
+                ),
             }
         )
 
@@ -170,6 +186,7 @@ class BacktestingEngine:
         self.entry_market_price = 0.0
         self.entry_commission = 0.0
         self.entry_index = None
+        self.entry_risk_decision = None
 
     def _process_signals(self, data):
         for index, row in data.iterrows():
@@ -177,7 +194,25 @@ class BacktestingEngine:
             signal = int(row["Signal"])
 
             if signal == 1 and self.position == 0:
-                self._buy(price, index)
+                if self.risk_engine is None:
+                    self._buy(price, index)
+                else:
+                    if self.risk_stop_column not in data.columns:
+                        raise ValueError(
+                            f"Risk-managed backtest requires '{self.risk_stop_column}' column."
+                        )
+                    stop_price = float(row[self.risk_stop_column])
+                    decision = self.risk_engine.assess_long(
+                        equity=self._calculate_equity(price),
+                        entry_price=price,
+                        stop_price=stop_price,
+                    )
+                    if decision.status != "REJECT":
+                        self._buy(
+                            price, index,
+                            position_size=decision.position_size,
+                            risk_decision=decision,
+                        )
 
             elif signal == -1 and self.position == 1:
                 self._sell(price, index)

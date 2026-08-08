@@ -1,29 +1,24 @@
-# CURRENT MISSION — Phase 3 Market Regime Detection
+# CURRENT MISSION — Phase 3 Risk Engine v1
 
 ## Objective
 
-Explain where a frozen strategy's unseen performance occurs by detecting causal market regimes and conditioning OOS trade evidence on those regimes.
+Replace all-in-only research execution with an optional, deterministic risk-based position-sizing foundation while preserving full backward compatibility.
 
 ## Current Priorities
 
-- detect trend state as BULLISH / BEARISH / SIDEWAYS
-- detect volatility state as LOW / NORMAL / HIGH
-- guarantee causal labels with no future leakage
-- preserve an explicit UNKNOWN warm-up state
-- attribute unseen OOS trades to the regime at trade entry
-- report regime-level trade count, net P&L, average P&L and win rate
-- keep regime evidence diagnostic; do not select strategies yet
-- preserve deterministic behavior and full backward compatibility
+- calculate risk budget from account equity and risk-per-trade
+- size long positions from entry price and protective stop distance
+- enforce a configurable maximum position fraction
+- expose explicit ALLOW / REDUCE / REJECT risk decisions
+- integrate approved sizing into Backtesting Engine execution
+- retain all-in behavior when Risk Engine is disabled
+- preserve realistic commission, spread and slippage handling
 - keep all automated tests passing
 
-## Regime Detection v1
+## Risk Engine v1 Boundary
 
-Trend uses ATR-normalized fast/slow EMA separation. Volatility uses normalized ATR relative to its trailing median. Thresholds are explicit and configurable.
-
-This layer answers *where* evidence appears. It does not yet claim causality, optimize parameters, allocate capital, or authorize live trading.
+This milestone sizes one long position at a time. It does not yet implement portfolio exposure, drawdown guards, loss limits, kill switches, correlation controls, dynamic strategy allocation or live-broker authorization.
 
 ## Next Mission
 
-After regime detection is proven, connect regime-conditioned evidence across strategies/assets, then define the Risk Engine before paper trading.
-
-Do not introduce the Strategy Optimizer yet.
+After position sizing is proven, add account/portfolio protection guards before paper trading.
