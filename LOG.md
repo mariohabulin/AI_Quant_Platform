@@ -963,3 +963,7 @@ Added a diagnostic bridge between `BacktestingEngine` and event-driven `PaperTra
 ## Operational Safety / Paper Runtime v1
 
 Implemented the final MUST-HAVE operational boundary before the first controlled real-time paper run: health-aware runtime loop, fail-closed exception isolation, graceful shutdown, heartbeat state, atomic JSON checkpoint/restart recovery, and injected Alpaca websocket transport with authentication/subscription plus bounded reconnect/backoff. Recovery intentionally persists only minimum trading continuity state; richer durable audit/event storage, distributed supervision and provider failover remain deferred until forward operation demonstrates the need.
+
+## Pre-Flight Gate v1
+
+Added `src/preflight.py` as the final explicit safety/configuration gate before the first controlled real-time paper run. The gate produces a structured PASS/FAIL report and never submits orders. It checks credential presence with redacted reporting, BTC/USD 1-minute scope, explicit risk protections, paper-account cleanliness, checkpoint writability, execution lock, injected provider connectivity/subscription, and runtime startability. Failures block progression rather than being silently tolerated.

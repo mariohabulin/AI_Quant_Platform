@@ -59,13 +59,15 @@ The gate classifies representative comparisons as `MATCH`, `INTENDED`, `DEFECT` 
 
 First provider contract: Alpaca crypto websocket bars, controlled `BTC/USD` 1-minute scope. Provider normalization plus stale/duplicate/out-of-order/future/missing-gap health gates emit only the existing `MarketDataEvent` contract. Authenticated network transport and reconnect/backoff stay in the runtime milestone so transport failure handling is tested at the operational boundary.
 
-## Milestone 2 — Operational Safety / Paper Runtime — IMPLEMENTED / VALIDATION PENDING
+## Milestone 2 — Operational Safety / Paper Runtime — COMPLETED
 
-Controlled runtime loop, graceful shutdown, exception isolation, heartbeat/health state, bounded feed-failure halt policy, Alpaca websocket authentication/subscription with reconnect/backoff, and minimal durable checkpoint/restart recovery are implemented. Basic restart recovery preserves broker/open-position, Risk Engine protection and session/feed continuity state so a restarted paper process does not wake up with trading amnesia.
+Controlled runtime loop, graceful shutdown, exception isolation, heartbeat/health state, bounded feed-failure halt policy, Alpaca websocket authentication/subscription with reconnect/backoff, and minimal durable checkpoint/restart recovery are implemented and regression-validated. Basic restart recovery preserves broker/open-position, Risk Engine protection and session/feed continuity state so a restarted paper process does not wake up with trading amnesia.
 
-## Milestone 3 — First Controlled Real-Time Paper Run
+## Milestone 3 — First Controlled Real-Time Paper Run — PRE-FLIGHT
 
-Run the full chain on real market data with simulated money, conservative scope and explicit observability. Compare forward behavior against backtest/replay expectations before expanding assets, timeframes or autonomy.
+Pre-Flight Gate v1 validates redacted credential presence, controlled BTC/USD 1-minute scope, explicit risk guards, paper-account state, writable checkpoint storage, hard-disabled execution, provider connectivity/subscription and runtime startability. Any failed check blocks progression.
+
+After pre-flight passes, run the full chain on real market data with simulated money, conservative scope and explicit observability. Compare forward behavior against backtest/replay expectations before expanding assets, timeframes or autonomy.
 
 ---
 

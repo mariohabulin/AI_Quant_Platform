@@ -1,37 +1,21 @@
 # CURRENT MISSION
 
-## Operational Safety / Paper Runtime v1
+## First Controlled Real-Time Paper Run — Pre-Flight Gate v1
 
-**Status:** IMPLEMENTED / VALIDATION PENDING
+The deterministic research, validation, risk, paper-trading, real-time market-data and operational-runtime foundations are implemented and regression-tested.
 
-### Objective
+Current objective: validate the final safety/configuration boundary before the first supervised BTC/USD 1-minute real-time paper session.
 
-Provide the minimum fail-safe process boundary required before the first controlled real-time `BTC/USD` paper session.
+Pre-flight requires:
+- Alpaca credentials present without exposing secret values
+- controlled BTC/USD / 1-minute provider scope
+- explicit conservative Risk Engine guards
+- clean or intentionally reconciled paper-account state
+- writable checkpoint/restart destination
+- order execution hard-disabled during pre-flight
+- successful injected connectivity/auth/subscription probe
+- runtime not halted/stopping
 
-### Implemented
+A failed check is fail-closed. Passing pre-flight does not authorize live-money trading.
 
-- `PaperOperationalRuntime` controlled event loop
-- heartbeat and explicit `STARTING / HEALTHY / DEGRADED / HALTED / STOPPING` runtime health
-- unhealthy market-data isolation before `PaperTradingSession`
-- bounded consecutive feed-failure halt policy
-- fail-closed handling for unexpected strategy/risk/execution errors
-- graceful shutdown that refuses new events after stop is requested
-- atomic JSON checkpoint persistence
-- restore of open paper position/account continuity
-- restore of Risk Engine drawdown/period/kill-switch state
-- restore of session/feed timestamp continuity to prevent replay after restart
-- provider transport interface plus Alpaca authentication/subscription and bounded reconnect/backoff
-- deterministic tests with injected websocket factory; no live credentials or network required
-
-### Definition of Done
-
-- operational-runtime tests pass
-- full regression remains green
-- unhealthy feed data cannot become a paper-trading decision
-- unexpected processing faults halt safely
-- a process restart can recover the minimum paper account/risk/session continuity state
-- network transport remains replaceable and provider details do not leak into Strategy/Risk/Paper layers
-
-### Next after validation
-
-Perform a pre-flight configuration/credential check and then the first short, supervised real-time `BTC/USD` paper session. Review feed health, runtime health, audit events, fills, account state and checkpoint recovery before increasing duration or autonomy.
+Next after validation: run a short supervised real-time dry-run, inspect feed/runtime/audit behavior, then explicitly enable simulated PaperBroker execution for the first controlled forward paper session.

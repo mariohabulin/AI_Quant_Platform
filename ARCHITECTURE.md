@@ -789,3 +789,9 @@ Real-time paper operation is isolated behind `PaperOperationalRuntime`. Provider
 Runtime failures are fail-closed: unhealthy feed events never reach the session, repeated feed-health failures halt processing, and unknown strategy/risk/execution exceptions halt rather than silently continuing. `JsonCheckpointStore` persists the minimum continuity state (broker account/open position, Risk Engine protection state, session/feed timestamp continuity and runtime counters) with atomic replace semantics.
 
 The checkpoint is intentionally not a general database or event store. Durable long-horizon audit storage, distributed supervision and multi-provider failover remain later operational concerns.
+
+## Pre-Flight Safety Gate v1
+
+Before any controlled real-time paper session, `PaperPreFlightGate` validates the operational boundary without submitting orders. The gate verifies redacted credential presence, the controlled BTC/USD 1-minute scope, explicit conservative Risk Engine guards, clean/reconciled paper-account state, writable checkpoint storage, hard-disabled execution, provider connectivity/subscription through an injected probe, and a startable runtime state. Any failed check blocks readiness. Credential values are never emitted in the report.
+
+Pre-flight is intentionally separate from trading execution: passing the gate is permission to proceed to a supervised dry-run/forward session, not permission for live-money execution.
