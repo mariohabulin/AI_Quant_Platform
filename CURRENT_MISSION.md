@@ -1,35 +1,34 @@
 # CURRENT MISSION
 
-## Backtest ↔ Paper Replay Consistency Validator v1
+## Paper Readiness Gate v1 — Representative Replay Consistency + Roadmap Reconciliation
 
 **Status:** IMPLEMENTED / VALIDATION PENDING
 
 ### Objective
 
-Measure whether deterministic historical backtesting and event-driven paper replay tell the same execution story under matched strategy, risk and execution assumptions, and produce explicit diagnostics when they do not.
+Convert Backtest ↔ Paper Replay consistency diagnostics into an explicit readiness decision before external real-time market connectivity is introduced, while reconciling project documentation with the implementation that already exists.
 
 ### Implemented
 
-- structured `ReplayConsistencyReport` with `CONSISTENT / DIVERGENT` status
-- field-level `ConsistencyDifference` diagnostics
-- same-history replay through `HistoricalReplayFeed`
-- bar-by-bar signal-sequence comparison
-- completed round-trip count comparison
-- quantity, entry/exit fill, commission and trade P&L comparison
-- final-equity comparison
-- final open-position-state comparison
-- configurable numeric tolerance
-- explicit detection of backtest forced-close versus persistent paper-position semantics
-- fresh-session requirement to prevent contaminated comparisons
+- `PaperReadinessGate` aggregates named representative consistency scenarios
+- evidence classifications: `MATCH`, `INTENDED`, `DEFECT`, `CONFIGURATION_MISMATCH`
+- only exact, explicitly expected `INTENDED` semantic differences may pass
+- unexpected difference fields block readiness
+- stale allow-lists block readiness when an expected divergence disappears
+- defect and configuration-mismatch classifications remain blocking even when their fields are known
+- structured per-scenario evidence and aggregate `READY / BLOCKED` result
+- ROADMAP reorganized into COMPLETED / CURRENT / NEXT / SHOULD HAVE / DEFERRED
+- basic restart recovery promoted into the pre-unattended-paper runtime milestone
 
 ### Definition of Done
 
-- consistency-validator tests pass
+- readiness-gate tests pass
 - full regression remains green
-- matched execution assumptions can produce a clean `CONSISTENT` report
-- intentionally mismatched execution assumptions produce useful field-level diagnostics
-- semantic differences are exposed, not silently corrected
+- matched representative scenarios pass as `MATCH`
+- known forced-close semantics can be explicitly classified without hiding new divergence
+- execution/configuration drift blocks the gate
+- documentation matches actual project state
 
 ### Next after validation
 
-Use the validator on representative real strategies/data and decide which divergences are intended semantics versus defects. Real streaming/provider integration remains deferred until replay/backtest consistency evidence is understood.
+Build the Real-Time Market Data Adapter + Feed Health boundary for one selected provider and one controlled asset/timeframe. External connectivity must continue to emit the existing normalized `MarketDataEvent` contract.

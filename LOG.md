@@ -939,3 +939,14 @@ The session deliberately remains in-memory. Durable persistence, restart recover
 ## Backtest ↔ Paper Replay Consistency Validator v1
 
 Added a diagnostic bridge between `BacktestingEngine` and event-driven `PaperTradingSession`. The validator runs the same historical OHLCV evidence through both paths and compares signals, round trips, sizing, fills, commission, P&L, final equity and open-position state. Differences are returned as structured diagnostics rather than being normalized away. This deliberately makes end-of-backtest forced liquidation visible when paper replay would keep the position open.
+
+## Paper Readiness Gate v1 — Representative Replay Consistency + Roadmap Reconciliation
+
+- Added an explicit readiness gate above `ReplayConsistencyValidator`.
+- Added named representative scenarios and structured aggregate readiness evidence.
+- Added `MATCH / INTENDED / DEFECT / CONFIGURATION_MISMATCH` classifications.
+- Only exact allow-listed `INTENDED` semantic differences can pass; unexpected fields, stale allow-lists, defects and configuration mismatches block readiness.
+- Preserved consistency diagnostics as evidence rather than silently modifying Backtesting or Paper Trading semantics.
+- Reconciled ROADMAP with actual completed Research/Validation, Risk Engine and Paper Trading work.
+- Promoted minimal checkpoint/restart recovery into the required operational-runtime milestone before unattended paper sessions.
+- Kept provider expansion, optimizer/AI learning, advanced portfolio risk and microstructure complexity deferred with explicit reasons.

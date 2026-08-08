@@ -4,411 +4,123 @@
 
 ## Purpose
 
-This document defines the long-term development plan of the AI Alpha Engine.
-
-Its purpose is not to describe individual Python implementations, but to present the logical evolution of the system from a quantitative research platform into a fully autonomous AI Alpha Trading Agent.
-
-Each development phase introduces new capabilities while preserving the stability of previously validated modules.
-
-Every phase must be completed, validated and documented before development proceeds to the next stage.
+This document is the project-level source of truth. Completed work, the current readiness gate, the next safe boundary and intentionally deferred work are kept explicit so implementation does not outrun evidence.
 
 ---
 
-# Phase 1 — Data Foundation
+# COMPLETED
+
+## Phase 1 — Data Foundation
+
+Historical data collection, validation, storage and visualization foundation. **Status: COMPLETED.**
+
+## Phase 2 — Research & Strategy Foundation
+
+Feature Engine, Strategy Library, Strategy Engine, Backtesting Engine, Performance Analyzer and the validated strategy set (EMA, RSI, MACD, Bollinger Bands, Donchian, ATR, Supertrend, ADX and Stochastic). **Status: COMPLETED.**
+
+## Phase 3 — Robustness / Validation Stack
+
+Benchmarking, out-of-sample validation, walk-forward analysis, falsification, validation pipeline, multi-asset evidence and market-regime diagnostics. Strategy Optimizer itself is intentionally deferred; the evidence controls required before optimization are already in place. **Status: CORE VALIDATION COMPLETED.**
+
+## Phase 4 — Risk Engine for Paper Trading
+
+Risk Engine v1 position sizing, v2 account protection and v3 trade-risk policy: exposure cap, drawdown/daily/weekly guards, kill switch, stop/target validation and configurable minimum reward/risk. **Status: COMPLETED FOR PAPER TRADING.**
+
+## Phase 5 — Deterministic Paper-Trading Foundation
+
+Paper Broker v1, Paper Trading Engine v1, stateful Session v2, provider-neutral MarketDataEvent / HistoricalReplayFeed and Backtest ↔ Paper Replay Consistency Validator v1. **Status: COMPLETED.**
+
+---
+
+# CURRENT — Paper Readiness Gate
 
 ## Objective
 
-Build a reliable foundation for collecting, validating and visualising market data.
+Turn replay-consistency diagnostics into explicit evidence before external real-time connectivity is introduced.
 
-## Core Components
+## Active milestone
 
-- Data Collection
-- Data Storage
-- Data Cleaning
-- Data Visualization
+**Paper Readiness Gate v1 — Representative Replay Consistency + Roadmap Reconciliation**
 
-## Status
+The gate classifies representative comparisons as `MATCH`, `INTENDED`, `DEFECT` or `CONFIGURATION_MISMATCH`. A divergence is never silently normalized: only an exact, explicitly allow-listed `INTENDED` semantic difference may pass. Defects, configuration mismatches, unexpected fields and stale allow-lists block readiness.
 
-🟢 Completed
+## Exit criteria
 
-## Result
-
-The system can reliably collect, validate, store and visualise historical market data.
+- representative consistency scenarios are green or explicitly classified as intended semantics
+- no unresolved defect/configuration mismatch is hidden by the gate
+- project documentation reflects actual implementation state
+- full automated regression remains green
 
 ---
 
-# Phase 2 — Research Engine
+# NEXT — Real-Time Paper Trading Path
 
-## Objective
+## Milestone 1 — Real-Time Market Data Adapter + Feed Health
 
-Build a modular quantitative research platform capable of developing, executing, backtesting and objectively evaluating independent trading strategies.
+Connect one selected provider and one controlled asset/timeframe through the existing normalized `MarketDataEvent` boundary. Add stale/duplicate/out-of-order/missing-bar handling and reconnect/feed-health evidence without leaking provider schemas into Strategy/Risk/Paper layers.
 
-## Completed Components
+## Milestone 2 — Operational Safety / Paper Runtime
 
-### Feature Engine
+Add controlled runtime loop, graceful shutdown, exception isolation, heartbeat/health state, structured logging and minimal durable checkpoint/restart recovery. Basic restart recovery is promoted from deferred work because unattended multi-hour/day paper sessions must not forget open paper state after a process restart.
 
-- Dynamic feature generation
-- EMA generation
-- RSI generation
-- Return calculation
-- Volatility calculation
-- Volume moving average
-- Input validation
+## Milestone 3 — First Controlled Real-Time Paper Run
 
-### Strategy Library
-
-- Strategy registration
-- Strategy validation
-- Duplicate protection
-- Strategy lookup
-
-### Strategy Engine
-
-- Common strategy contract
-- Strategy execution
-- Required feature integration
-- Signal validation
-
-### Trading Strategies
-
-Validated strategies:
-
-- EMA Strategy
-- RSI Strategy
-
-Both strategies execute through the same architecture.
-
-### Backtesting Engine
-
-- Trade simulation
-- Portfolio management
-- Trade history
-- Equity curve
-- Stateless execution
-
-### Performance Analyzer
-
-- Performance metrics
-- Strategy evaluation
-- Deterministic performance analysis
+Run the full chain on real market data with simulated money, conservative scope and explicit observability. Compare forward behavior against backtest/replay expectations before expanding assets, timeframes or autonomy.
 
 ---
 
-## Research Engine Validation
+# SHOULD HAVE DURING PAPER TRADING
 
-Successfully validated:
+- operational alerts and richer watchdog telemetry
+- session performance reports and replay/forward comparison reports
+- richer data-quality metrics and provider reconnect telemetry
+- durable order/event audit storage for extended forward testing
 
-- Dynamic Feature Engine
-- Parameterized strategies
-- Required Features contract
-- Common Strategy contract
-- Strategy-independent execution pipeline
-- End-to-End Research Pipeline
-
-Current automated test status:
-
-✅ **112 / 112 automated tests passing**
+These improve long-duration operations but do not block the first controlled real-time paper run once the minimum safe runtime exists.
 
 ---
 
-## Status
+# DEFERRED / POST-PAPER-TRADING ENHANCEMENTS
 
-🟢 Completed
+These items are intentionally deferred, **not rejected**. A deferred capability moves into active development when required for safe unattended operation, when forward evidence exposes a material model gap, or when the next architectural boundary cannot be completed safely without it.
 
-The Research Engine is now a stable modular platform capable of supporting multiple independent trading strategies through a single reusable execution pipeline.
+## Risk and Portfolio
 
-Future strategies should integrate without requiring architectural changes.
+- portfolio correlation/concentration and aggregate multi-position exposure — wait for multi-position forward evidence
+- portfolio allocation/weighting and volatility targeting — wait until multiple simultaneous opportunities are proven relevant
+- VaR / Expected Shortfall — add only if they improve decisions beyond current drawdown/exposure controls
+- conservative fractional Kelly — wait for sufficiently stable edge estimates
+- Monte Carlo drawdown as a hard gate — wait until acceptable drawdown policy is empirically calibrated
+- broker-specific margin/leverage/buying-power checks — wait until a broker/exchange target is selected
+- emergency forced liquidation — wait for the execution state machine/live adapter; Risk Engine should not secretly become execution
 
----
+## Strategy Intelligence
 
-# Phase 3 — Strategy Optimization
+- regime-based automatic strategy selection — current regime evidence remains diagnostic until conditioned performance is robust
+- additional strategies — add only when validation/paper evidence shows a real coverage gap
+- Strategy Optimizer/adaptive parameter optimization — defer until evidence demonstrates need and overfitting controls can govern it
+- AI Learning Engine / autonomous adaptation — defer until stable forward evidence and governance exist
 
-## Objective
+## Execution / Market Microstructure
 
-Develop the optimisation layer responsible for discovering robust strategy configurations while reducing overfitting.
+- limit/stop order lifecycle — market-order boundary first
+- partial fills/liquidity simulation — add if paper/live evidence shows deterministic fills materially overstate execution
+- latency, queue position and richer microstructure — venue/timeframe dependent; evidence must justify complexity
+- live broker/exchange adapter — only after stable paper runtime and forward evidence
+- advanced broker reconciliation — requires live connectivity
 
-## Planned Components
+## Data / Runtime Scale
 
-- Strategy Optimizer
-- Parameter Search
-- Strategy Ranking
-- Walk Forward Analysis
-- Robustness Testing
-
-## Completion Criteria
-
-The system can objectively compare parameter combinations and identify statistically robust strategies.
-
-## Status
-
-⬜ Planned
-
----
-
-# Phase 4 — Risk & Portfolio Management
-
-## Objective
-
-Protect capital through systematic risk and portfolio management.
-
-## Planned Components
-
-- Risk Engine
-- Position Sizing
-- Portfolio Engine
-- Capital Allocation
-
-## Completion Criteria
-
-The system manages risk and capital independently from trading strategies.
-
-## Status
-
-⬜ Planned
-
----
-
-# Phase 5 — Market Intelligence
-
-## Objective
-
-Understand current market conditions and identify the most appropriate trading opportunities.
-
-## Planned Components
-
-- Market Scanner
-- Market Regime Detection
-- Opportunity Detection
-- Strategy Recommendation
-
-## Completion Criteria
-
-The system recognises changing market conditions and recommends appropriate trading strategies.
-
-## Status
-
-⬜ Planned
-
----
-
-# Phase 6 — Alpha Decision Engine
-
-## Objective
-
-Combine research, market intelligence and risk management into a unified decision-making system.
-
-## Planned Components
-
-- Strategy Selection
-- Strategy Confidence Evaluation
-- Market Regime Integration
-- Risk Validation
-- Portfolio Validation
-- Trade Decision
-
-## Completion Criteria
-
-The system autonomously selects the most appropriate strategy based on statistical evidence.
-
-## Status
-
-⬜ Planned
-
----
-
-# Phase 7 — AI Learning Engine
-
-## Objective
-
-Enable continuous improvement through learning from historical performance.
-
-## Planned Components
-
-- Performance Learning
-- Strategy Ranking
-- Adaptive Optimization
-- Continuous Improvement
-
-## Completion Criteria
-
-The system continuously improves decision quality using historical research results.
-
-## Status
-
-⬜ Planned
-
----
-
-# Phase 8 — Live Trading
-
-## Objective
-
-Deploy the AI Alpha Engine to real financial markets.
-
-## Planned Components
-
-- Execution Engine
-- Broker Integration
-- Live Monitoring
-- Safety Controls
-
-## Completion Criteria
-
-The AI Alpha Trading Agent operates safely and autonomously on live financial markets.
-
-## Status
-
-⬜ Planned
+- bounded rolling-history/replay performance optimization — wait for measured session-duration and warm-up requirements
+- broad provider/asset/timeframe expansion — first prove one provider + controlled scope
+- large-scale consistency matrices — expand after the v1 readiness evidence contract is trusted on representative cases
 
 ---
 
 # Long-Term Objective
 
-When completed, the AI Alpha Engine will:
-
-- research financial markets
-- generate market features
-- develop trading strategies
-- optimise strategy parameters
-- evaluate statistical robustness
-- manage portfolio risk
-- understand market regimes
-- recommend appropriate strategies
-- select the highest-confidence opportunity
-- learn from historical performance
-- continuously improve decision quality
-- power the AI Alpha Trading Agent
-
----
+Evolve the validated research/risk/paper foundation into a safely operated AI Alpha Trading Agent that can research, validate, manage risk, trade through replaceable execution/data boundaries and improve only when evidence justifies adaptation.
 
 # Development Principle
 
-Every phase follows the same development process:
-
-- Architecture Review
-- Design
-- Test Driven Development
-- Validation
-- Documentation
-- Git Integration
-
-Progress is measured by architectural quality, deterministic behaviour and automated validation rather than implementation speed.
-
----
-
-# Development Evolution
-
-```text
-Phase 1
-Data Foundation
-
-↓
-
-Phase 2
-Research Engine
-
-↓
-
-Phase 3
-Strategy Optimization
-
-↓
-
-Phase 4
-Risk & Portfolio Management
-
-↓
-
-Phase 5
-Market Intelligence
-
-↓
-
-Phase 6
-Alpha Decision Engine
-
-↓
-
-Phase 7
-AI Learning Engine
-
-↓
-
-Phase 8
-Live Trading
-```
----
-
-# Deferred / Post-Paper-Trading Enhancements
-
-These items are intentionally deferred, **not rejected**. They remain on the roadmap so the project can reach evidence-producing paper trading without uncontrolled scope growth. Their priority will be reassessed using backtest and forward/paper-trading evidence.
-
-## Risk and Portfolio
-
-- portfolio correlation and concentration risk controls
-- aggregate multi-position / multi-asset exposure limits
-- portfolio allocation and weighting policies
-- volatility targeting
-- Value at Risk (VaR) and Expected Shortfall where evidence shows they add decision value
-- Kelly sizing or a deliberately conservative fractional-Kelly variant
-- Monte Carlo drawdown evidence as a possible hard risk gate after acceptable drawdown policy is empirically defined
-- broker-aware authorization, margin/leverage constraints and live buying-power checks
-- emergency forced liquidation / live execution kill-switch path
-
-## Strategy Intelligence
-
-- regime-based strategy selection only after regime-conditioned evidence is sufficiently robust
-- additional strategies only when backtesting or paper trading demonstrates a real coverage gap
-- Strategy Optimizer / adaptive parameter optimization only after the validation stack can control overfitting risk and evidence shows optimization is necessary
-
-## Research / Validation Extensions
-
-- portfolio-level cross-asset correlation and diversification validation
-- richer stress/scenario testing if paper-trading discrepancies justify it
-- recalibration of Validation Policy and Multi-Asset Policy thresholds from accumulated evidence rather than arbitrary expansion
-
-## Deferral Principle
-
-The current objective is not to build every institutional risk feature before the first forward test. The objective is to enter paper trading with a deterministic, testable and conservative core, measure where simulation and reality diverge, and use that evidence to decide which deferred capabilities earn implementation priority.
-
----
-
-# Deferred Paper / Live Execution Backlog
-
-These items are intentionally deferred to protect the current objective: validate a deterministic Paper Broker and then a deterministic Paper Trading Engine before introducing external connectivity or execution complexity. They are **not rejected**.
-
-## Deferred to Later Paper-Trading Milestones
-
-- **Real streaming market-data adapter** — deferred until deterministic Paper Trading Engine orchestration is proven, so API/network failures are not debugged at the same time as strategy/risk/execution logic.
-- **Persistent account/order state and restart recovery** — deferred until the in-memory lifecycle is stable; required before unattended or long-duration paper trading so a process restart cannot lose broker state.
-- **Operational monitoring, alerts and heartbeat/watchdog controls** — deferred until the continuous paper loop exists; required before unattended paper or live operation.
-- **Order/event audit persistence** — in-memory evidence is sufficient for Broker v1 unit validation; durable audit storage is required before extended forward testing and live deployment.
-- **Limit and stop order types** — deferred until market-order lifecycle is validated because adding order-type branching now would expand execution complexity without proving the basic boundary first.
-- **Partial-fill and liquidity simulation** — deferred until paper results show that simple deterministic fills materially overstate execution quality; implementation priority should be evidence-driven.
-- **Latency, queue position and richer market-microstructure models** — deferred because they are venue/timeframe dependent and should be added only if paper/live discrepancies show that the simpler slippage/spread model is insufficient.
-
-## Deferred Until After Stable Paper Trading
-
-- **Live broker/exchange adapter** — deferred until Paper Broker and Paper Trading Engine demonstrate stable order lifecycle, risk authorization, state handling and auditability. Live connectivity must replace the broker boundary, not force changes into Strategy or Risk Engine.
-- **Broker-specific margin/leverage/buying-power rules** — deferred until a real broker/exchange target is selected because rules differ materially by venue and account type.
-- **Emergency forced-liquidation execution path** — deferred until the live/paper execution state machine and broker adapter exist; Risk Engine currently blocks new risk but does not secretly become an execution engine.
-- **Advanced broker reconciliation** — deferred until live connectivity exists; later required to compare internal state against broker/exchange positions, fills and balances.
-
-## Existing Post-Paper Research / Risk Backlog
-
-The previously documented deferred portfolio, risk and strategy-intelligence items remain active: portfolio correlation/concentration risk, aggregate exposure, portfolio allocation/weighting, volatility targeting, VaR/Expected Shortfall, fractional Kelly, Monte Carlo drawdown hard-gate policy, regime-based strategy selection, evidence-justified additional strategies and Strategy Optimizer/adaptive optimization.
-
-## Deferral Rule
-
-A deferred capability moves into active development only when one of three conditions is met: it is required for safe unattended paper/live operation; forward evidence exposes a material model gap; or the next architectural boundary cannot be completed safely without it. This prevents forgotten work without allowing the backlog to become uncontrolled scope creep.
-
-### Market-data boundary note
-
-- **Provider selection and real streaming connectivity remain deferred until deterministic replay/backtest consistency is measured.** The normalized `MarketDataEvent` boundary is implemented first so provider-specific schemas, reconnect behavior and API failures cannot contaminate Strategy/Risk/Paper Trading logic. Once a provider is selected, its adapter must translate external payloads into this internal contract.
-- **Replay performance optimization / bounded rolling-history buffers are deferred until real session duration and strategy warm-up requirements are measured.** Replay v1 intentionally favors transparent cumulative data views over premature memory/performance optimization.
-
-### Replay consistency note
-
-- **Automatic reconciliation / forced semantic alignment is deferred.** Consistency v1 first measures and explains divergence; changing either Backtesting or Paper Trading semantics before collecting evidence could hide real model drift.
-- **Real provider streaming remains deferred until representative replay/backtest comparisons are understood.** External API timing, reconnects and provider schema differences should not be introduced while internal execution equivalence is still being measured.
-- **Large-scale consistency matrices across every strategy/asset/timeframe are deferred until the v1 diagnostic contract is validated on representative cases.** The first objective is trustworthy diagnostics, then breadth.
+Architecture Review → Design → TDD → Validation → Documentation → Git Integration. Progress is measured by evidence, deterministic behavior and safe boundaries rather than feature count.
