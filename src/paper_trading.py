@@ -141,3 +141,101 @@ class PaperTradingEngine:
             )
 
         raise ValueError("Latest signal must be -1, 0, or 1.")
+
+
+@dataclass(frozen=True)
+class PaperSessionSnapshot:
+    sequence: int
+    timestamp: object
+    market_price: float
+    cash: float
+    position_quantity: float
+    average_entry_price: float
+    realized_pnl: float
+    equity: float
+    event_status: str
+    event_type: str
+
+
+class PaperTradingSession:
+    """Stateful deterministic session over an ordered stream of market events.
+
+    The session owns sequencing and account snapshots only. Strategy, risk and
+    execution responsibilities remain delegated to PaperTradingEngine and its
+    dependencies.
+    """
+
+    def __init__(self, engine):
+        if engine is None:
+            raise ValueError("engine is required.")
+        if not isinstance(engine, PaperTradingEngine):
+            raise TypeError("engine must be a PaperTradingEngine.")
+        self.engine = engine
+        self._snapshots = []
+        self._last_timestamp = None
+
+    @property
+    def snapshot_history(self):
+        return tuple(self._snapshots)
+
+    @property
+    def last_snapshot(self):
+        return self._snapshots[-1] if self._snapshots else None
+
+    def _validate_timestamp(self, timestamp):
+        import pandas as pd
+        try:
+            ts = pd.Timestamp(timestamp)
+        except Exception as exc:
+            raise TypeError("Session timestamp must be datetime-like.") from exc
+        if pd.isna(ts):
+            raise ValueError("Session timestamp must be valid.")
+        if self._last_timestamp is not None and ts <= self._last_timestamp:
+            raise ValueError("Session market events must have strictly increasing timestamps.")
+        return ts
+
+    def process(self, data, stop_price=None, target_price=None, timestamp=None):
+        if data is None or getattr(data, "empty", True):
+            raise ValueError("Session market data cannot be empty.")
+        event_timestamp = timestamp if timestamp is not None else data.index[-1]
+        ts = self._validate_timestamp(event_timestamp)
+
+        event = self.engine.process_market_event(
+            data, stop_price=stop_price, target_price=target_price, timestamp=ts
+        )
+        account = self.engine.paper_broker.account_snapshot(mark_price=event.market_price)
+        snapshot = PaperSessionSnapshot(
+            sequence=len(self._snapshots) + 1,
+            timestamp=ts,
+            market_price=event.market_price,
+            cash=account["cash"],
+            position_quantity=account["position_quantity"],
+            average_entry_price=account["average_entry_price"],
+            realized_pnl=account["realized_pnl"],
+            equity=account["equity"],
+            event_status=event.status,
+            event_type=event.event_type,
+        )
+        self._snapshots.append(snapshot)
+        self._last_timestamp = ts
+        return snapshot
+
+    def run(self, events):
+        """Process an iterable of event dictionaries in deterministic order.
+
+        Each item requires ``data`` and may provide ``stop_price``,
+        ``target_price`` and ``timestamp``.
+        """
+        if events is None:
+            raise ValueError("events are required.")
+        results = []
+        for item in events:
+            if not isinstance(item, dict) or "data" not in item:
+                raise ValueError("Each session event must be a dict containing data.")
+            results.append(self.process(
+                item["data"],
+                stop_price=item.get("stop_price"),
+                target_price=item.get("target_price"),
+                timestamp=item.get("timestamp"),
+            ))
+        return tuple(results)

@@ -921,3 +921,9 @@ Real streaming market data, Paper Trading Engine orchestration, persistence/rest
 ## Paper Trading Engine v1 — Orchestration Foundation
 
 Added a deterministic `PaperTradingEngine` that connects Strategy Engine, Risk Engine and Paper Broker without duplicating their responsibilities. Each market event uses only the data explicitly supplied to the engine, the latest strategy signal is risk-authorized before a BUY order reaches the broker, SELL closes the current long position, and HOLD/rejected/no-position outcomes remain auditable without creating phantom orders. Added deterministic event history for forward-test diagnostics. Real streaming data, persistence/restart recovery and unattended monitoring remain deferred per ROADMAP until this in-memory orchestration boundary is validated.
+
+## Paper Trading v2 — Session & State Foundation
+
+A deterministic session boundary now coordinates ordered market events across time while preserving PaperTradingEngine, RiskEngine and PaperBroker state. Session snapshots record mark-to-market equity, cash, position, realized P&L and the associated orchestration outcome. Timestamps must be strictly increasing, preventing accidental replay/out-of-order processing in the deterministic forward loop.
+
+The session deliberately remains in-memory. Durable persistence, restart recovery, external streaming feeds and watchdog/monitoring remain deferred in ROADMAP until the deterministic continuous lifecycle is validated.

@@ -145,3 +145,120 @@ def test_strategy_receives_only_data_supplied_for_current_event():
     engine.process_market_event(data.iloc[:1])
     assert strategy.calls == 1
     assert engine.event_history[-1].market_price == 100.0
+
+
+from src.paper_trading import PaperTradingSession
+
+
+def test_session_requires_paper_trading_engine():
+    with pytest.raises(ValueError, match="engine is required"):
+        PaperTradingSession(None)
+    with pytest.raises(TypeError, match="PaperTradingEngine"):
+        PaperTradingSession(object())
+
+
+def test_session_records_mark_to_market_snapshot_for_hold():
+    session = PaperTradingSession(make_engine(0))
+    snapshot = session.process(market_data(100))
+    assert snapshot.sequence == 1
+    assert snapshot.equity == pytest.approx(10000.0)
+    assert snapshot.position_quantity == 0.0
+    assert snapshot.event_status == "NO_ACTION"
+
+
+def test_session_carries_open_position_across_market_events():
+    strategy = StubStrategyEngine(1)
+    engine = PaperTradingEngine(strategy, RiskEngine(), PaperBroker(initial_cash=10000))
+    session = PaperTradingSession(engine)
+    first = session.process(market_data(100, "2026-08-08 10:00"), stop_price=98)
+    strategy.signal = 0
+    second = session.process(market_data(105, "2026-08-08 11:00"))
+    assert first.position_quantity == pytest.approx(50.0)
+    assert second.position_quantity == pytest.approx(50.0)
+    assert second.equity == pytest.approx(10250.0)
+
+
+def test_session_sell_realizes_pnl_and_closes_position():
+    strategy = StubStrategyEngine(1)
+    engine = PaperTradingEngine(strategy, RiskEngine(), PaperBroker(initial_cash=10000))
+    session = PaperTradingSession(engine)
+    session.process(market_data(100, "2026-08-08 10:00"), stop_price=98)
+    strategy.signal = -1
+    snapshot = session.process(market_data(105, "2026-08-08 11:00"))
+    assert snapshot.position_quantity == 0.0
+    assert snapshot.realized_pnl == pytest.approx(250.0)
+    assert snapshot.equity == pytest.approx(10250.0)
+
+
+def test_session_snapshots_are_immutable_view_and_sequenced():
+    session = PaperTradingSession(make_engine(0))
+    session.process(market_data(100, "2026-08-08 10:00"))
+    session.process(market_data(101, "2026-08-08 11:00"))
+    assert isinstance(session.snapshot_history, tuple)
+    assert [s.sequence for s in session.snapshot_history] == [1, 2]
+    assert session.last_snapshot.sequence == 2
+
+
+def test_session_rejects_non_increasing_timestamps():
+    session = PaperTradingSession(make_engine(0))
+    session.process(market_data(100, "2026-08-08 10:00"))
+    with pytest.raises(ValueError, match="strictly increasing"):
+        session.process(market_data(101, "2026-08-08 10:00"))
+
+
+def test_session_rejects_empty_market_data():
+    session = PaperTradingSession(make_engine(0))
+    with pytest.raises(ValueError, match="cannot be empty"):
+        session.process(pd.DataFrame())
+
+
+def test_session_run_processes_ordered_event_sequence():
+    session = PaperTradingSession(make_engine(0))
+    snapshots = session.run([
+        {"data": market_data(100, "2026-08-08 10:00")},
+        {"data": market_data(101, "2026-08-08 11:00")},
+        {"data": market_data(102, "2026-08-08 12:00")},
+    ])
+    assert isinstance(snapshots, tuple)
+    assert len(snapshots) == 3
+    assert snapshots[-1].market_price == 102.0
+
+
+def test_session_run_requires_data_in_each_event():
+    session = PaperTradingSession(make_engine(0))
+    with pytest.raises(ValueError, match="containing data"):
+        session.run([{"timestamp": "2026-08-08 10:00"}])
+
+
+def test_session_preserves_risk_protection_state_across_events():
+    strategy = StubStrategyEngine(0)
+    risk = RiskEngine(max_drawdown_fraction=0.05)
+    engine = PaperTradingEngine(strategy, risk, PaperBroker(initial_cash=10000))
+    session = PaperTradingSession(engine)
+    session.process(market_data(100, "2026-08-08 10:00"))
+    engine.paper_broker.cash = 9000.0
+    strategy.signal = 1
+    snapshot = session.process(market_data(100, "2026-08-08 11:00"), stop_price=98)
+    assert snapshot.event_status == "REJECTED"
+    assert risk.kill_switch_active is True
+    assert engine.paper_broker.position_quantity == 0.0
+
+
+def test_session_uses_explicit_timestamp_for_ordered_clock():
+    session = PaperTradingSession(make_engine(0))
+    snapshot = session.process(
+        market_data(100, "2026-08-08 09:00"),
+        timestamp="2026-08-08 10:30",
+    )
+    assert snapshot.timestamp == pd.Timestamp("2026-08-08 10:30")
+
+
+def test_session_does_not_reset_engine_or_broker_state_between_process_calls():
+    strategy = StubStrategyEngine(1)
+    engine = PaperTradingEngine(strategy, RiskEngine(), PaperBroker(initial_cash=10000))
+    session = PaperTradingSession(engine)
+    session.process(market_data(100, "2026-08-08 10:00"), stop_price=98)
+    order_count = len(engine.paper_broker.order_history)
+    session.process(market_data(101, "2026-08-08 11:00"), stop_price=99)
+    assert len(engine.paper_broker.order_history) == order_count
+    assert len(engine.event_history) == 2

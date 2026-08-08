@@ -1,30 +1,31 @@
 # CURRENT MISSION
 
-## Paper Trading Engine v1 — Orchestration Foundation
+## Paper Trading v2 — Session & State Foundation
 
 **Status:** IMPLEMENTED / VALIDATION PENDING
 
 ### Objective
 
-Prove a deterministic paper-trading orchestration path that connects existing Strategy, Risk and Paper Broker boundaries without introducing live connectivity or duplicating domain logic.
+Prove that paper trading can operate across an ordered sequence of market events while preserving account, position, risk-protection and audit state between events.
 
 ### Implemented
 
-- market-event → Strategy Engine → signal orchestration
-- pre-trade protection and long risk authorization
-- authorized BUY → Paper Broker market order/fill
-- SELL → full close of current long position
-- HOLD, duplicate BUY, rejected risk and empty-position SELL as explicit no-order outcomes
-- deterministic immutable audit-event history
-- no external market-data dependency
+- stateful deterministic PaperTradingSession
+- strictly increasing event-time guard
+- mark-to-market session snapshots
+- persistent in-memory cash, position, realized P&L and equity across events
+- preserved RiskEngine protection / kill-switch state across the session
+- deterministic multi-event run boundary
+- immutable session snapshot history
+- no external market-data or persistence dependency
 
 ### Definition of Done
 
-- new orchestration tests pass
-- full regression suite remains green
-- documentation reflects the new boundary
-- deferred live/persistence/monitoring work remains explicitly tracked in ROADMAP
+- session/state tests pass
+- full regression remains green
+- existing Paper Trading Engine and Paper Broker responsibilities remain unchanged
+- deferred persistence, streaming and monitoring work remains explicitly tracked in ROADMAP
 
 ### Next after validation
 
-Design the deterministic market-data/event-feed boundary and continuous paper loop before attaching a real streaming provider.
+Design the market-data/event-feed adapter boundary, then connect a deterministic feed before selecting and attaching a real market-data provider.
