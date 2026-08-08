@@ -1,32 +1,35 @@
 # CURRENT MISSION
 
-## Market Data Boundary + Historical Replay Feed v1
+## Backtest ↔ Paper Replay Consistency Validator v1
 
 **Status:** IMPLEMENTED / VALIDATION PENDING
 
 ### Objective
 
-Create a provider-neutral market-event boundary and prove that historical OHLCV bars can be replayed deterministically through the stateful PaperTradingSession without future-data leakage.
+Measure whether deterministic historical backtesting and event-driven paper replay tell the same execution story under matched strategy, risk and execution assumptions, and produce explicit diagnostics when they do not.
 
 ### Implemented
 
-- immutable normalized `MarketDataEvent`
-- deterministic `HistoricalReplayFeed`
-- required OHLCV schema and numeric/integrity validation
-- unique, strictly increasing event-time enforcement
-- cumulative data-available-so-far views for strategy execution
-- repeatable replay with consumer-isolated event copies
-- integration proof from replay feed into PaperTradingSession
-- no external API/network dependency
+- structured `ReplayConsistencyReport` with `CONSISTENT / DIVERGENT` status
+- field-level `ConsistencyDifference` diagnostics
+- same-history replay through `HistoricalReplayFeed`
+- bar-by-bar signal-sequence comparison
+- completed round-trip count comparison
+- quantity, entry/exit fill, commission and trade P&L comparison
+- final-equity comparison
+- final open-position-state comparison
+- configurable numeric tolerance
+- explicit detection of backtest forced-close versus persistent paper-position semantics
+- fresh-session requirement to prevent contaminated comparisons
 
 ### Definition of Done
 
-- market-data feed tests pass
+- consistency-validator tests pass
 - full regression remains green
-- replay never exposes future bars to the current event
-- Strategy, Risk Engine, Paper Broker and PaperTradingSession responsibilities remain unchanged
-- real streaming connectivity remains provider-adapter work, not core trading-engine logic
+- matched execution assumptions can produce a clean `CONSISTENT` report
+- intentionally mismatched execution assumptions produce useful field-level diagnostics
+- semantic differences are exposed, not silently corrected
 
 ### Next after validation
 
-Add replay/backtest consistency evidence and then select/attach a real market-data provider behind the normalized event boundary.
+Use the validator on representative real strategies/data and decide which divergences are intended semantics versus defects. Real streaming/provider integration remains deferred until replay/backtest consistency evidence is understood.

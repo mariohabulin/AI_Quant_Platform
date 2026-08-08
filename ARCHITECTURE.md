@@ -759,3 +759,11 @@ Strategy → Risk → Paper Broker
 ```
 
 The feed owns data normalization, chronological ordering and OHLCV integrity checks. It does not generate signals, stops/targets, risk decisions or orders. Real streaming providers must later adapt into this same internal event contract rather than leaking provider-specific payloads into Strategy, Risk or Paper Trading layers.
+
+## Replay / Backtest Consistency Boundary
+
+`ReplayConsistencyValidator` is a diagnostic validation layer between the historical `BacktestingEngine` and the event-driven `PaperTradingSession`. It replays the same OHLCV history through the normalized `HistoricalReplayFeed` and compares evidence rather than assuming the two execution paths are equivalent.
+
+V1 compares signal sequence, completed round trips, quantity, entry/exit fill prices, commission, realized trade P&L, final equity and final open-position state. A difference produces a structured `DIVERGENT` report; it is not hidden or automatically normalized away. This explicitly exposes known semantic differences such as the backtester's end-of-run forced close versus a paper session that keeps an open position alive.
+
+The validator remains outside Strategy, Risk and Broker responsibilities. Its job is diagnosis only; it must not modify either execution path to manufacture agreement.

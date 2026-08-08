@@ -935,3 +935,7 @@ The session deliberately remains in-memory. Durable persistence, restart recover
 - Replay emits cumulative data available only up to each event, preventing future-bar leakage by construction.
 - Proved replay events can drive the existing stateful PaperTradingSession without changing Strategy, Risk or Paper Broker boundaries.
 - External streaming/API connectivity remains deferred until deterministic replay and consistency evidence are green.
+
+## Backtest ↔ Paper Replay Consistency Validator v1
+
+Added a diagnostic bridge between `BacktestingEngine` and event-driven `PaperTradingSession`. The validator runs the same historical OHLCV evidence through both paths and compares signals, round trips, sizing, fills, commission, P&L, final equity and open-position state. Differences are returned as structured diagnostics rather than being normalized away. This deliberately makes end-of-backtest forced liquidation visible when paper replay would keep the position open.

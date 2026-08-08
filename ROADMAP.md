@@ -406,3 +406,9 @@ A deferred capability moves into active development only when one of three condi
 
 - **Provider selection and real streaming connectivity remain deferred until deterministic replay/backtest consistency is measured.** The normalized `MarketDataEvent` boundary is implemented first so provider-specific schemas, reconnect behavior and API failures cannot contaminate Strategy/Risk/Paper Trading logic. Once a provider is selected, its adapter must translate external payloads into this internal contract.
 - **Replay performance optimization / bounded rolling-history buffers are deferred until real session duration and strategy warm-up requirements are measured.** Replay v1 intentionally favors transparent cumulative data views over premature memory/performance optimization.
+
+### Replay consistency note
+
+- **Automatic reconciliation / forced semantic alignment is deferred.** Consistency v1 first measures and explains divergence; changing either Backtesting or Paper Trading semantics before collecting evidence could hide real model drift.
+- **Real provider streaming remains deferred until representative replay/backtest comparisons are understood.** External API timing, reconnects and provider schema differences should not be introduced while internal execution equivalence is still being measured.
+- **Large-scale consistency matrices across every strategy/asset/timeframe are deferred until the v1 diagnostic contract is validated on representative cases.** The first objective is trustworthy diagnostics, then breadth.
