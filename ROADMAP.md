@@ -145,3 +145,11 @@ Architecture Review → Design → TDD → Validation → Documentation → Git 
 - [x] Real-world trade-batch ordering regression protection
 - [ ] Bounded live-data -> Operational Runtime -> PaperTradingSession -> Risk Engine -> PaperBroker proof
 - Deferred until bounded proof: real exchange execution, API credentials, multi-asset live trading, long-running cloud deployment, production monitoring, calibrated transaction costs. These add operational/capital risk without helping prove the current boundary.
+
+### Forward Paper Session v1
+- [x] Prove bounded Coinbase live-data -> Operational Runtime -> PaperTradingSession -> Risk Engine -> PaperBroker path.
+- [x] Add supervised longer-session runner with configurable healthy-bar bound.
+- [x] Add append-only JSONL audit records for accepted/rejected bars, strategy/risk/order outcome, account snapshot and explicit real-orders=0 evidence.
+- [ ] Prove a naturally occurring paper entry and exit over forward data; do not manufacture signals merely to demonstrate orders.
+- [ ] Add crash-transparent strategy-history/aggregator recovery before claiming unattended restart continuity. Reason: existing checkpoint state restores broker/risk/feed/session continuity, but not the accumulating EMA history or an in-progress 1m trade bucket.
+- [ ] Add unattended/cloud operation only after forward-session evidence, restart continuity and operational alerting are proven.

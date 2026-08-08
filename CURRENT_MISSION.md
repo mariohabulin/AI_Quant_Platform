@@ -28,3 +28,6 @@ Alpaca onboarding/MFA is parked after repeated provider-side setup failures. The
 
 ### Current checkpoint — Coinbase Live Paper Bridge v1
 Prove a bounded BTC-USD live-data path through Feed Health, Operational Runtime, Strategy Engine, Risk Engine and PaperBroker. Real order execution remains structurally unavailable. After the bounded probe is proven, evaluate observed behavior before expanding duration or execution scope.
+
+### Forward Paper Session v1
+Next controlled boundary: extend the proven live-paper bridge into a supervised bounded forward session with append-only JSONL audit evidence. The runner remains BTC-USD/1m, paper-only, and structurally unable to send real orders. Crash-transparent strategy-history recovery is intentionally deferred: current runtime checkpoints preserve account/risk/feed continuity but do not yet preserve the accumulating EMA history needed to claim exact strategy continuity after restart.

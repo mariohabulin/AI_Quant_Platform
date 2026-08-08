@@ -807,3 +807,6 @@ The transport subscribes only to public `market_trades` and `heartbeats`; no acc
 
 ### Coinbase Live Paper Bridge
 The bounded live-paper path is Coinbase public WebSocket -> 1m trade aggregator -> Coinbase bar adapter / Feed Health -> PaperOperationalRuntime -> accumulating PaperTradingSession -> Strategy Engine -> Risk Engine -> PaperBroker. No real broker execution adapter is reachable from this runner. Historical strategy context is accumulated only from health-accepted completed bars.
+
+## Forward Paper Observation Boundary
+`src/forward_paper_session.py` reuses the Coinbase live-paper composition and adds only bounded duration plus append-only JSONL audit evidence. It has no real broker/exchange execution adapter. Audit persistence is evidence/observability, not a substitute for runtime checkpoint recovery. Exact restart continuity remains deferred until strategy history and in-progress market-data aggregation can be restored deterministically.

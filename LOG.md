@@ -980,3 +980,9 @@ After Alpaca account/MFA onboarding blocked the first external dry-run, the prov
 - Live strategy history is accumulated across accepted bars; risk policy uses 1% stop distance and 3R target for paper authorization.
 - Corrected StrategyEngine package import compatibility so `python -m src...` runners can reuse the tested engine.
 - Deferred: exchange execution adapter/API credentials, persistence hardening, multi-asset live orchestration, production stop/target policy, fees/slippage calibration, monitoring/alerts. Reason: first prove bounded end-to-end live-data paper behavior before increasing operational or capital risk.
+
+## Forward Paper Session v1
+- Promoted the proven bounded Coinbase live-paper bridge into a configurable supervised forward-paper observation runner.
+- Added append-only JSONL audit evidence for session boundaries, rejected bars, paper events, strategy/risk/order outcomes and account snapshots.
+- Real order execution remains structurally unavailable.
+- Explicitly deferred crash-transparent strategy-history and in-progress 1m aggregator recovery; current operational checkpoints alone are insufficient to claim exact EMA continuity after restart.
