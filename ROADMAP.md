@@ -198,3 +198,8 @@ Extended forward observation exposed event-time reordering across separate Coinb
 - Replay drops remain audit-visible (`PROVIDER_REPLAY_DROPPED`) but do not consume the operational runtime consecutive-failure budget.
 - Fresh forward bars still pass through strict freshness, ordering and missing-gap validation; real execution remains impossible.
 - This change targets the observed 10:25 -> 10:23 -> 10:24 replay sequence that previously caused a false `RUNTIME_HALTED` during the supervised 30-bar run.
+
+## Forward Operational Diagnostics v1
+- Add transport-quality and market-time continuity metrics to the deterministic forward-session report.
+- Add signal activity and Risk Engine rejection diagnostics without changing trading policy.
+- Use the diagnostics to judge the next 60-bar supervised gate before multi-hour/overnight soak testing.

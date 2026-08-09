@@ -63,3 +63,6 @@ Validate bounded reconnect backoff and complete-audit fail-closed shutdown under
 - Replay drops remain audit-visible (`PROVIDER_REPLAY_DROPPED`) but do not consume the operational runtime consecutive-failure budget.
 - Fresh forward bars still pass through strict freshness, ordering and missing-gap validation; real execution remains impossible.
 - This change targets the observed 10:25 -> 10:23 -> 10:24 replay sequence that previously caused a false `RUNTIME_HALTED` during the supervised 30-bar run.
+
+### Forward Operational Diagnostics v1
+Instrument the proven 30-bar forward path before increasing duration. Report transport disconnect/reconnect quality, provider replay drops, market-time continuity/gap minutes, actionable signal rate and grouped Risk Engine rejection reasons. This is observability only; do not weaken Feed Health, Risk Engine or execution locks. Next gate after validation: supervised 60-bar forward run judged by both functional completion and operational quality.

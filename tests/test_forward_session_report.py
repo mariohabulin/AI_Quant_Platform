@@ -93,3 +93,38 @@ def test_report_counts_reconnect_rebase_as_rebase_event(tmp_path):
     report = build_forward_session_report(audit)
     assert report.status == "PASS"
     assert report.rebase_events == 2
+
+
+def test_report_adds_operational_transport_and_activity_diagnostics(tmp_path):
+    audit = tmp_path / "diagnostics.jsonl"
+    rows = [
+        {"type": "SESSION_START", "at": "2026-08-09T10:47:00+00:00", "resumed": True},
+        {"type": "PAPER_EVENT", "paper_orders": 0, "real_orders": 0,
+         "snapshot": {"timestamp": "2026-08-09T10:47:00+00:00", "equity": 5000.0, "position_quantity": 0.0},
+         "event": {"signal": 0, "status": "NO_ACTION", "risk_status": "ALLOW", "reason": "Strategy emitted HOLD."}},
+        {"type": "TRANSPORT_EVENT", "event": "DISCONNECTED", "reason": "reset", "real_orders": 0},
+        {"type": "TRANSPORT_EVENT", "event": "RECONNECTED", "reconnect_count": 1, "real_orders": 0},
+        {"type": "RECONNECT_REBASE", "timestamp": "2026-08-09T10:55:00+00:00", "real_orders": 0},
+        {"type": "PROVIDER_REPLAY_DROPPED", "timestamp": "2026-08-09T10:47:00+00:00", "real_orders": 0},
+        {"type": "PAPER_EVENT", "paper_orders": 0, "real_orders": 0,
+         "snapshot": {"timestamp": "2026-08-09T10:56:00+00:00", "equity": 5000.0, "position_quantity": 0.0},
+         "event": {"signal": 1, "status": "REJECTED", "risk_status": "REJECT", "reason": "Minimum reward/risk requirement not met."}},
+        {"type": "SESSION_END", "reason": "MAX_BARS", "processed_events": 2, "rejected_events": 0,
+         "paper_orders": 0, "equity": 5000.0, "position": 0.0, "real_orders": 0},
+    ]
+    write_rows(audit, rows)
+    report = build_forward_session_report(audit)
+    assert report.transport_disconnects == 1
+    assert report.transport_reconnects == 1
+    assert report.reconnect_success_rate == pytest.approx(1.0)
+    assert report.provider_replay_drops == 1
+    assert report.market_span_minutes == pytest.approx(9.0)
+    assert report.expected_contiguous_minutes == pytest.approx(1.0)
+    assert report.observed_gap_minutes == pytest.approx(8.0)
+    assert report.signal_activity_rate == pytest.approx(0.5)
+    assert report.risk_rejection_rate == pytest.approx(1.0)
+    assert report.risk_rejection_reasons == {"Minimum reward/risk requirement not met.": 1}
+    text = format_forward_session_report(report)
+    assert "disconnects=1 reconnects=1 success=100.0%" in text
+    assert "observed_gap=8.0m" in text
+    assert "signal_rate=50.0%" in text

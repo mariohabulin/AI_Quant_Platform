@@ -7,7 +7,10 @@ from dataclasses import asdict, dataclass
 import argparse
 import json
 from pathlib import Path
+from collections import Counter
 import sys
+
+import pandas as pd
 
 
 @dataclass(frozen=True)
@@ -32,6 +35,17 @@ class ForwardSessionReport:
     real_orders: int
     audit_complete: bool
     end_reason: str
+    transport_disconnects: int
+    transport_reconnects: int
+    reconnect_exhausted: int
+    reconnect_success_rate: float
+    provider_replay_drops: int
+    market_span_minutes: float
+    expected_contiguous_minutes: float
+    observed_gap_minutes: float
+    signal_activity_rate: float
+    risk_rejection_rate: float
+    risk_rejection_reasons: dict
 
 
 def _read_rows(path):
@@ -76,6 +90,8 @@ def build_forward_session_report(audit_path="runtime/forward_paper_audit.jsonl")
     rejected = [row for row in rows if row.get("type") == "REJECTED_BAR"]
     rebases = [row for row in rows if row.get("type") in {"RESTART_REBASE", "RECONNECT_REBASE"}]
     end = rows[-1]
+    transport = [row for row in rows if row.get("type") == "TRANSPORT_EVENT"]
+    replay_drops = [row for row in rows if row.get("type") == "PROVIDER_REPLAY_DROPPED"]
 
     if not paper:
         raise RuntimeError("Latest forward session has no PAPER_EVENT records to report.")
@@ -98,6 +114,36 @@ def build_forward_session_report(audit_path="runtime/forward_paper_audit.jsonl")
     real_orders = max(real_orders_values, default=0)
     final_equity = float(end.get("equity", equities[-1]))
     final_position = float(end.get("position", snapshots[-1].get("position_quantity", 0.0)))
+
+    disconnects = sum(row.get("event") == "DISCONNECTED" for row in transport)
+    reconnects = sum(row.get("event") == "RECONNECTED" for row in transport)
+    reconnect_exhausted = sum(row.get("event") == "RECONNECT_EXHAUSTED" for row in transport)
+    reconnect_success_rate = (reconnects / disconnects) if disconnects else 1.0
+
+    paper_timestamps = []
+    for snapshot in snapshots:
+        value = snapshot.get("timestamp")
+        if value is not None:
+            try:
+                paper_timestamps.append(pd.Timestamp(value))
+            except Exception:
+                pass
+    if len(paper_timestamps) >= 2:
+        market_span_minutes = (max(paper_timestamps) - min(paper_timestamps)).total_seconds() / 60.0
+        expected_contiguous_minutes = float(len(paper_timestamps) - 1)
+        observed_gap_minutes = max(0.0, market_span_minutes - expected_contiguous_minutes)
+    else:
+        market_span_minutes = 0.0
+        expected_contiguous_minutes = 0.0
+        observed_gap_minutes = 0.0
+
+    actionable_signals = sum(signal != 0 for signal in signals)
+    signal_activity_rate = actionable_signals / len(signals) if signals else 0.0
+    risk_rejections = [event for event in events if str(event.get("risk_status", "")) == "REJECT"]
+    risk_rejection_rate = len(risk_rejections) / actionable_signals if actionable_signals else 0.0
+    risk_rejection_reasons = dict(sorted(Counter(
+        str(event.get("reason") or "UNKNOWN") for event in risk_rejections
+    ).items()))
 
     processed = int(end.get("processed_events", len(paper)))
     rejected_count = int(end.get("rejected_events", len(rejected)))
@@ -131,6 +177,17 @@ def build_forward_session_report(audit_path="runtime/forward_paper_audit.jsonl")
         real_orders=real_orders,
         audit_complete=complete,
         end_reason=str(end.get("reason", "UNKNOWN")),
+        transport_disconnects=disconnects,
+        transport_reconnects=reconnects,
+        reconnect_exhausted=reconnect_exhausted,
+        reconnect_success_rate=reconnect_success_rate,
+        provider_replay_drops=len(replay_drops),
+        market_span_minutes=market_span_minutes,
+        expected_contiguous_minutes=expected_contiguous_minutes,
+        observed_gap_minutes=observed_gap_minutes,
+        signal_activity_rate=signal_activity_rate,
+        risk_rejection_rate=risk_rejection_rate,
+        risk_rejection_reasons=risk_rejection_reasons,
     )
 
 
@@ -142,6 +199,9 @@ def format_forward_session_report(report):
         f"risk: ALLOW={report.risk_allow} REDUCE={report.risk_reduce} REJECT={report.risk_reject}",
         f"orders: paper={report.paper_orders} filled={report.filled_orders} REAL={report.real_orders}",
         f"equity: start={report.start_equity:.2f} final={report.final_equity:.2f} net_pnl={report.net_pnl:.2f} max_drawdown={report.max_drawdown:.4%}",
+        f"transport: disconnects={report.transport_disconnects} reconnects={report.transport_reconnects} success={report.reconnect_success_rate:.1%} exhausted={report.reconnect_exhausted} replay_drops={report.provider_replay_drops}",
+        f"continuity: market_span={report.market_span_minutes:.1f}m expected_contiguous={report.expected_contiguous_minutes:.1f}m observed_gap={report.observed_gap_minutes:.1f}m",
+        f"activity: signal_rate={report.signal_activity_rate:.1%} risk_reject_rate={report.risk_rejection_rate:.1%} reject_reasons={report.risk_rejection_reasons}",
         f"final_position={report.final_position:.8f} end_reason={report.end_reason}",
     ])
 

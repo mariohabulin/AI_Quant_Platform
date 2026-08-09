@@ -842,3 +842,6 @@ Coinbase reconnect uses bounded exponential backoff. Exhaustion emits a terminal
 - Replay drops remain audit-visible (`PROVIDER_REPLAY_DROPPED`) but do not consume the operational runtime consecutive-failure budget.
 - Fresh forward bars still pass through strict freshness, ordering and missing-gap validation; real execution remains impossible.
 - This change targets the observed 10:25 -> 10:23 -> 10:24 replay sequence that previously caused a false `RUNTIME_HALTED` during the supervised 30-bar run.
+
+## Forward Operational Diagnostics
+`forward_session_report` is the read-only observability boundary for supervised forward operation. It derives transport reliability, provider replay, market-time continuity/gap and signal/risk activity metrics solely from append-only forward audit evidence. It must not mutate runtime, strategy, Risk Engine, Feed Health or execution state.

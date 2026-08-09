@@ -1031,3 +1031,9 @@ The first supervised forward-paper run produced a real-data BUY and ended with a
 - Replay drops remain audit-visible (`PROVIDER_REPLAY_DROPPED`) but do not consume the operational runtime consecutive-failure budget.
 - Fresh forward bars still pass through strict freshness, ordering and missing-gap validation; real execution remains impossible.
 - This change targets the observed 10:25 -> 10:23 -> 10:24 replay sequence that previously caused a false `RUNTIME_HALTED` during the supervised 30-bar run.
+
+## Forward Operational Diagnostics v1
+- Extended the read-only forward session report with transport disconnect/reconnect counts, reconnect success rate, reconnect exhaustion count and provider replay-drop count.
+- Added market-time continuity diagnostics: first-to-last processed-bar span, contiguous 1-minute expectation and observed gap minutes. This makes long wall-clock runs with sparse accepted bars visible instead of hiding them behind a simple PASS.
+- Added trading-activity diagnostics: actionable signal rate, risk-rejection rate among actionable signals and grouped risk-rejection reasons.
+- Diagnostics remain observational only: no strategy, risk threshold, execution, reconnect or Feed Health behavior is changed.
