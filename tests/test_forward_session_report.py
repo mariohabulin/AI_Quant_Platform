@@ -157,3 +157,29 @@ def test_report_summarizes_transport_outage_quality_and_failure_kinds(tmp_path):
     assert "outage_total=20.0s" in text
     assert "outage_max=12.5s" in text
     assert "'DNS': 1" in text
+
+
+def test_report_includes_hybrid_rest_backfill_in_continuity_metrics(tmp_path):
+    audit = tmp_path / "hybrid.jsonl"
+    rows = [
+        {"type": "SESSION_START", "at": "2026-08-09T12:00:00+00:00"},
+        {"type": "PAPER_EVENT", "paper_orders": 0, "real_orders": 0,
+         "snapshot": {"timestamp": "2026-08-09T12:00:00+00:00", "equity": 5000.0, "position_quantity": 0.0},
+         "event": {"signal": 0, "status": "NO_ACTION", "risk_status": "ALLOW", "reason": "HOLD"}},
+        {"type": "REST_BACKFILL_BAR", "timestamp": "2026-08-09T12:01:00+00:00", "real_orders": 0},
+        {"type": "REST_BACKFILL_BAR", "timestamp": "2026-08-09T12:02:00+00:00", "real_orders": 0},
+        {"type": "REST_BACKFILL_COMPLETE", "recovered_bars": 2, "real_orders": 0},
+        {"type": "PAPER_EVENT", "paper_orders": 0, "real_orders": 0,
+         "snapshot": {"timestamp": "2026-08-09T12:03:00+00:00", "equity": 5000.0, "position_quantity": 0.0},
+         "event": {"signal": 0, "status": "NO_ACTION", "risk_status": "ALLOW", "reason": "HOLD"}},
+        {"type": "SESSION_END", "reason": "MAX_BARS", "processed_events": 2, "rejected_events": 0,
+         "paper_orders": 0, "equity": 5000.0, "position": 0.0, "real_orders": 0},
+    ]
+    write_rows(audit, rows)
+    report = build_forward_session_report(audit)
+    assert report.rest_backfill_bars == 2
+    assert report.rest_backfill_failures == 0
+    assert report.market_span_minutes == pytest.approx(3.0)
+    assert report.expected_contiguous_minutes == pytest.approx(3.0)
+    assert report.observed_gap_minutes == pytest.approx(0.0)
+    assert "hybrid_recovery: backfill_bars=2 failures=0" in format_forward_session_report(report)

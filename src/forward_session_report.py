@@ -43,6 +43,8 @@ class ForwardSessionReport:
     max_outage_seconds: float
     disconnect_reason_counts: dict
     provider_replay_drops: int
+    rest_backfill_bars: int
+    rest_backfill_failures: int
     market_span_minutes: float
     expected_contiguous_minutes: float
     observed_gap_minutes: float
@@ -95,6 +97,8 @@ def build_forward_session_report(audit_path="runtime/forward_paper_audit.jsonl")
     end = rows[-1]
     transport = [row for row in rows if row.get("type") == "TRANSPORT_EVENT"]
     replay_drops = [row for row in rows if row.get("type") == "PROVIDER_REPLAY_DROPPED"]
+    rest_backfill = [row for row in rows if row.get("type") == "REST_BACKFILL_BAR"]
+    rest_backfill_failures = [row for row in rows if row.get("type") == "REST_BACKFILL_FAILED"]
 
     if not paper:
         raise RuntimeError("Latest forward session has no PAPER_EVENT records to report.")
@@ -136,17 +140,25 @@ def build_forward_session_report(audit_path="runtime/forward_paper_audit.jsonl")
         if row.get("event") == "DISCONNECTED"
     ).items()))
 
-    paper_timestamps = []
+    continuity_timestamps = []
     for snapshot in snapshots:
         value = snapshot.get("timestamp")
         if value is not None:
             try:
-                paper_timestamps.append(pd.Timestamp(value))
+                continuity_timestamps.append(pd.Timestamp(value))
             except Exception:
                 pass
-    if len(paper_timestamps) >= 2:
-        market_span_minutes = (max(paper_timestamps) - min(paper_timestamps)).total_seconds() / 60.0
-        expected_contiguous_minutes = float(len(paper_timestamps) - 1)
+    for row in rest_backfill:
+        value = row.get("timestamp")
+        if value is not None:
+            try:
+                continuity_timestamps.append(pd.Timestamp(value))
+            except Exception:
+                pass
+    continuity_timestamps = sorted(set(continuity_timestamps))
+    if len(continuity_timestamps) >= 2:
+        market_span_minutes = (max(continuity_timestamps) - min(continuity_timestamps)).total_seconds() / 60.0
+        expected_contiguous_minutes = float(len(continuity_timestamps) - 1)
         observed_gap_minutes = max(0.0, market_span_minutes - expected_contiguous_minutes)
     else:
         market_span_minutes = 0.0
@@ -201,6 +213,8 @@ def build_forward_session_report(audit_path="runtime/forward_paper_audit.jsonl")
         max_outage_seconds=max_outage_seconds,
         disconnect_reason_counts=disconnect_reason_counts,
         provider_replay_drops=len(replay_drops),
+        rest_backfill_bars=len(rest_backfill),
+        rest_backfill_failures=len(rest_backfill_failures),
         market_span_minutes=market_span_minutes,
         expected_contiguous_minutes=expected_contiguous_minutes,
         observed_gap_minutes=observed_gap_minutes,
@@ -220,6 +234,7 @@ def format_forward_session_report(report):
         f"equity: start={report.start_equity:.2f} final={report.final_equity:.2f} net_pnl={report.net_pnl:.2f} max_drawdown={report.max_drawdown:.4%}",
         f"transport: disconnects={report.transport_disconnects} reconnects={report.transport_reconnects} success={report.reconnect_success_rate:.1%} exhausted={report.reconnect_exhausted} replay_drops={report.provider_replay_drops}",
         f"transport_quality: outage_total={report.total_outage_seconds:.1f}s outage_max={report.max_outage_seconds:.1f}s reasons={report.disconnect_reason_counts}",
+        f"hybrid_recovery: backfill_bars={report.rest_backfill_bars} failures={report.rest_backfill_failures}",
         f"continuity: market_span={report.market_span_minutes:.1f}m expected_contiguous={report.expected_contiguous_minutes:.1f}m observed_gap={report.observed_gap_minutes:.1f}m",
         f"activity: signal_rate={report.signal_activity_rate:.1%} risk_reject_rate={report.risk_rejection_rate:.1%} reject_reasons={report.risk_rejection_reasons}",
         f"final_position={report.final_position:.8f} end_reason={report.end_reason}",

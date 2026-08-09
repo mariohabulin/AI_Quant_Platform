@@ -8,6 +8,7 @@ import pandas as pd
 
 
 COINBASE_WS_URL = "wss://advanced-trade-ws.coinbase.com"
+COINBASE_EXCHANGE_REST_URL = "https://api.exchange.coinbase.com"
 
 
 @dataclass(frozen=True)
@@ -213,6 +214,134 @@ class CoinbaseOneMinuteBarAdapter:
         if values["Low"] > min(values["Open"], values["High"], values["Close"]):
             raise ValueError("Completed bar Low has invalid price geometry.")
         return timestamp, values
+
+
+class CoinbasePublicRestCandleClient:
+    """Public REST fallback for completed Coinbase Exchange one-minute candles.
+
+    The client is deliberately read-only and unauthenticated. It is used only to
+    repair market-data continuity after websocket gaps; it has no order/execution
+    capability. A request function can be injected for deterministic tests.
+    """
+
+    def __init__(self, product_id="BTC-USD", request_fn=None, timeout_seconds=10.0):
+        if not isinstance(product_id, str) or not product_id.strip():
+            raise ValueError("product_id is required.")
+        if float(timeout_seconds) <= 0:
+            raise ValueError("timeout_seconds must be positive.")
+        self.product_id = product_id.strip().upper()
+        self.request_fn = request_fn
+        self.timeout_seconds = float(timeout_seconds)
+
+    def _get(self, start, end):
+        params = {
+            "start": pd.Timestamp(start).isoformat(),
+            "end": pd.Timestamp(end).isoformat(),
+            "granularity": 60,
+        }
+        url = f"{COINBASE_EXCHANGE_REST_URL}/products/{self.product_id}/candles"
+        if self.request_fn is not None:
+            response = self.request_fn(url, params=params, timeout=self.timeout_seconds)
+        else:
+            import requests
+            response = requests.get(url, params=params, timeout=self.timeout_seconds)
+        raise_for_status = getattr(response, "raise_for_status", None)
+        if callable(raise_for_status):
+            raise_for_status()
+        payload = response.json() if hasattr(response, "json") else response
+        if not isinstance(payload, list):
+            raise RuntimeError("Coinbase REST candle response must be a list.")
+        return payload
+
+    @staticmethod
+    def _parse_row(row):
+        if not isinstance(row, (list, tuple)) or len(row) < 6:
+            raise RuntimeError("Coinbase REST candle row is invalid.")
+        # Exchange REST shape: [time, low, high, open, close, volume].
+        ts = pd.Timestamp(int(row[0]), unit="s", tz="UTC")
+        low, high, open_, close, volume = map(float, row[1:6])
+        return CoinbaseCompletedBar(ts, open_, high, low, close, volume)
+
+    def fetch_range(self, start, end):
+        """Return completed 1m bars for [start, end), chunking under REST limits."""
+        start = pd.Timestamp(start)
+        end = pd.Timestamp(end)
+        if pd.isna(start) or pd.isna(end) or end <= start:
+            return tuple()
+        if start.tzinfo is None:
+            start = start.tz_localize("UTC")
+        if end.tzinfo is None:
+            end = end.tz_localize("UTC")
+        cursor = start.floor("min")
+        end = end.floor("min")
+        bars = {}
+        # Coinbase Exchange REST allows at most 300 candles per request. Use a
+        # smaller 299-minute window to keep inclusive endpoint semantics harmless.
+        while cursor < end:
+            chunk_end = min(cursor + pd.Timedelta(minutes=299), end)
+            payload = self._get(cursor, chunk_end)
+            for row in payload:
+                bar = self._parse_row(row)
+                if cursor <= bar.timestamp < end:
+                    bars[bar.timestamp] = bar
+            cursor = chunk_end
+        return tuple(bars[key] for key in sorted(bars))
+
+
+class CoinbaseHybridGapRecovery:
+    """Recover exact missing 1m continuity with public REST candles.
+
+    Recovery is fail-closed: every expected missing minute must be present exactly
+    once. Historical bars are returned for state catch-up only; callers must not
+    retroactively execute orders from them.
+    """
+
+    def __init__(self, rest_client=None, max_backfill_minutes=300,
+                 max_attempts=3, retry_backoff_seconds=2.0, sleep_fn=None):
+        if not isinstance(max_backfill_minutes, int) or max_backfill_minutes <= 0:
+            raise ValueError("max_backfill_minutes must be a positive integer.")
+        if not isinstance(max_attempts, int) or max_attempts <= 0:
+            raise ValueError("max_attempts must be a positive integer.")
+        if float(retry_backoff_seconds) < 0:
+            raise ValueError("retry_backoff_seconds cannot be negative.")
+        self.rest_client = rest_client or CoinbasePublicRestCandleClient()
+        self.max_backfill_minutes = max_backfill_minutes
+        self.max_attempts = max_attempts
+        self.retry_backoff_seconds = float(retry_backoff_seconds)
+        self.sleep_fn = sleep_fn or time.sleep
+
+    def recover(self, last_accepted_timestamp, next_live_timestamp):
+        if last_accepted_timestamp is None:
+            return tuple()
+        last_ts = pd.Timestamp(last_accepted_timestamp)
+        next_ts = pd.Timestamp(next_live_timestamp)
+        start = last_ts + pd.Timedelta(minutes=1)
+        end = next_ts
+        if end <= start:
+            return tuple()
+        expected = list(pd.date_range(start=start, end=end - pd.Timedelta(minutes=1), freq="1min"))
+        if len(expected) > self.max_backfill_minutes:
+            raise RuntimeError(
+                f"REST backfill gap of {len(expected)} minutes exceeds safety limit "
+                f"of {self.max_backfill_minutes}."
+            )
+        last_error = None
+        for attempt in range(1, self.max_attempts + 1):
+            try:
+                bars = self.rest_client.fetch_range(start, end)
+                by_ts = {pd.Timestamp(bar.timestamp): bar for bar in bars}
+                missing = [ts for ts in expected if ts not in by_ts]
+                if not missing:
+                    return tuple(by_ts[ts] for ts in expected)
+                last_error = RuntimeError(
+                    f"Coinbase REST backfill incomplete: missing {len(missing)} of "
+                    f"{len(expected)} required one-minute bars."
+                )
+            except Exception as exc:
+                last_error = exc
+            if attempt < self.max_attempts and self.retry_backoff_seconds:
+                self.sleep_fn(self.retry_backoff_seconds * attempt)
+        raise RuntimeError(f"Coinbase REST backfill failed after {self.max_attempts} attempts: {last_error}")
 
 
 class CoinbasePublicWebSocketTransport:

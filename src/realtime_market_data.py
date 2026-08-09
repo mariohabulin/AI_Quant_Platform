@@ -159,6 +159,36 @@ class RealTimeMarketDataFeed:
         )
         return True
 
+    def ingest_backfill(self, provider_message):
+        """Accept a historical continuity bar without wall-clock freshness checks.
+
+        This path exists for verified REST gap recovery after a live transport
+        interruption. Schema, ordering and one-minute continuity remain strict;
+        only the real-time staleness check is intentionally skipped.
+        """
+        timestamp, values = self.adapter.normalize(provider_message)
+        if self._last_timestamp is not None:
+            if timestamp == self._last_timestamp:
+                self._fail("Duplicate provider backfill bar rejected.")
+            if timestamp < self._last_timestamp:
+                self._fail("Out-of-order provider backfill bar rejected.")
+            gap = timestamp - self._last_timestamp
+            if gap != self.timeframe:
+                self._fail("Backfill bar continuity is incomplete.")
+
+        row = pd.DataFrame([values], index=pd.DatetimeIndex([timestamp]))
+        if self._history.empty:
+            self._history = row.loc[:, REQUIRED_OHLCV_COLUMNS].copy()
+        else:
+            self._history = pd.concat([self._history, row]).loc[:, REQUIRED_OHLCV_COLUMNS]
+        self._accepted += 1
+        self._last_timestamp = timestamp
+        self._health = FeedHealthSnapshot(
+            "HEALTHY", self._accepted, timestamp, self._last_received_at,
+            "Historical REST backfill accepted.",
+        )
+        return MarketDataEvent(self._accepted, timestamp, self._history.copy())
+
     def ingest(self, provider_message, received_at=None):
         timestamp, values = self.adapter.normalize(provider_message)
         received = pd.Timestamp(received_at) if received_at is not None else pd.Timestamp.now(tz="UTC")

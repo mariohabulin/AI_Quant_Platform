@@ -1043,3 +1043,11 @@ The first supervised forward-paper run produced a real-data BUY and ended with a
 - Recorded the long-term 24/7 operating model: Universe Manager -> lightweight broad scanner -> candidate ranking -> deep strategy/regime analysis -> Risk Engine -> portfolio gate -> execution.
 - The Agent is intended to run continuously while respecting venue/session calendars; individual markets are not assumed to trade 24/7.
 - Broad multi-market scanning remains intentionally deferred until single-symbol transport/runtime stability and extended forward evidence are proven, so scale does not multiply unresolved operational defects.
+
+## 2026-08-09 — Hybrid WS + REST Recovery v1
+- The first 60-bar operational-quality run finished 60/60 but required more than three hours, with 17 disconnects, 16 reconnects and 144 minutes of observed market-time gap.
+- Kept WebSocket as the primary live source but removed perfect-socket continuity as a system assumption.
+- Added public Coinbase Exchange REST 1-minute candle recovery for exact missing intervals after restart/reconnect.
+- Backfilled bars are validation/state catch-up only: they update feed continuity, EMA input history, mark-to-market and Risk Engine equity observation but never execute historical signals/orders.
+- Added exact-minute coverage validation, bounded recovery size, short bounded retry for REST propagation delay, audit evidence and `BACKFILL_FATAL` fail-closed shutdown when continuity cannot be proven.
+- Extended Forward Session Report with hybrid backfill/failure counts and continuity metrics that include recovered minutes.

@@ -357,3 +357,67 @@ def test_transport_sends_protocol_ping_on_long_lived_connection():
     assert next(iterator)["channel"] == "heartbeats"
     assert next(iterator)["channel"] == "heartbeats"
     assert sock.pings == ["ai-quant-keepalive", "ai-quant-keepalive"]
+
+
+def test_public_rest_candle_client_parses_and_sorts_one_minute_candles():
+    from src.coinbase_market_data import CoinbasePublicRestCandleClient
+
+    class Response:
+        def raise_for_status(self):
+            return None
+        def json(self):
+            return [
+                [1786276920, "99", "103", "100", "102", "2.5"],
+                [1786276860, "98", "102", "99", "101", "1.5"],
+            ]
+
+    calls = []
+    def request(url, params, timeout):
+        calls.append((url, params, timeout))
+        return Response()
+
+    client = CoinbasePublicRestCandleClient(request_fn=request)
+    bars = client.fetch_range("2026-08-09T12:01:00Z", "2026-08-09T12:03:00Z")
+    assert [bar.timestamp for bar in bars] == [
+        pd.Timestamp("2026-08-09T12:01:00Z"),
+        pd.Timestamp("2026-08-09T12:02:00Z"),
+    ]
+    assert bars[0].open == pytest.approx(99.0)
+    assert bars[0].high == pytest.approx(102.0)
+    assert bars[0].low == pytest.approx(98.0)
+    assert bars[0].close == pytest.approx(101.0)
+    assert calls[0][1]["granularity"] == 60
+
+
+def test_hybrid_gap_recovery_requires_exact_minute_coverage():
+    from src.coinbase_market_data import CoinbaseCompletedBar, CoinbaseHybridGapRecovery
+
+    class Rest:
+        def fetch_range(self, start, end):
+            return (
+                CoinbaseCompletedBar(pd.Timestamp("2026-08-09T12:01:00Z"), 1, 1, 1, 1, 1),
+                CoinbaseCompletedBar(pd.Timestamp("2026-08-09T12:03:00Z"), 1, 1, 1, 1, 1),
+            )
+
+    recovery = CoinbaseHybridGapRecovery(rest_client=Rest(), max_attempts=1, sleep_fn=lambda _: None)
+    with pytest.raises(RuntimeError, match="incomplete"):
+        recovery.recover("2026-08-09T12:00:00Z", "2026-08-09T12:04:00Z")
+
+
+def test_hybrid_gap_recovery_returns_exact_missing_minutes_in_order():
+    from src.coinbase_market_data import CoinbaseCompletedBar, CoinbaseHybridGapRecovery
+
+    class Rest:
+        def fetch_range(self, start, end):
+            return tuple(
+                CoinbaseCompletedBar(ts, 1, 1, 1, 1, 1)
+                for ts in [
+                    pd.Timestamp("2026-08-09T12:03:00Z"),
+                    pd.Timestamp("2026-08-09T12:01:00Z"),
+                    pd.Timestamp("2026-08-09T12:02:00Z"),
+                ]
+            )
+
+    recovery = CoinbaseHybridGapRecovery(rest_client=Rest())
+    bars = recovery.recover("2026-08-09T12:00:00Z", "2026-08-09T12:04:00Z")
+    assert [bar.timestamp for bar in bars] == list(pd.date_range("2026-08-09T12:01:00Z", periods=3, freq="1min"))

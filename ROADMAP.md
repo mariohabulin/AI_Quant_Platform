@@ -225,3 +225,15 @@ After single-symbol operational stability and extended forward evidence are prov
 - Keep real multi-market execution disabled until portfolio-level risk and venue/session handling are validated.
 
 **Long-term operating principle:** the Agent may run 24/7 even though individual markets do not. It should continuously know which configured markets are open/relevant, scan the appropriate universe, rank opportunities, and trade only when the full strategy + risk + portfolio policy authorizes action.
+
+### Hybrid WS + REST Recovery v1
+- [x] Keep WebSocket as the primary low-latency Coinbase market-data path.
+- [x] Add unauthenticated Coinbase public REST 1-minute candle client for continuity repair.
+- [x] Detect exact missing minute range from the last accepted feed watermark to the first post-gap live bar.
+- [x] Require exact REST coverage for every missing minute; never synthesize candles.
+- [x] Catch up Feed/EMA/Risk/mark state without retroactively executing historical signals.
+- [x] Audit every recovered bar and completed/failed recovery boundary.
+- [x] Fail closed with `BACKFILL_FATAL` when verified continuity cannot be restored.
+- [ ] Prove live hybrid recovery on a supervised reconnect gap.
+- [ ] Repeat the 60-bar operational-quality gate and require near-contiguous market-time coverage before increasing soak duration.
+- Deferred: provider redundancy across independent venues, broad multi-symbol backfill orchestration and cloud 24/7 deployment. Reason: first prove one-symbol hybrid continuity end-to-end.

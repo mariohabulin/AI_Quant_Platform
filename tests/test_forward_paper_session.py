@@ -13,6 +13,24 @@ def trade_message(ts, price="100", size="1"):
     }
 
 
+class FakeGapRecovery:
+    def __init__(self, fail=False):
+        self.calls = []
+        self.fail = fail
+
+    def recover(self, last_accepted, next_live):
+        from src.coinbase_market_data import CoinbaseCompletedBar
+        self.calls.append((pd.Timestamp(last_accepted), pd.Timestamp(next_live)))
+        if self.fail:
+            raise RuntimeError("simulated REST backfill failure")
+        start = pd.Timestamp(last_accepted) + pd.Timedelta(minutes=1)
+        end = pd.Timestamp(next_live)
+        return tuple(
+            CoinbaseCompletedBar(ts, 100.0, 100.0, 100.0, 100.0, 1.0)
+            for ts in pd.date_range(start=start, end=end - pd.Timedelta(minutes=1), freq="1min")
+        )
+
+
 def test_jsonl_audit_appends_parseable_records(tmp_path):
     path = tmp_path / "audit.jsonl"
     audit = JsonlForwardAudit(path)
@@ -178,6 +196,7 @@ def test_resumed_forward_session_rebases_gap_without_trading_boundary_bar(tmp_pa
         pd.Timestamp("2026-08-08T19:54:20Z"),
         pd.Timestamp("2026-08-08T19:55:20Z"),
     ])
+    recovery = FakeGapRecovery()
     result = run_forward_paper(
         transport=messages,
         max_processed_bars=2,
@@ -185,19 +204,21 @@ def test_resumed_forward_session_rebases_gap_without_trading_boundary_bar(tmp_pa
         output=output.append,
         now_fn=lambda: next(clock),
         state_path=state,
+        gap_recovery=recovery,
     )
 
     rows = [json.loads(line) for line in audit.read_text(encoding="utf-8").splitlines()]
-    rebases = [row for row in rows if row["type"] == "RESTART_REBASE"]
+    backfill = [row for row in rows if row["type"] == "REST_BACKFILL_BAR"]
+    completed = [row for row in rows if row["type"] == "REST_BACKFILL_COMPLETE"]
     paper = [row for row in rows if row["type"] == "PAPER_EVENT"]
-    assert len(rebases) == 1
-    assert rebases[0]["timestamp"] == "2026-08-08T19:52:00+00:00"
+    assert len(backfill) == 26
+    assert len(completed) == 1
     assert len(paper) == 2
     assert result.processed_events == 2
     assert result.rejected_events == 0
     assert result.final_position == pytest.approx(0.02)
-    assert any(line.startswith("REBASE ") for line in output)
-    assert paper[0]["snapshot"]["timestamp"] == "2026-08-08T19:53:00+00:00"
+    assert any(line.startswith("REST_BACKFILL 26 bars") for line in output)
+    assert paper[0]["snapshot"]["timestamp"] == "2026-08-08T19:52:00+00:00"
 
 
 def test_forward_session_audits_reconnect_and_rebases_without_trading_boundary_bar(tmp_path):
@@ -222,6 +243,7 @@ def test_forward_session_audits_reconnect_and_rebases_without_trading_boundary_b
         pd.Timestamp("2026-08-09T08:12:20Z"),
     ])
     output = []
+    recovery = FakeGapRecovery()
     result = run_forward_paper(
         transport=messages,
         max_processed_bars=3,
@@ -230,18 +252,19 @@ def test_forward_session_audits_reconnect_and_rebases_without_trading_boundary_b
         now_fn=lambda: next(times),
         state_path=state,
         resume=False,
+        gap_recovery=recovery,
     )
     rows = [json.loads(line) for line in audit.read_text(encoding="utf-8").splitlines()]
     transport_events = [row for row in rows if row["type"] == "TRANSPORT_EVENT"]
-    reconnect_rebases = [row for row in rows if row["type"] == "RECONNECT_REBASE"]
+    backfill = [row for row in rows if row["type"] == "REST_BACKFILL_BAR"]
     paper = [row for row in rows if row["type"] == "PAPER_EVENT"]
     assert [row["event"] for row in transport_events] == ["DISCONNECTED", "RECONNECTED"]
-    assert len(reconnect_rebases) == 1
+    assert len(backfill) == 8
     assert len(paper) == 3
     assert result.processed_events == 3
     assert result.rejected_events == 0
     assert any(line.startswith("TRANSPORT DISCONNECTED") for line in output)
-    assert any("reconnect gap reconciled" in line for line in output)
+    assert any(line.startswith("REST_BACKFILL 8 bars") for line in output)
 
 
 def test_forward_session_labels_runtime_health_halt_instead_of_transport_end(tmp_path):
@@ -325,3 +348,37 @@ def test_replay_classifier_does_not_mutate_runtime_health():
     after = runtime.health
     assert after.rejected_events == before.rejected_events
     assert after.consecutive_failures == before.consecutive_failures
+
+
+def test_forward_session_fails_closed_when_rest_backfill_is_incomplete(tmp_path):
+    audit = tmp_path / "backfill_fatal.jsonl"
+    messages = [
+        trade_message("2026-08-09T08:00:10Z", "100"),
+        trade_message("2026-08-09T08:01:10Z", "101"),
+        trade_message("2026-08-09T08:02:10Z", "102"),
+        {"channel": "_coinbase_transport", "event": "DISCONNECTED", "attempt": 1, "reason": "reset"},
+        {"channel": "_coinbase_transport", "event": "RECONNECTED", "reconnect_count": 1},
+        trade_message("2026-08-09T08:10:10Z", "110"),
+        trade_message("2026-08-09T08:11:10Z", "111"),
+    ]
+    times = iter([
+        pd.Timestamp("2026-08-09T08:00:00Z"),
+        pd.Timestamp("2026-08-09T08:01:20Z"),
+        pd.Timestamp("2026-08-09T08:02:20Z"),
+        pd.Timestamp("2026-08-09T08:11:20Z"),
+    ])
+    result = run_forward_paper(
+        transport=messages,
+        max_processed_bars=10,
+        audit_path=audit,
+        now_fn=lambda: next(times),
+        state_path=tmp_path / "state.json",
+        resume=False,
+        gap_recovery=FakeGapRecovery(fail=True),
+    )
+    rows = [json.loads(line) for line in audit.read_text(encoding="utf-8").splitlines()]
+    assert any(row["type"] == "REST_BACKFILL_FAILED" for row in rows)
+    assert rows[-1]["type"] == "SESSION_END"
+    assert rows[-1]["reason"] == "BACKFILL_FATAL"
+    assert rows[-1]["real_orders"] == 0
+    assert result.processed_events == 2

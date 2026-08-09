@@ -13,7 +13,11 @@ import sys
 import pandas as pd
 
 from src.coinbase_live_paper import build_live_paper_runtime
-from src.coinbase_market_data import CoinbaseOneMinuteTradeAggregator, CoinbasePublicWebSocketTransport
+from src.coinbase_market_data import (
+    CoinbaseHybridGapRecovery,
+    CoinbaseOneMinuteTradeAggregator,
+    CoinbasePublicWebSocketTransport,
+)
 from src.operational_runtime import JsonCheckpointStore
 from src.realtime_market_data import FeedHealthError
 
@@ -177,6 +181,24 @@ def _is_completed_provider_replay(runtime, bar):
     return last_accepted is not None and pd.Timestamp(bar.timestamp) <= pd.Timestamp(last_accepted)
 
 
+def _apply_rest_backfill_bar(runtime, bar):
+    """Catch up market/strategy/risk state without retroactive order execution."""
+    market_event = runtime.realtime_feed.ingest_backfill(bar)
+    timestamp = pd.Timestamp(market_event.timestamp)
+    latest = market_event.data.loc[[timestamp]].copy()
+    runtime.session._history = pd.concat([runtime.session._history, latest]).sort_index()
+    runtime.session._history = runtime.session._history[~runtime.session._history.index.duplicated(keep="last")]
+    runtime.session._last_timestamp = timestamp
+
+    broker = runtime.session.engine.paper_broker
+    close = float(latest["Close"].iloc[-1])
+    broker.last_market_price = close
+    account = broker.account_snapshot(mark_price=close)
+    runtime.session.engine.risk_engine.observe_equity(account["equity"], timestamp)
+    runtime._last_event_at = timestamp
+    return account
+
+
 def run_forward_paper(
     transport=None,
     max_processed_bars=60,
@@ -185,6 +207,7 @@ def run_forward_paper(
     now_fn=None,
     state_path="runtime/forward_paper_state.json",
     resume=True,
+    gap_recovery=None,
 ):
     if not isinstance(max_processed_bars, int) or max_processed_bars <= 0:
         raise ValueError("max_processed_bars must be a positive integer.")
@@ -195,6 +218,11 @@ def run_forward_paper(
     runtime = build_live_paper_runtime()
     continuity = ForwardContinuityStore(state_path)
     resumed = continuity.load_into(runtime, aggregator) if resume else False
+    if resumed:
+        # A persisted partial trade bucket cannot be trusted across process downtime.
+        # The historical gap will be rebuilt from completed REST candles instead.
+        aggregator.reset_stream_boundary()
+    gap_recovery = gap_recovery or CoinbaseHybridGapRecovery()
     now_fn = now_fn or (lambda: pd.Timestamp.now(tz="UTC"))
 
     output(
@@ -207,6 +235,7 @@ def run_forward_paper(
     rebase_boundary_pending = resumed
     rebase_boundary_kind = "RESTART" if resumed else None
     transport_fatal = False
+    backfill_fatal = False
 
     for message in transport:
         if isinstance(message, dict) and message.get("channel") == "_coinbase_transport":
@@ -261,26 +290,54 @@ def run_forward_paper(
                 continue
 
             if rebase_boundary_pending:
-                try:
-                    rebased = runtime.realtime_feed.reconcile_after_restart(bar, received_at=received_at)
-                except FeedHealthError:
-                    rebased = False
+                last_accepted = runtime.realtime_feed._last_timestamp
+                gap = None if last_accepted is None else pd.Timestamp(bar.timestamp) - pd.Timestamp(last_accepted)
+                if last_accepted is not None and gap is not None and gap > runtime.realtime_feed.max_gap:
+                    boundary_kind = rebase_boundary_kind or "RESTART"
+                    try:
+                        recovered = gap_recovery.recover(last_accepted, bar.timestamp)
+                        for recovered_bar in recovered:
+                            account = _apply_rest_backfill_bar(runtime, recovered_bar)
+                            audit.append({
+                                "type": "REST_BACKFILL_BAR",
+                                "timestamp": recovered_bar.timestamp,
+                                "close": recovered_bar.close,
+                                "equity": account["equity"],
+                                "position": account["position_quantity"],
+                                "boundary_kind": boundary_kind,
+                                "real_orders": 0,
+                            })
+                        audit.append({
+                            "type": "REST_BACKFILL_COMPLETE",
+                            "boundary_kind": boundary_kind,
+                            "from_timestamp": last_accepted,
+                            "to_timestamp": bar.timestamp,
+                            "recovered_bars": len(recovered),
+                            "real_orders": 0,
+                        })
+                        output(
+                            f"REST_BACKFILL {len(recovered)} bars: "
+                            f"{pd.Timestamp(last_accepted)} -> {pd.Timestamp(bar.timestamp)}; trading resumes on live bar"
+                        )
+                        continuity.save(runtime, aggregator)
+                        rebase_boundary_pending = False
+                        rebase_boundary_kind = None
+                    except Exception as exc:
+                        backfill_fatal = True
+                        continuity.save(runtime, aggregator)
+                        audit.append({
+                            "type": "REST_BACKFILL_FAILED",
+                            "boundary_kind": boundary_kind,
+                            "from_timestamp": last_accepted,
+                            "to_timestamp": bar.timestamp,
+                            "reason": f"{type(exc).__name__}: {exc}",
+                            "real_orders": 0,
+                        })
+                        output(f"REST_BACKFILL_FAILED: {type(exc).__name__}: {exc}")
+                        break
                 else:
                     rebase_boundary_pending = False
-                if rebased:
-                    boundary_kind = rebase_boundary_kind or "RESTART"
-                    continuity.save(runtime, aggregator)
-                    audit.append({
-                        "type": "RESTART_REBASE" if boundary_kind == "RESTART" else "RECONNECT_REBASE",
-                        "timestamp": bar.timestamp,
-                        "reason": runtime.realtime_feed.health.reason,
-                        "paper_orders": len(runtime.session.engine.paper_broker.order_history),
-                        "real_orders": 0,
-                    })
-                    output(f"REBASE {bar.timestamp}: {boundary_kind.lower()} gap reconciled; no trading decision")
                     rebase_boundary_kind = None
-                    continue
-                rebase_boundary_kind = None
 
             snapshot = runtime.process_provider_message(bar, received_at=received_at)
             if snapshot is None:
@@ -341,13 +398,15 @@ def run_forward_paper(
                     broker.position_quantity,
                     str(audit.path),
                 )
-        if runtime.stop_requested:
+        if backfill_fatal or runtime.stop_requested:
             break
 
     broker = runtime.session.engine.paper_broker
     mark = broker.last_market_price or 1.0
     final = broker.account_snapshot(mark_price=mark)
-    if transport_fatal:
+    if backfill_fatal:
+        end_reason = "BACKFILL_FATAL"
+    elif transport_fatal:
         end_reason = "TRANSPORT_FATAL"
     elif runtime.stop_requested and runtime.health.status == "HALTED":
         end_reason = "RUNTIME_HALTED"

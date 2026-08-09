@@ -857,3 +857,15 @@ The Universe Manager owns configured instrument/venue scope and market-session a
 The Agent process may operate continuously while respecting each venue's actual trading calendar. Crypto can be scanned continuously; exchange-traded instruments are activated/deactivated according to their sessions rather than treated as 24/7 markets.
 
 This boundary is intentionally deferred until single-symbol live-paper transport, continuity and long-duration operational quality are proven. Broadening the universe must reuse provider-neutral market-data and execution contracts rather than embedding symbol/provider assumptions into Strategy or Risk layers.
+
+## Hybrid Market-Data Continuity Boundary
+
+The production-oriented Coinbase path is now explicitly hybrid:
+
+`WebSocket live trades -> event-time reorder -> completed 1m bars`
+
+`disconnect/restart gap -> public REST 1m candles -> exact continuity validation -> non-tradable state catch-up -> next live bar resumes normal trading`
+
+WebSocket remains the low-latency source. REST is a recovery/backfill source only. Historical recovery bars advance provider/feed watermark, accumulated strategy input history, broker mark price and Risk Engine equity observation, but they do **not** invoke Strategy/Risk/Execution orchestration retroactively. This prevents a delayed historical BUY/SELL signal from becoming a current paper/live order.
+
+Recovery is exact and fail-closed. Every expected missing minute must be present; candles are never fabricated. Recovery gaps above the configured safety bound or incomplete REST responses stop the session with `BACKFILL_FATAL` and preserve continuity state. The provider-neutral trading layers remain unaware of whether a bar originated from WebSocket or REST recovery.
