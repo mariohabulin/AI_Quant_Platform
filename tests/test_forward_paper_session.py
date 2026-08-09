@@ -291,3 +291,37 @@ def test_forward_session_closes_audit_on_reconnect_exhaustion(tmp_path):
     assert any(row.get("event") == "RECONNECT_EXHAUSTED" for row in rows)
     assert state.exists()
     assert result.audit_path == str(audit)
+
+
+
+def test_completed_provider_replay_classifier_uses_accepted_feed_watermark():
+    from src.coinbase_live_paper import build_live_paper_runtime
+    from src.coinbase_market_data import CoinbaseCompletedBar
+    from src.forward_paper_session import _is_completed_provider_replay
+
+    runtime = build_live_paper_runtime()
+    runtime.realtime_feed._last_timestamp = pd.Timestamp("2026-08-09T10:25:00Z")
+
+    def bar(ts):
+        return CoinbaseCompletedBar(pd.Timestamp(ts), 100.0, 101.0, 99.0, 100.0, 1.0)
+
+    assert _is_completed_provider_replay(runtime, bar("2026-08-09T10:25:00Z"))
+    assert _is_completed_provider_replay(runtime, bar("2026-08-09T10:23:00Z"))
+    assert _is_completed_provider_replay(runtime, bar("2026-08-09T10:24:00Z"))
+    assert not _is_completed_provider_replay(runtime, bar("2026-08-09T10:26:00Z"))
+
+
+def test_replay_classifier_does_not_mutate_runtime_health():
+    from src.coinbase_live_paper import build_live_paper_runtime
+    from src.coinbase_market_data import CoinbaseCompletedBar
+    from src.forward_paper_session import _is_completed_provider_replay
+
+    runtime = build_live_paper_runtime()
+    runtime.realtime_feed._last_timestamp = pd.Timestamp("2026-08-09T10:25:00Z")
+    before = runtime.health
+    replay = CoinbaseCompletedBar(pd.Timestamp("2026-08-09T10:24:00Z"), 100.0, 101.0, 99.0, 100.0, 1.0)
+
+    assert _is_completed_provider_replay(runtime, replay)
+    after = runtime.health
+    assert after.rejected_events == before.rejected_events
+    assert after.consecutive_failures == before.consecutive_failures

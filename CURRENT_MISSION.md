@@ -56,3 +56,10 @@ Extended forward observation exposed event-time reordering across separate Coinb
 
 ### Transport Failure Recovery v2
 Validate bounded reconnect backoff and complete-audit fail-closed shutdown under real network/DNS failure before repeating the 30-bar extended forward-paper run.
+
+
+## Reconnect Replay Reconciliation v1
+- Completed Coinbase bars at or behind the already-accepted feed watermark are classified as provider replay and dropped before the trading/Feed Health pipeline.
+- Replay drops remain audit-visible (`PROVIDER_REPLAY_DROPPED`) but do not consume the operational runtime consecutive-failure budget.
+- Fresh forward bars still pass through strict freshness, ordering and missing-gap validation; real execution remains impossible.
+- This change targets the observed 10:25 -> 10:23 -> 10:24 replay sequence that previously caused a false `RUNTIME_HALTED` during the supervised 30-bar run.

@@ -170,6 +170,13 @@ def bootstrap_continuity_from_audit(audit_path, state_path):
     store.save(runtime, aggregator)
     return broker.account_snapshot(mark_price=broker.last_market_price)
 
+
+def _is_completed_provider_replay(runtime, bar):
+    """Return True when a completed bar is at/behind the accepted feed watermark."""
+    last_accepted = runtime.realtime_feed._last_timestamp
+    return last_accepted is not None and pd.Timestamp(bar.timestamp) <= pd.Timestamp(last_accepted)
+
+
 def run_forward_paper(
     transport=None,
     max_processed_bars=60,
@@ -228,6 +235,29 @@ def run_forward_paper(
 
         for bar in aggregator.ingest_message(message):
             received_at = now_fn()
+
+            # Coinbase can replay already-completed minutes after a stream boundary
+            # (and occasionally across normal websocket delivery). Those bars are
+            # non-actionable because the feed has already accepted an equal/newer
+            # timestamp. Drop them before Feed Health so benign provider replay does
+            # not consume the runtime's consecutive-failure budget. Fresh forward
+            # bars still pass through the full stale/order/gap health gate below.
+            last_accepted = runtime.realtime_feed._last_timestamp
+            if _is_completed_provider_replay(runtime, bar):
+                audit.append({
+                    "type": "PROVIDER_REPLAY_DROPPED",
+                    "timestamp": bar.timestamp,
+                    "last_accepted_timestamp": last_accepted,
+                    "reason": "Completed provider bar already accepted or older than feed watermark.",
+                    "processed_events": session_processed,
+                    "rejected_events": session_rejected,
+                    "runtime_processed_events": runtime.health.processed_events,
+                    "runtime_rejected_events": runtime.health.rejected_events,
+                    "real_orders": 0,
+                })
+                output(f"REPLAY_DROP {bar.timestamp}: already at/below accepted feed watermark")
+                continue
+
             if rebase_boundary_pending:
                 try:
                     rebased = runtime.realtime_feed.reconcile_after_restart(bar, received_at=received_at)

@@ -191,3 +191,10 @@ Extended forward observation exposed event-time reordering across separate Coinb
 - Deferred: multi-provider failover and distributed supervision. Reason: one-provider reconnect/recovery must first be proven repeatedly before adding redundant infrastructure.
 
 - [x] Transport Failure Recovery v2: bounded reconnect backoff, fatal transport audit closure, continuity checkpoint.
+
+
+## Reconnect Replay Reconciliation v1
+- Completed Coinbase bars at or behind the already-accepted feed watermark are classified as provider replay and dropped before the trading/Feed Health pipeline.
+- Replay drops remain audit-visible (`PROVIDER_REPLAY_DROPPED`) but do not consume the operational runtime consecutive-failure budget.
+- Fresh forward bars still pass through strict freshness, ordering and missing-gap validation; real execution remains impossible.
+- This change targets the observed 10:25 -> 10:23 -> 10:24 replay sequence that previously caused a false `RUNTIME_HALTED` during the supervised 30-bar run.

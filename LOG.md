@@ -1024,3 +1024,10 @@ The first supervised forward-paper run produced a real-data BUY and ended with a
 - Reconnect exhaustion is now a controlled transport terminal event rather than an uncaught exception.
 - Forward-paper audit always closes with `SESSION_END reason=TRANSPORT_FATAL` on exhausted reconnects.
 - Continuity state is checkpointed before controlled transport-fatal shutdown; real execution remains impossible.
+
+
+## Reconnect Replay Reconciliation v1
+- Completed Coinbase bars at or behind the already-accepted feed watermark are classified as provider replay and dropped before the trading/Feed Health pipeline.
+- Replay drops remain audit-visible (`PROVIDER_REPLAY_DROPPED`) but do not consume the operational runtime consecutive-failure budget.
+- Fresh forward bars still pass through strict freshness, ordering and missing-gap validation; real execution remains impossible.
+- This change targets the observed 10:25 -> 10:23 -> 10:24 replay sequence that previously caused a false `RUNTIME_HALTED` during the supervised 30-bar run.
