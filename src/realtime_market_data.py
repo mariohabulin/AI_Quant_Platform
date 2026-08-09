@@ -107,6 +107,48 @@ class RealTimeMarketDataFeed:
         )
         raise FeedHealthError(reason)
 
+    def reconcile_after_restart(self, provider_message, received_at=None):
+        """Rebase feed time continuity across an intentional process restart.
+
+        Only an excessive *forward* gap may be reconciled. The boundary bar must
+        still be fresh and ordered, and it is deliberately not appended to feed
+        history or emitted as a MarketDataEvent, so no trading decision can be
+        made from the restart boundary itself.
+        """
+        timestamp, _ = self.adapter.normalize(provider_message)
+        received = pd.Timestamp(received_at) if received_at is not None else pd.Timestamp.now(tz="UTC")
+        if pd.isna(received):
+            raise ValueError("received_at must be valid.")
+
+        compare_ts = timestamp
+        compare_received = received
+        if compare_ts.tzinfo is None and compare_received.tzinfo is not None:
+            compare_ts = compare_ts.tz_localize("UTC")
+        elif compare_ts.tzinfo is not None and compare_received.tzinfo is None:
+            compare_received = compare_received.tz_localize("UTC")
+
+        age = compare_received - compare_ts
+        if age < pd.Timedelta(0):
+            self._fail("Provider bar timestamp is in the future.", received)
+        if age > self.stale_after:
+            self._fail("Provider bar is stale.", received)
+        if self._last_timestamp is None:
+            return False
+        if timestamp == self._last_timestamp:
+            self._fail("Duplicate provider bar rejected.", received)
+        if timestamp < self._last_timestamp:
+            self._fail("Out-of-order provider bar rejected.", received)
+        if timestamp - self._last_timestamp <= self.max_gap:
+            return False
+
+        self._last_timestamp = timestamp
+        self._last_received_at = received
+        self._health = FeedHealthSnapshot(
+            "HEALTHY", self._accepted, timestamp, received,
+            "Restart gap reconciled; boundary bar intentionally not emitted.",
+        )
+        return True
+
     def ingest(self, provider_message, received_at=None):
         timestamp, values = self.adapter.normalize(provider_message)
         received = pd.Timestamp(received_at) if received_at is not None else pd.Timestamp.now(tz="UTC")

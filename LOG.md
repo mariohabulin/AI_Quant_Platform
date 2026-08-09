@@ -989,3 +989,8 @@ After Alpaca account/MFA onboarding blocked the first external dry-run, the prov
 
 ## Forward Paper Continuity / Recovery v1
 The first supervised forward-paper run produced a real-data BUY and ended with an open paper BTC position. That promoted exact restart continuity from deferred work to MUST-HAVE. Added atomic continuity persistence for broker/risk/feed/session state plus accumulated EMA history and the in-progress Coinbase minute bucket, and added a one-time bootstrap path from the preserved first-live audit. Mutable runtime artifacts are now ignored by Git; the first live audit is retained as evidence.
+
+## Restart Gap Reconciliation v1
+- Added explicit restart-only feed rebase for intentional offline gaps without weakening normal missing-bar protection.
+- Restart boundary bar is audit-visible but non-tradable; the next contiguous bar returns to normal Feed Health -> strategy -> risk -> paper flow.
+- Forward-session bar limits now count bars processed in the current invocation rather than cumulative restored runtime history.

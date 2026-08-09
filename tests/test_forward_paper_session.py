@@ -139,3 +139,62 @@ def test_cli_bootstrap_keeps_legacy_explicit_audit_override(monkeypatch, tmp_pat
     state = tmp_path / "state.json"
     assert module.main(["--bootstrap-from-audit", "--audit", str(audit), "--state", str(state)]) == 0
     assert seen["audit"] == str(audit)
+
+
+def test_resumed_forward_session_rebases_gap_without_trading_boundary_bar(tmp_path):
+    from src.coinbase_live_paper import build_live_paper_runtime
+    from src.coinbase_market_data import CoinbaseOneMinuteTradeAggregator
+    from src.forward_paper_session import ForwardContinuityStore
+
+    state = tmp_path / "state.json"
+    runtime = build_live_paper_runtime()
+    broker = runtime.session.engine.paper_broker
+    broker.cash = 3750.0
+    broker.position_quantity = 0.02
+    broker.average_entry_price = 62500.0
+    broker.position_cost_basis = 1250.0
+    runtime.session._history = pd.DataFrame(
+        [{"Open": 62500.0, "High": 62500.0, "Low": 62500.0, "Close": 62500.0, "Volume": 1.0}],
+        index=pd.DatetimeIndex([pd.Timestamp("2026-08-08T19:25:00Z")]),
+    )
+    runtime.session.session._last_timestamp = pd.Timestamp("2026-08-08T19:25:00Z")
+    runtime.realtime_feed._last_timestamp = pd.Timestamp("2026-08-08T19:25:00Z")
+    runtime.realtime_feed._accepted = 1
+    runtime._processed = 1
+    runtime._last_event_at = pd.Timestamp("2026-08-08T19:25:00Z")
+    ForwardContinuityStore(state).save(runtime, CoinbaseOneMinuteTradeAggregator())
+
+    messages = [
+        trade_message("2026-08-08T19:52:10Z", "62600"),
+        trade_message("2026-08-08T19:53:10Z", "62601"),
+        trade_message("2026-08-08T19:54:10Z", "62602"),
+        trade_message("2026-08-08T19:55:10Z", "62603"),
+    ]
+    audit = tmp_path / "resume.jsonl"
+    output = []
+    clock = iter([
+        pd.Timestamp("2026-08-08T19:52:20Z"),
+        pd.Timestamp("2026-08-08T19:53:20Z"),
+        pd.Timestamp("2026-08-08T19:54:20Z"),
+        pd.Timestamp("2026-08-08T19:55:20Z"),
+    ])
+    result = run_forward_paper(
+        transport=messages,
+        max_processed_bars=2,
+        audit_path=audit,
+        output=output.append,
+        now_fn=lambda: next(clock),
+        state_path=state,
+    )
+
+    rows = [json.loads(line) for line in audit.read_text(encoding="utf-8").splitlines()]
+    rebases = [row for row in rows if row["type"] == "RESTART_REBASE"]
+    paper = [row for row in rows if row["type"] == "PAPER_EVENT"]
+    assert len(rebases) == 1
+    assert rebases[0]["timestamp"] == "2026-08-08T19:52:00+00:00"
+    assert len(paper) == 2
+    assert result.processed_events == 2
+    assert result.rejected_events == 0
+    assert result.final_position == pytest.approx(0.02)
+    assert any(line.startswith("REBASE ") for line in output)
+    assert paper[0]["snapshot"]["timestamp"] == "2026-08-08T19:53:00+00:00"

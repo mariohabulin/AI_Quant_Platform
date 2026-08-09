@@ -115,3 +115,28 @@ def test_consumer_mutation_cannot_corrupt_realtime_history():
     event = f.ingest(bar(), received_at="2026-08-08T10:00:20Z")
     event.data.loc[event.timestamp, "Close"] = 1
     assert f.history.loc[event.timestamp, "Close"] == pytest.approx(60050)
+
+
+def test_restart_reconcile_rebases_large_forward_gap_without_emitting_bar():
+    f = feed(max_gap="2min")
+    f.ingest(bar("2026-08-08T10:00:00Z"), received_at="2026-08-08T10:00:20Z")
+
+    assert f.reconcile_after_restart(
+        bar("2026-08-08T10:30:00Z"), received_at="2026-08-08T10:30:20Z"
+    ) is True
+    assert f.health.status == "HEALTHY"
+    assert f.health.accepted_events == 1
+    assert len(f.history) == 1
+
+    event = f.ingest(bar("2026-08-08T10:31:00Z"), received_at="2026-08-08T10:31:20Z")
+    assert event.sequence == 2
+    assert event.timestamp == pd.Timestamp("2026-08-08T10:31:00Z")
+
+
+def test_restart_reconcile_does_not_weaken_stale_bar_guard():
+    f = feed(max_gap="2min", stale_after="2min")
+    f.ingest(bar("2026-08-08T10:00:00Z"), received_at="2026-08-08T10:00:20Z")
+    with pytest.raises(FeedHealthError, match="stale"):
+        f.reconcile_after_restart(
+            bar("2026-08-08T10:30:00Z"), received_at="2026-08-08T10:40:00Z"
+        )

@@ -15,6 +15,7 @@ import pandas as pd
 from src.coinbase_live_paper import build_live_paper_runtime
 from src.coinbase_market_data import CoinbaseOneMinuteTradeAggregator, CoinbasePublicWebSocketTransport
 from src.operational_runtime import JsonCheckpointStore
+from src.realtime_market_data import FeedHealthError
 
 
 @dataclass(frozen=True)
@@ -199,17 +200,43 @@ def run_forward_paper(
         f"paper execution=ON | max_bars={max_processed_bars} | resumed={resumed}"
     )
     audit.append({"type": "SESSION_START", "at": now_fn(), "max_processed_bars": max_processed_bars, "resumed": resumed})
+    session_processed = 0
+    session_rejected = 0
+    restart_boundary_pending = resumed
 
     for message in transport:
         for bar in aggregator.ingest_message(message):
-            snapshot = runtime.process_provider_message(bar, received_at=now_fn())
+            received_at = now_fn()
+            if restart_boundary_pending:
+                try:
+                    rebased = runtime.realtime_feed.reconcile_after_restart(bar, received_at=received_at)
+                except FeedHealthError:
+                    rebased = False
+                else:
+                    restart_boundary_pending = False
+                if rebased:
+                    continuity.save(runtime, aggregator)
+                    audit.append({
+                        "type": "RESTART_REBASE",
+                        "timestamp": bar.timestamp,
+                        "reason": runtime.realtime_feed.health.reason,
+                        "paper_orders": len(runtime.session.engine.paper_broker.order_history),
+                        "real_orders": 0,
+                    })
+                    output(f"REBASE {bar.timestamp}: restart gap reconciled; no trading decision")
+                    continue
+
+            snapshot = runtime.process_provider_message(bar, received_at=received_at)
             if snapshot is None:
+                session_rejected += 1
                 record = {
                     "type": "REJECTED_BAR",
                     "timestamp": bar.timestamp,
                     "reason": runtime.health.reason,
-                    "processed_events": runtime.health.processed_events,
-                    "rejected_events": runtime.health.rejected_events,
+                    "processed_events": session_processed,
+                    "rejected_events": session_rejected,
+                    "runtime_processed_events": runtime.health.processed_events,
+                    "runtime_rejected_events": runtime.health.rejected_events,
                 }
                 audit.append(record)
                 output(f"REJECTED {bar.timestamp}: {runtime.health.reason}")
@@ -217,6 +244,7 @@ def run_forward_paper(
                     break
                 continue
 
+            session_processed += 1
             event = runtime.session.engine.event_history[-1]
             broker = runtime.session.engine.paper_broker
             record = {
@@ -234,22 +262,24 @@ def run_forward_paper(
                 f"equity={snapshot.equity:.2f} orders={len(broker.order_history)}"
             )
 
-            if runtime.health.processed_events >= max_processed_bars:
+            if session_processed >= max_processed_bars:
                 runtime.request_shutdown("Bounded forward-paper observation complete.")
                 final = broker.account_snapshot(mark_price=snapshot.market_price)
                 audit.append({
                     "type": "SESSION_END",
                     "reason": "MAX_BARS",
-                    "processed_events": runtime.health.processed_events,
-                    "rejected_events": runtime.health.rejected_events,
+                    "processed_events": session_processed,
+                    "rejected_events": session_rejected,
+                    "runtime_processed_events": runtime.health.processed_events,
+                    "runtime_rejected_events": runtime.health.rejected_events,
                     "paper_orders": len(broker.order_history),
                     "equity": final["equity"],
                     "position": broker.position_quantity,
                     "real_orders": 0,
                 })
                 return ForwardPaperResult(
-                    runtime.health.processed_events,
-                    runtime.health.rejected_events,
+                    session_processed,
+                    session_rejected,
                     len(broker.order_history),
                     final["equity"],
                     broker.position_quantity,
@@ -264,16 +294,18 @@ def run_forward_paper(
     audit.append({
         "type": "SESSION_END",
         "reason": "TRANSPORT_ENDED",
-        "processed_events": runtime.health.processed_events,
-        "rejected_events": runtime.health.rejected_events,
+        "processed_events": session_processed,
+        "rejected_events": session_rejected,
+        "runtime_processed_events": runtime.health.processed_events,
+        "runtime_rejected_events": runtime.health.rejected_events,
         "paper_orders": len(broker.order_history),
         "equity": final["equity"],
         "position": broker.position_quantity,
         "real_orders": 0,
     })
     return ForwardPaperResult(
-        runtime.health.processed_events,
-        runtime.health.rejected_events,
+        session_processed,
+        session_rejected,
         len(broker.order_history),
         final["equity"],
         broker.position_quantity,

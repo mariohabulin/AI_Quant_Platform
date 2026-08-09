@@ -160,3 +160,10 @@ Architecture Review → Design → TDD → Validation → Documentation → Git 
 - [x] Keep mutable `runtime/*.json` and `runtime/*.jsonl` artifacts out of Git; retain the first live audit as immutable milestone evidence under `docs/evidence/`.
 - [ ] Prove continuity live: bootstrap the audited position, restart, and confirm cash/position/order sequence before processing additional bars.
 - [ ] Longer unattended/cloud sessions remain deferred until live restart continuity is proven.
+
+### Restart Gap Reconciliation v1
+- [x] Distinguish an intentional process-restart gap from an in-session missing-data defect.
+- [x] Make the first fresh excessive-gap boundary bar non-tradable and audit-visible.
+- [x] Restore normal strict gap enforcement immediately after the boundary.
+- [x] Bound resumed forward sessions by bars processed in the current invocation.
+- [ ] Prove the reconciliation path on live Coinbase data while preserving the existing paper position and `REAL_orders=0`.
