@@ -83,3 +83,13 @@ def test_cli_json_output(tmp_path, capsys):
     payload = json.loads(capsys.readouterr().out)
     assert payload["status"] == "PASS"
     assert payload["paper_orders"] == 1
+
+
+def test_report_counts_reconnect_rebase_as_rebase_event(tmp_path):
+    audit = tmp_path / "audit.jsonl"
+    rows = session_rows()
+    rows.insert(2, {"type": "RECONNECT_REBASE", "timestamp": "2026-08-09T06:40:00+00:00", "real_orders": 0})
+    write_rows(audit, rows)
+    report = build_forward_session_report(audit)
+    assert report.status == "PASS"
+    assert report.rebase_events == 2

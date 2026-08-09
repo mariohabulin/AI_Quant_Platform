@@ -179,3 +179,13 @@ Architecture Review → Design → TDD → Validation → Documentation → Git 
 Extended forward observation exposed event-time reordering across separate Coinbase websocket messages. Add a bounded 2-second event-time reorder buffer before strict minute aggregation, persist the pending buffer in forward continuity state, and keep truly late trades fail-closed after the watermark. This adds a small intentional bar-finalization delay to preserve OHLCV correctness rather than silently dropping late trades.
 
 - [x] Align Coinbase completed-bar freshness with interval-close semantics after late-trade reorder buffering.
+
+### Coinbase Transport Resilience v1
+- [x] Confirm Coinbase public transport already subscribes to heartbeats and has bounded reconnect.
+- [x] Distinguish transport reconnect evidence from market-data/feed-health evidence.
+- [x] Reset reconnect attempt budget after a successfully restored connection instead of accumulating transient outages for the life of the process.
+- [x] Discard incomplete/pending 1m aggregation state across a disconnect; do not manufacture a bar from potentially missed trades.
+- [x] Reconcile the first fresh excessive-gap bar after reconnect as a non-tradable boundary, then restore normal strict Feed Health checks.
+- [x] Report repeated Feed Health safety shutdown as `RUNTIME_HALTED`, not `TRANSPORT_ENDED`.
+- [ ] Prove reconnect/rebase behavior on live Coinbase data and then repeat the supervised 30-bar forward run.
+- Deferred: multi-provider failover and distributed supervision. Reason: one-provider reconnect/recovery must first be proven repeatedly before adding redundant infrastructure.

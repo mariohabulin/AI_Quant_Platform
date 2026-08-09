@@ -1009,3 +1009,12 @@ The first supervised forward-paper run produced a real-data BUY and ended with a
 - Preserved fail-closed behavior for trades that arrive beyond the configured reorder window.
 
 - Live 5-bar probe exposed false stale rejection after event-time buffering. Added adapter-specific completed-bar freshness reference (bar close), preserving strict future/order/gap guards.
+
+## 2026-08-09 — Coinbase Transport Resilience v1
+- Investigated the first extended forward run ending after 12 healthy bars followed by stale/missing-gap rejections.
+- Corrected the earlier hypothesis: Coinbase heartbeats and reconnect were already present. The run ended because repeated Feed Health failures halted the operational runtime, after which Forward Paper mislabeled the stop as `TRANSPORT_ENDED`.
+- Added transport disconnect/reconnect control events and audit visibility.
+- Reconnect budget now resets after a successful post-reconnect message so separate transient outages do not accumulate against one lifetime counter.
+- Partial Coinbase aggregation state is discarded across a disconnect to avoid constructing OHLCV from a market interval that may contain missed trades.
+- The first fresh excessive-gap completed bar after reconnect is a non-tradable `RECONNECT_REBASE`; strict gap enforcement resumes immediately afterward.
+- Runtime safety halts are now audited as `RUNTIME_HALTED`.

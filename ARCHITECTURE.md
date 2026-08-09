@@ -825,3 +825,10 @@ A resumed forward-paper process may legitimately reconnect after a gap larger th
 Extended forward observation exposed event-time reordering across separate Coinbase websocket messages. Add a bounded 2-second event-time reorder buffer before strict minute aggregation, persist the pending buffer in forward continuity state, and keep truly late trades fail-closed after the watermark. This adds a small intentional bar-finalization delay to preserve OHLCV correctness rather than silently dropping late trades.
 
 - Completed-bar freshness semantics: adapters may define `freshness_reference(timestamp, timeframe)`; Coinbase completed 1m bars are aged from interval close, while timestamp ordering remains anchored to interval start.
+
+## Coinbase Transport Resilience v1
+`CoinbasePublicWebSocketTransport` now emits explicit internal transport-control events around reconnects while preserving the public market-data contract. Reconnect attempts are bounded per consecutive outage and reset after the reconnected socket successfully delivers data; healthy periods therefore do not consume a lifetime reconnect budget.
+
+A disconnect invalidates the in-progress Coinbase aggregation boundary because trades may have been missed while the socket was unavailable. `CoinbaseOneMinuteTradeAggregator.reset_stream_boundary()` discards only partial/pending aggregation state. After reconnect, Forward Paper marks the next fresh excessive-gap completed bar as a non-tradable reconnect rebase, then resumes normal Feed Health enforcement on subsequent bars. Account, Risk Engine and strategy history remain intact.
+
+Forward audit now records `TRANSPORT_EVENT` and `RECONNECT_REBASE` evidence. A safety halt caused by repeated Feed Health failures is reported as `RUNTIME_HALTED`, not mislabeled as `TRANSPORT_ENDED`.

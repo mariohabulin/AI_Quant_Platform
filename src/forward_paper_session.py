@@ -197,29 +197,54 @@ def run_forward_paper(
     audit.append({"type": "SESSION_START", "at": now_fn(), "max_processed_bars": max_processed_bars, "resumed": resumed})
     session_processed = 0
     session_rejected = 0
-    restart_boundary_pending = resumed
+    rebase_boundary_pending = resumed
+    rebase_boundary_kind = "RESTART" if resumed else None
 
     for message in transport:
+        if isinstance(message, dict) and message.get("channel") == "_coinbase_transport":
+            event = str(message.get("event", "UNKNOWN"))
+            audit.append({
+                "type": "TRANSPORT_EVENT",
+                "event": event,
+                "reason": message.get("reason"),
+                "attempt": message.get("attempt"),
+                "reconnect_count": message.get("reconnect_count"),
+                "real_orders": 0,
+            })
+            output(f"TRANSPORT {event}: {message.get('reason') or 'connection restored'}")
+            if event == "DISCONNECTED":
+                aggregator.reset_stream_boundary()
+                rebase_boundary_pending = True
+                rebase_boundary_kind = "RECONNECT"
+                continuity.save(runtime, aggregator)
+            elif event == "RECONNECTED":
+                rebase_boundary_pending = True
+                rebase_boundary_kind = "RECONNECT"
+            continue
+
         for bar in aggregator.ingest_message(message):
             received_at = now_fn()
-            if restart_boundary_pending:
+            if rebase_boundary_pending:
                 try:
                     rebased = runtime.realtime_feed.reconcile_after_restart(bar, received_at=received_at)
                 except FeedHealthError:
                     rebased = False
                 else:
-                    restart_boundary_pending = False
+                    rebase_boundary_pending = False
                 if rebased:
+                    boundary_kind = rebase_boundary_kind or "RESTART"
                     continuity.save(runtime, aggregator)
                     audit.append({
-                        "type": "RESTART_REBASE",
+                        "type": "RESTART_REBASE" if boundary_kind == "RESTART" else "RECONNECT_REBASE",
                         "timestamp": bar.timestamp,
                         "reason": runtime.realtime_feed.health.reason,
                         "paper_orders": len(runtime.session.engine.paper_broker.order_history),
                         "real_orders": 0,
                     })
-                    output(f"REBASE {bar.timestamp}: restart gap reconciled; no trading decision")
+                    output(f"REBASE {bar.timestamp}: {boundary_kind.lower()} gap reconciled; no trading decision")
+                    rebase_boundary_kind = None
                     continue
+                rebase_boundary_kind = None
 
             snapshot = runtime.process_provider_message(bar, received_at=received_at)
             if snapshot is None:
@@ -286,9 +311,10 @@ def run_forward_paper(
     broker = runtime.session.engine.paper_broker
     mark = broker.last_market_price or 1.0
     final = broker.account_snapshot(mark_price=mark)
+    end_reason = "RUNTIME_HALTED" if runtime.stop_requested and runtime.health.status == "HALTED" else "TRANSPORT_ENDED"
     audit.append({
         "type": "SESSION_END",
-        "reason": "TRANSPORT_ENDED",
+        "reason": end_reason,
         "processed_events": session_processed,
         "rejected_events": session_rejected,
         "runtime_processed_events": runtime.health.processed_events,

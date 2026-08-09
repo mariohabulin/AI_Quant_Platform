@@ -174,3 +174,60 @@ def test_reorder_buffer_state_round_trips_without_losing_pending_trade():
     assert len(bars) == 1
     assert bars[0].timestamp == pd.Timestamp("2026-08-08T12:00:00Z")
     assert bars[0].close == pytest.approx(100.0)
+
+
+def test_transport_reconnect_budget_resets_after_successful_reconnect():
+    class FakeSocket:
+        def __init__(self, messages):
+            self.messages = list(messages)
+            self.sent = []
+        def send(self, payload):
+            self.sent.append(json.loads(payload))
+        def recv(self):
+            if not self.messages:
+                raise ConnectionError("simulated disconnect")
+            item = self.messages.pop(0)
+            if isinstance(item, Exception):
+                raise item
+            return json.dumps(item)
+        def close(self):
+            pass
+
+    sockets = [
+        FakeSocket([{"channel": "heartbeats", "events": []}]),
+        FakeSocket([{"channel": "heartbeats", "events": []}]),
+        FakeSocket([{"channel": "heartbeats", "events": []}]),
+    ]
+    calls = []
+    def factory(url):
+        calls.append(url)
+        return sockets[len(calls) - 1]
+
+    transport = CoinbasePublicWebSocketTransport(
+        websocket_factory=factory,
+        max_reconnect_attempts=1,
+        backoff_seconds=0,
+    )
+    iterator = iter(transport)
+    sequence = [next(iterator) for _ in range(7)]
+    assert [item.get("event") for item in sequence if item.get("channel") == "_coinbase_transport"] == [
+        "DISCONNECTED", "RECONNECTED", "DISCONNECTED", "RECONNECTED"
+    ]
+    assert sum(item.get("channel") == "heartbeats" for item in sequence) == 3
+    assert len(calls) == 3
+    assert all(sock.sent == list(transport.subscription_messages) for sock in sockets)
+
+
+def test_aggregator_reset_stream_boundary_discards_partial_and_pending_state():
+    aggregator = CoinbaseOneMinuteTradeAggregator(reorder_window="2s")
+    aggregator.ingest_message({
+        "channel": "market_trades",
+        "events": [{"trades": [trade("2026-08-08T12:00:59.900Z", 100)]}],
+    })
+    assert aggregator.export_state()["pending_trades"]
+    aggregator.reset_stream_boundary()
+    state = aggregator.export_state()
+    assert state["bucket"] is None
+    assert state["ohlcv"] is None
+    assert state["pending_trades"] == []
+    assert state["latest_seen_ts"] is None

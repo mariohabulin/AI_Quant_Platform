@@ -128,6 +128,19 @@ class CoinbaseOneMinuteTradeAggregator:
             self._ohlcv = None
         return completed
 
+    def reset_stream_boundary(self):
+        """Discard incomplete aggregation state across a transport reconnect.
+
+        A reconnect can imply missed trades. Keeping a partial OHLCV bucket across
+        that boundary could silently create a bar from incomplete market data, so
+        the next connection must start from a clean aggregation boundary.
+        """
+        self._bucket = None
+        self._ohlcv = None
+        self._pending_trades = []
+        self._latest_seen_ts = None
+        self._arrival_sequence = 0
+
     def export_state(self):
         return {
             "bucket": None if self._bucket is None else pd.Timestamp(self._bucket).isoformat(),
@@ -236,7 +249,9 @@ class CoinbasePublicWebSocketTransport:
         return create_connection(COINBASE_WS_URL, timeout=10)
 
     def __iter__(self):
-        attempts = 0
+        consecutive_failures = 0
+        reconnect_count = 0
+        reconnect_pending = False
         while True:
             ws = None
             try:
@@ -245,15 +260,39 @@ class CoinbasePublicWebSocketTransport:
                     ws.send(json.dumps(payload))
                 while True:
                     raw = ws.recv()
-                    if raw is None:
+                    if raw is None or raw == "":
                         raise ConnectionError("Coinbase websocket closed.")
-                    yield json.loads(raw) if isinstance(raw, str) else raw
+                    message = json.loads(raw) if isinstance(raw, str) else raw
+                    if reconnect_pending:
+                        reconnect_count += 1
+                        consecutive_failures = 0
+                        reconnect_pending = False
+                        yield {
+                            "channel": "_coinbase_transport",
+                            "event": "RECONNECTED",
+                            "reconnect_count": reconnect_count,
+                        }
+                    yield message
             except GeneratorExit:
                 raise
-            except Exception:
-                attempts += 1
-                if attempts > self.max_reconnect_attempts:
+            except Exception as exc:
+                consecutive_failures += 1
+                reason = f"{type(exc).__name__}: {exc}"
+                if consecutive_failures > self.max_reconnect_attempts:
+                    yield {
+                        "channel": "_coinbase_transport",
+                        "event": "RECONNECT_EXHAUSTED",
+                        "attempt": consecutive_failures,
+                        "reason": reason,
+                    }
                     raise
+                reconnect_pending = True
+                yield {
+                    "channel": "_coinbase_transport",
+                    "event": "DISCONNECTED",
+                    "attempt": consecutive_failures,
+                    "reason": reason,
+                }
                 if self.backoff_seconds:
                     time.sleep(self.backoff_seconds)
             finally:

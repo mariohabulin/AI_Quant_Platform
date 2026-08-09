@@ -74,7 +74,7 @@ def build_forward_session_report(audit_path="runtime/forward_paper_audit.jsonl")
     rows = _latest_session(_read_rows(audit_path))
     paper = [row for row in rows if row.get("type") == "PAPER_EVENT"]
     rejected = [row for row in rows if row.get("type") == "REJECTED_BAR"]
-    rebases = [row for row in rows if row.get("type") == "RESTART_REBASE"]
+    rebases = [row for row in rows if row.get("type") in {"RESTART_REBASE", "RECONNECT_REBASE"}]
     end = rows[-1]
 
     if not paper:

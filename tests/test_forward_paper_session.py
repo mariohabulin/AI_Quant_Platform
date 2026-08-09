@@ -198,3 +198,69 @@ def test_resumed_forward_session_rebases_gap_without_trading_boundary_bar(tmp_pa
     assert result.final_position == pytest.approx(0.02)
     assert any(line.startswith("REBASE ") for line in output)
     assert paper[0]["snapshot"]["timestamp"] == "2026-08-08T19:53:00+00:00"
+
+
+def test_forward_session_audits_reconnect_and_rebases_without_trading_boundary_bar(tmp_path):
+    state = tmp_path / "state.json"
+    audit = tmp_path / "audit.jsonl"
+    messages = [
+        trade_message("2026-08-09T08:00:10Z", "100"),
+        trade_message("2026-08-09T08:01:10Z", "101"),
+        trade_message("2026-08-09T08:02:10Z", "102"),
+        {"channel": "_coinbase_transport", "event": "DISCONNECTED", "attempt": 1, "reason": "test"},
+        {"channel": "_coinbase_transport", "event": "RECONNECTED", "reconnect_count": 1},
+        trade_message("2026-08-09T08:10:10Z", "110"),
+        trade_message("2026-08-09T08:11:10Z", "111"),
+        trade_message("2026-08-09T08:12:10Z", "112"),
+        trade_message("2026-08-09T08:13:10Z", "113"),
+    ]
+    times = iter([
+        pd.Timestamp("2026-08-09T08:00:00Z"),  # SESSION_START
+        pd.Timestamp("2026-08-09T08:01:20Z"),
+        pd.Timestamp("2026-08-09T08:02:20Z"),
+        pd.Timestamp("2026-08-09T08:11:20Z"),
+        pd.Timestamp("2026-08-09T08:12:20Z"),
+    ])
+    output = []
+    result = run_forward_paper(
+        transport=messages,
+        max_processed_bars=3,
+        audit_path=audit,
+        output=output.append,
+        now_fn=lambda: next(times),
+        state_path=state,
+        resume=False,
+    )
+    rows = [json.loads(line) for line in audit.read_text(encoding="utf-8").splitlines()]
+    transport_events = [row for row in rows if row["type"] == "TRANSPORT_EVENT"]
+    reconnect_rebases = [row for row in rows if row["type"] == "RECONNECT_REBASE"]
+    paper = [row for row in rows if row["type"] == "PAPER_EVENT"]
+    assert [row["event"] for row in transport_events] == ["DISCONNECTED", "RECONNECTED"]
+    assert len(reconnect_rebases) == 1
+    assert len(paper) == 3
+    assert result.processed_events == 3
+    assert result.rejected_events == 0
+    assert any(line.startswith("TRANSPORT DISCONNECTED") for line in output)
+    assert any("reconnect gap reconciled" in line for line in output)
+
+
+def test_forward_session_labels_runtime_health_halt_instead_of_transport_end(tmp_path):
+    messages = [
+        trade_message("2026-08-09T08:00:10Z", "100"),
+        trade_message("2026-08-09T08:01:10Z", "101"),
+        trade_message("2026-08-09T08:02:10Z", "102"),
+        trade_message("2026-08-09T08:03:10Z", "103"),
+    ]
+    audit = tmp_path / "halt.jsonl"
+    run_forward_paper(
+        transport=messages,
+        max_processed_bars=10,
+        audit_path=audit,
+        now_fn=lambda: pd.Timestamp("2026-08-09T10:00:00Z"),
+        state_path=tmp_path / "state.json",
+        resume=False,
+    )
+    rows = [json.loads(line) for line in audit.read_text(encoding="utf-8").splitlines()]
+    assert rows[-1]["type"] == "SESSION_END"
+    assert rows[-1]["reason"] == "RUNTIME_HALTED"
+    assert rows[-1]["rejected_events"] == 3
