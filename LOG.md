@@ -994,3 +994,10 @@ The first supervised forward-paper run produced a real-data BUY and ended with a
 - Added explicit restart-only feed rebase for intentional offline gaps without weakening normal missing-bar protection.
 - Restart boundary bar is audit-visible but non-tradable; the next contiguous bar returns to normal Feed Health -> strategy -> risk -> paper flow.
 - Forward-session bar limits now count bars processed in the current invocation rather than cumulative restored runtime history.
+
+
+## Extended Forward Run Readiness + Session Report v1
+- Added deterministic read-only reporting for the latest complete forward-paper audit session.
+- Report covers processed/rejected/rebase bars, BUY/SELL/HOLD signals, risk ALLOW/REDUCE/REJECT outcomes, paper/fill counts, start/final equity, net P&L, max drawdown, final position, end reason and explicit real-order evidence.
+- Incomplete/malformed latest sessions fail closed instead of producing a misleading summary.
+- Longer unattended/cloud operation remains deferred; the next evidence step is a supervised 30-60 bar live Coinbase forward-paper run followed by report review.

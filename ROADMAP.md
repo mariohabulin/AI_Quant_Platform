@@ -167,3 +167,10 @@ Architecture Review → Design → TDD → Validation → Documentation → Git 
 - [x] Restore normal strict gap enforcement immediately after the boundary.
 - [x] Bound resumed forward sessions by bars processed in the current invocation.
 - [ ] Prove the reconciliation path on live Coinbase data while preserving the existing paper position and `REAL_orders=0`.
+
+
+### Extended Forward Run Readiness + Session Report v1
+- [x] Add deterministic latest-session JSONL reporting with fail-closed audit-boundary validation.
+- [x] Report bars/rejections/rebases, signals, risk outcomes, paper fills, equity/P&L, max drawdown, final position and real-order evidence.
+- [ ] Run the first supervised 30-60 bar Coinbase forward-paper session and review its report before increasing duration.
+- [ ] Keep unattended/cloud execution deferred until repeated supervised runs are clean and operational alerting is defined.

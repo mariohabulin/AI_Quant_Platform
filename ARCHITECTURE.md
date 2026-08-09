@@ -816,3 +816,7 @@ Forward-paper restart state is broader than the generic operational checkpoint b
 
 ## Restart Gap Reconciliation Boundary
 A resumed forward-paper process may legitimately reconnect after a gap larger than normal feed tolerance. `RealTimeMarketDataFeed.reconcile_after_restart` permits only a fresh, strictly forward excessive gap to establish a new timestamp baseline. The boundary bar is never emitted as a `MarketDataEvent`, never enters strategy history, and therefore cannot create a trading decision. Normal gap enforcement resumes immediately on the next bar; stale, future, duplicate and out-of-order protections remain fail-closed.
+
+
+## Extended Forward Session Reporting Boundary
+`src/forward_session_report.py` is a read-only evidence layer over the append-only forward JSONL audit. It selects only the latest complete `SESSION_START` -> `SESSION_END` block and fails closed on malformed or incomplete boundaries. The reporter never touches transport, strategy, risk or broker execution. A report is PASS only when audit counts reconcile and all recorded real-order evidence remains zero. This keeps longer forward observation measurable without widening the trading boundary.

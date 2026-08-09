@@ -37,3 +37,7 @@ Promoted to MUST-HAVE after the first live forward-paper BUY ended with an open 
 
 ### Restart Gap Reconciliation v1
 Validate restart/resume against live Coinbase data: restore the open paper position, rebase one fresh post-restart boundary bar without trading it, then require subsequent bars to pass the normal feed-health policy. Real execution remains structurally unavailable.
+
+
+### Extended Forward Run Readiness + Session Report v1
+Move from 3-bar probes to supervised 30-60 bar forward evidence without expanding execution scope. Add a read-only report over the latest JSONL session so every extended run is judged by processed/rejected/rebase counts, signals, risk outcomes, paper fills, equity/P&L, max drawdown, final position, audit completeness and explicit `REAL_orders=0`. Longer unattended/cloud operation remains deferred until repeated supervised reports are clean.
