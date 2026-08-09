@@ -203,3 +203,25 @@ Extended forward observation exposed event-time reordering across separate Coinb
 - Add transport-quality and market-time continuity metrics to the deterministic forward-session report.
 - Add signal activity and Risk Engine rejection diagnostics without changing trading policy.
 - Use the diagnostics to judge the next 60-bar supervised gate before multi-hour/overnight soak testing.
+
+## Future Scale Milestone — 24/7 Market Universe Scanner and Orchestration
+
+The current `BTC-USD` Coinbase path is a controlled proving ground for live-paper transport, continuity, Feed Health, risk and operational safety. It is **not** the intended final trading scope.
+
+After single-symbol operational stability and extended forward evidence are proven, expand toward a 24/7 market-intelligence architecture:
+
+1. **Universe Manager** — maintain a configurable universe across supported crypto, equities and other approved markets; understand venue/session calendars and which instruments are currently actionable.
+2. **Lightweight Market Scanner** — continuously screen the broad universe using low-cost liquidity, volume, volatility, trend, momentum, breakout and regime criteria.
+3. **Candidate Ranking** — rank/filter scanner output so only the strongest candidates enter expensive analysis.
+4. **Deep Analysis** — run relevant Strategy Library / Market Regime / validation logic on shortlisted candidates rather than brute-forcing every strategy over every instrument continuously.
+5. **Portfolio Gate** — apply aggregate exposure, concentration/correlation and capital-allocation controls across simultaneous opportunities.
+6. **Execution Orchestration** — route only fully authorized opportunities to replaceable venue/broker execution boundaries.
+
+### Activation gates
+
+- Do not activate broad scanning while the one-symbol transport/runtime path is operationally unstable.
+- First prove repeated supervised single-symbol forward runs, then multi-hour/overnight continuity and monitoring.
+- Expand next to controlled multi-symbol live-paper data and scanner correctness before broad market-universe coverage.
+- Keep real multi-market execution disabled until portfolio-level risk and venue/session handling are validated.
+
+**Long-term operating principle:** the Agent may run 24/7 even though individual markets do not. It should continuously know which configured markets are open/relevant, scan the appropriate universe, rank opportunities, and trade only when the full strategy + risk + portfolio policy authorizes action.

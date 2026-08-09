@@ -845,3 +845,15 @@ Coinbase reconnect uses bounded exponential backoff. Exhaustion emits a terminal
 
 ## Forward Operational Diagnostics
 `forward_session_report` is the read-only observability boundary for supervised forward operation. It derives transport reliability, provider replay, market-time continuity/gap and signal/risk activity metrics solely from append-only forward audit evidence. It must not mutate runtime, strategy, Risk Engine, Feed Health or execution state.
+
+## Target 24/7 Market-Universe Architecture (Deferred Scale Boundary)
+
+`BTC-USD` is the current live-paper proving instrument, not a permanent single-asset architecture. The future scale boundary is:
+
+`Universe Manager -> Lightweight Scanner -> Candidate Ranking -> Strategy/Regime Deep Analysis -> Risk Engine -> Portfolio Gate -> Execution Adapter`
+
+The Universe Manager owns configured instrument/venue scope and market-session awareness. The Scanner performs inexpensive broad filtering; Candidate Ranking bounds downstream computational work; only shortlisted instruments reach full strategy/regime analysis. Risk remains independent from signal generation, and a future Portfolio Gate adds aggregate multi-position exposure/concentration/correlation controls before execution.
+
+The Agent process may operate continuously while respecting each venue's actual trading calendar. Crypto can be scanned continuously; exchange-traded instruments are activated/deactivated according to their sessions rather than treated as 24/7 markets.
+
+This boundary is intentionally deferred until single-symbol live-paper transport, continuity and long-duration operational quality are proven. Broadening the universe must reuse provider-neutral market-data and execution contracts rather than embedding symbol/provider assumptions into Strategy or Risk layers.

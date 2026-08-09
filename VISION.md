@@ -173,3 +173,21 @@ Together these documents provide the long-term direction, architecture and devel
 
 
 
+
+## 24/7 Market-Universe Intelligence
+
+The long-term AI Alpha Trading Agent is not a single-symbol BTC bot. It is intended to operate continuously as a 24/7 market-intelligence service across a broad, configurable universe of supported markets and instruments.
+
+The target operating model is hierarchical rather than brute-force analysis of every strategy on every asset:
+
+**Market Universe -> Lightweight Scanner -> Candidate Ranking -> Deep Strategy/Regime Analysis -> Risk Engine -> Portfolio/Exposure Check -> Execution**
+
+- `Universe Manager` determines which configured venues, asset classes and instruments are currently tradable or relevant. Crypto may be monitored continuously; exchange-traded assets are governed by their own sessions/calendars.
+- `Market Scanner` continuously applies inexpensive liquidity, volume, volatility, trend, momentum, breakout and regime filters to reduce the broad universe to a manageable candidate set.
+- `Candidate Ranking` prioritizes the strongest opportunities so expensive strategy/regime analysis is focused where evidence is most promising.
+- `Trading Engine` performs full strategy, validation and risk analysis only on shortlisted candidates and acts only when the complete decision policy is satisfied.
+- Portfolio-level exposure/correlation controls govern simultaneous opportunities before live execution is authorized.
+
+The objective is not maximum trading activity. The objective is continuous awareness of the available market universe and selective allocation of attention and risk to the best validated opportunities.
+
+This capability is intentionally staged after one-symbol live-paper transport/runtime stability is proven. Scaling an unstable single-symbol runtime would multiply operational defects rather than create useful market intelligence.

@@ -1037,3 +1037,9 @@ The first supervised forward-paper run produced a real-data BUY and ended with a
 - Added market-time continuity diagnostics: first-to-last processed-bar span, contiguous 1-minute expectation and observed gap minutes. This makes long wall-clock runs with sparse accepted bars visible instead of hiding them behind a simple PASS.
 - Added trading-activity diagnostics: actionable signal rate, risk-rejection rate among actionable signals and grouped risk-rejection reasons.
 - Diagnostics remain observational only: no strategy, risk threshold, execution, reconnect or Feed Health behavior is changed.
+
+## 2026-08-09 — 24/7 Market-Universe Target Clarified
+- Clarified that `BTC-USD` is the controlled live-paper proving instrument, not the final product scope.
+- Recorded the long-term 24/7 operating model: Universe Manager -> lightweight broad scanner -> candidate ranking -> deep strategy/regime analysis -> Risk Engine -> portfolio gate -> execution.
+- The Agent is intended to run continuously while respecting venue/session calendars; individual markets are not assumed to trade 24/7.
+- Broad multi-market scanning remains intentionally deferred until single-symbol transport/runtime stability and extended forward evidence are proven, so scale does not multiply unresolved operational defects.
