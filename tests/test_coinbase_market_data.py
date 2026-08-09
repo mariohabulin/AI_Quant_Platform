@@ -252,3 +252,108 @@ def test_transport_uses_bounded_exponential_backoff_for_consecutive_failures():
     assert next(iterator)["event"] == "DISCONNECTED"
     assert next(iterator)["event"] == "RECONNECT_EXHAUSTED"
     assert sleeps == [5.0, 10.0, 12.0]
+
+
+def test_transport_classifies_failure_and_reports_outage_duration_on_reconnect():
+    class Clock:
+        def __init__(self):
+            self.value = 100.0
+
+        def __call__(self):
+            return self.value
+
+    clock = Clock()
+
+    class FakeSocket:
+        def __init__(self, items):
+            self.items = list(items)
+            self.sent = []
+
+        def send(self, payload):
+            self.sent.append(json.loads(payload))
+
+        def recv(self):
+            item = self.items.pop(0)
+            if isinstance(item, Exception):
+                clock.value += 3.0
+                raise item
+            clock.value += 2.0
+            return json.dumps(item)
+
+        def close(self):
+            pass
+
+    sockets = [
+        FakeSocket([ConnectionResetError(10054, "forcibly closed")]),
+        FakeSocket([{"channel": "heartbeats", "events": []}]),
+    ]
+    calls = []
+
+    def factory(url):
+        index = len(calls)
+        calls.append(url)
+        return sockets[index]
+
+    transport = CoinbasePublicWebSocketTransport(
+        websocket_factory=factory,
+        max_reconnect_attempts=2,
+        backoff_seconds=0,
+        monotonic_fn=clock,
+    )
+    iterator = iter(transport)
+    disconnected = next(iterator)
+    reconnected = next(iterator)
+    heartbeat = next(iterator)
+
+    assert disconnected["event"] == "DISCONNECTED"
+    assert disconnected["failure_kind"] == "RESET"
+    assert reconnected["event"] == "RECONNECTED"
+    assert reconnected["outage_seconds"] == pytest.approx(2.0)
+    assert heartbeat["channel"] == "heartbeats"
+
+
+def test_transport_sends_protocol_ping_on_long_lived_connection():
+    class Clock:
+        def __init__(self):
+            self.value = 0.0
+
+        def __call__(self):
+            return self.value
+
+    clock = Clock()
+
+    class FakeSocket:
+        def __init__(self):
+            self.sent = []
+            self.pings = []
+            self.reads = 0
+
+        def send(self, payload):
+            self.sent.append(json.loads(payload))
+
+        def ping(self, payload):
+            self.pings.append(payload)
+
+        def recv(self):
+            self.reads += 1
+            clock.value += 6.0
+            if self.reads <= 3:
+                return json.dumps({"channel": "heartbeats", "events": []})
+            raise KeyboardInterrupt()
+
+        def close(self):
+            pass
+
+    sock = FakeSocket()
+    transport = CoinbasePublicWebSocketTransport(
+        websocket_factory=lambda url: sock,
+        max_reconnect_attempts=0,
+        ping_interval_seconds=5,
+        monotonic_fn=clock,
+    )
+    iterator = iter(transport)
+
+    assert next(iterator)["channel"] == "heartbeats"
+    assert next(iterator)["channel"] == "heartbeats"
+    assert next(iterator)["channel"] == "heartbeats"
+    assert sock.pings == ["ai-quant-keepalive", "ai-quant-keepalive"]

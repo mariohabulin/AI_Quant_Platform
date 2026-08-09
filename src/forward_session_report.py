@@ -39,6 +39,9 @@ class ForwardSessionReport:
     transport_reconnects: int
     reconnect_exhausted: int
     reconnect_success_rate: float
+    total_outage_seconds: float
+    max_outage_seconds: float
+    disconnect_reason_counts: dict
     provider_replay_drops: int
     market_span_minutes: float
     expected_contiguous_minutes: float
@@ -119,6 +122,19 @@ def build_forward_session_report(audit_path="runtime/forward_paper_audit.jsonl")
     reconnects = sum(row.get("event") == "RECONNECTED" for row in transport)
     reconnect_exhausted = sum(row.get("event") == "RECONNECT_EXHAUSTED" for row in transport)
     reconnect_success_rate = (reconnects / disconnects) if disconnects else 1.0
+    outage_values = [
+        float(row.get("outage_seconds"))
+        for row in transport
+        if row.get("event") in {"RECONNECTED", "RECONNECT_EXHAUSTED"}
+        and row.get("outage_seconds") is not None
+    ]
+    total_outage_seconds = sum(outage_values)
+    max_outage_seconds = max(outage_values, default=0.0)
+    disconnect_reason_counts = dict(sorted(Counter(
+        str(row.get("failure_kind") or "UNKNOWN")
+        for row in transport
+        if row.get("event") == "DISCONNECTED"
+    ).items()))
 
     paper_timestamps = []
     for snapshot in snapshots:
@@ -181,6 +197,9 @@ def build_forward_session_report(audit_path="runtime/forward_paper_audit.jsonl")
         transport_reconnects=reconnects,
         reconnect_exhausted=reconnect_exhausted,
         reconnect_success_rate=reconnect_success_rate,
+        total_outage_seconds=total_outage_seconds,
+        max_outage_seconds=max_outage_seconds,
+        disconnect_reason_counts=disconnect_reason_counts,
         provider_replay_drops=len(replay_drops),
         market_span_minutes=market_span_minutes,
         expected_contiguous_minutes=expected_contiguous_minutes,
@@ -200,6 +219,7 @@ def format_forward_session_report(report):
         f"orders: paper={report.paper_orders} filled={report.filled_orders} REAL={report.real_orders}",
         f"equity: start={report.start_equity:.2f} final={report.final_equity:.2f} net_pnl={report.net_pnl:.2f} max_drawdown={report.max_drawdown:.4%}",
         f"transport: disconnects={report.transport_disconnects} reconnects={report.transport_reconnects} success={report.reconnect_success_rate:.1%} exhausted={report.reconnect_exhausted} replay_drops={report.provider_replay_drops}",
+        f"transport_quality: outage_total={report.total_outage_seconds:.1f}s outage_max={report.max_outage_seconds:.1f}s reasons={report.disconnect_reason_counts}",
         f"continuity: market_span={report.market_span_minutes:.1f}m expected_contiguous={report.expected_contiguous_minutes:.1f}m observed_gap={report.observed_gap_minutes:.1f}m",
         f"activity: signal_rate={report.signal_activity_rate:.1%} risk_reject_rate={report.risk_rejection_rate:.1%} reject_reasons={report.risk_rejection_reasons}",
         f"final_position={report.final_position:.8f} end_reason={report.end_reason}",

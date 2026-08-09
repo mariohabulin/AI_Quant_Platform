@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 import heapq
 import json
+import socket
 import time
 
 import pandas as pd
@@ -223,7 +224,9 @@ class CoinbasePublicWebSocketTransport:
 
     def __init__(self, product_id="BTC-USD", websocket_factory=None,
                  max_reconnect_attempts=3, backoff_seconds=5.0,
-                 backoff_factor=2.0, max_backoff_seconds=30.0, sleep_fn=None):
+                 backoff_factor=2.0, max_backoff_seconds=30.0, sleep_fn=None,
+                 socket_timeout_seconds=30.0, ping_interval_seconds=20.0,
+                 monotonic_fn=None):
         if max_reconnect_attempts < 0:
             raise ValueError("max_reconnect_attempts cannot be negative.")
         if backoff_seconds < 0:
@@ -232,6 +235,10 @@ class CoinbasePublicWebSocketTransport:
             raise ValueError("backoff_factor must be at least 1.")
         if max_backoff_seconds < 0:
             raise ValueError("max_backoff_seconds cannot be negative.")
+        if socket_timeout_seconds <= 0:
+            raise ValueError("socket_timeout_seconds must be greater than zero.")
+        if ping_interval_seconds < 0:
+            raise ValueError("ping_interval_seconds cannot be negative.")
         self.product_id = str(product_id).upper()
         self.websocket_factory = websocket_factory
         self.max_reconnect_attempts = int(max_reconnect_attempts)
@@ -239,6 +246,9 @@ class CoinbasePublicWebSocketTransport:
         self.backoff_factor = float(backoff_factor)
         self.max_backoff_seconds = float(max_backoff_seconds)
         self.sleep_fn = sleep_fn or time.sleep
+        self.socket_timeout_seconds = float(socket_timeout_seconds)
+        self.ping_interval_seconds = float(ping_interval_seconds)
+        self.monotonic_fn = monotonic_fn or time.monotonic
 
     def _backoff_for_attempt(self, attempt):
         delay = self.backoff_seconds * (self.backoff_factor ** max(0, attempt - 1))
@@ -251,6 +261,20 @@ class CoinbasePublicWebSocketTransport:
             {"type": "subscribe", "channel": "heartbeats"},
         )
 
+    @staticmethod
+    def _failure_kind(exc):
+        text = str(exc).lower()
+        name = type(exc).__name__.lower()
+        if isinstance(exc, socket.gaierror) or "getaddrinfo" in text or "address" in name:
+            return "DNS"
+        if isinstance(exc, ConnectionResetError) or "10054" in text or "forcibly closed" in text or "reset" in name:
+            return "RESET"
+        if isinstance(exc, TimeoutError) or "timeout" in name or "timed out" in text:
+            return "TIMEOUT"
+        if isinstance(exc, ConnectionError) or "closed" in text:
+            return "CLOSED"
+        return "OTHER"
+
     def _connect(self):
         if self.websocket_factory is not None:
             return self.websocket_factory(COINBASE_WS_URL)
@@ -258,19 +282,33 @@ class CoinbasePublicWebSocketTransport:
             from websocket import create_connection
         except ImportError as exc:
             raise RuntimeError("websocket-client is required for Coinbase transport.") from exc
-        return create_connection(COINBASE_WS_URL, timeout=10)
+        return create_connection(COINBASE_WS_URL, timeout=self.socket_timeout_seconds)
+
+    def _maybe_ping(self, ws, last_ping_at):
+        if self.ping_interval_seconds <= 0:
+            return last_ping_at
+        now = self.monotonic_fn()
+        if now - last_ping_at < self.ping_interval_seconds:
+            return last_ping_at
+        ping = getattr(ws, "ping", None)
+        if callable(ping):
+            ping("ai-quant-keepalive")
+        return now
 
     def __iter__(self):
         consecutive_failures = 0
         reconnect_count = 0
         reconnect_pending = False
+        outage_started_at = None
         while True:
             ws = None
             try:
                 ws = self._connect()
                 for payload in self.subscription_messages:
                     ws.send(json.dumps(payload))
+                last_ping_at = self.monotonic_fn()
                 while True:
+                    last_ping_at = self._maybe_ping(ws, last_ping_at)
                     raw = ws.recv()
                     if raw is None or raw == "":
                         raise ConnectionError("Coinbase websocket closed.")
@@ -279,10 +317,15 @@ class CoinbasePublicWebSocketTransport:
                         reconnect_count += 1
                         consecutive_failures = 0
                         reconnect_pending = False
+                        outage_seconds = None
+                        if outage_started_at is not None:
+                            outage_seconds = max(0.0, self.monotonic_fn() - outage_started_at)
+                        outage_started_at = None
                         yield {
                             "channel": "_coinbase_transport",
                             "event": "RECONNECTED",
                             "reconnect_count": reconnect_count,
+                            "outage_seconds": outage_seconds,
                         }
                     yield message
             except GeneratorExit:
@@ -290,12 +333,17 @@ class CoinbasePublicWebSocketTransport:
             except Exception as exc:
                 consecutive_failures += 1
                 reason = f"{type(exc).__name__}: {exc}"
+                failure_kind = self._failure_kind(exc)
+                if outage_started_at is None:
+                    outage_started_at = self.monotonic_fn()
                 if consecutive_failures > self.max_reconnect_attempts:
                     yield {
                         "channel": "_coinbase_transport",
                         "event": "RECONNECT_EXHAUSTED",
                         "attempt": consecutive_failures,
                         "reason": reason,
+                        "failure_kind": failure_kind,
+                        "outage_seconds": max(0.0, self.monotonic_fn() - outage_started_at),
                     }
                     return
                 reconnect_pending = True
@@ -304,6 +352,7 @@ class CoinbasePublicWebSocketTransport:
                     "event": "DISCONNECTED",
                     "attempt": consecutive_failures,
                     "reason": reason,
+                    "failure_kind": failure_kind,
                 }
                 delay = self._backoff_for_attempt(consecutive_failures)
                 if delay:

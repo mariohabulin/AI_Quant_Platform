@@ -128,3 +128,32 @@ def test_report_adds_operational_transport_and_activity_diagnostics(tmp_path):
     assert "disconnects=1 reconnects=1 success=100.0%" in text
     assert "observed_gap=8.0m" in text
     assert "signal_rate=50.0%" in text
+
+
+def test_report_summarizes_transport_outage_quality_and_failure_kinds(tmp_path):
+    audit = tmp_path / "transport_quality.jsonl"
+    rows = [
+        {"type": "SESSION_START", "at": "2026-08-09T10:00:00+00:00"},
+        {"type": "PAPER_EVENT", "paper_orders": 0, "real_orders": 0,
+         "snapshot": {"timestamp": "2026-08-09T10:00:00+00:00", "equity": 5000.0, "position_quantity": 0.0},
+         "event": {"signal": 0, "status": "NO_ACTION", "risk_status": "ALLOW", "reason": "HOLD"}},
+        {"type": "TRANSPORT_EVENT", "event": "DISCONNECTED", "failure_kind": "RESET", "real_orders": 0},
+        {"type": "TRANSPORT_EVENT", "event": "RECONNECTED", "outage_seconds": 7.5, "real_orders": 0},
+        {"type": "TRANSPORT_EVENT", "event": "DISCONNECTED", "failure_kind": "DNS", "real_orders": 0},
+        {"type": "TRANSPORT_EVENT", "event": "RECONNECTED", "outage_seconds": 12.5, "real_orders": 0},
+        {"type": "PAPER_EVENT", "paper_orders": 0, "real_orders": 0,
+         "snapshot": {"timestamp": "2026-08-09T10:21:00+00:00", "equity": 5000.0, "position_quantity": 0.0},
+         "event": {"signal": 0, "status": "NO_ACTION", "risk_status": "ALLOW", "reason": "HOLD"}},
+        {"type": "SESSION_END", "reason": "MAX_BARS", "processed_events": 2, "rejected_events": 0,
+         "paper_orders": 0, "equity": 5000.0, "position": 0.0, "real_orders": 0},
+    ]
+    write_rows(audit, rows)
+    report = build_forward_session_report(audit)
+
+    assert report.total_outage_seconds == pytest.approx(20.0)
+    assert report.max_outage_seconds == pytest.approx(12.5)
+    assert report.disconnect_reason_counts == {"DNS": 1, "RESET": 1}
+    text = format_forward_session_report(report)
+    assert "outage_total=20.0s" in text
+    assert "outage_max=12.5s" in text
+    assert "'DNS': 1" in text

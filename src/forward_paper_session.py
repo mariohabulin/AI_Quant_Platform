@@ -215,8 +215,10 @@ def run_forward_paper(
                 "type": "TRANSPORT_EVENT",
                 "event": event,
                 "reason": message.get("reason"),
+                "failure_kind": message.get("failure_kind"),
                 "attempt": message.get("attempt"),
                 "reconnect_count": message.get("reconnect_count"),
+                "outage_seconds": message.get("outage_seconds"),
                 "real_orders": 0,
             })
             output(f"TRANSPORT {event}: {message.get('reason') or 'connection restored'}")

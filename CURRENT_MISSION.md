@@ -66,3 +66,6 @@ Validate bounded reconnect backoff and complete-audit fail-closed shutdown under
 
 ### Forward Operational Diagnostics v1
 Instrument the proven 30-bar forward path before increasing duration. Report transport disconnect/reconnect quality, provider replay drops, market-time continuity/gap minutes, actionable signal rate and grouped Risk Engine rejection reasons. This is observability only; do not weaken Feed Health, Risk Engine or execution locks. Next gate after validation: supervised 60-bar forward run judged by both functional completion and operational quality.
+
+### Transport Stability v1
+Reduce dependence on recovery during long-lived Coinbase sessions without weakening fail-closed behavior. Keep the application-level `heartbeats` subscription, add protocol-level WebSocket PING keepalive for intermediaries, classify disconnect causes (`RESET`/`DNS`/`TIMEOUT`/`CLOSED`/`OTHER`), and record measured outage duration on reconnect/exhaustion. Extend the session report with total/max outage seconds and grouped disconnect causes. This milestone changes transport observability/keepalive only; strategy, Risk Engine, Feed Health and execution policy remain unchanged.
