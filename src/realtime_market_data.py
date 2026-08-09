@@ -130,7 +130,17 @@ class RealTimeMarketDataFeed:
         age = compare_received - compare_ts
         if age < pd.Timedelta(0):
             self._fail("Provider bar timestamp is in the future.", received)
-        if age > self.stale_after:
+        freshness_ts = timestamp
+        freshness_reference = getattr(self.adapter, "freshness_reference", None)
+        if callable(freshness_reference):
+            freshness_ts = pd.Timestamp(freshness_reference(timestamp, self.timeframe))
+        compare_freshness = freshness_ts
+        if compare_freshness.tzinfo is None and compare_received.tzinfo is not None:
+            compare_freshness = compare_freshness.tz_localize("UTC")
+        elif compare_freshness.tzinfo is not None and compare_received.tzinfo is None:
+            compare_received = compare_received.tz_localize("UTC")
+        freshness_age = compare_received - compare_freshness
+        if freshness_age > self.stale_after:
             self._fail("Provider bar is stale.", received)
         if self._last_timestamp is None:
             return False
@@ -166,7 +176,17 @@ class RealTimeMarketDataFeed:
         age = compare_received - compare_ts
         if age < pd.Timedelta(0):
             self._fail("Provider bar timestamp is in the future.", received)
-        if age > self.stale_after:
+        freshness_ts = timestamp
+        freshness_reference = getattr(self.adapter, "freshness_reference", None)
+        if callable(freshness_reference):
+            freshness_ts = pd.Timestamp(freshness_reference(timestamp, self.timeframe))
+        compare_freshness = freshness_ts
+        if compare_freshness.tzinfo is None and compare_received.tzinfo is not None:
+            compare_freshness = compare_freshness.tz_localize("UTC")
+        elif compare_freshness.tzinfo is not None and compare_received.tzinfo is None:
+            compare_received = compare_received.tz_localize("UTC")
+        freshness_age = compare_received - compare_freshness
+        if freshness_age > self.stale_after:
             self._fail("Provider bar is stale.", received)
 
         if self._last_timestamp is not None:

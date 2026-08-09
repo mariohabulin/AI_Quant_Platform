@@ -174,3 +174,8 @@ Architecture Review → Design → TDD → Validation → Documentation → Git 
 - [x] Report bars/rejections/rebases, signals, risk outcomes, paper fills, equity/P&L, max drawdown, final position and real-order evidence.
 - [ ] Run the first supervised 30-60 bar Coinbase forward-paper session and review its report before increasing duration.
 - [ ] Keep unattended/cloud execution deferred until repeated supervised runs are clean and operational alerting is defined.
+
+### Coinbase Late-Trade Ordering Robustness v2
+Extended forward observation exposed event-time reordering across separate Coinbase websocket messages. Add a bounded 2-second event-time reorder buffer before strict minute aggregation, persist the pending buffer in forward continuity state, and keep truly late trades fail-closed after the watermark. This adds a small intentional bar-finalization delay to preserve OHLCV correctness rather than silently dropping late trades.
+
+- [x] Align Coinbase completed-bar freshness with interval-close semantics after late-trade reorder buffering.

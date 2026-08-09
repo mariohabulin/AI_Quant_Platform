@@ -92,10 +92,7 @@ class ForwardContinuityStore:
             "version": self.VERSION,
             "runtime": runtime.export_checkpoint(),
             "strategy_history": self._frame_to_records(runtime.session._history),
-            "aggregator": {
-                "bucket": None if aggregator._bucket is None else pd.Timestamp(aggregator._bucket).isoformat(),
-                "ohlcv": aggregator._ohlcv,
-            },
+            "aggregator": aggregator.export_state(),
         }
         self.path.parent.mkdir(parents=True, exist_ok=True)
         temporary = self.path.with_suffix(self.path.suffix + ".tmp")
@@ -114,9 +111,7 @@ class ForwardContinuityStore:
             raise RuntimeError("Unsupported forward continuity state version.")
         runtime.restore(payload["runtime"])
         runtime.session._history = self._records_to_frame(payload.get("strategy_history", []))
-        state = payload.get("aggregator", {})
-        aggregator._bucket = pd.Timestamp(state["bucket"]) if state.get("bucket") else None
-        aggregator._ohlcv = state.get("ohlcv")
+        aggregator.restore_state(payload.get("aggregator", {}))
         return True
 
 

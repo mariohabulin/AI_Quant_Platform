@@ -38,6 +38,7 @@ def test_dry_run_rejects_stale_bar_fail_closed_and_can_accept_next_bar():
         message(trade("2026-08-08T12:00:10Z", 100)),
         message(trade("2026-08-08T12:01:01Z", 101)),
         message(trade("2026-08-08T12:02:01Z", 102)),
+        message(trade("2026-08-08T12:03:01Z", 103)),
     ])
     times = iter([pd.Timestamp("2026-08-08T12:05:00Z"), pd.Timestamp("2026-08-08T12:02:05Z")])
     lines = []

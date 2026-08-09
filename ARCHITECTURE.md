@@ -820,3 +820,8 @@ A resumed forward-paper process may legitimately reconnect after a gap larger th
 
 ## Extended Forward Session Reporting Boundary
 `src/forward_session_report.py` is a read-only evidence layer over the append-only forward JSONL audit. It selects only the latest complete `SESSION_START` -> `SESSION_END` block and fails closed on malformed or incomplete boundaries. The reporter never touches transport, strategy, risk or broker execution. A report is PASS only when audit counts reconcile and all recorded real-order evidence remains zero. This keeps longer forward observation measurable without widening the trading boundary.
+
+### Coinbase Late-Trade Ordering Robustness v2
+Extended forward observation exposed event-time reordering across separate Coinbase websocket messages. Add a bounded 2-second event-time reorder buffer before strict minute aggregation, persist the pending buffer in forward continuity state, and keep truly late trades fail-closed after the watermark. This adds a small intentional bar-finalization delay to preserve OHLCV correctness rather than silently dropping late trades.
+
+- Completed-bar freshness semantics: adapters may define `freshness_reference(timestamp, timeframe)`; Coinbase completed 1m bars are aged from interval close, while timestamp ordering remains anchored to interval start.

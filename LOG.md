@@ -1001,3 +1001,11 @@ The first supervised forward-paper run produced a real-data BUY and ended with a
 - Report covers processed/rejected/rebase bars, BUY/SELL/HOLD signals, risk ALLOW/REDUCE/REJECT outcomes, paper/fill counts, start/final equity, net P&L, max drawdown, final position, end reason and explicit real-order evidence.
 - Incomplete/malformed latest sessions fail closed instead of producing a misleading summary.
 - Longer unattended/cloud operation remains deferred; the next evidence step is a supervised 30-60 bar live Coinbase forward-paper run followed by report review.
+
+## 2026-08-09 — Coinbase Late-Trade Ordering Robustness v2
+- First extended forward run stopped safely on an out-of-order Coinbase trade arriving across websocket messages.
+- Added a bounded 2-second event-time reorder buffer ahead of the strict 1-minute aggregator; trades are processed chronologically only after the watermark makes them safe.
+- Persisted pending reorder-buffer state through Forward Paper Continuity so restart does not silently lose buffered trades.
+- Preserved fail-closed behavior for trades that arrive beyond the configured reorder window.
+
+- Live 5-bar probe exposed false stale rejection after event-time buffering. Added adapter-specific completed-bar freshness reference (bar close), preserving strict future/order/gap guards.

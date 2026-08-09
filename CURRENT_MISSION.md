@@ -41,3 +41,8 @@ Validate restart/resume against live Coinbase data: restore the open paper posit
 
 ### Extended Forward Run Readiness + Session Report v1
 Move from 3-bar probes to supervised 30-60 bar forward evidence without expanding execution scope. Add a read-only report over the latest JSONL session so every extended run is judged by processed/rejected/rebase counts, signals, risk outcomes, paper fills, equity/P&L, max drawdown, final position, audit completeness and explicit `REAL_orders=0`. Longer unattended/cloud operation remains deferred until repeated supervised reports are clean.
+
+### Coinbase Late-Trade Ordering Robustness v2
+Extended forward observation exposed event-time reordering across separate Coinbase websocket messages. Add a bounded 2-second event-time reorder buffer before strict minute aggregation, persist the pending buffer in forward continuity state, and keep truly late trades fail-closed after the watermark. This adds a small intentional bar-finalization delay to preserve OHLCV correctness rather than silently dropping late trades.
+
+- Completed-Bar Freshness Semantics hotfix: validate finalized Coinbase 1m bars against interval close so the 2s reorder watermark does not falsely mark healthy bars stale.
