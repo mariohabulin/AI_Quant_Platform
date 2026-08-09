@@ -264,3 +264,30 @@ def test_forward_session_labels_runtime_health_halt_instead_of_transport_end(tmp
     assert rows[-1]["type"] == "SESSION_END"
     assert rows[-1]["reason"] == "RUNTIME_HALTED"
     assert rows[-1]["rejected_events"] == 3
+
+
+def test_forward_session_closes_audit_on_reconnect_exhaustion(tmp_path):
+    messages = [
+        trade_message("2026-08-09T08:00:10Z", "100"),
+        trade_message("2026-08-09T08:01:10Z", "101"),
+        trade_message("2026-08-09T08:02:10Z", "102"),
+        {"channel": "_coinbase_transport", "event": "DISCONNECTED", "attempt": 1, "reason": "dns unavailable"},
+        {"channel": "_coinbase_transport", "event": "RECONNECT_EXHAUSTED", "attempt": 4, "reason": "dns unavailable"},
+    ]
+    audit = tmp_path / "fatal.jsonl"
+    state = tmp_path / "state.json"
+    result = run_forward_paper(
+        transport=messages,
+        max_processed_bars=10,
+        audit_path=audit,
+        now_fn=lambda: pd.Timestamp("2026-08-09T08:02:20Z"),
+        state_path=state,
+        resume=False,
+    )
+    rows = [json.loads(line) for line in audit.read_text(encoding="utf-8").splitlines()]
+    assert rows[-1]["type"] == "SESSION_END"
+    assert rows[-1]["reason"] == "TRANSPORT_FATAL"
+    assert rows[-1]["real_orders"] == 0
+    assert any(row.get("event") == "RECONNECT_EXHAUSTED" for row in rows)
+    assert state.exists()
+    assert result.audit_path == str(audit)

@@ -189,3 +189,5 @@ Extended forward observation exposed event-time reordering across separate Coinb
 - [x] Report repeated Feed Health safety shutdown as `RUNTIME_HALTED`, not `TRANSPORT_ENDED`.
 - [ ] Prove reconnect/rebase behavior on live Coinbase data and then repeat the supervised 30-bar forward run.
 - Deferred: multi-provider failover and distributed supervision. Reason: one-provider reconnect/recovery must first be proven repeatedly before adding redundant infrastructure.
+
+- [x] Transport Failure Recovery v2: bounded reconnect backoff, fatal transport audit closure, continuity checkpoint.

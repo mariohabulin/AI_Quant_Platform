@@ -1018,3 +1018,9 @@ The first supervised forward-paper run produced a real-data BUY and ended with a
 - Partial Coinbase aggregation state is discarded across a disconnect to avoid constructing OHLCV from a market interval that may contain missed trades.
 - The first fresh excessive-gap completed bar after reconnect is a non-tradable `RECONNECT_REBASE`; strict gap enforcement resumes immediately afterward.
 - Runtime safety halts are now audited as `RUNTIME_HALTED`.
+
+## Transport Failure Recovery v2
+- Added bounded exponential reconnect backoff for temporary DNS/network outages.
+- Reconnect exhaustion is now a controlled transport terminal event rather than an uncaught exception.
+- Forward-paper audit always closes with `SESSION_END reason=TRANSPORT_FATAL` on exhausted reconnects.
+- Continuity state is checkpointed before controlled transport-fatal shutdown; real execution remains impossible.

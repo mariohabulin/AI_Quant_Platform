@@ -53,3 +53,6 @@ Extended forward observation exposed event-time reordering across separate Coinb
 - Added explicit DISCONNECTED/RECONNECTED transport-control evidence, per-outage reconnect budgeting, partial-aggregator reset across disconnect, and a non-tradable reconnect rebase before normal trading resumes.
 - Corrected session-end diagnosis so a Feed Health safety halt is recorded as `RUNTIME_HALTED` rather than `TRANSPORT_ENDED`.
 - Next evidence gate: short live reconnect probe, then repeat the supervised 30-bar forward-paper run. Real execution remains structurally unavailable.
+
+### Transport Failure Recovery v2
+Validate bounded reconnect backoff and complete-audit fail-closed shutdown under real network/DNS failure before repeating the 30-bar extended forward-paper run.

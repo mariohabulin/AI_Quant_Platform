@@ -199,6 +199,7 @@ def run_forward_paper(
     session_rejected = 0
     rebase_boundary_pending = resumed
     rebase_boundary_kind = "RESTART" if resumed else None
+    transport_fatal = False
 
     for message in transport:
         if isinstance(message, dict) and message.get("channel") == "_coinbase_transport":
@@ -220,6 +221,9 @@ def run_forward_paper(
             elif event == "RECONNECTED":
                 rebase_boundary_pending = True
                 rebase_boundary_kind = "RECONNECT"
+            elif event == "RECONNECT_EXHAUSTED":
+                transport_fatal = True
+                continuity.save(runtime, aggregator)
             continue
 
         for bar in aggregator.ingest_message(message):
@@ -311,7 +315,12 @@ def run_forward_paper(
     broker = runtime.session.engine.paper_broker
     mark = broker.last_market_price or 1.0
     final = broker.account_snapshot(mark_price=mark)
-    end_reason = "RUNTIME_HALTED" if runtime.stop_requested and runtime.health.status == "HALTED" else "TRANSPORT_ENDED"
+    if transport_fatal:
+        end_reason = "TRANSPORT_FATAL"
+    elif runtime.stop_requested and runtime.health.status == "HALTED":
+        end_reason = "RUNTIME_HALTED"
+    else:
+        end_reason = "TRANSPORT_ENDED"
     audit.append({
         "type": "SESSION_END",
         "reason": end_reason,

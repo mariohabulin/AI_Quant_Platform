@@ -231,3 +231,24 @@ def test_aggregator_reset_stream_boundary_discards_partial_and_pending_state():
     assert state["ohlcv"] is None
     assert state["pending_trades"] == []
     assert state["latest_seen_ts"] is None
+
+
+def test_transport_uses_bounded_exponential_backoff_for_consecutive_failures():
+    sleeps = []
+    def failing_factory(url):
+        raise OSError("dns unavailable")
+
+    transport = CoinbasePublicWebSocketTransport(
+        websocket_factory=failing_factory,
+        max_reconnect_attempts=3,
+        backoff_seconds=5,
+        backoff_factor=2,
+        max_backoff_seconds=12,
+        sleep_fn=sleeps.append,
+    )
+    iterator = iter(transport)
+    assert next(iterator)["event"] == "DISCONNECTED"
+    assert next(iterator)["event"] == "DISCONNECTED"
+    assert next(iterator)["event"] == "DISCONNECTED"
+    assert next(iterator)["event"] == "RECONNECT_EXHAUSTED"
+    assert sleeps == [5.0, 10.0, 12.0]

@@ -222,15 +222,27 @@ class CoinbasePublicWebSocketTransport:
     """
 
     def __init__(self, product_id="BTC-USD", websocket_factory=None,
-                 max_reconnect_attempts=3, backoff_seconds=1.0):
+                 max_reconnect_attempts=3, backoff_seconds=5.0,
+                 backoff_factor=2.0, max_backoff_seconds=30.0, sleep_fn=None):
         if max_reconnect_attempts < 0:
             raise ValueError("max_reconnect_attempts cannot be negative.")
         if backoff_seconds < 0:
             raise ValueError("backoff_seconds cannot be negative.")
+        if backoff_factor < 1:
+            raise ValueError("backoff_factor must be at least 1.")
+        if max_backoff_seconds < 0:
+            raise ValueError("max_backoff_seconds cannot be negative.")
         self.product_id = str(product_id).upper()
         self.websocket_factory = websocket_factory
         self.max_reconnect_attempts = int(max_reconnect_attempts)
         self.backoff_seconds = float(backoff_seconds)
+        self.backoff_factor = float(backoff_factor)
+        self.max_backoff_seconds = float(max_backoff_seconds)
+        self.sleep_fn = sleep_fn or time.sleep
+
+    def _backoff_for_attempt(self, attempt):
+        delay = self.backoff_seconds * (self.backoff_factor ** max(0, attempt - 1))
+        return min(delay, self.max_backoff_seconds)
 
     @property
     def subscription_messages(self):
@@ -285,7 +297,7 @@ class CoinbasePublicWebSocketTransport:
                         "attempt": consecutive_failures,
                         "reason": reason,
                     }
-                    raise
+                    return
                 reconnect_pending = True
                 yield {
                     "channel": "_coinbase_transport",
@@ -293,8 +305,9 @@ class CoinbasePublicWebSocketTransport:
                     "attempt": consecutive_failures,
                     "reason": reason,
                 }
-                if self.backoff_seconds:
-                    time.sleep(self.backoff_seconds)
+                delay = self._backoff_for_attempt(consecutive_failures)
+                if delay:
+                    self.sleep_fn(delay)
             finally:
                 if ws is not None:
                     try:

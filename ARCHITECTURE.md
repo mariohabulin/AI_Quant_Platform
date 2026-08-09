@@ -832,3 +832,6 @@ Extended forward observation exposed event-time reordering across separate Coinb
 A disconnect invalidates the in-progress Coinbase aggregation boundary because trades may have been missed while the socket was unavailable. `CoinbaseOneMinuteTradeAggregator.reset_stream_boundary()` discards only partial/pending aggregation state. After reconnect, Forward Paper marks the next fresh excessive-gap completed bar as a non-tradable reconnect rebase, then resumes normal Feed Health enforcement on subsequent bars. Account, Risk Engine and strategy history remain intact.
 
 Forward audit now records `TRANSPORT_EVENT` and `RECONNECT_REBASE` evidence. A safety halt caused by repeated Feed Health failures is reported as `RUNTIME_HALTED`, not mislabeled as `TRANSPORT_ENDED`.
+
+### Transport-failure boundary
+Coinbase reconnect uses bounded exponential backoff. Exhaustion emits a terminal transport event; forward-paper checkpoints continuity and closes the append-only session audit with `TRANSPORT_FATAL` instead of allowing a transport exception to leave an incomplete session.
