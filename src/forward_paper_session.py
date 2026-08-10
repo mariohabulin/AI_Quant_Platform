@@ -295,11 +295,17 @@ def run_forward_paper(
                 if last_accepted is not None and gap is not None and gap > runtime.realtime_feed.max_gap:
                     boundary_kind = rebase_boundary_kind or "RESTART"
                     try:
-                        recovered = gap_recovery.recover(last_accepted, bar.timestamp)
+                        startup_catchup = boundary_kind == "RESTART" and hasattr(gap_recovery, "recover_startup")
+                        if startup_catchup:
+                            recovered = gap_recovery.recover_startup(last_accepted, bar.timestamp)
+                        else:
+                            recovered = gap_recovery.recover(last_accepted, bar.timestamp)
+                        audit_type = "STARTUP_CATCHUP_BAR" if startup_catchup else "REST_BACKFILL_BAR"
+                        complete_type = "STARTUP_CATCHUP_COMPLETE" if startup_catchup else "REST_BACKFILL_COMPLETE"
                         for recovered_bar in recovered:
                             account = _apply_rest_backfill_bar(runtime, recovered_bar)
                             audit.append({
-                                "type": "REST_BACKFILL_BAR",
+                                "type": audit_type,
                                 "timestamp": recovered_bar.timestamp,
                                 "close": recovered_bar.close,
                                 "equity": account["equity"],
@@ -308,15 +314,16 @@ def run_forward_paper(
                                 "real_orders": 0,
                             })
                         audit.append({
-                            "type": "REST_BACKFILL_COMPLETE",
+                            "type": complete_type,
                             "boundary_kind": boundary_kind,
                             "from_timestamp": last_accepted,
                             "to_timestamp": bar.timestamp,
                             "recovered_bars": len(recovered),
                             "real_orders": 0,
                         })
+                        label = "STARTUP_CATCHUP" if startup_catchup else "REST_BACKFILL"
                         output(
-                            f"REST_BACKFILL {len(recovered)} bars: "
+                            f"{label} {len(recovered)} bars: "
                             f"{pd.Timestamp(last_accepted)} -> {pd.Timestamp(bar.timestamp)}; trading resumes on live bar"
                         )
                         continuity.save(runtime, aggregator)

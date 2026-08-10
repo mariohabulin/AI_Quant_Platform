@@ -297,20 +297,43 @@ class CoinbaseHybridGapRecovery:
     """
 
     def __init__(self, rest_client=None, max_backfill_minutes=300,
-                 max_attempts=3, retry_backoff_seconds=2.0, sleep_fn=None):
+                 max_startup_catchup_minutes=10080, max_attempts=3,
+                 retry_backoff_seconds=2.0, sleep_fn=None):
         if not isinstance(max_backfill_minutes, int) or max_backfill_minutes <= 0:
             raise ValueError("max_backfill_minutes must be a positive integer.")
+        if not isinstance(max_startup_catchup_minutes, int) or max_startup_catchup_minutes <= 0:
+            raise ValueError("max_startup_catchup_minutes must be a positive integer.")
+        if max_startup_catchup_minutes < max_backfill_minutes:
+            raise ValueError("max_startup_catchup_minutes cannot be smaller than max_backfill_minutes.")
         if not isinstance(max_attempts, int) or max_attempts <= 0:
             raise ValueError("max_attempts must be a positive integer.")
         if float(retry_backoff_seconds) < 0:
             raise ValueError("retry_backoff_seconds cannot be negative.")
         self.rest_client = rest_client or CoinbasePublicRestCandleClient()
         self.max_backfill_minutes = max_backfill_minutes
+        self.max_startup_catchup_minutes = max_startup_catchup_minutes
         self.max_attempts = max_attempts
         self.retry_backoff_seconds = float(retry_backoff_seconds)
         self.sleep_fn = sleep_fn or time.sleep
 
     def recover(self, last_accepted_timestamp, next_live_timestamp):
+        return self._recover_with_limit(
+            last_accepted_timestamp, next_live_timestamp, self.max_backfill_minutes, "REST backfill"
+        )
+
+    def recover_startup(self, last_accepted_timestamp, next_live_timestamp):
+        """Catch up a bounded long process-downtime gap without retroactive trading.
+
+        The REST client already chunks requests below Coinbase's per-request candle
+        limit. This larger boundary is deliberately startup-only; reconnect recovery
+        keeps the tighter normal-session safety limit.
+        """
+        return self._recover_with_limit(
+            last_accepted_timestamp, next_live_timestamp,
+            self.max_startup_catchup_minutes, "Startup catch-up"
+        )
+
+    def _recover_with_limit(self, last_accepted_timestamp, next_live_timestamp, limit, label):
         if last_accepted_timestamp is None:
             return tuple()
         last_ts = pd.Timestamp(last_accepted_timestamp)
@@ -320,10 +343,9 @@ class CoinbaseHybridGapRecovery:
         if end <= start:
             return tuple()
         expected = list(pd.date_range(start=start, end=end - pd.Timedelta(minutes=1), freq="1min"))
-        if len(expected) > self.max_backfill_minutes:
+        if len(expected) > limit:
             raise RuntimeError(
-                f"REST backfill gap of {len(expected)} minutes exceeds safety limit "
-                f"of {self.max_backfill_minutes}."
+                f"{label} gap of {len(expected)} minutes exceeds safety limit of {limit}."
             )
         last_error = None
         for attempt in range(1, self.max_attempts + 1):

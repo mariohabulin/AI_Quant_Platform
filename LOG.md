@@ -1051,3 +1051,6 @@ The first supervised forward-paper run produced a real-data BUY and ended with a
 - Backfilled bars are validation/state catch-up only: they update feed continuity, EMA input history, mark-to-market and Risk Engine equity observation but never execute historical signals/orders.
 - Added exact-minute coverage validation, bounded recovery size, short bounded retry for REST propagation delay, audit evidence and `BACKFILL_FATAL` fail-closed shutdown when continuity cannot be proven.
 - Extended Forward Session Report with hybrid backfill/failure counts and continuity metrics that include recovered minutes.
+
+## Startup Historical Catch-up v1
+A 60-bar Hybrid gate attempted after overnight downtime stopped safely before trading because the persisted-to-live gap was 896 minutes, exceeding the normal 300-minute reconnect limit. This was classified as a different operational boundary rather than solved by weakening the reconnect limit. Added startup-only bounded historical catch-up using the already chunked REST client, exact minute validation, non-tradable state reconstruction, separate audit evidence, and a seven-day default startup ceiling. Normal reconnect recovery remains capped at 300 minutes.

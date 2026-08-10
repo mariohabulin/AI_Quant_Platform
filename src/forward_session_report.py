@@ -44,6 +44,7 @@ class ForwardSessionReport:
     disconnect_reason_counts: dict
     provider_replay_drops: int
     rest_backfill_bars: int
+    startup_catchup_bars: int
     rest_backfill_failures: int
     market_span_minutes: float
     expected_contiguous_minutes: float
@@ -98,6 +99,7 @@ def build_forward_session_report(audit_path="runtime/forward_paper_audit.jsonl")
     transport = [row for row in rows if row.get("type") == "TRANSPORT_EVENT"]
     replay_drops = [row for row in rows if row.get("type") == "PROVIDER_REPLAY_DROPPED"]
     rest_backfill = [row for row in rows if row.get("type") == "REST_BACKFILL_BAR"]
+    startup_catchup = [row for row in rows if row.get("type") == "STARTUP_CATCHUP_BAR"]
     rest_backfill_failures = [row for row in rows if row.get("type") == "REST_BACKFILL_FAILED"]
 
     if not paper:
@@ -148,7 +150,7 @@ def build_forward_session_report(audit_path="runtime/forward_paper_audit.jsonl")
                 continuity_timestamps.append(pd.Timestamp(value))
             except Exception:
                 pass
-    for row in rest_backfill:
+    for row in rest_backfill + startup_catchup:
         value = row.get("timestamp")
         if value is not None:
             try:
@@ -214,6 +216,7 @@ def build_forward_session_report(audit_path="runtime/forward_paper_audit.jsonl")
         disconnect_reason_counts=disconnect_reason_counts,
         provider_replay_drops=len(replay_drops),
         rest_backfill_bars=len(rest_backfill),
+        startup_catchup_bars=len(startup_catchup),
         rest_backfill_failures=len(rest_backfill_failures),
         market_span_minutes=market_span_minutes,
         expected_contiguous_minutes=expected_contiguous_minutes,
@@ -234,7 +237,7 @@ def format_forward_session_report(report):
         f"equity: start={report.start_equity:.2f} final={report.final_equity:.2f} net_pnl={report.net_pnl:.2f} max_drawdown={report.max_drawdown:.4%}",
         f"transport: disconnects={report.transport_disconnects} reconnects={report.transport_reconnects} success={report.reconnect_success_rate:.1%} exhausted={report.reconnect_exhausted} replay_drops={report.provider_replay_drops}",
         f"transport_quality: outage_total={report.total_outage_seconds:.1f}s outage_max={report.max_outage_seconds:.1f}s reasons={report.disconnect_reason_counts}",
-        f"hybrid_recovery: backfill_bars={report.rest_backfill_bars} failures={report.rest_backfill_failures}",
+        f"hybrid_recovery: backfill_bars={report.rest_backfill_bars} startup_catchup_bars={report.startup_catchup_bars} failures={report.rest_backfill_failures}",
         f"continuity: market_span={report.market_span_minutes:.1f}m expected_contiguous={report.expected_contiguous_minutes:.1f}m observed_gap={report.observed_gap_minutes:.1f}m",
         f"activity: signal_rate={report.signal_activity_rate:.1%} risk_reject_rate={report.risk_rejection_rate:.1%} reject_reasons={report.risk_rejection_reasons}",
         f"final_position={report.final_position:.8f} end_reason={report.end_reason}",

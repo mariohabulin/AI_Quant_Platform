@@ -421,3 +421,29 @@ def test_hybrid_gap_recovery_returns_exact_missing_minutes_in_order():
     recovery = CoinbaseHybridGapRecovery(rest_client=Rest())
     bars = recovery.recover("2026-08-09T12:00:00Z", "2026-08-09T12:04:00Z")
     assert [bar.timestamp for bar in bars] == list(pd.date_range("2026-08-09T12:01:00Z", periods=3, freq="1min"))
+
+
+def test_startup_catchup_allows_bounded_gap_larger_than_reconnect_limit():
+    from src.coinbase_market_data import CoinbaseCompletedBar, CoinbaseHybridGapRecovery
+
+    class Rest:
+        def fetch_range(self, start, end):
+            return tuple(
+                CoinbaseCompletedBar(ts, 1, 1, 1, 1, 1)
+                for ts in pd.date_range(start=start, end=pd.Timestamp(end) - pd.Timedelta(minutes=1), freq="1min")
+            )
+
+    recovery = CoinbaseHybridGapRecovery(
+        rest_client=Rest(), max_backfill_minutes=300, max_startup_catchup_minutes=1000
+    )
+    with pytest.raises(RuntimeError, match="REST backfill gap of 896 minutes"):
+        recovery.recover("2026-08-09T00:00:00Z", "2026-08-09T14:57:00Z")
+    bars = recovery.recover_startup("2026-08-09T00:00:00Z", "2026-08-09T14:57:00Z")
+    assert len(bars) == 896
+
+
+def test_startup_catchup_remains_bounded():
+    from src.coinbase_market_data import CoinbaseHybridGapRecovery
+    recovery = CoinbaseHybridGapRecovery(max_startup_catchup_minutes=600)
+    with pytest.raises(RuntimeError, match="Startup catch-up gap of 601 minutes"):
+        recovery.recover_startup("2026-08-09T00:00:00Z", "2026-08-09T10:02:00Z")

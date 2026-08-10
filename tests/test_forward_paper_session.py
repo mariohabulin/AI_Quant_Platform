@@ -382,3 +382,49 @@ def test_forward_session_fails_closed_when_rest_backfill_is_incomplete(tmp_path)
     assert rows[-1]["reason"] == "BACKFILL_FATAL"
     assert rows[-1]["real_orders"] == 0
     assert result.processed_events == 2
+
+
+def test_forward_session_uses_startup_catchup_without_retroactive_orders(tmp_path):
+    from src.coinbase_market_data import CoinbaseCompletedBar
+    from src.coinbase_live_paper import build_live_paper_runtime
+    from src.forward_paper_session import ForwardContinuityStore
+    from src.coinbase_market_data import CoinbaseOneMinuteTradeAggregator
+
+    class StartupRecovery(FakeGapRecovery):
+        def recover_startup(self, last_accepted, next_live):
+            self.calls.append((pd.Timestamp(last_accepted), pd.Timestamp(next_live), "startup"))
+            return tuple(
+                CoinbaseCompletedBar(ts, 100, 100, 100, 100, 1)
+                for ts in pd.date_range(
+                    start=pd.Timestamp(last_accepted) + pd.Timedelta(minutes=1),
+                    end=pd.Timestamp(next_live) - pd.Timedelta(minutes=1), freq="1min"
+                )
+            )
+
+    state = tmp_path / "state.json"
+    runtime = build_live_paper_runtime()
+    runtime.realtime_feed._last_timestamp = pd.Timestamp("2026-08-09T00:00:00Z")
+    runtime.realtime_feed._accepted = 1
+    runtime._processed = 1
+    runtime._last_event_at = pd.Timestamp("2026-08-09T00:00:00Z")
+    ForwardContinuityStore(state).save(runtime, CoinbaseOneMinuteTradeAggregator())
+
+    recovery = StartupRecovery()
+    messages = [
+        trade_message("2026-08-09T14:57:10Z", "100"),
+        trade_message("2026-08-09T14:58:10Z", "101"),
+        trade_message("2026-08-09T14:59:10Z", "102"),
+    ]
+    audit = tmp_path / "startup.jsonl"
+    result = run_forward_paper(
+        transport=messages, max_processed_bars=1, audit_path=audit,
+        output=lambda _: None, now_fn=lambda: pd.Timestamp("2026-08-09T14:59:20Z"),
+        state_path=state, gap_recovery=recovery,
+    )
+    rows = [json.loads(line) for line in audit.read_text(encoding="utf-8").splitlines()]
+    catchup = [row for row in rows if row["type"] == "STARTUP_CATCHUP_BAR"]
+    paper = [row for row in rows if row["type"] == "PAPER_EVENT"]
+    assert len(catchup) == 896
+    assert len(paper) == 1
+    assert result.paper_orders == 0
+    assert rows[-1]["real_orders"] == 0

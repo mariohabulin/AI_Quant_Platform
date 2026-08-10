@@ -182,4 +182,4 @@ def test_report_includes_hybrid_rest_backfill_in_continuity_metrics(tmp_path):
     assert report.market_span_minutes == pytest.approx(3.0)
     assert report.expected_contiguous_minutes == pytest.approx(3.0)
     assert report.observed_gap_minutes == pytest.approx(0.0)
-    assert "hybrid_recovery: backfill_bars=2 failures=0" in format_forward_session_report(report)
+    assert "hybrid_recovery: backfill_bars=2 startup_catchup_bars=0 failures=0" in format_forward_session_report(report)
