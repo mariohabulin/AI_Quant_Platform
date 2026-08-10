@@ -260,3 +260,11 @@ After single-symbol operational stability and extended forward evidence are prov
 - [ ] Require: 60/60 processed, `MAX_BARS`, `audit_complete=True`, hybrid failures=0, `observed_gap=0.0m`, `REAL_orders=0`.
 - [ ] Verify state continuity through reconnect/backfill and zero retroactive orders from recovery bars.
 - [ ] After PASS, progress to multi-hour -> overnight -> 24h -> multi-day soak tests.
+
+### Post-Recovery Position Reconciliation v1
+- [x] Prove the lifecycle failure from forward evidence: LONG open before downtime; EMA20/EMA50 `ABOVE -> BELOW` occurs during startup catch-up; no retroactive SELL is allowed; later live bars are already BELOW/HOLD.
+- [x] Detect actionable bearish strategy transitions while applying REST/startup recovery bars without executing orders on those bars.
+- [x] Persist pending reconciliation state in the forward continuity checkpoint so a second process interruption cannot erase the required exit.
+- [x] On the first fresh live bar, close the existing long at the current paper price/time through the existing broker/risk-observation path; never replay the historical fill.
+- [x] Audit `RECOVERY_CROSSOVER_DETECTED` and `POST_RECOVERY_RECONCILIATION`; preserve `REAL orders=0`.
+- [x] Add regression coverage for persistence, non-retroactive recovery, and first-live-bar exit execution.

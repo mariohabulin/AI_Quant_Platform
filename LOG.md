@@ -1061,3 +1061,6 @@ A 60-bar Hybrid gate attempted after overnight downtime stopped safely before tr
 - Root cause was an off-by-policy boundary: recovery started only when the live timestamp delta was greater than Feed Health `max_gap=2m`; a 2m delta therefore bypassed recovery even though it represents one missing 1m candle.
 - Reconnect/restart recovery now uses strict timeframe continuity (`gap > 1m`) while normal live Feed Health tolerance remains unchanged.
 - Added a regression test reproducing `11:33 -> reconnect -> 11:35`, requiring REST recovery of exactly `11:34` before `11:35` can be processed.
+
+## 2026-08-10 - Post-Recovery Position Reconciliation v1
+Forward-paper evidence isolated a real lifecycle edge case rather than a strategy-frequency issue. The current long was opened live at 11:20 UTC. Offline reconstruction of audited bars found EMA20 crossing below EMA50 at 12:27 UTC inside startup catch-up. Because recovery bars intentionally cannot trade, the event-based SELL disappeared once live state resumed already BELOW. Added durable recovery-transition detection and first-fresh-live-bar reconciliation: historical bars remain non-actionable, the pending exit survives checkpoints, execution occurs only at current live price/time, and REAL execution remains impossible. Added regression tests around persistence and non-retroactive exit timing.

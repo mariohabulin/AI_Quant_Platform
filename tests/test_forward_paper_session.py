@@ -216,9 +216,15 @@ def test_resumed_forward_session_rebases_gap_without_trading_boundary_bar(tmp_pa
     assert len(paper) == 2
     assert result.processed_events == 2
     assert result.rejected_events == 0
-    assert result.final_position == pytest.approx(0.02)
+    # The synthetic recovery collapses price from 62500 to 100, producing a
+    # bearish recovery crossover. The new lifecycle contract preserves the
+    # position during backfill, then closes it on the first fresh live bar.
+    assert result.final_position == pytest.approx(0.0)
+    assert any(row["type"] == "RECOVERY_CROSSOVER_DETECTED" for row in rows)
+    assert any(row["type"] == "POST_RECOVERY_RECONCILIATION" for row in rows)
     assert any(line.startswith("REST_BACKFILL 26 bars") for line in output)
     assert paper[0]["snapshot"]["timestamp"] == "2026-08-08T19:52:00+00:00"
+    assert paper[0]["event"]["signal"] == -1
 
 
 def test_forward_session_audits_reconnect_and_rebases_without_trading_boundary_bar(tmp_path):
@@ -478,3 +484,88 @@ def test_forward_session_uses_startup_catchup_without_retroactive_orders(tmp_pat
     assert len(paper) == 1
     assert result.paper_orders == 0
     assert rows[-1]["real_orders"] == 0
+
+
+def test_continuity_store_preserves_pending_post_recovery_reconciliation(tmp_path):
+    from src.coinbase_live_paper import build_live_paper_runtime
+    from src.coinbase_market_data import CoinbaseOneMinuteTradeAggregator
+    from src.forward_paper_session import ForwardContinuityStore
+
+    state = tmp_path / "state.json"
+    runtime = build_live_paper_runtime()
+    runtime._forward_pending_reconciliation = {
+        "kind": "LONG_EXIT",
+        "detected_at": "2026-08-10T12:27:00+00:00",
+        "strategy": "ema_crossover",
+        "boundary_kind": "RESTART",
+    }
+    ForwardContinuityStore(state).save(runtime, CoinbaseOneMinuteTradeAggregator())
+
+    restored = build_live_paper_runtime()
+    restored._forward_pending_reconciliation = None
+    assert ForwardContinuityStore(state).load_into(restored, CoinbaseOneMinuteTradeAggregator())
+    assert restored._forward_pending_reconciliation["kind"] == "LONG_EXIT"
+    assert restored._forward_pending_reconciliation["detected_at"] == "2026-08-10T12:27:00+00:00"
+
+
+def test_post_recovery_reconciliation_closes_long_on_first_fresh_live_bar(monkeypatch, tmp_path):
+    from src.coinbase_live_paper import build_live_paper_runtime
+    from src.coinbase_market_data import CoinbaseOneMinuteTradeAggregator
+    from src.forward_paper_session import ForwardContinuityStore
+
+    state = tmp_path / "state.json"
+    runtime = build_live_paper_runtime()
+    broker = runtime.session.engine.paper_broker
+    broker.cash = 3750.0
+    broker.position_quantity = 0.02
+    broker.average_entry_price = 100.0
+    broker.position_cost_basis = 2.0
+    runtime.session._history = pd.DataFrame(
+        [{"Open": 100.0, "High": 100.0, "Low": 100.0, "Close": 100.0, "Volume": 1.0}],
+        index=pd.DatetimeIndex([pd.Timestamp("2026-08-10T12:00:00Z")]),
+    )
+    runtime.session.session._last_timestamp = pd.Timestamp("2026-08-10T12:00:00Z")
+    runtime.realtime_feed._last_timestamp = pd.Timestamp("2026-08-10T12:00:00Z")
+    runtime.realtime_feed._accepted = 1
+    runtime._processed = 1
+    runtime._last_event_at = pd.Timestamp("2026-08-10T12:00:00Z")
+    ForwardContinuityStore(state).save(runtime, CoinbaseOneMinuteTradeAggregator())
+
+    # Isolate the lifecycle contract: recovery observes a bearish strategy event,
+    # but only the first fresh live bar is allowed to execute the exit.
+    monkeypatch.setattr(
+        "src.forward_paper_session._strategy_activity_diagnostics",
+        lambda runtime: {"strategy": "ema_crossover", "signal": -1, "relation": "BELOW"},
+    )
+    messages = [
+        trade_message("2026-08-10T12:05:10Z", "95"),
+        trade_message("2026-08-10T12:06:10Z", "96"),
+        trade_message("2026-08-10T12:07:10Z", "97"),
+    ]
+    audit = tmp_path / "reconcile.jsonl"
+    result = run_forward_paper(
+        transport=messages,
+        max_processed_bars=1,
+        audit_path=audit,
+        output=lambda _: None,
+        now_fn=lambda: pd.Timestamp("2026-08-10T12:06:20Z"),
+        state_path=state,
+        gap_recovery=FakeGapRecovery(),
+    )
+
+    rows = [json.loads(line) for line in audit.read_text(encoding="utf-8").splitlines()]
+    detected = [row for row in rows if row["type"] == "RECOVERY_CROSSOVER_DETECTED"]
+    reconciled = [row for row in rows if row["type"] == "POST_RECOVERY_RECONCILIATION"]
+    paper = [row for row in rows if row["type"] == "PAPER_EVENT"]
+    backfill = [row for row in rows if row["type"] == "REST_BACKFILL_BAR"]
+
+    assert len(detected) == 1
+    assert len(reconciled) == 1
+    assert len(backfill) == 4
+    assert all(row.get("real_orders") == 0 for row in backfill)
+    assert paper[0]["event"]["signal"] == -1
+    assert paper[0]["event"]["status"] == "FILLED"
+    assert paper[0]["event"]["timestamp"] == "2026-08-10T12:05:00+00:00"
+    assert reconciled[0]["executed_at"] == "2026-08-10T12:05:00+00:00"
+    assert result.paper_orders == 1
+    assert result.final_position == pytest.approx(0.0)

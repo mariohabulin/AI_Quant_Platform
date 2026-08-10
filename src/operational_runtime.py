@@ -125,7 +125,7 @@ class PaperOperationalRuntime:
         self.heartbeat(reason)
         return self._health
 
-    def process_provider_message(self, provider_message, stop_price=None, target_price=None, received_at=None):
+    def process_provider_message(self, provider_message, stop_price=None, target_price=None, received_at=None, reconcile_long_exit=False):
         if self._stop_requested:
             raise RuntimeError("Runtime is stopping and cannot accept new market data.")
         received = pd.Timestamp(received_at) if received_at is not None else self._now()
@@ -136,6 +136,7 @@ class PaperOperationalRuntime:
                 stop_price=stop_price,
                 target_price=target_price,
                 timestamp=market_event.timestamp,
+                reconcile_long_exit=reconcile_long_exit,
             )
         except FeedHealthError as exc:
             self._rejected += 1

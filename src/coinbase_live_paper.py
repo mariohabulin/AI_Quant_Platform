@@ -55,7 +55,7 @@ class AccumulatingPaperSession:
     def _last_timestamp(self, value):
         self.session._last_timestamp = value
 
-    def process(self, data, stop_price=None, target_price=None, timestamp=None):
+    def process(self, data, stop_price=None, target_price=None, timestamp=None, reconcile_long_exit=False):
         if data is None or getattr(data, "empty", True):
             raise ValueError("Live paper market data cannot be empty.")
         self._history = pd.concat([self._history, data]).sort_index()
@@ -68,6 +68,7 @@ class AccumulatingPaperSession:
             stop_price=stop,
             target_price=target,
             timestamp=timestamp,
+            reconcile_long_exit=reconcile_long_exit,
         )
 
 

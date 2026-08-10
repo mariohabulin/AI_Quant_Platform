@@ -262,3 +262,32 @@ def test_session_does_not_reset_engine_or_broker_state_between_process_calls():
     session.process(market_data(101, "2026-08-08 11:00"), stop_price=99)
     assert len(engine.paper_broker.order_history) == order_count
     assert len(engine.event_history) == 2
+
+
+def test_reconcile_long_exit_executes_at_current_bar_without_replaying_strategy_signal():
+    from src.paper_broker import PaperBroker
+    from src.paper_trading import PaperTradingEngine
+    from src.risk_engine import RiskEngine
+
+    class HoldStrategyEngine:
+        def run(self, data):
+            result = data.copy()
+            result["Signal"] = 0
+            return result
+
+    broker = PaperBroker(initial_cash=5000.0)
+    broker.position_quantity = 1.0
+    broker.average_entry_price = 100.0
+    broker.position_cost_basis = 100.0
+    broker.cash = 4900.0
+    engine = PaperTradingEngine(HoldStrategyEngine(), RiskEngine(), broker)
+    now = pd.Timestamp("2026-08-10T13:00:00Z")
+    data = pd.DataFrame({"Close": [95.0]}, index=[now])
+
+    event = engine.reconcile_long_exit(data, timestamp=now)
+
+    assert event.signal == -1
+    assert event.status == "FILLED"
+    assert event.timestamp == now
+    assert event.fill_price == pytest.approx(95.0)
+    assert broker.position_quantity == pytest.approx(0.0)

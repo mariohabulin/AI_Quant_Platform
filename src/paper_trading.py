@@ -63,6 +63,35 @@ class PaperTradingEngine:
             raise ValueError("Latest Close price must be greater than zero.")
         return float(price)
 
+    def reconcile_long_exit(self, data, timestamp=None, reason="Post-recovery bearish transition."):
+        """Close an existing long *now* after a recovery-only bearish transition.
+
+        Recovery bars never execute orders. This explicit path is invoked only on
+        the first fresh live bar after recovery, so fill price/time are current and
+        the historical crossover is not replayed as a retroactive trade.
+        """
+        result = self.strategy_engine.run(data)
+        if result.empty:
+            raise ValueError("Strategy result cannot be empty.")
+        market_price = self._latest_price(result)
+        event_timestamp = timestamp if timestamp is not None else result.index[-1]
+        snapshot = self.paper_broker.account_snapshot(mark_price=market_price)
+        protection = self.risk_engine.observe_equity(snapshot["equity"], event_timestamp)
+        quantity = self.paper_broker.position_quantity
+        if quantity <= 0:
+            return self._record(
+                event_timestamp, "RECONCILIATION", -1, "NO_ACTION",
+                "Post-recovery reconciliation found no long position to close.",
+                market_price=market_price, risk_status=protection.status,
+            )
+        order = self.paper_broker.submit_market_order("SELL", quantity, timestamp=event_timestamp)
+        fill = self.paper_broker.execute_order(order.order_id, market_price, timestamp=event_timestamp)
+        return self._record(
+            event_timestamp, "ORDER", -1, fill.status, reason, order_id=fill.order_id,
+            quantity=fill.quantity, market_price=market_price, fill_price=fill.fill_price,
+            risk_status=protection.status,
+        )
+
     def process_market_event(self, data, stop_price=None, target_price=None, timestamp=None):
         """Process one deterministic market event using data available so far."""
         result = self.strategy_engine.run(data)
@@ -194,15 +223,18 @@ class PaperTradingSession:
             raise ValueError("Session market events must have strictly increasing timestamps.")
         return ts
 
-    def process(self, data, stop_price=None, target_price=None, timestamp=None):
+    def process(self, data, stop_price=None, target_price=None, timestamp=None, reconcile_long_exit=False):
         if data is None or getattr(data, "empty", True):
             raise ValueError("Session market data cannot be empty.")
         event_timestamp = timestamp if timestamp is not None else data.index[-1]
         ts = self._validate_timestamp(event_timestamp)
 
-        event = self.engine.process_market_event(
-            data, stop_price=stop_price, target_price=target_price, timestamp=ts
-        )
+        if reconcile_long_exit:
+            event = self.engine.reconcile_long_exit(data, timestamp=ts)
+        else:
+            event = self.engine.process_market_event(
+                data, stop_price=stop_price, target_price=target_price, timestamp=ts
+            )
         account = self.engine.paper_broker.account_snapshot(mark_price=event.market_price)
         snapshot = PaperSessionSnapshot(
             sequence=len(self._snapshots) + 1,

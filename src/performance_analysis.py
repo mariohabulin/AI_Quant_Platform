@@ -137,8 +137,7 @@ class PerformanceAnalyzer:
             drawdown = (
                (peak_equity - current_equity)
                / peak_equity
-            ) * 100
-
+            ) * 10
             if drawdown > max_drawdown:
                max_drawdown = drawdown
 

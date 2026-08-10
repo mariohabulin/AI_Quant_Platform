@@ -97,6 +97,7 @@ class ForwardContinuityStore:
             "runtime": runtime.export_checkpoint(),
             "strategy_history": self._frame_to_records(runtime.session._history),
             "aggregator": aggregator.export_state(),
+            "pending_reconciliation": getattr(runtime, "_forward_pending_reconciliation", None),
         }
         self.path.parent.mkdir(parents=True, exist_ok=True)
         temporary = self.path.with_suffix(self.path.suffix + ".tmp")
@@ -116,6 +117,7 @@ class ForwardContinuityStore:
         runtime.restore(payload["runtime"])
         runtime.session._history = self._records_to_frame(payload.get("strategy_history", []))
         aggregator.restore_state(payload.get("aggregator", {}))
+        runtime._forward_pending_reconciliation = payload.get("pending_reconciliation")
         return True
 
 
@@ -251,6 +253,7 @@ def run_forward_paper(
     transport = transport or CoinbasePublicWebSocketTransport()
     aggregator = CoinbaseOneMinuteTradeAggregator(product_id="BTC-USD")
     runtime = build_live_paper_runtime()
+    runtime._forward_pending_reconciliation = None
     continuity = ForwardContinuityStore(state_path)
     resumed = continuity.load_into(runtime, aggregator) if resume else False
     if resumed:
@@ -348,6 +351,24 @@ def run_forward_paper(
                         complete_type = "STARTUP_CATCHUP_COMPLETE" if startup_catchup else "REST_BACKFILL_COMPLETE"
                         for recovered_bar in recovered:
                             account = _apply_rest_backfill_bar(runtime, recovered_bar)
+                            recovery_diagnostics = _strategy_activity_diagnostics(runtime)
+                            if (
+                                account["position_quantity"] > 0
+                                and recovery_diagnostics.get("signal") == -1
+                                and runtime._forward_pending_reconciliation is None
+                            ):
+                                runtime._forward_pending_reconciliation = {
+                                    "kind": "LONG_EXIT",
+                                    "detected_at": pd.Timestamp(recovered_bar.timestamp).isoformat(),
+                                    "strategy": recovery_diagnostics.get("strategy"),
+                                    "boundary_kind": boundary_kind,
+                                }
+                                audit.append({
+                                    "type": "RECOVERY_CROSSOVER_DETECTED",
+                                    **runtime._forward_pending_reconciliation,
+                                    "position": account["position_quantity"],
+                                    "real_orders": 0,
+                                })
                             audit.append({
                                 "type": audit_type,
                                 "timestamp": recovered_bar.timestamp,
@@ -390,7 +411,15 @@ def run_forward_paper(
                     rebase_boundary_pending = False
                     rebase_boundary_kind = None
 
-            snapshot = runtime.process_provider_message(bar, received_at=received_at)
+            pending_reconciliation = runtime._forward_pending_reconciliation
+            reconcile_long_exit = bool(
+                pending_reconciliation
+                and pending_reconciliation.get("kind") == "LONG_EXIT"
+                and runtime.session.engine.paper_broker.position_quantity > 0
+            )
+            snapshot = runtime.process_provider_message(
+                bar, received_at=received_at, reconcile_long_exit=reconcile_long_exit
+            )
             if snapshot is None:
                 session_rejected += 1
                 record = {
@@ -407,6 +436,20 @@ def run_forward_paper(
                 if runtime.stop_requested:
                     break
                 continue
+
+            if reconcile_long_exit:
+                event = runtime.session.engine.event_history[-1]
+                audit.append({
+                    "type": "POST_RECOVERY_RECONCILIATION",
+                    "detected_at": pending_reconciliation.get("detected_at"),
+                    "executed_at": snapshot.timestamp,
+                    "strategy": pending_reconciliation.get("strategy"),
+                    "status": event.status,
+                    "order_id": event.order_id,
+                    "fill_price": event.fill_price,
+                    "real_orders": 0,
+                })
+                runtime._forward_pending_reconciliation = None
 
             session_processed += 1
             event = runtime.session.engine.event_history[-1]
