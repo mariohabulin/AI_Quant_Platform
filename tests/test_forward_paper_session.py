@@ -350,6 +350,56 @@ def test_replay_classifier_does_not_mutate_runtime_health():
     assert after.consecutive_failures == before.consecutive_failures
 
 
+
+def test_reconnect_boundary_recovers_exactly_one_missing_minute(tmp_path):
+    """A 2-minute live timestamp jump means one full 1m bar is missing."""
+    from src.coinbase_live_paper import build_live_paper_runtime
+    from src.coinbase_market_data import CoinbaseOneMinuteTradeAggregator
+    from src.forward_paper_session import ForwardContinuityStore
+
+    state = tmp_path / "state.json"
+    runtime = build_live_paper_runtime()
+    runtime.realtime_feed._last_timestamp = pd.Timestamp("2026-08-10T11:33:00Z")
+    runtime.realtime_feed._accepted = 1
+    runtime.session.session._last_timestamp = pd.Timestamp("2026-08-10T11:33:00Z")
+    runtime._processed = 1
+    runtime._last_event_at = pd.Timestamp("2026-08-10T11:33:00Z")
+    ForwardContinuityStore(state).save(runtime, CoinbaseOneMinuteTradeAggregator())
+
+    messages = [
+        {"channel": "_coinbase_transport", "event": "DISCONNECTED", "attempt": 1, "reason": "test"},
+        {"channel": "_coinbase_transport", "event": "RECONNECTED", "reconnect_count": 1},
+        trade_message("2026-08-10T11:35:10Z", "100"),
+        trade_message("2026-08-10T11:36:10Z", "101"),
+        trade_message("2026-08-10T11:37:10Z", "102"),
+    ]
+    recovery = FakeGapRecovery()
+    audit = tmp_path / "one_minute_gap.jsonl"
+    result = run_forward_paper(
+        transport=messages,
+        max_processed_bars=1,
+        audit_path=audit,
+        output=lambda _: None,
+        now_fn=lambda: pd.Timestamp("2026-08-10T11:36:20Z"),
+        state_path=state,
+        gap_recovery=recovery,
+    )
+
+    rows = [json.loads(line) for line in audit.read_text(encoding="utf-8").splitlines()]
+    backfill = [row for row in rows if row["type"] == "REST_BACKFILL_BAR"]
+    paper = [row for row in rows if row["type"] == "PAPER_EVENT"]
+
+    assert recovery.calls == [(
+        pd.Timestamp("2026-08-10T11:33:00Z"),
+        pd.Timestamp("2026-08-10T11:35:00Z"),
+    )]
+    assert [row["timestamp"] for row in backfill] == ["2026-08-10T11:34:00+00:00"]
+    assert paper[0]["snapshot"]["timestamp"] == "2026-08-10T11:35:00+00:00"
+    assert result.processed_events == 1
+    assert result.rejected_events == 0
+    assert result.paper_orders == 0
+
+
 def test_forward_session_fails_closed_when_rest_backfill_is_incomplete(tmp_path):
     audit = tmp_path / "backfill_fatal.jsonl"
     messages = [

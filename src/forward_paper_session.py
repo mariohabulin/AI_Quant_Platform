@@ -292,7 +292,16 @@ def run_forward_paper(
             if rebase_boundary_pending:
                 last_accepted = runtime.realtime_feed._last_timestamp
                 gap = None if last_accepted is None else pd.Timestamp(bar.timestamp) - pd.Timestamp(last_accepted)
-                if last_accepted is not None and gap is not None and gap > runtime.realtime_feed.max_gap:
+                # A stream boundary requires exact 1m continuity, not merely
+                # compliance with the normal live-feed max-gap tolerance. If the
+                # first completed live bar is two minutes after the accepted
+                # watermark, exactly one minute is missing and must be REST
+                # recovered before trading resumes.
+                if (
+                    last_accepted is not None
+                    and gap is not None
+                    and gap > runtime.realtime_feed.timeframe
+                ):
                     boundary_kind = rebase_boundary_kind or "RESTART"
                     try:
                         startup_catchup = boundary_kind == "RESTART" and hasattr(gap_recovery, "recover_startup")

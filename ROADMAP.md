@@ -234,7 +234,8 @@ After single-symbol operational stability and extended forward evidence are prov
 - [x] Catch up Feed/EMA/Risk/mark state without retroactively executing historical signals.
 - [x] Audit every recovered bar and completed/failed recovery boundary.
 - [x] Fail closed with `BACKFILL_FATAL` when verified continuity cannot be restored.
-- [ ] Prove live hybrid recovery on a supervised reconnect gap.
+- [x] Enforce exact one-minute continuity at reconnect/restart boundaries so a 2m timestamp delta recovers the single missing 1m candle instead of passing via normal live `max_gap` tolerance.
+- [x] Prove live hybrid recovery on supervised reconnect gaps; REST backfill restored missing history with zero recovery failures.
 - [ ] Repeat the 60-bar operational-quality gate and require near-contiguous market-time coverage before increasing soak duration.
 - Deferred: provider redundancy across independent venues, broad multi-symbol backfill orchestration and cloud 24/7 deployment. Reason: first prove one-symbol hybrid continuity end-to-end.
 
@@ -244,4 +245,4 @@ After single-symbol operational stability and extended forward evidence are prov
 - [x] Permit bounded startup catch-up (default 7 days) through chunked Coinbase REST 1m retrieval.
 - [x] Require exact minute continuity and forbid retroactive orders during catch-up.
 - [x] Audit startup catch-up separately and include it in continuity diagnostics.
-- [ ] Live evidence gate: recover the observed overnight gap, then complete the 60-bar Hybrid operational gate.
+- [x] Live evidence gate: recovered a 911-bar overnight gap with exact continuity, then completed the 60-bar Hybrid operational gate.

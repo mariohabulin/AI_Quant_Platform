@@ -75,3 +75,6 @@ The 60-bar operational-quality run completed functionally but exposed persistent
 
 ### Startup Historical Catch-up v1
 Hybrid recovery exposed a separate restart boundary: a supervised session resumed after an 896-minute offline gap, correctly refusing to treat it as a normal <=300-minute reconnect backfill. Add a startup-only bounded historical catch-up path (default maximum seven days) that uses the existing chunked Coinbase REST candle client, requires exact minute coverage, updates feed/strategy/risk/account state without retroactive trading, and resumes decisions only on a fresh live bar. The normal reconnect recovery limit remains 300 minutes and unchanged. Oversized or incomplete startup recovery remains fail-closed.
+### Exact One-Minute Boundary Recovery
+The first 60-bar Hybrid gate completed 60/60 with `BACKFILL failures=0` but diagnostics exposed one remaining minute of continuity loss: accepted `11:33`, reconnect, then live `11:35` with no `11:34` recovery record. Root cause: reconnect recovery was triggered only when the timestamp delta exceeded normal Feed Health `max_gap` (2m), so a 2m delta could hide exactly one missing 1m bar. At restart/reconnect boundaries, require exact timeframe continuity instead: any delta greater than 1m invokes REST recovery before trading resumes. Normal live Feed Health tolerance remains unchanged.
+

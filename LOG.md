@@ -1054,3 +1054,10 @@ The first supervised forward-paper run produced a real-data BUY and ended with a
 
 ## Startup Historical Catch-up v1
 A 60-bar Hybrid gate attempted after overnight downtime stopped safely before trading because the persisted-to-live gap was 896 minutes, exceeding the normal 300-minute reconnect limit. This was classified as a different operational boundary rather than solved by weakening the reconnect limit. Added startup-only bounded historical catch-up using the already chunked REST client, exact minute validation, non-tradable state reconstruction, separate audit evidence, and a seven-day default startup ceiling. Normal reconnect recovery remains capped at 300 minutes.
+
+## 2026-08-10 — Exact One-Minute Boundary Recovery
+- Hybrid 60-bar live evidence completed 60/60 with REST recovery and a real paper BUY, but operational diagnostics reported `observed_gap=1.0m`.
+- Audit isolation proved the missing minute was `11:34`: the last accepted live bar was `11:33`, reconnect occurred, and trading resumed on `11:35` without a REST backfill record for `11:34`.
+- Root cause was an off-by-policy boundary: recovery started only when the live timestamp delta was greater than Feed Health `max_gap=2m`; a 2m delta therefore bypassed recovery even though it represents one missing 1m candle.
+- Reconnect/restart recovery now uses strict timeframe continuity (`gap > 1m`) while normal live Feed Health tolerance remains unchanged.
+- Added a regression test reproducing `11:33 -> reconnect -> 11:35`, requiring REST recovery of exactly `11:34` before `11:35` can be processed.
