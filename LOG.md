@@ -1064,3 +1064,12 @@ A 60-bar Hybrid gate attempted after overnight downtime stopped safely before tr
 
 ## 2026-08-10 - Post-Recovery Position Reconciliation v1
 Forward-paper evidence isolated a real lifecycle edge case rather than a strategy-frequency issue. The current long was opened live at 11:20 UTC. Offline reconstruction of audited bars found EMA20 crossing below EMA50 at 12:27 UTC inside startup catch-up. Because recovery bars intentionally cannot trade, the event-based SELL disappeared once live state resumed already BELOW. Added durable recovery-transition detection and first-fresh-live-bar reconciliation: historical bars remain non-actionable, the pending exit survives checkpoints, execution occurs only at current live price/time, and REAL execution remains impossible. Added regression tests around persistence and non-retroactive exit timing.
+
+
+## 2026-08-10 — Hybrid 60-Bar Verification Gate — PASS WITH TRANSPORT WARNING
+- Completed the fresh supervised gate with 60/60 processed, 0 rejected, `MAX_BARS`, `audit_complete=True`, hybrid recovery failures=0, `observed_gap=0.0m`, and `REAL_orders=0`.
+- Preserved exact market-time continuity across a 306-minute span by reconstructing 191 reconnect REST backfill bars plus 56 startup catch-up bars; recovery bars remained non-retroactive/non-tradable.
+- Post-Recovery Position Reconciliation activated in forward evidence: the recovery-detected bearish transition produced a current-live-time paper SELL rather than a historical fill.
+- Strategy Behavior Diagnostics v2 observed both regimes and transitions; a later bullish BUY signal was rejected by Risk Engine because the minimum reward/risk requirement was not met.
+- Transport remained materially unstable on the local Windows environment: 16 disconnects, 12 reconnects (75% success), ~2697.2s total outage and ~1967.4s maximum outage, with RESET and DNS causes.
+- Classification: continuity/safety gate PASS; transport quality WARNING. Local WebSocket behavior is not accepted as production-grade. Controlled cloud transport validation plus monitoring/alerting remains required before unattended 24/7 live deployment.

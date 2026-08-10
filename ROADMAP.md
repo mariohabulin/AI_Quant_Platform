@@ -255,11 +255,14 @@ After single-symbol operational stability and extended forward evidence are prov
 - [ ] Validate diagnostics on a short supervised live-paper probe.
 - [ ] Do not tune strategy thresholds until observed behavior is explained with evidence.
 
-### Pending Hybrid 60-Bar Verification Gate
-- [ ] Run a fresh supervised 60-bar session after the exact one-minute recovery fix and diagnostics validation.
-- [ ] Require: 60/60 processed, `MAX_BARS`, `audit_complete=True`, hybrid failures=0, `observed_gap=0.0m`, `REAL_orders=0`.
-- [ ] Verify state continuity through reconnect/backfill and zero retroactive orders from recovery bars.
-- [ ] After PASS, progress to multi-hour -> overnight -> 24h -> multi-day soak tests.
+### Hybrid 60-Bar Verification Gate — PASS WITH TRANSPORT WARNING
+- [x] Run a fresh supervised 60-bar session after the exact one-minute recovery fix and diagnostics validation.
+- [x] Require: 60/60 processed, `MAX_BARS`, `audit_complete=True`, hybrid failures=0, `observed_gap=0.0m`, `REAL_orders=0`.
+- [x] Verify state continuity through reconnect/backfill and zero retroactive orders from recovery bars.
+- [x] Record recovery evidence: 191 reconnect backfill bars + 56 startup catch-up bars across a 306-minute market span with zero observed market gap.
+- [x] Record transport warning: 16 disconnects, 12 reconnects (75% success), ~2697.2s total outage, ~1967.4s max outage; causes included RESET and DNS.
+- [ ] Progress to multi-hour -> overnight -> 24h -> multi-day soak tests with transport quality as an explicit acceptance dimension.
+- [ ] Before unattended 24/7 live deployment, validate transport in the controlled cloud runtime and add operational monitoring/alerting.
 
 ### Post-Recovery Position Reconciliation v1
 - [x] Prove the lifecycle failure from forward evidence: LONG open before downtime; EMA20/EMA50 `ABOVE -> BELOW` occurs during startup catch-up; no retroactive SELL is allowed; later live bars are already BELOW/HOLD.
@@ -273,6 +276,6 @@ After single-symbol operational stability and extended forward evidence are prov
 - [x] Extend the read-only forward report with live ABOVE/BELOW transition counts and consecutive regime-run lengths.
 - [x] Separate live strategy transitions from audited recovery crossovers so recovery evidence is not mistaken for executable live activity.
 - [x] Summarize bars spent with an open position versus flat and mark-to-market equity change across observed open-position bars.
-- [ ] Validate v2 on a fresh supervised forward-paper sample before any EMA threshold/timeframe tuning.
-- [ ] Keep the Pending Hybrid 60-Bar Verification Gate mandatory before longer soak testing.
+- [x] Validate v2 on a fresh supervised 60-bar forward-paper sample before any EMA threshold/timeframe tuning.
+- [x] Complete the Hybrid 60-Bar Verification Gate before longer soak testing; result: PASS WITH TRANSPORT WARNING.
 - [ ] Defer multi-timeframe swing decision architecture until infrastructure/continuity gates pass; 1m remains the fast infrastructure validation clock, not the final trading-policy commitment.
