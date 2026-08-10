@@ -211,3 +211,48 @@ def test_report_explains_strategy_behavior_without_changing_policy(tmp_path):
     text = format_forward_session_report(report)
     assert "strategy_behavior: strategy=ema_crossover" in text
     assert "decision_reasons:" in text
+
+
+def test_report_strategy_behavior_v2_tracks_transitions_runs_recovery_and_position(tmp_path):
+    audit = tmp_path / "strategy_behavior_v2.jsonl"
+    rows = [
+        {"type": "SESSION_START", "at": "2026-08-10T14:00:00+00:00"},
+        {"type": "PAPER_EVENT", "paper_orders": 0, "real_orders": 0,
+         "snapshot": {"timestamp": "2026-08-10T14:00:00+00:00", "equity": 5000.0, "position_quantity": 0.0},
+         "event": {"signal": 0, "status": "NO_ACTION", "risk_status": "ALLOW", "reason": "HOLD"},
+         "strategy_diagnostics": {"strategy": "ema_crossover", "relation": "BELOW", "spread_bps": -2.0}},
+        {"type": "PAPER_EVENT", "paper_orders": 1, "real_orders": 0,
+         "snapshot": {"timestamp": "2026-08-10T14:01:00+00:00", "equity": 5001.0, "position_quantity": 0.01},
+         "event": {"signal": 1, "status": "FILLED", "risk_status": "ALLOW", "reason": "BUY"},
+         "strategy_diagnostics": {"strategy": "ema_crossover", "relation": "ABOVE", "spread_bps": 1.0}},
+        {"type": "PAPER_EVENT", "paper_orders": 1, "real_orders": 0,
+         "snapshot": {"timestamp": "2026-08-10T14:02:00+00:00", "equity": 5003.0, "position_quantity": 0.01},
+         "event": {"signal": 0, "status": "NO_ACTION", "risk_status": "ALLOW", "reason": "HOLD"},
+         "strategy_diagnostics": {"strategy": "ema_crossover", "relation": "ABOVE", "spread_bps": 2.0}},
+        {"type": "RECOVERY_CROSSOVER_DETECTED", "kind": "LONG_EXIT", "boundary_kind": "RESTART",
+         "strategy": "ema_crossover", "position": 0.01, "real_orders": 0},
+        {"type": "PAPER_EVENT", "paper_orders": 1, "real_orders": 0,
+         "snapshot": {"timestamp": "2026-08-10T14:03:00+00:00", "equity": 4999.0, "position_quantity": 0.01},
+         "event": {"signal": 0, "status": "NO_ACTION", "risk_status": "ALLOW", "reason": "HOLD"},
+         "strategy_diagnostics": {"strategy": "ema_crossover", "relation": "BELOW", "spread_bps": -1.0}},
+        {"type": "SESSION_END", "reason": "MAX_BARS", "processed_events": 4, "rejected_events": 0,
+         "paper_orders": 1, "equity": 4999.0, "position": 0.01, "real_orders": 0},
+    ]
+    write_rows(audit, rows)
+    report = build_forward_session_report(audit)
+    assert report.live_relation_transitions == {"ABOVE->BELOW": 1, "BELOW->ABOVE": 1}
+    assert report.live_crossovers == 2
+    assert report.recovery_crossovers == 1
+    assert report.recovery_crossover_kinds == {"RESTART": 1}
+    assert report.max_above_run_bars == 2
+    assert report.max_below_run_bars == 1
+    assert report.current_relation == "BELOW"
+    assert report.current_relation_run_bars == 1
+    assert report.bars_with_open_position == 3
+    assert report.bars_flat == 1
+    assert report.open_position_equity_change == pytest.approx(-2.0)
+    text = format_forward_session_report(report)
+    assert "strategy_transitions: live=2" in text
+    assert "recovery=1" in text
+    assert "strategy_runs: max_ABOVE=2 max_BELOW=1 current=BELOW:1" in text
+    assert "position_behavior: open_bars=3 flat_bars=1 open_equity_change=-2.00" in text

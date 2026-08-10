@@ -58,6 +58,17 @@ class ForwardSessionReport:
     strategy_spread_bps_max: float
     strategy_spread_bps_avg: float
     event_reason_counts: dict
+    live_relation_transitions: dict
+    live_crossovers: int
+    recovery_crossovers: int
+    recovery_crossover_kinds: dict
+    max_above_run_bars: int
+    max_below_run_bars: int
+    current_relation: str
+    current_relation_run_bars: int
+    bars_with_open_position: int
+    bars_flat: int
+    open_position_equity_change: float
 
 
 def _read_rows(path):
@@ -196,6 +207,46 @@ def build_forward_session_report(audit_path="runtime/forward_paper_audit.jsonl")
         str(event.get("reason") or "UNKNOWN") for event in events
     ).items()))
 
+    relations = [
+        str(row.get("strategy_diagnostics", {}).get("relation"))
+        for row in paper
+        if isinstance(row.get("strategy_diagnostics"), dict)
+        and row.get("strategy_diagnostics", {}).get("relation") in {"ABOVE", "BELOW"}
+    ]
+    relation_transitions = Counter()
+    for previous, current in zip(relations, relations[1:]):
+        if previous != current:
+            relation_transitions[f"{previous}->{current}"] += 1
+    live_relation_transitions = dict(sorted(relation_transitions.items()))
+    live_crossovers = sum(relation_transitions.values())
+
+    recovery_crossover_rows = [row for row in rows if row.get("type") == "RECOVERY_CROSSOVER_DETECTED"]
+    recovery_crossovers = len(recovery_crossover_rows)
+    recovery_crossover_kinds = dict(sorted(Counter(
+        str(row.get("boundary_kind") or "UNKNOWN") for row in recovery_crossover_rows
+    ).items()))
+
+    max_runs = {"ABOVE": 0, "BELOW": 0}
+    current_relation = relations[-1] if relations else "UNKNOWN"
+    current_relation_run_bars = 0
+    run_relation = None
+    run_length = 0
+    for relation in relations:
+        if relation == run_relation:
+            run_length += 1
+        else:
+            run_relation = relation
+            run_length = 1
+        max_runs[relation] = max(max_runs[relation], run_length)
+    if relations:
+        current_relation_run_bars = run_length
+
+    position_quantities = [float(snapshot.get("position_quantity", 0.0)) for snapshot in snapshots]
+    bars_with_open_position = sum(abs(quantity) > 0.0 for quantity in position_quantities)
+    bars_flat = len(position_quantities) - bars_with_open_position
+    open_equities = [equity for equity, quantity in zip(equities, position_quantities) if abs(quantity) > 0.0]
+    open_position_equity_change = (open_equities[-1] - open_equities[0]) if open_equities else 0.0
+
     processed = int(end.get("processed_events", len(paper)))
     rejected_count = int(end.get("rejected_events", len(rejected)))
     complete = (
@@ -251,6 +302,17 @@ def build_forward_session_report(audit_path="runtime/forward_paper_audit.jsonl")
         strategy_spread_bps_max=strategy_spread_bps_max,
         strategy_spread_bps_avg=strategy_spread_bps_avg,
         event_reason_counts=event_reason_counts,
+        live_relation_transitions=live_relation_transitions,
+        live_crossovers=live_crossovers,
+        recovery_crossovers=recovery_crossovers,
+        recovery_crossover_kinds=recovery_crossover_kinds,
+        max_above_run_bars=max_runs["ABOVE"],
+        max_below_run_bars=max_runs["BELOW"],
+        current_relation=current_relation,
+        current_relation_run_bars=current_relation_run_bars,
+        bars_with_open_position=bars_with_open_position,
+        bars_flat=bars_flat,
+        open_position_equity_change=open_position_equity_change,
     )
 
 
@@ -268,6 +330,9 @@ def format_forward_session_report(report):
         f"continuity: market_span={report.market_span_minutes:.1f}m expected_contiguous={report.expected_contiguous_minutes:.1f}m observed_gap={report.observed_gap_minutes:.1f}m",
         f"activity: signal_rate={report.signal_activity_rate:.1%} risk_reject_rate={report.risk_rejection_rate:.1%} reject_reasons={report.risk_rejection_reasons}",
         f"strategy_behavior: strategy={report.strategy_name} relation={report.strategy_relation_counts} spread_bps[min/avg/max]={report.strategy_spread_bps_min:.2f}/{report.strategy_spread_bps_avg:.2f}/{report.strategy_spread_bps_max:.2f}",
+        f"strategy_transitions: live={report.live_crossovers} {report.live_relation_transitions} recovery={report.recovery_crossovers} {report.recovery_crossover_kinds}",
+        f"strategy_runs: max_ABOVE={report.max_above_run_bars} max_BELOW={report.max_below_run_bars} current={report.current_relation}:{report.current_relation_run_bars}",
+        f"position_behavior: open_bars={report.bars_with_open_position} flat_bars={report.bars_flat} open_equity_change={report.open_position_equity_change:.2f}",
         f"decision_reasons: {report.event_reason_counts}",
         f"final_position={report.final_position:.8f} end_reason={report.end_reason}",
     ])

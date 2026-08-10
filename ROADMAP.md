@@ -268,3 +268,11 @@ After single-symbol operational stability and extended forward evidence are prov
 - [x] On the first fresh live bar, close the existing long at the current paper price/time through the existing broker/risk-observation path; never replay the historical fill.
 - [x] Audit `RECOVERY_CROSSOVER_DETECTED` and `POST_RECOVERY_RECONCILIATION`; preserve `REAL orders=0`.
 - [x] Add regression coverage for persistence, non-retroactive recovery, and first-live-bar exit execution.
+
+### Strategy Behavior Diagnostics v2
+- [x] Extend the read-only forward report with live ABOVE/BELOW transition counts and consecutive regime-run lengths.
+- [x] Separate live strategy transitions from audited recovery crossovers so recovery evidence is not mistaken for executable live activity.
+- [x] Summarize bars spent with an open position versus flat and mark-to-market equity change across observed open-position bars.
+- [ ] Validate v2 on a fresh supervised forward-paper sample before any EMA threshold/timeframe tuning.
+- [ ] Keep the Pending Hybrid 60-Bar Verification Gate mandatory before longer soak testing.
+- [ ] Defer multi-timeframe swing decision architecture until infrastructure/continuity gates pass; 1m remains the fast infrastructure validation clock, not the final trading-policy commitment.
