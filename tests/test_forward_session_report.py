@@ -183,3 +183,31 @@ def test_report_includes_hybrid_rest_backfill_in_continuity_metrics(tmp_path):
     assert report.expected_contiguous_minutes == pytest.approx(3.0)
     assert report.observed_gap_minutes == pytest.approx(0.0)
     assert "hybrid_recovery: backfill_bars=2 startup_catchup_bars=0 failures=0" in format_forward_session_report(report)
+
+
+def test_report_explains_strategy_behavior_without_changing_policy(tmp_path):
+    audit = tmp_path / "strategy_behavior.jsonl"
+    rows = [
+        {"type": "SESSION_START", "at": "2026-08-10T13:00:00+00:00"},
+        {"type": "PAPER_EVENT", "paper_orders": 0, "real_orders": 0,
+         "snapshot": {"timestamp": "2026-08-10T13:00:00+00:00", "equity": 5000.0, "position_quantity": 0.0},
+         "event": {"signal": 0, "status": "NO_ACTION", "risk_status": "ALLOW", "reason": "Strategy emitted HOLD."},
+         "strategy_diagnostics": {"strategy": "ema_crossover", "relation": "BELOW", "spread_bps": -2.0}},
+        {"type": "PAPER_EVENT", "paper_orders": 1, "real_orders": 0,
+         "snapshot": {"timestamp": "2026-08-10T13:01:00+00:00", "equity": 5001.0, "position_quantity": 0.01},
+         "event": {"signal": 1, "status": "FILLED", "risk_status": "REDUCE", "reason": "Position reduced."},
+         "strategy_diagnostics": {"strategy": "ema_crossover", "relation": "ABOVE", "spread_bps": 1.0}},
+        {"type": "SESSION_END", "reason": "MAX_BARS", "processed_events": 2, "rejected_events": 0,
+         "paper_orders": 1, "equity": 5001.0, "position": 0.01, "real_orders": 0},
+    ]
+    write_rows(audit, rows)
+    report = build_forward_session_report(audit)
+    assert report.strategy_name == "ema_crossover"
+    assert report.strategy_relation_counts == {"ABOVE": 1, "BELOW": 1}
+    assert report.strategy_spread_bps_min == pytest.approx(-2.0)
+    assert report.strategy_spread_bps_avg == pytest.approx(-0.5)
+    assert report.strategy_spread_bps_max == pytest.approx(1.0)
+    assert report.event_reason_counts == {"Position reduced.": 1, "Strategy emitted HOLD.": 1}
+    text = format_forward_session_report(report)
+    assert "strategy_behavior: strategy=ema_crossover" in text
+    assert "decision_reasons:" in text

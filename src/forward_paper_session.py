@@ -199,6 +199,41 @@ def _apply_rest_backfill_bar(runtime, bar):
     return account
 
 
+def _strategy_activity_diagnostics(runtime):
+    """Return read-only diagnostics for the current strategy state.
+
+    Diagnostics explain observed signal behavior; they never alter strategy, risk,
+    broker, feed-health, or execution decisions.
+    """
+    engine = runtime.session.engine.strategy_engine
+    result = engine.run(runtime.session._history)
+    strategy = engine.strategy
+    latest = result.iloc[-1]
+    diagnostics = {
+        "strategy": engine.strategy_name,
+        "signal": int(latest["Signal"]),
+    }
+    fast_period = getattr(strategy, "fast_period", None)
+    slow_period = getattr(strategy, "slow_period", None)
+    if fast_period is not None and slow_period is not None:
+        fast_col = f"EMA_{fast_period}"
+        slow_col = f"EMA_{slow_period}"
+        if fast_col in result.columns and slow_col in result.columns:
+            fast = float(latest[fast_col])
+            slow = float(latest[slow_col])
+            spread = fast - slow
+            diagnostics.update({
+                "fast_period": int(fast_period),
+                "slow_period": int(slow_period),
+                "fast_value": fast,
+                "slow_value": slow,
+                "spread": spread,
+                "spread_bps": (spread / slow * 10000.0) if slow else 0.0,
+                "relation": "ABOVE" if spread > 0 else "BELOW" if spread < 0 else "EQUAL",
+            })
+    return diagnostics
+
+
 def run_forward_paper(
     transport=None,
     max_processed_bars=60,
@@ -380,6 +415,7 @@ def run_forward_paper(
                 "type": "PAPER_EVENT",
                 "snapshot": asdict(snapshot),
                 "event": asdict(event),
+                "strategy_diagnostics": _strategy_activity_diagnostics(runtime),
                 "paper_orders": len(broker.order_history),
                 "real_orders": 0,
             }

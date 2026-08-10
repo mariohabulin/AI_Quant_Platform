@@ -52,6 +52,12 @@ class ForwardSessionReport:
     signal_activity_rate: float
     risk_rejection_rate: float
     risk_rejection_reasons: dict
+    strategy_name: str
+    strategy_relation_counts: dict
+    strategy_spread_bps_min: float
+    strategy_spread_bps_max: float
+    strategy_spread_bps_avg: float
+    event_reason_counts: dict
 
 
 def _read_rows(path):
@@ -175,6 +181,21 @@ def build_forward_session_report(audit_path="runtime/forward_paper_audit.jsonl")
         str(event.get("reason") or "UNKNOWN") for event in risk_rejections
     ).items()))
 
+    diagnostics = [row.get("strategy_diagnostics", {}) for row in paper]
+    diagnostics = [item for item in diagnostics if isinstance(item, dict) and item]
+    strategy_names = [str(item.get("strategy")) for item in diagnostics if item.get("strategy")]
+    strategy_name = strategy_names[-1] if strategy_names else "UNKNOWN"
+    strategy_relation_counts = dict(sorted(Counter(
+        str(item.get("relation")) for item in diagnostics if item.get("relation")
+    ).items()))
+    spread_bps = [float(item["spread_bps"]) for item in diagnostics if item.get("spread_bps") is not None]
+    strategy_spread_bps_min = min(spread_bps, default=0.0)
+    strategy_spread_bps_max = max(spread_bps, default=0.0)
+    strategy_spread_bps_avg = sum(spread_bps) / len(spread_bps) if spread_bps else 0.0
+    event_reason_counts = dict(sorted(Counter(
+        str(event.get("reason") or "UNKNOWN") for event in events
+    ).items()))
+
     processed = int(end.get("processed_events", len(paper)))
     rejected_count = int(end.get("rejected_events", len(rejected)))
     complete = (
@@ -224,6 +245,12 @@ def build_forward_session_report(audit_path="runtime/forward_paper_audit.jsonl")
         signal_activity_rate=signal_activity_rate,
         risk_rejection_rate=risk_rejection_rate,
         risk_rejection_reasons=risk_rejection_reasons,
+        strategy_name=strategy_name,
+        strategy_relation_counts=strategy_relation_counts,
+        strategy_spread_bps_min=strategy_spread_bps_min,
+        strategy_spread_bps_max=strategy_spread_bps_max,
+        strategy_spread_bps_avg=strategy_spread_bps_avg,
+        event_reason_counts=event_reason_counts,
     )
 
 
@@ -240,6 +267,8 @@ def format_forward_session_report(report):
         f"hybrid_recovery: backfill_bars={report.rest_backfill_bars} startup_catchup_bars={report.startup_catchup_bars} failures={report.rest_backfill_failures}",
         f"continuity: market_span={report.market_span_minutes:.1f}m expected_contiguous={report.expected_contiguous_minutes:.1f}m observed_gap={report.observed_gap_minutes:.1f}m",
         f"activity: signal_rate={report.signal_activity_rate:.1%} risk_reject_rate={report.risk_rejection_rate:.1%} reject_reasons={report.risk_rejection_reasons}",
+        f"strategy_behavior: strategy={report.strategy_name} relation={report.strategy_relation_counts} spread_bps[min/avg/max]={report.strategy_spread_bps_min:.2f}/{report.strategy_spread_bps_avg:.2f}/{report.strategy_spread_bps_max:.2f}",
+        f"decision_reasons: {report.event_reason_counts}",
         f"final_position={report.final_position:.8f} end_reason={report.end_reason}",
     ])
 

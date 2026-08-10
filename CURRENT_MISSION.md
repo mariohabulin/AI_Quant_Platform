@@ -78,3 +78,10 @@ Hybrid recovery exposed a separate restart boundary: a supervised session resume
 ### Exact One-Minute Boundary Recovery
 The first 60-bar Hybrid gate completed 60/60 with `BACKFILL failures=0` but diagnostics exposed one remaining minute of continuity loss: accepted `11:33`, reconnect, then live `11:35` with no `11:34` recovery record. Root cause: reconnect recovery was triggered only when the timestamp delta exceeded normal Feed Health `max_gap` (2m), so a 2m delta could hide exactly one missing 1m bar. At restart/reconnect boundaries, require exact timeframe continuity instead: any delta greater than 1m invokes REST recovery before trading resumes. Normal live Feed Health tolerance remains unchanged.
 
+
+
+### Signal Activity & Strategy Behavior Analysis v1
+Current diagnostic milestone: explain live-paper signal behavior before changing any strategy threshold. Persist read-only per-bar strategy diagnostics (including EMA relationship/spread for the active EMA crossover strategy) and summarize decision reasons in the forward-session report. This milestone must not alter Strategy Engine decisions, Risk Engine policy, Feed Health, PaperBroker execution, or the structural `REAL_orders=0` lock.
+
+### Pending Hybrid 60-Bar Verification Gate
+After the exact one-minute recovery fix and Signal Activity diagnostics are validated, execute a fresh supervised 60-bar forward-paper session. Acceptance requires 60/60 processed, `MAX_BARS`, `audit_complete=True`, hybrid recovery failures=0, `observed_gap=0.0m`, `REAL_orders=0`, continuity preserved through reconnect/backfill, and no retroactive orders from REST/startup catch-up bars. Only after PASS increase duration toward multi-hour, overnight, 24-hour and multi-day soak testing.

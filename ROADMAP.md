@@ -246,3 +246,17 @@ After single-symbol operational stability and extended forward evidence are prov
 - [x] Require exact minute continuity and forbid retroactive orders during catch-up.
 - [x] Audit startup catch-up separately and include it in continuity diagnostics.
 - [x] Live evidence gate: recovered a 911-bar overnight gap with exact continuity, then completed the 60-bar Hybrid operational gate.
+
+
+### Signal Activity & Strategy Behavior Analysis v1
+- [x] Add read-only per-bar active-strategy diagnostics to forward audit evidence.
+- [x] For EMA crossover, expose fast/slow relationship and spread in basis points without changing signal generation.
+- [x] Summarize strategy relationship/spread and decision reasons in the deterministic forward-session report.
+- [ ] Validate diagnostics on a short supervised live-paper probe.
+- [ ] Do not tune strategy thresholds until observed behavior is explained with evidence.
+
+### Pending Hybrid 60-Bar Verification Gate
+- [ ] Run a fresh supervised 60-bar session after the exact one-minute recovery fix and diagnostics validation.
+- [ ] Require: 60/60 processed, `MAX_BARS`, `audit_complete=True`, hybrid failures=0, `observed_gap=0.0m`, `REAL_orders=0`.
+- [ ] Verify state continuity through reconnect/backfill and zero retroactive orders from recovery bars.
+- [ ] After PASS, progress to multi-hour -> overnight -> 24h -> multi-day soak tests.
