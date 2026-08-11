@@ -35,8 +35,9 @@ class ForwardPaperResult:
 class JsonlForwardAudit:
     """Append-only, line-delimited audit sink for supervised forward sessions."""
 
-    def __init__(self, path):
+    def __init__(self, path, clock=None):
         self.path = Path(path)
+        self.clock = clock or (lambda: pd.Timestamp.now(tz="UTC"))
         if self.path.exists() and self.path.is_dir():
             raise ValueError("audit path must be a file path.")
         self.path.parent.mkdir(parents=True, exist_ok=True)
@@ -50,6 +51,11 @@ class JsonlForwardAudit:
     def append(self, record):
         if not isinstance(record, dict):
             raise TypeError("audit record must be a dict.")
+        record = dict(record)
+        recorded_at = pd.Timestamp(self.clock())
+        if pd.isna(recorded_at):
+            raise ValueError("audit clock returned an invalid timestamp.")
+        record.setdefault("recorded_at", recorded_at)
         with self.path.open("a", encoding="utf-8") as handle:
             handle.write(json.dumps(record, sort_keys=True, default=self._json_default) + "\n")
 
@@ -65,8 +71,9 @@ class ForwardContinuityStore:
 
     VERSION = 1
 
-    def __init__(self, path):
+    def __init__(self, path, clock=None):
         self.path = Path(path)
+        self.clock = clock or (lambda: pd.Timestamp.now(tz="UTC"))
 
     @staticmethod
     def _frame_to_records(frame):
@@ -92,8 +99,12 @@ class ForwardContinuityStore:
         return pd.DataFrame(rows, index=pd.DatetimeIndex(index))
 
     def save(self, runtime, aggregator):
+        saved_at = pd.Timestamp(self.clock())
+        if pd.isna(saved_at):
+            raise ValueError("continuity clock returned an invalid timestamp.")
         payload = {
             "version": self.VERSION,
+            "saved_at": saved_at.isoformat(),
             "runtime": runtime.export_checkpoint(),
             "strategy_history": self._frame_to_records(runtime.session._history),
             "aggregator": aggregator.export_state(),

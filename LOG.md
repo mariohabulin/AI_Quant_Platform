@@ -1082,3 +1082,15 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - Added planned entry, stop, target, computed reward/risk and required-minimum evidence to both approved and rejected paper BUY events.
 - Extended the read-only forward-session report with reward/risk evaluation count, rejection count, observed ratio range and required thresholds.
 - Validation: 72/72 targeted Risk Engine, Paper Trading and Forward Session Report tests pass; the complete local Windows/Python 3.14.6 repository passes 553/553 automated tests.
+
+## 2026-08-11 — Operational Monitoring & Alerting v1
+- Promoted monitoring/alerting into the active operational-readiness path before cloud soak testing.
+- Added an independent read-only monitor over the latest forward audit session and continuity state.
+- Added deterministic `OK` / `WARNING` / `CRITICAL` classification, stable alert codes, operator-readable and JSON output, and process exit codes `0/1/2`.
+- Added critical detection for missing/unreadable/stale active-session evidence, fatal backfill/transport/runtime endings, REST recovery failure, reconnect exhaustion, non-zero REAL-order evidence and active Risk kill switch.
+- Added warnings for a current transport disconnect and pending post-recovery long-exit reconciliation.
+- Added explicit `recorded_at` timestamps to new audit records and `saved_at` timestamps to new forward continuity checkpoints without changing market timestamps or trading decisions.
+- External notification delivery and process supervision remain separate deferred adapters that will consume this monitoring boundary during Cloud Runtime Readiness.
+- Real retained runtime validation classified the completed 60-bar session as `OK / COMPLETED / MAX_BARS` with `REAL_orders=0` and no alerts. That probe exposed a backward-compatibility display gap: legacy `SESSION_END` records predate `recorded_at`, so audit age incorrectly appeared as zero. Added file-modification-time fallback and regression coverage for legacy completed audits.
+- Repeated real-artifact monitoring after the fallback reported matching audit/checkpoint age, retained `OK / COMPLETED / MAX_BARS`, `REAL_orders=0` and zero alerts.
+- Final validation: 37/37 targeted Operational Monitoring and Forward Paper tests pass; the complete local Windows/Python 3.14.6 repository passes 572/572 automated tests.

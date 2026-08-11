@@ -290,3 +290,17 @@ After single-symbol operational stability and extended forward evidence are prov
 - [x] Confirm the complete local Windows/Python 3.14.6 repository passes all 553 tests before milestone commit/push.
 
 Next after local validation: longer supervised paper sessions, operational readiness and controlled cloud transport/monitoring validation before unattended 24/7 deployment.
+
+### Operational Monitoring & Alerting v1
+- [x] Add an independent read-only monitor over the append-only forward audit and continuity state.
+- [x] Classify operational state as `OK`, `WARNING` or `CRITICAL` with stable machine-readable alert codes.
+- [x] Detect missing, unreadable or stale audit/checkpoint evidence while an active session is expected to progress.
+- [x] Detect `BACKFILL_FATAL`, `TRANSPORT_FATAL`, `RUNTIME_HALTED`, REST backfill failure and transport reconnect exhaustion.
+- [x] Detect non-zero REAL-order evidence and an active Risk Engine kill switch as critical safety violations.
+- [x] Warn on current transport disconnect and pending post-recovery position reconciliation.
+- [x] Add `recorded_at` to new audit records and `saved_at` to new continuity checkpoints for deterministic freshness evaluation.
+- [x] Provide operator-readable and JSON output plus exit codes `0=OK`, `1=WARNING`, `2=CRITICAL` for cloud watchdog integration.
+- [x] Confirm the complete local Windows/Python 3.14.6 repository passes all 572 tests before milestone commit/push.
+- [x] Run the monitor against retained real runtime audit/state artifacts; result: `OK / COMPLETED / MAX_BARS`, matching audit/checkpoint age, `REAL_orders=0`, zero alerts.
+
+Deferred from v1: email/Slack/SMS delivery, automatic restart, service manager/container orchestration and cloud scheduler configuration. Reason: notification and supervision adapters must consume a proven deterministic monitoring decision boundary rather than duplicate operational policy inside provider-specific integrations.

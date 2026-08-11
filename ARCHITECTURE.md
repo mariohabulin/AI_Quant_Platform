@@ -882,3 +882,12 @@ Historical REST/startup catch-up bars are state-reconstruction inputs, never exe
 Risk Engine remains the sole owner of minimum reward/risk authorization. Planned reward/risk is computed from validated market prices as `(target - entry) / (entry - stop)`. Threshold equality uses a fixed relative tolerance of `1e-12` solely to neutralize binary floating-point representation error at an otherwise exact configured boundary. The tolerance is not applied to stop/target validity, sizing, exposure caps or any other risk rule; a meaningfully sub-threshold ratio remains `REJECT`.
 
 `PaperTradingEvent` carries the Risk Engine decision evidence for evaluated BUY signals: planned entry, stop, target, computed reward/risk ratio and configured minimum. The append-only forward audit serializes this event unchanged, and `forward_session_report` derives read-only reward/risk counts and ranges from that evidence. Reporting must never recompute, normalize or override the original Risk Engine decision.
+
+## Operational Monitoring & Alerting Boundary v1
+`src/operational_monitoring.py` is a read-only operational decision layer over the append-only forward audit and atomic forward continuity state. It does not import the live runtime composition, generate strategy signals, assess trade risk, repair market data, submit orders, restart processes or mutate operational artifacts.
+
+The monitor converts existing evidence into `OK`, `WARNING` or `CRITICAL` plus stable alert codes. Critical conditions include missing/unreadable/stale required evidence for a running session, fatal runtime/recovery/transport termination, explicit REST backfill failure, non-zero REAL-order evidence and an active Risk Engine kill switch. Current disconnect and pending position reconciliation remain warnings unless stronger evidence makes the report critical. CLI exit codes are `0`, `1` and `2` respectively so an external watchdog can act without reimplementing policy.
+
+Every new forward audit record carries `recorded_at`; every new forward continuity state carries `saved_at`. These are operational observation timestamps, distinct from market-event time. Historical artifacts without the new checkpoint timestamp fall back to file modification time for backward-compatible inspection.
+
+Notification delivery and process supervision are outside this boundary. Future email/Slack/SMS adapters, cloud health checks, schedulers or service managers consume the monitoring report/exit code. They must not embed duplicate trading or alert-classification rules.

@@ -33,12 +33,16 @@ class FakeGapRecovery:
 
 def test_jsonl_audit_appends_parseable_records(tmp_path):
     path = tmp_path / "audit.jsonl"
-    audit = JsonlForwardAudit(path)
+    audit = JsonlForwardAudit(
+        path, clock=lambda: pd.Timestamp("2026-08-11T10:00:00Z")
+    )
     audit.append({"type": "TEST", "at": pd.Timestamp("2026-08-08T18:00:00Z")})
     audit.append({"type": "TEST2", "value": 2})
     rows = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
     assert [row["type"] for row in rows] == ["TEST", "TEST2"]
     assert rows[0]["at"] == "2026-08-08T18:00:00+00:00"
+    assert rows[0]["recorded_at"] == "2026-08-11T10:00:00+00:00"
+    assert rows[1]["recorded_at"] == "2026-08-11T10:00:00+00:00"
 
 
 def test_forward_runner_is_bounded_and_audited(tmp_path):
@@ -89,8 +93,13 @@ def test_continuity_store_round_trip_preserves_position_history_and_bucket(tmp_p
     aggregator = CoinbaseOneMinuteTradeAggregator()
     aggregator.ingest_trade({"product_id": "BTC-USD", "price": "62501", "size": "0.1", "time": "2026-08-08T19:25:10Z"})
 
-    store = ForwardContinuityStore(tmp_path / "state.json")
+    store = ForwardContinuityStore(
+        tmp_path / "state.json",
+        clock=lambda: pd.Timestamp("2026-08-11T10:00:00Z"),
+    )
     store.save(runtime, aggregator)
+    payload = json.loads((tmp_path / "state.json").read_text(encoding="utf-8"))
+    assert payload["saved_at"] == "2026-08-11T10:00:00+00:00"
     restored = build_live_paper_runtime()
     restored_agg = CoinbaseOneMinuteTradeAggregator()
     assert store.load_into(restored, restored_agg) is True
