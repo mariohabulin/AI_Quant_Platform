@@ -1103,3 +1103,13 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - The gate does not start trading, place orders, alter strategy/risk policy, provision infrastructure or choose a cloud vendor.
 - Validation: 13/13 focused Cloud Runtime Readiness tests and the complete 585/585 local Windows/Python 3.14.6 repository suite pass.
 - Real CLI validation passed all seven checks with PAPER mode, real execution disabled, five bounded bars, 30-second monitoring, 180-second staleness, absolute colocated paths, writable storage, importable runtime components and Python 3.14.
+
+## 2026-08-11 — Controlled Cloud Deployment Baseline v1
+- Provisioned the first controlled paper-validation host: Hetzner CPX22 in Nuremberg with Ubuntu 24.04 LTS, x86, 2 vCPU, 4 GB RAM and 80 GB SSD.
+- Enabled Hetzner account 2FA, retained an offline recovery key and configured a dedicated passphrase-protected ED25519 SSH key.
+- Attached a free provider firewall with SSH and ICMP inbound rules; all unrelated new inbound traffic is implicitly denied while required outbound connectivity remains available.
+- Installed all available Ubuntu LTS security updates and proved a controlled server reboot followed by successful SSH-key reconnection.
+- No repository code, API credentials, trading runtime or real-order capability has been deployed to the host yet.
+- Clean-clone validation reproduced four failures in `tests/test_strategy_engine.py`: the tests read workstation-only `data/AAPL.csv`, which is excluded by the repository `*.csv` ignore rule.
+- Replaced only those external test reads with deterministic in-memory OHLCV data; production Strategy Engine and trading policy are unchanged.
+- Validation: 9/9 targeted Strategy Engine tests and the complete 585/585 repository suite pass both in the isolated clean repository without the local CSV artifact and on Windows/Python 3.14.6. Commit/push remains required before exact-revision cloud deployment.

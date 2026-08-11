@@ -319,3 +319,18 @@ Deferred from v1: email/Slack/SMS delivery, automatic restart, service manager/c
 - [x] Run the real CLI gate with safe PAPER configuration; result: all seven readiness checks PASS.
 
 Deferred from v1: cloud-provider selection, paid resource creation, container/service-manager configuration, notification delivery and an actual cloud trading process. Next after local validation: select a controlled cloud runtime and execute a bounded paper-only transport/monitoring gate before longer soak testing.
+
+### Controlled Cloud Deployment Baseline v1
+- [x] Select a one-month controlled EU cloud host: Hetzner CPX22 in Nuremberg, Ubuntu 24.04 LTS, x86, 2 vCPU, 4 GB RAM and 80 GB SSD.
+- [x] Protect the Hetzner account with 2FA and retain an offline recovery key.
+- [x] Use a dedicated passphrase-protected ED25519 SSH key; do not create or distribute a server root password.
+- [x] Attach a Hetzner Cloud Firewall with SSH and ICMP inbound rules and unrestricted required outbound connectivity.
+- [x] Install available Ubuntu LTS security updates and prove controlled reboot plus SSH-key reconnection.
+- [x] Remove the clean-clone dependency of four Strategy Engine tests on Git-ignored `data/AAPL.csv` by using deterministic in-memory OHLCV input.
+- [x] Confirm the isolated clean repository passes all 585 tests without local CSV artifacts.
+- [x] Confirm 9/9 focused Strategy Engine tests and the complete 585/585 local Windows/Python 3.14.6 suite before milestone commit/push.
+- [ ] Deploy the exact committed revision to CPX22 and reproduce the complete test suite on Ubuntu.
+- [ ] Configure one absolute persistent runtime directory and require the provider-neutral Cloud Runtime Readiness gate to PASS.
+- [ ] Start only a bounded PAPER session after deployment, regression and readiness evidence are all clean.
+
+Deferred until the cloud regression/readiness gate passes: service-manager automation, monitoring schedule, notification delivery, overnight/24-hour soak tests and any real execution capability.

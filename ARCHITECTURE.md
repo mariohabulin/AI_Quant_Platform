@@ -898,3 +898,10 @@ Notification delivery and process supervision are outside this boundary. Future 
 The gate requires PAPER mode with real execution explicitly disabled, a bounded session, a valid monitor/staleness cadence, distinct audit and continuity files in one absolute persistent runtime directory, writable storage, importable runtime/monitoring components and Python 3.12-3.14. Storage validation is limited to a temporary write/read/cleanup probe and is not attempted until path validation passes. Human-readable and JSON reports share the same checks; exit codes are `0=PASS` and `2=FAIL` for later service-manager deployment gates.
 
 Provider selection, container/service orchestration, secrets delivery, notification adapters and cloud transport behavior remain outside this boundary. Those deployment concerns may consume the readiness result but must not duplicate or weaken its execution-lock and persistence requirements.
+
+## Controlled Cloud Host Boundary v1
+The first provider-specific validation environment is one Hetzner CPX22 instance in the Nuremberg EU location, running Ubuntu 24.04 LTS on x86. This is an operational test host, not a new dependency of the trading architecture: Strategy, Risk, Feed Health, recovery, monitoring and reporting remain unaware of the infrastructure provider.
+
+Host access uses a dedicated passphrase-protected ED25519 SSH key. A provider firewall permits only SSH and ICMP as new inbound traffic; required outbound connections remain available for package repositories, DNS and the public Coinbase WebSocket/REST paths. No application port is publicly exposed. The initial image is security-updated and reboot/reconnect validated before code deployment.
+
+Repository regression tests must be hermetic at the deployment boundary. Test inputs needed by committed tests must be generated in memory or committed under an explicit test-fixture policy; they must not depend on ignored workstation artifacts such as `data/AAPL.csv`. A cloud deployment is eligible to start only from an exact committed revision whose full suite passes in a clean clone, followed by the same full suite and Cloud Runtime Readiness gate on the target host.

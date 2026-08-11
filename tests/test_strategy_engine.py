@@ -9,6 +9,20 @@ sys.path.append(
 from strategy_engine import StrategyEngine
 from strategies.ema_strategy import EMAStrategy
 from strategy_library import StrategyLibrary
+
+
+def _market_data():
+    return pd.DataFrame(
+        {
+            "Open": [100.0, 101.0, 102.0],
+            "High": [102.0, 103.0, 104.0],
+            "Low": [99.0, 100.0, 101.0],
+            "Close": [101.0, 102.0, 103.0],
+            "Volume": [1_000.0, 1_100.0, 1_200.0],
+        }
+    )
+
+
 def test_strategy_name():
     library = StrategyLibrary()
 
@@ -20,7 +34,7 @@ def test_strategy_name():
     assert engine.strategy_name == "ema_crossover"
 
 def test_run_returns_dataframe():
-    data = pd.read_csv("data/AAPL.csv")
+    data = _market_data()
 
     library = StrategyLibrary()
 
@@ -78,7 +92,7 @@ class StrategyWithoutSignalColumn:
         return pd.DataFrame({"Close": [100, 101, 102]})
     
 def test_strategy_without_signal_column_raises_error():
-    data = pd.read_csv("data/AAPL.csv")
+    data = _market_data()
 
     library = StrategyLibrary()
 
@@ -103,7 +117,7 @@ class StrategyWithInvalidSignals:
         })
     
 def test_invalid_signal_values_raise_error():
-    data = pd.read_csv("data/AAPL.csv")
+    data = _market_data()
 
     library = StrategyLibrary()
 
@@ -140,7 +154,7 @@ class StrategyReturningNonDataFrame:
         return [0, 1, -1]
     
 def test_non_dataframe_result_raises_error():
-    data = pd.read_csv("data/AAPL.csv")
+    data = _market_data()
 
     library = StrategyLibrary()
 
@@ -224,4 +238,3 @@ def test_run_uses_strategy_required_features(monkeypatch):
     engine.run(data)
 
     assert captured_required_features == strategy.required_features
-  
