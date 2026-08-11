@@ -304,3 +304,18 @@ Next after local validation: longer supervised paper sessions, operational readi
 - [x] Run the monitor against retained real runtime audit/state artifacts; result: `OK / COMPLETED / MAX_BARS`, matching audit/checkpoint age, `REAL_orders=0`, zero alerts.
 
 Deferred from v1: email/Slack/SMS delivery, automatic restart, service manager/container orchestration and cloud scheduler configuration. Reason: notification and supervision adapters must consume a proven deterministic monitoring decision boundary rather than duplicate operational policy inside provider-specific integrations.
+
+### Cloud Runtime Readiness v1
+- [x] Add a provider-neutral pre-deployment gate that does not start the trading runtime or provision infrastructure.
+- [x] Require explicit `PAPER` mode and explicit real-execution disablement.
+- [x] Require a positive bounded forward-session bar count.
+- [x] Require a positive monitoring interval below the stale-evidence threshold.
+- [x] Require distinct audit/state files inside one absolute persistent runtime directory.
+- [x] Probe persistent storage with bounded write/read/cleanup and block the probe when path validation fails.
+- [x] Verify forward-paper and operational-monitoring entrypoints are importable.
+- [x] Require the validated Python 3.12-3.14 runtime range.
+- [x] Provide readable/JSON evidence and deterministic exit codes `0=PASS`, `2=FAIL`.
+- [x] Confirm 13/13 focused tests and the complete 585/585 local Windows/Python 3.14.6 repository suite before milestone commit/push.
+- [x] Run the real CLI gate with safe PAPER configuration; result: all seven readiness checks PASS.
+
+Deferred from v1: cloud-provider selection, paid resource creation, container/service-manager configuration, notification delivery and an actual cloud trading process. Next after local validation: select a controlled cloud runtime and execute a bounded paper-only transport/monitoring gate before longer soak testing.

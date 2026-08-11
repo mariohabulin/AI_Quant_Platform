@@ -891,3 +891,10 @@ The monitor converts existing evidence into `OK`, `WARNING` or `CRITICAL` plus s
 Every new forward audit record carries `recorded_at`; every new forward continuity state carries `saved_at`. These are operational observation timestamps, distinct from market-event time. Historical artifacts without the new checkpoint timestamp fall back to file modification time for backward-compatible inspection.
 
 Notification delivery and process supervision are outside this boundary. Future email/Slack/SMS adapters, cloud health checks, schedulers or service managers consume the monitoring report/exit code. They must not embed duplicate trading or alert-classification rules.
+
+## Cloud Runtime Readiness Boundary v1
+`src/cloud_readiness.py` is a provider-neutral, pre-deployment validation boundary. It consumes explicit environment configuration and emits a deterministic PASS/FAIL report before any cloud paper process is allowed to start. It does not import provider SDKs, provision infrastructure, start the forward session, submit orders or mutate trading state.
+
+The gate requires PAPER mode with real execution explicitly disabled, a bounded session, a valid monitor/staleness cadence, distinct audit and continuity files in one absolute persistent runtime directory, writable storage, importable runtime/monitoring components and Python 3.12-3.14. Storage validation is limited to a temporary write/read/cleanup probe and is not attempted until path validation passes. Human-readable and JSON reports share the same checks; exit codes are `0=PASS` and `2=FAIL` for later service-manager deployment gates.
+
+Provider selection, container/service orchestration, secrets delivery, notification adapters and cloud transport behavior remain outside this boundary. Those deployment concerns may consume the readiness result but must not duplicate or weaken its execution-lock and persistence requirements.

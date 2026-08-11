@@ -1094,3 +1094,12 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - Real retained runtime validation classified the completed 60-bar session as `OK / COMPLETED / MAX_BARS` with `REAL_orders=0` and no alerts. That probe exposed a backward-compatibility display gap: legacy `SESSION_END` records predate `recorded_at`, so audit age incorrectly appeared as zero. Added file-modification-time fallback and regression coverage for legacy completed audits.
 - Repeated real-artifact monitoring after the fallback reported matching audit/checkpoint age, retained `OK / COMPLETED / MAX_BARS`, `REAL_orders=0` and zero alerts.
 - Final validation: 37/37 targeted Operational Monitoring and Forward Paper tests pass; the complete local Windows/Python 3.14.6 repository passes 572/572 automated tests.
+
+## 2026-08-11 — Cloud Runtime Readiness v1
+- Added a provider-neutral pre-deployment gate before cloud-provider selection or paid infrastructure creation.
+- Added fail-closed checks for explicit PAPER mode, disabled real execution, a positive bounded session, monitoring cadence below stale threshold, absolute colocated audit/state paths, writable persistent storage, required runtime imports and Python 3.12-3.14.
+- Storage readiness uses a temporary write/read/cleanup probe; invalid paths block the probe so a failed configuration cannot create an unintended relative runtime directory.
+- Added operator-readable and JSON reports with deterministic exit codes `0=PASS` and `2=FAIL`.
+- The gate does not start trading, place orders, alter strategy/risk policy, provision infrastructure or choose a cloud vendor.
+- Validation: 13/13 focused Cloud Runtime Readiness tests and the complete 585/585 local Windows/Python 3.14.6 repository suite pass.
+- Real CLI validation passed all seven checks with PAPER mode, real execution disabled, five bounded bars, 30-second monitoring, 180-second staleness, absolute colocated paths, writable storage, importable runtime components and Python 3.14.
