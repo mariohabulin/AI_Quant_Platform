@@ -52,6 +52,11 @@ class ForwardSessionReport:
     signal_activity_rate: float
     risk_rejection_rate: float
     risk_rejection_reasons: dict
+    reward_risk_evaluations: int
+    reward_risk_rejections: int
+    reward_risk_ratio_min: float
+    reward_risk_ratio_max: float
+    minimum_reward_risk_values: tuple
     strategy_name: str
     strategy_relation_counts: dict
     strategy_spread_bps_min: float
@@ -191,6 +196,18 @@ def build_forward_session_report(audit_path="runtime/forward_paper_audit.jsonl")
     risk_rejection_reasons = dict(sorted(Counter(
         str(event.get("reason") or "UNKNOWN") for event in risk_rejections
     ).items()))
+    reward_risk_events = [
+        event for event in events
+        if event.get("planned_reward_risk_ratio") is not None
+    ]
+    reward_risk_ratios = [
+        float(event["planned_reward_risk_ratio"]) for event in reward_risk_events
+    ]
+    minimum_reward_risk_values = tuple(sorted(set(
+        float(event["minimum_reward_risk"])
+        for event in reward_risk_events
+        if event.get("minimum_reward_risk") is not None
+    )))
 
     diagnostics = [row.get("strategy_diagnostics", {}) for row in paper]
     diagnostics = [item for item in diagnostics if isinstance(item, dict) and item]
@@ -296,6 +313,14 @@ def build_forward_session_report(audit_path="runtime/forward_paper_audit.jsonl")
         signal_activity_rate=signal_activity_rate,
         risk_rejection_rate=risk_rejection_rate,
         risk_rejection_reasons=risk_rejection_reasons,
+        reward_risk_evaluations=len(reward_risk_events),
+        reward_risk_rejections=sum(
+            str(event.get("risk_status", "")) == "REJECT"
+            for event in reward_risk_events
+        ),
+        reward_risk_ratio_min=min(reward_risk_ratios, default=0.0),
+        reward_risk_ratio_max=max(reward_risk_ratios, default=0.0),
+        minimum_reward_risk_values=minimum_reward_risk_values,
         strategy_name=strategy_name,
         strategy_relation_counts=strategy_relation_counts,
         strategy_spread_bps_min=strategy_spread_bps_min,
@@ -329,6 +354,7 @@ def format_forward_session_report(report):
         f"hybrid_recovery: backfill_bars={report.rest_backfill_bars} startup_catchup_bars={report.startup_catchup_bars} failures={report.rest_backfill_failures}",
         f"continuity: market_span={report.market_span_minutes:.1f}m expected_contiguous={report.expected_contiguous_minutes:.1f}m observed_gap={report.observed_gap_minutes:.1f}m",
         f"activity: signal_rate={report.signal_activity_rate:.1%} risk_reject_rate={report.risk_rejection_rate:.1%} reject_reasons={report.risk_rejection_reasons}",
+        f"reward_risk: evaluations={report.reward_risk_evaluations} rejected={report.reward_risk_rejections} observed[min/max]={report.reward_risk_ratio_min:.6f}/{report.reward_risk_ratio_max:.6f} required={report.minimum_reward_risk_values}",
         f"strategy_behavior: strategy={report.strategy_name} relation={report.strategy_relation_counts} spread_bps[min/avg/max]={report.strategy_spread_bps_min:.2f}/{report.strategy_spread_bps_avg:.2f}/{report.strategy_spread_bps_max:.2f}",
         f"strategy_transitions: live={report.live_crossovers} {report.live_relation_transitions} recovery={report.recovery_crossovers} {report.recovery_crossover_kinds}",
         f"strategy_runs: max_ABOVE={report.max_above_run_bars} max_BELOW={report.max_below_run_bars} current={report.current_relation}:{report.current_relation_run_bars}",

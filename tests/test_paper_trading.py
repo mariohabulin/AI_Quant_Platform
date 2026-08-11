@@ -81,7 +81,26 @@ def test_reward_risk_policy_can_reject_before_order_submission():
     event = engine.process_market_event(market_data(), stop_price=98.0, target_price=104.0)
     assert event.status == "REJECTED"
     assert event.risk_status == "REJECT"
+    assert event.planned_entry_price == pytest.approx(100.0)
+    assert event.planned_stop_price == pytest.approx(98.0)
+    assert event.planned_target_price == pytest.approx(104.0)
+    assert event.planned_reward_risk_ratio == pytest.approx(2.0)
+    assert event.minimum_reward_risk == pytest.approx(3.0)
     assert len(engine.paper_broker.order_history) == 0
+
+
+def test_reward_risk_policy_preserves_approved_decision_evidence():
+    engine = make_engine(1, min_reward_risk=3.0)
+    event = engine.process_market_event(
+        market_data(), stop_price=98.0, target_price=106.0
+    )
+
+    assert event.status == "FILLED"
+    assert event.planned_entry_price == pytest.approx(100.0)
+    assert event.planned_stop_price == pytest.approx(98.0)
+    assert event.planned_target_price == pytest.approx(106.0)
+    assert event.planned_reward_risk_ratio == pytest.approx(3.0)
+    assert event.minimum_reward_risk == pytest.approx(3.0)
 
 
 def test_protection_guard_rejects_new_risk_before_order_submission():

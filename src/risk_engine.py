@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import math
 import pandas as pd
 
 
@@ -27,6 +28,8 @@ class ProtectionDecision:
 
 class RiskEngine:
     """Deterministic long-position sizing from equity, risk and stop distance."""
+
+    REWARD_RISK_REL_TOLERANCE = 1e-12
 
     def __init__(
         self, risk_per_trade=0.01, max_position_fraction=1.0,
@@ -163,7 +166,16 @@ class RiskEngine:
                     "Minimum reward/risk policy requires a target price.",
                     stop_price=stop_price,
                 )
-            if reward_risk_ratio < self.min_reward_risk:
+            meets_threshold = (
+                reward_risk_ratio >= self.min_reward_risk
+                or math.isclose(
+                    reward_risk_ratio,
+                    self.min_reward_risk,
+                    rel_tol=self.REWARD_RISK_REL_TOLERANCE,
+                    abs_tol=0.0,
+                )
+            )
+            if not meets_threshold:
                 return RiskDecision(
                     "REJECT", 0.0, 0.0, equity * self.risk_per_trade, 0.0,
                     "Minimum reward/risk requirement not met.",

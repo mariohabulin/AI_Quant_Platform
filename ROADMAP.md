@@ -279,3 +279,14 @@ After single-symbol operational stability and extended forward evidence are prov
 - [x] Validate v2 on a fresh supervised 60-bar forward-paper sample before any EMA threshold/timeframe tuning.
 - [x] Complete the Hybrid 60-Bar Verification Gate before longer soak testing; result: PASS WITH TRANSPORT WARNING.
 - [ ] Defer multi-timeframe swing decision architecture until infrastructure/continuity gates pass; 1m remains the fast infrastructure validation clock, not the final trading-policy commitment.
+
+### Risk/Reward Decision Diagnostics v1
+- [x] Reproduce the live BUY boundary rejection at entry `63850.18`: planned exact 3R recomputed as `2.9999999999999885` and was falsely rejected by strict floating-point comparison.
+- [x] Add regression coverage for exact-threshold acceptance using the observed live price construction.
+- [x] Add a separate guard proving a meaningfully sub-threshold ratio remains rejected.
+- [x] Apply a narrowly bounded relative tolerance only to minimum reward/risk threshold equality; keep stop/target validation, sizing and rejection policy unchanged.
+- [x] Persist planned entry, stop, target, computed reward/risk and required minimum in approved and rejected paper BUY events.
+- [x] Summarize reward/risk evaluation counts, rejection counts, observed range and required thresholds in the read-only forward-session report.
+- [x] Confirm the complete local Windows/Python 3.14.6 repository passes all 553 tests before milestone commit/push.
+
+Next after local validation: longer supervised paper sessions, operational readiness and controlled cloud transport/monitoring validation before unattended 24/7 deployment.

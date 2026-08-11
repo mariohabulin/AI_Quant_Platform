@@ -14,6 +14,11 @@ class PaperTradingEvent:
     market_price: float = None
     fill_price: float = None
     risk_status: str = None
+    planned_entry_price: float = None
+    planned_stop_price: float = None
+    planned_target_price: float = None
+    planned_reward_risk_ratio: float = None
+    minimum_reward_risk: float = None
 
 
 class PaperTradingEngine:
@@ -133,6 +138,11 @@ class PaperTradingEngine:
                 return self._record(
                     event_timestamp, "RISK", signal, "REJECTED", decision.reason,
                     market_price=market_price, risk_status=decision.status,
+                    planned_entry_price=market_price,
+                    planned_stop_price=decision.stop_price,
+                    planned_target_price=decision.target_price,
+                    planned_reward_risk_ratio=decision.reward_risk_ratio,
+                    minimum_reward_risk=self.risk_engine.min_reward_risk,
                 )
 
             order = self.paper_broker.submit_market_order(
@@ -146,6 +156,11 @@ class PaperTradingEngine:
                 fill.reason or decision.reason, order_id=fill.order_id,
                 quantity=fill.quantity, market_price=market_price,
                 fill_price=fill.fill_price, risk_status=decision.status,
+                planned_entry_price=market_price,
+                planned_stop_price=decision.stop_price,
+                planned_target_price=decision.target_price,
+                planned_reward_risk_ratio=decision.reward_risk_ratio,
+                minimum_reward_risk=self.risk_engine.min_reward_risk,
             )
 
         if signal == -1:

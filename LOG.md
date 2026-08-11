@@ -1073,3 +1073,12 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - Strategy Behavior Diagnostics v2 observed both regimes and transitions; a later bullish BUY signal was rejected by Risk Engine because the minimum reward/risk requirement was not met.
 - Transport remained materially unstable on the local Windows environment: 16 disconnects, 12 reconnects (75% success), ~2697.2s total outage and ~1967.4s maximum outage, with RESET and DNS causes.
 - Classification: continuity/safety gate PASS; transport quality WARNING. Local WebSocket behavior is not accepted as production-grade. Controlled cloud transport validation plus monitoring/alerting remains required before unattended 24/7 live deployment.
+
+## 2026-08-11 — Risk/Reward Decision Diagnostics v1
+- Traced the observed live BUY rejection at `63850.18` through strategy -> planned stop/target -> Risk Engine.
+- Proved the bridge constructed an exact 3R target while binary floating-point arithmetic produced `2.9999999999999885`, falsely satisfying the previous strict `< 3.0` rejection check.
+- Added an exact live-price regression test and a separate meaningfully-below-threshold rejection guard.
+- Added a fixed `1e-12` relative tolerance only for threshold equality; stop/target validation, risk sizing, exposure caps and the configured 3R policy are unchanged.
+- Added planned entry, stop, target, computed reward/risk and required-minimum evidence to both approved and rejected paper BUY events.
+- Extended the read-only forward-session report with reward/risk evaluation count, rejection count, observed ratio range and required thresholds.
+- Validation: 72/72 targeted Risk Engine, Paper Trading and Forward Session Report tests pass; the complete local Windows/Python 3.14.6 repository passes 553/553 automated tests.

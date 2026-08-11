@@ -108,7 +108,10 @@ def test_report_adds_operational_transport_and_activity_diagnostics(tmp_path):
         {"type": "PROVIDER_REPLAY_DROPPED", "timestamp": "2026-08-09T10:47:00+00:00", "real_orders": 0},
         {"type": "PAPER_EVENT", "paper_orders": 0, "real_orders": 0,
          "snapshot": {"timestamp": "2026-08-09T10:56:00+00:00", "equity": 5000.0, "position_quantity": 0.0},
-         "event": {"signal": 1, "status": "REJECTED", "risk_status": "REJECT", "reason": "Minimum reward/risk requirement not met."}},
+         "event": {"signal": 1, "status": "REJECTED", "risk_status": "REJECT", "reason": "Minimum reward/risk requirement not met.",
+                   "planned_entry_price": 100.0, "planned_stop_price": 98.0,
+                   "planned_target_price": 104.0, "planned_reward_risk_ratio": 2.0,
+                   "minimum_reward_risk": 3.0}},
         {"type": "SESSION_END", "reason": "MAX_BARS", "processed_events": 2, "rejected_events": 0,
          "paper_orders": 0, "equity": 5000.0, "position": 0.0, "real_orders": 0},
     ]
@@ -124,10 +127,16 @@ def test_report_adds_operational_transport_and_activity_diagnostics(tmp_path):
     assert report.signal_activity_rate == pytest.approx(0.5)
     assert report.risk_rejection_rate == pytest.approx(1.0)
     assert report.risk_rejection_reasons == {"Minimum reward/risk requirement not met.": 1}
+    assert report.reward_risk_evaluations == 1
+    assert report.reward_risk_rejections == 1
+    assert report.reward_risk_ratio_min == pytest.approx(2.0)
+    assert report.reward_risk_ratio_max == pytest.approx(2.0)
+    assert report.minimum_reward_risk_values == (3.0,)
     text = format_forward_session_report(report)
     assert "disconnects=1 reconnects=1 success=100.0%" in text
     assert "observed_gap=8.0m" in text
     assert "signal_rate=50.0%" in text
+    assert "reward_risk: evaluations=1 rejected=1" in text
 
 
 def test_report_summarizes_transport_outage_quality_and_failure_kinds(tmp_path):

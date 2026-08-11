@@ -221,6 +221,34 @@ def test_reward_risk_policy_accepts_trade_at_threshold():
     assert decision.target_price == 106
 
 
+def test_reward_risk_policy_accepts_live_generated_trade_at_exact_threshold():
+    entry_price = 63850.18
+    stop_price = entry_price * (1.0 - 0.01)
+    target_price = entry_price + (entry_price - stop_price) * 3.0
+
+    decision = RiskEngine(min_reward_risk=3.0).assess_long(
+        5000, entry_price=entry_price, stop_price=stop_price,
+        target_price=target_price,
+    )
+
+    assert decision.status in ("ALLOW", "REDUCE")
+    assert decision.reward_risk_ratio == pytest.approx(3.0)
+
+
+def test_reward_risk_policy_rejects_trade_meaningfully_below_threshold():
+    entry_price = 63850.18
+    stop_price = entry_price * (1.0 - 0.01)
+    target_price = entry_price + (entry_price - stop_price) * (3.0 - 1e-8)
+
+    decision = RiskEngine(min_reward_risk=3.0).assess_long(
+        5000, entry_price=entry_price, stop_price=stop_price,
+        target_price=target_price,
+    )
+
+    assert decision.status == "REJECT"
+    assert decision.reason == "Minimum reward/risk requirement not met."
+
+
 def test_reward_risk_policy_rejects_trade_below_threshold():
     decision = RiskEngine(min_reward_risk=3.0).assess_long(
         10000, entry_price=100, stop_price=98, target_price=104
