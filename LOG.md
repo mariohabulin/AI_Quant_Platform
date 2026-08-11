@@ -1109,7 +1109,13 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - Enabled Hetzner account 2FA, retained an offline recovery key and configured a dedicated passphrase-protected ED25519 SSH key.
 - Attached a free provider firewall with SSH and ICMP inbound rules; all unrelated new inbound traffic is implicitly denied while required outbound connectivity remains available.
 - Installed all available Ubuntu LTS security updates and proved a controlled server reboot followed by successful SSH-key reconnection.
-- No repository code, API credentials, trading runtime or real-order capability has been deployed to the host yet.
+- At initial provisioning, no repository code, API credentials, trading runtime or real-order capability was deployed to the host.
 - Clean-clone validation reproduced four failures in `tests/test_strategy_engine.py`: the tests read workstation-only `data/AAPL.csv`, which is excluded by the repository `*.csv` ignore rule.
 - Replaced only those external test reads with deterministic in-memory OHLCV data; production Strategy Engine and trading policy are unchanged.
-- Validation: 9/9 targeted Strategy Engine tests and the complete 585/585 repository suite pass both in the isolated clean repository without the local CSV artifact and on Windows/Python 3.14.6. Commit/push remains required before exact-revision cloud deployment.
+- Validation: 9/9 targeted Strategy Engine tests and the complete 585/585 repository suite pass both in the isolated clean repository without the local CSV artifact and on Windows/Python 3.14.6.
+- Deployed exact commit `6095960` to `/opt/ai-alpha`; Ubuntu 24.04/Python 3.12.3 reproduced 9/9 focused Strategy Engine tests and the complete 585/585 suite.
+- Created root-only persistent runtime storage at `/var/lib/ai-alpha`; the real cloud CLI gate passed all seven readiness checks with PAPER mode, real execution disabled, five bounded bars, 30-second monitoring cadence and 180-second stale threshold.
+- Started the first bounded cloud PAPER session as transient systemd unit `ai-alpha-paper-smoke-v1`; it completed independently of SSH with `Result=success`, `ExecMainStatus=0` and `MAX_BARS`.
+- Deterministic session evidence: `PASS`, `audit_complete=True`, 5 processed, 0 rejected, 0 rebases, BUY/SELL/HOLD `0/1/4`, paper/filled/REAL orders `0/0/0`, disconnects/reconnects `0/0`, recovery failures `0`, market span `4.0m` and `observed_gap=0.0m`.
+- Operational Monitoring classified the persistent cloud evidence as `OK / COMPLETED / MAX_BARS`, with `REAL_orders=0` and zero alerts.
+- Controlled Cloud Deployment Baseline v1 is closed. No exchange credentials or real-order capability were installed; longer supervised cloud soak testing and operational service/restart controls remain mandatory before unattended 24/7 readiness.

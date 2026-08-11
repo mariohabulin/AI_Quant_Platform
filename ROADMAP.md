@@ -329,8 +329,16 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
 - [x] Remove the clean-clone dependency of four Strategy Engine tests on Git-ignored `data/AAPL.csv` by using deterministic in-memory OHLCV input.
 - [x] Confirm the isolated clean repository passes all 585 tests without local CSV artifacts.
 - [x] Confirm 9/9 focused Strategy Engine tests and the complete 585/585 local Windows/Python 3.14.6 suite before milestone commit/push.
-- [ ] Deploy the exact committed revision to CPX22 and reproduce the complete test suite on Ubuntu.
-- [ ] Configure one absolute persistent runtime directory and require the provider-neutral Cloud Runtime Readiness gate to PASS.
-- [ ] Start only a bounded PAPER session after deployment, regression and readiness evidence are all clean.
+- [x] Deploy exact commit `6095960` to CPX22 and pass 9/9 focused plus 585/585 complete tests on Ubuntu/Python 3.12.3.
+- [x] Configure root-only `/var/lib/ai-alpha` persistent storage and pass all seven provider-neutral Cloud Runtime Readiness checks.
+- [x] Complete a systemd-backed five-bar PAPER smoke session with `success/0`, report `PASS`, complete audit, zero rejected bars, zero disconnects, `observed_gap=0.0m` and `REAL=0`.
+- [x] Run Operational Monitoring over the cloud audit/state evidence; result: `OK / COMPLETED / MAX_BARS`, zero alerts and `REAL_orders=0`.
 
-Deferred until the cloud regression/readiness gate passes: service-manager automation, monitoring schedule, notification delivery, overnight/24-hour soak tests and any real execution capability.
+### Cloud Operational Soak Progression v1
+- [ ] Define a repeatable PAPER-only systemd service configuration with explicit real-execution lock and persistent audit/state paths.
+- [ ] Define a recurring Operational Monitoring schedule and retain operator-readable failure evidence.
+- [ ] Prove controlled process restart plus continuity resume on CPX22 before extending duration.
+- [ ] Run a bounded multi-hour cloud paper session and review transport, recovery, strategy, Risk Engine and monitoring evidence.
+- [ ] Progress to overnight, 24-hour and multi-day soak gates only after each shorter gate passes.
+
+External notification delivery and any real execution capability remain deferred. A clean five-bar smoke test proves the deployment path, not unattended 24/7 production readiness.
