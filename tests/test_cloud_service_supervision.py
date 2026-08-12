@@ -10,6 +10,17 @@ def _unit(name):
     return (SYSTEMD / name).read_text(encoding="utf-8")
 
 
+def _environment(name):
+    values = {}
+    for raw_line in _unit(name).splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#"):
+            continue
+        key, value = line.split("=", maxsplit=1)
+        values[key] = value
+    return values
+
+
 def _values(text, directive):
     return re.findall(rf"^{re.escape(directive)}=(.*)$", text, flags=re.MULTILINE)
 
@@ -19,6 +30,7 @@ def test_supervision_package_contains_repeatable_deployment_artifacts():
         "README.md",
         "ai-alpha-monitor.service",
         "ai-alpha-monitor.timer",
+        "ai-alpha-paper.env",
         "ai-alpha-paper.service",
         "install.sh",
     } <= {path.name for path in SYSTEMD.iterdir()}
@@ -32,7 +44,8 @@ def test_paper_service_is_non_root_and_bound_to_the_deployed_revision():
     assert _values(service, "WorkingDirectory") == ["/opt/ai-alpha"]
     assert _values(service, "ExecStart") == [
         "/opt/ai-alpha/.venv/bin/python -m src.forward_paper_session "
-        "--bars 10 --audit /var/lib/ai-alpha/forward_paper_audit.jsonl "
+        "--bars ${AI_ALPHA_SESSION_BARS} "
+        "--audit /var/lib/ai-alpha/forward_paper_audit.jsonl "
         "--state /var/lib/ai-alpha/forward_paper_state.json"
     ]
 
@@ -44,15 +57,24 @@ def test_paper_service_has_fail_closed_readiness_and_execution_lock():
     assert {
         "AI_ALPHA_MODE=PAPER",
         "AI_ALPHA_RUNTIME_DIR=/var/lib/ai-alpha",
-        "AI_ALPHA_SESSION_BARS=10",
         "AI_ALPHA_MONITOR_INTERVAL_SECONDS=60",
         "AI_ALPHA_STALE_AFTER_SECONDS=180",
         "AI_ALPHA_REAL_EXECUTION_ENABLED=false",
     } <= environment
-    assert _values(service, "EnvironmentFile") == []
+    assert not any(value.startswith("AI_ALPHA_SESSION_BARS=") for value in environment)
+    assert _values(service, "EnvironmentFile") == [
+        "/etc/ai-alpha/ai-alpha-paper.env"
+    ]
     assert _values(service, "ExecStartPre") == [
         "/opt/ai-alpha/.venv/bin/python -m src.cloud_readiness"
     ]
+
+
+def test_paper_service_uses_reviewed_three_hour_soak_bound():
+    environment = _environment("ai-alpha-paper.env")
+
+    assert environment == {"AI_ALPHA_SESSION_BARS": "180"}
+    assert int(environment["AI_ALPHA_SESSION_BARS"]) > 0
 
 
 def test_paper_service_uses_persistent_private_runtime_storage():
@@ -140,6 +162,19 @@ def test_installer_creates_passwordless_system_identity_and_exact_paths():
     assert "/etc/systemd/system" in installer
     assert "systemd-analyze verify" in installer
     assert "systemctl daemon-reload" in installer
+
+
+def test_installer_deploys_root_controlled_session_configuration_before_verify():
+    installer = _unit("install.sh")
+
+    assert "config_target=/etc/ai-alpha" in installer
+    assert 'install -d -o root -g root -m 0755 "${config_target}"' in installer
+    config_install = (
+        'install -o root -g root -m 0644 "${unit_source}/ai-alpha-paper.env" '
+        '"${config_target}/ai-alpha-paper.env"'
+    )
+    assert config_install in installer
+    assert installer.index(config_install) < installer.index("systemd-analyze verify")
 
 
 def test_installer_never_starts_or_enables_a_trading_process():

@@ -4,6 +4,7 @@ set -euo pipefail
 repo_dir=/opt/ai-alpha
 unit_source=/opt/ai-alpha/deploy/systemd
 unit_target=/etc/systemd/system
+config_target=/etc/ai-alpha
 runtime_dir=/var/lib/ai-alpha
 service_user=ai-alpha
 
@@ -23,6 +24,8 @@ fi
 
 install -d -o "${service_user}" -g "${service_user}" -m 0700 "${runtime_dir}"
 chown -R "${service_user}:${service_user}" "${runtime_dir}"
+install -d -o root -g root -m 0755 "${config_target}"
+install -o root -g root -m 0644 "${unit_source}/ai-alpha-paper.env" "${config_target}/ai-alpha-paper.env"
 
 systemd-analyze verify \
     "${unit_source}/ai-alpha-paper.service" \

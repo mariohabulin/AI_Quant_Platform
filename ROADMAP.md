@@ -344,6 +344,9 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
 - [x] Prove controlled process restart after durable checkpoints: `SIGINT` stop, clean systemd result, second readiness PASS, `resumed=True`, safe provider replay drop and no automatic crash restart.
 - [x] Complete the restarted ten-bar session with report `PASS`, complete audit, zero rejected bars, zero disconnects, `observed_gap=0.0m`, `MAX_BARS`, `REAL=0` and process `success/0`.
 - [x] Enable only the one-minute monitoring timer and verify recurring `OK / COMPLETED / MAX_BARS`, zero-alert journal evidence while the PAPER service remains boot-disabled and inactive after completion.
+- [x] Replace duplicated ten-bar literals with one committed, root-owned `AI_ALPHA_SESSION_BARS` configuration consumed by both Cloud Runtime Readiness and the forward runner; current reviewed bound: 180 one-minute bars.
+- [x] Confirm the bounded-soak configuration with 25/25 focused supervision/readiness tests and the complete 597/597 local Windows/Python 3.14.6 suite before implementation commit/push.
+- [ ] Deploy the exact bounded-soak commit, rerun focused/full cloud tests, native unit verification and all seven pre-start readiness checks.
 - [ ] Run a bounded multi-hour cloud paper session and review transport, recovery, strategy, Risk Engine and monitoring evidence.
 - [ ] Progress to overnight, 24-hour and multi-day soak gates only after each shorter gate passes.
 

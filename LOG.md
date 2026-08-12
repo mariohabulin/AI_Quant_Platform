@@ -1137,3 +1137,14 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - The restarted service completed 10/10 fresh bars with `Result=success`, `ExecMainStatus=0` and no automatic failure restarts. The final report returned `PASS`, `audit_complete=True`, `resumed=True`, zero rejected bars, zero disconnects, zero recovery failures, `observed_gap=0.0m`, `MAX_BARS` and `REAL=0`.
 - Enabled only the persistent one-minute Operational Monitoring timer. Recurring journald evidence reports `OK / COMPLETED / MAX_BARS`, `REAL_orders=0` and zero alerts while the PAPER service is inactive and boot-disabled.
 - Cloud Service Supervision & Restart Validation v1 is closed. Next evidence boundary: a bounded multi-hour cloud PAPER soak; overnight, 24-hour, multi-day and any real execution capability remain gated.
+
+## 2026-08-12 — Bounded Multi-Hour Cloud PAPER Soak v1 (Preparation)
+- TDD RED: the expanded supervision contract failed 5 tests because no reviewed session configuration existed, the systemd unit duplicated a fixed ten-bar literal and the installer did not deploy root-controlled duration policy.
+- Added committed `deploy/systemd/ai-alpha-paper.env` with the first multi-hour bound of 180 completed one-minute bars, approximately three hours.
+- The systemd service now imports the root-owned configuration before Cloud Runtime Readiness and passes the identical value to `forward_paper_session --bars`, preventing validation/execution drift.
+- The non-activating installer deploys the configuration under `/etc/ai-alpha` before native unit verification. It still cannot start, restart or enable trading.
+- TDD GREEN: all 12 supervision-contract tests pass after the minimal deployment-adapter change.
+- Isolated validation: 25/25 combined supervision/readiness tests and the complete 597/597 Python 3.12.13 suite pass; whitespace and installer shell syntax checks are clean.
+- Windows validation: 25/25 combined supervision/readiness tests and the complete 597/597 repository suite pass on Python 3.14.6.
+- Strategy, Risk Engine, Feed Health, hybrid recovery, PaperBroker decisions and the structural `REAL_orders=0` lock are unchanged.
+- Pending evidence: exact-commit cloud deployment validation and the controlled 180-bar cloud PAPER run with recurring monitoring and deterministic final reports.

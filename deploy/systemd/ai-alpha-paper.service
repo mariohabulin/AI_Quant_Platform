@@ -14,12 +14,12 @@ WorkingDirectory=/opt/ai-alpha
 Environment=PYTHONUNBUFFERED=1
 Environment=AI_ALPHA_MODE=PAPER
 Environment=AI_ALPHA_RUNTIME_DIR=/var/lib/ai-alpha
-Environment=AI_ALPHA_SESSION_BARS=10
+EnvironmentFile=/etc/ai-alpha/ai-alpha-paper.env
 Environment=AI_ALPHA_MONITOR_INTERVAL_SECONDS=60
 Environment=AI_ALPHA_STALE_AFTER_SECONDS=180
 Environment=AI_ALPHA_REAL_EXECUTION_ENABLED=false
 ExecStartPre=/opt/ai-alpha/.venv/bin/python -m src.cloud_readiness
-ExecStart=/opt/ai-alpha/.venv/bin/python -m src.forward_paper_session --bars 10 --audit /var/lib/ai-alpha/forward_paper_audit.jsonl --state /var/lib/ai-alpha/forward_paper_state.json
+ExecStart=/opt/ai-alpha/.venv/bin/python -m src.forward_paper_session --bars ${AI_ALPHA_SESSION_BARS} --audit /var/lib/ai-alpha/forward_paper_audit.jsonl --state /var/lib/ai-alpha/forward_paper_state.json
 Restart=on-failure
 RestartSec=10s
 SuccessExitStatus=130
