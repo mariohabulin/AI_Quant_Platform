@@ -1,0 +1,155 @@
+from pathlib import Path
+import re
+
+
+ROOT = Path(__file__).resolve().parents[1]
+SYSTEMD = ROOT / "deploy" / "systemd"
+
+
+def _unit(name):
+    return (SYSTEMD / name).read_text(encoding="utf-8")
+
+
+def _values(text, directive):
+    return re.findall(rf"^{re.escape(directive)}=(.*)$", text, flags=re.MULTILINE)
+
+
+def test_supervision_package_contains_repeatable_deployment_artifacts():
+    assert {
+        "README.md",
+        "ai-alpha-monitor.service",
+        "ai-alpha-monitor.timer",
+        "ai-alpha-paper.service",
+        "install.sh",
+    } <= {path.name for path in SYSTEMD.iterdir()}
+
+
+def test_paper_service_is_non_root_and_bound_to_the_deployed_revision():
+    service = _unit("ai-alpha-paper.service")
+
+    assert _values(service, "User") == ["ai-alpha"]
+    assert _values(service, "Group") == ["ai-alpha"]
+    assert _values(service, "WorkingDirectory") == ["/opt/ai-alpha"]
+    assert _values(service, "ExecStart") == [
+        "/opt/ai-alpha/.venv/bin/python -m src.forward_paper_session "
+        "--bars 10 --audit /var/lib/ai-alpha/forward_paper_audit.jsonl "
+        "--state /var/lib/ai-alpha/forward_paper_state.json"
+    ]
+
+
+def test_paper_service_has_fail_closed_readiness_and_execution_lock():
+    service = _unit("ai-alpha-paper.service")
+    environment = set(_values(service, "Environment"))
+
+    assert {
+        "AI_ALPHA_MODE=PAPER",
+        "AI_ALPHA_RUNTIME_DIR=/var/lib/ai-alpha",
+        "AI_ALPHA_SESSION_BARS=10",
+        "AI_ALPHA_MONITOR_INTERVAL_SECONDS=60",
+        "AI_ALPHA_STALE_AFTER_SECONDS=180",
+        "AI_ALPHA_REAL_EXECUTION_ENABLED=false",
+    } <= environment
+    assert _values(service, "EnvironmentFile") == []
+    assert _values(service, "ExecStartPre") == [
+        "/opt/ai-alpha/.venv/bin/python -m src.cloud_readiness"
+    ]
+
+
+def test_paper_service_uses_persistent_private_runtime_storage():
+    service = _unit("ai-alpha-paper.service")
+
+    assert _values(service, "StateDirectory") == ["ai-alpha"]
+    assert _values(service, "StateDirectoryMode") == ["0700"]
+    assert _values(service, "ReadWritePaths") == ["/var/lib/ai-alpha"]
+    assert _values(service, "UMask") == ["0077"]
+
+
+def test_paper_service_has_bounded_restart_policy_and_controlled_signal():
+    service = _unit("ai-alpha-paper.service")
+
+    assert _values(service, "Restart") == ["on-failure"]
+    assert _values(service, "RestartSec") == ["10s"]
+    assert _values(service, "StartLimitIntervalSec") == ["300"]
+    assert _values(service, "StartLimitBurst") == ["5"]
+    assert _values(service, "KillSignal") == ["SIGINT"]
+    assert _values(service, "SuccessExitStatus") == ["130"]
+
+
+def test_paper_service_applies_minimum_process_hardening():
+    service = _unit("ai-alpha-paper.service")
+
+    for directive in (
+        "LockPersonality",
+        "NoNewPrivileges",
+        "PrivateDevices",
+        "PrivateTmp",
+        "ProtectClock",
+        "ProtectControlGroups",
+        "ProtectHome",
+        "ProtectHostname",
+        "ProtectKernelLogs",
+        "ProtectKernelModules",
+        "ProtectKernelTunables",
+        "RemoveIPC",
+        "RestrictRealtime",
+        "RestrictNamespaces",
+        "RestrictSUIDSGID",
+    ):
+        assert _values(service, directive) == ["true"]
+    assert _values(service, "CapabilityBoundingSet") == [""]
+    assert _values(service, "AmbientCapabilities") == [""]
+    assert _values(service, "ProtectSystem") == ["strict"]
+    assert _values(service, "SystemCallArchitectures") == ["native"]
+    assert _values(service, "RestrictAddressFamilies") == [
+        "AF_UNIX AF_INET AF_INET6"
+    ]
+
+
+def test_monitor_service_consumes_existing_read_only_policy():
+    service = _unit("ai-alpha-monitor.service")
+
+    assert _values(service, "Type") == ["oneshot"]
+    assert _values(service, "User") == ["ai-alpha"]
+    assert _values(service, "Group") == ["ai-alpha"]
+    assert _values(service, "ExecStart") == [
+        "/opt/ai-alpha/.venv/bin/python -m src.operational_monitoring "
+        "--audit /var/lib/ai-alpha/forward_paper_audit.jsonl "
+        "--state /var/lib/ai-alpha/forward_paper_state.json "
+        "--stale-after 3min"
+    ]
+    assert _values(service, "ReadWritePaths") == []
+    assert _values(service, "SuccessExitStatus") == ["1"]
+
+
+def test_monitor_timer_is_recurring_persistent_and_does_not_start_trading():
+    timer = _unit("ai-alpha-monitor.timer")
+
+    assert _values(timer, "OnBootSec") == ["2min"]
+    assert _values(timer, "OnUnitActiveSec") == ["1min"]
+    assert _values(timer, "Persistent") == ["true"]
+    assert _values(timer, "Unit") == ["ai-alpha-monitor.service"]
+    assert "ai-alpha-paper.service" not in timer
+
+
+def test_installer_creates_passwordless_system_identity_and_exact_paths():
+    installer = _unit("install.sh")
+
+    assert "useradd --system" in installer
+    assert "--shell /usr/sbin/nologin" in installer
+    assert "/var/lib/ai-alpha" in installer
+    assert "/etc/systemd/system" in installer
+    assert "systemd-analyze verify" in installer
+    assert "systemctl daemon-reload" in installer
+
+
+def test_installer_never_starts_or_enables_a_trading_process():
+    installer = _unit("install.sh")
+
+    forbidden = (
+        "systemctl start",
+        "systemctl restart",
+        "systemctl enable",
+        "systemctl --now",
+        "enable --now",
+    )
+    assert all(command not in installer for command in forbidden)

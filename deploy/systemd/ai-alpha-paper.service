@@ -1,0 +1,57 @@
+[Unit]
+Description=AI Alpha bounded cloud paper session
+Documentation=file:/opt/ai-alpha/deploy/systemd/README.md
+Wants=network-online.target
+After=network-online.target
+StartLimitIntervalSec=300
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=ai-alpha
+Group=ai-alpha
+WorkingDirectory=/opt/ai-alpha
+Environment=PYTHONUNBUFFERED=1
+Environment=AI_ALPHA_MODE=PAPER
+Environment=AI_ALPHA_RUNTIME_DIR=/var/lib/ai-alpha
+Environment=AI_ALPHA_SESSION_BARS=10
+Environment=AI_ALPHA_MONITOR_INTERVAL_SECONDS=60
+Environment=AI_ALPHA_STALE_AFTER_SECONDS=180
+Environment=AI_ALPHA_REAL_EXECUTION_ENABLED=false
+ExecStartPre=/opt/ai-alpha/.venv/bin/python -m src.cloud_readiness
+ExecStart=/opt/ai-alpha/.venv/bin/python -m src.forward_paper_session --bars 10 --audit /var/lib/ai-alpha/forward_paper_audit.jsonl --state /var/lib/ai-alpha/forward_paper_state.json
+Restart=on-failure
+RestartSec=10s
+SuccessExitStatus=130
+KillSignal=SIGINT
+TimeoutStopSec=30s
+UMask=0077
+StateDirectory=ai-alpha
+StateDirectoryMode=0700
+AmbientCapabilities=
+CapabilityBoundingSet=
+LockPersonality=true
+NoNewPrivileges=true
+PrivateDevices=true
+PrivateTmp=true
+ProtectClock=true
+ProtectControlGroups=true
+ProtectHome=true
+ProtectHostname=true
+ProtectKernelLogs=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/ai-alpha
+RemoveIPC=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+RestrictNamespaces=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+SystemCallArchitectures=native
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=ai-alpha-paper
+
+[Install]
+WantedBy=multi-user.target

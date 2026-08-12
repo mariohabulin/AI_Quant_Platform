@@ -1,0 +1,37 @@
+[Unit]
+Description=AI Alpha read-only operational monitoring
+Documentation=file:/opt/ai-alpha/deploy/systemd/README.md
+After=local-fs.target
+
+[Service]
+Type=oneshot
+User=ai-alpha
+Group=ai-alpha
+WorkingDirectory=/opt/ai-alpha
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/opt/ai-alpha/.venv/bin/python -m src.operational_monitoring --audit /var/lib/ai-alpha/forward_paper_audit.jsonl --state /var/lib/ai-alpha/forward_paper_state.json --stale-after 3min
+SuccessExitStatus=1
+UMask=0077
+AmbientCapabilities=
+CapabilityBoundingSet=
+LockPersonality=true
+NoNewPrivileges=true
+PrivateDevices=true
+PrivateTmp=true
+ProtectClock=true
+ProtectControlGroups=true
+ProtectHome=true
+ProtectHostname=true
+ProtectKernelLogs=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectSystem=strict
+RemoveIPC=true
+RestrictAddressFamilies=AF_UNIX
+RestrictNamespaces=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+SystemCallArchitectures=native
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=ai-alpha-monitor

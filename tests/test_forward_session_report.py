@@ -30,6 +30,7 @@ def test_report_summarizes_latest_complete_session(tmp_path):
     write_rows(audit, session_rows())
     report = build_forward_session_report(audit)
     assert report.status == "PASS"
+    assert report.resumed is True
     assert report.processed_events == 2
     assert report.rejected_events == 1
     assert report.rebase_events == 1
@@ -72,6 +73,7 @@ def test_report_format_is_operator_readable(tmp_path):
     write_rows(audit, session_rows())
     text = format_forward_session_report(build_forward_session_report(audit))
     assert "status=PASS" in text
+    assert "resumed=True" in text
     assert "REAL=0" in text
     assert "net_pnl=-10.00" in text
 

@@ -1119,3 +1119,15 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - Deterministic session evidence: `PASS`, `audit_complete=True`, 5 processed, 0 rejected, 0 rebases, BUY/SELL/HOLD `0/1/4`, paper/filled/REAL orders `0/0/0`, disconnects/reconnects `0/0`, recovery failures `0`, market span `4.0m` and `observed_gap=0.0m`.
 - Operational Monitoring classified the persistent cloud evidence as `OK / COMPLETED / MAX_BARS`, with `REAL_orders=0` and zero alerts.
 - Controlled Cloud Deployment Baseline v1 is closed. No exchange credentials or real-order capability were installed; longer supervised cloud soak testing and operational service/restart controls remain mandatory before unattended 24/7 readiness.
+
+## 2026-08-12 — Cloud Service Supervision & Restart Validation v1 (Implementation)
+- Added reviewed systemd deployment artifacts for a bounded ten-bar PAPER service, independent Operational Monitoring oneshot/timer, non-activating installer and operator runbook.
+- The forward process runs under the passwordless/non-login `ai-alpha` system identity with a private `0700` state directory; project/OS paths are read-only and no exchange credentials or real-execution adapter are introduced.
+- Every start is blocked by the existing Cloud Runtime Readiness gate unless PAPER mode, disabled real execution, bounded bars, monitoring cadence, persistent paths, writable storage, components and Python runtime all pass.
+- Added bounded `Restart=on-failure`, restart rate limiting, controlled `SIGINT` shutdown and journald evidence. Normal `MAX_BARS` completion does not restart.
+- Added a persistent one-minute timer that invokes only the existing read-only Operational Monitoring policy. The timer cannot start/restart paper trading; installation performs no activation.
+- Extended the read-only forward report with the latest `resumed` session boundary so cloud restart evidence is explicit and machine-readable; trading decisions and recovery semantics are unchanged.
+- TDD evidence: the new supervision suite first failed 10/10 because no deployment artifacts existed, then passed 10/10 after minimal implementation. The report extension first failed 2 tests, then passed 22/22 combined supervision/report tests.
+- Local isolated validation: 72/72 focused supervision/readiness/monitor/runtime tests and the complete 595/595 suite pass. systemd 255 offline security analysis reports `3.0 OK` for the paper service and `2.7 OK` for the monitor.
+- Windows/Python 3.14.6 validation: 22/22 combined supervision/report tests and the complete 595/595 repository suite pass.
+- Pending before closure: commit/push, exact-revision CPX22 installation, native systemd verification, controlled restart with `resumed=True`, clean ten-bar completion and recurring monitoring evidence.

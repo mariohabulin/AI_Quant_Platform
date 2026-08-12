@@ -1,0 +1,13 @@
+[Unit]
+Description=Run AI Alpha operational monitoring every minute
+Documentation=file:/opt/ai-alpha/deploy/systemd/README.md
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=1min
+AccuracySec=5s
+Persistent=true
+Unit=ai-alpha-monitor.service
+
+[Install]
+WantedBy=timers.target

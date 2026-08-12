@@ -335,9 +335,14 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
 - [x] Run Operational Monitoring over the cloud audit/state evidence; result: `OK / COMPLETED / MAX_BARS`, zero alerts and `REAL_orders=0`.
 
 ### Cloud Operational Soak Progression v1
-- [ ] Define a repeatable PAPER-only systemd service configuration with explicit real-execution lock and persistent audit/state paths.
-- [ ] Define a recurring Operational Monitoring schedule and retain operator-readable failure evidence.
+- [x] Define a repeatable non-root PAPER-only systemd service with pre-start Cloud Readiness, explicit real-execution lock, ten bounded bars, persistent audit/state paths, rate-limited failure restart and process hardening.
+- [x] Define a persistent one-minute read-only Operational Monitoring timer that retains readable decisions in journald and cannot control trading.
+- [x] Add deterministic `resumed=True/False` evidence to the existing forward-session report without changing trading behavior.
+- [x] Prove the deployment contract with 10/10 focused infrastructure tests, 22/22 combined supervision/report tests, systemd 255 security scores `3.0 OK` / `2.7 OK`, and an isolated 595/595 full suite.
+- [x] Confirm 22/22 combined supervision/report tests and the complete 595/595 local Windows/Python 3.14.6 suite before milestone commit/push.
+- [ ] Install the exact committed revision on CPX22 and require native `systemd-analyze verify` plus pre-start Cloud Runtime Readiness PASS.
 - [ ] Prove controlled process restart plus continuity resume on CPX22 before extending duration.
+- [ ] Enable the monitoring timer explicitly and verify recurring journal evidence without enabling the paper service at boot.
 - [ ] Run a bounded multi-hour cloud paper session and review transport, recovery, strategy, Risk Engine and monitoring evidence.
 - [ ] Progress to overnight, 24-hour and multi-day soak gates only after each shorter gate passes.
 

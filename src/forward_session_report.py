@@ -16,6 +16,7 @@ import pandas as pd
 @dataclass(frozen=True)
 class ForwardSessionReport:
     status: str
+    resumed: bool
     processed_events: int
     rejected_events: int
     rebase_events: int
@@ -277,6 +278,7 @@ def build_forward_session_report(audit_path="runtime/forward_paper_audit.jsonl")
 
     return ForwardSessionReport(
         status=status,
+        resumed=bool(rows[0].get("resumed", False)),
         processed_events=processed,
         rejected_events=rejected_count,
         rebase_events=len(rebases),
@@ -343,7 +345,7 @@ def build_forward_session_report(audit_path="runtime/forward_paper_audit.jsonl")
 
 def format_forward_session_report(report):
     return "\n".join([
-        f"Extended Forward Session Report | status={report.status} | audit_complete={report.audit_complete}",
+        f"Extended Forward Session Report | status={report.status} | audit_complete={report.audit_complete} | resumed={report.resumed}",
         f"bars: processed={report.processed_events} rejected={report.rejected_events} rebases={report.rebase_events}",
         f"signals: BUY={report.buy_signals} SELL={report.sell_signals} HOLD={report.hold_signals}",
         f"risk: ALLOW={report.risk_allow} REDUCE={report.risk_reduce} REJECT={report.risk_reject}",
