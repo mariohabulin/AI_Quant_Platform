@@ -1120,7 +1120,7 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - Operational Monitoring classified the persistent cloud evidence as `OK / COMPLETED / MAX_BARS`, with `REAL_orders=0` and zero alerts.
 - Controlled Cloud Deployment Baseline v1 is closed. No exchange credentials or real-order capability were installed; longer supervised cloud soak testing and operational service/restart controls remain mandatory before unattended 24/7 readiness.
 
-## 2026-08-12 — Cloud Service Supervision & Restart Validation v1 (Implementation)
+## 2026-08-12 — Cloud Service Supervision & Restart Validation v1
 - Added reviewed systemd deployment artifacts for a bounded ten-bar PAPER service, independent Operational Monitoring oneshot/timer, non-activating installer and operator runbook.
 - The forward process runs under the passwordless/non-login `ai-alpha` system identity with a private `0700` state directory; project/OS paths are read-only and no exchange credentials or real-execution adapter are introduced.
 - Every start is blocked by the existing Cloud Runtime Readiness gate unless PAPER mode, disabled real execution, bounded bars, monitoring cadence, persistent paths, writable storage, components and Python runtime all pass.
@@ -1130,4 +1130,10 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - TDD evidence: the new supervision suite first failed 10/10 because no deployment artifacts existed, then passed 10/10 after minimal implementation. The report extension first failed 2 tests, then passed 22/22 combined supervision/report tests.
 - Local isolated validation: 72/72 focused supervision/readiness/monitor/runtime tests and the complete 595/595 suite pass. systemd 255 offline security analysis reports `3.0 OK` for the paper service and `2.7 OK` for the monitor.
 - Windows/Python 3.14.6 validation: 22/22 combined supervision/report tests and the complete 595/595 repository suite pass.
-- Pending before closure: commit/push, exact-revision CPX22 installation, native systemd verification, controlled restart with `resumed=True`, clean ten-bar completion and recurring monitoring evidence.
+- Deployed exact commit `accedf0` to CPX22; 22/22 focused supervision/report tests and the complete 595/595 Ubuntu/Python 3.12.3 suite pass.
+- The installer created the non-login `ai-alpha` identity and private `0700` runtime directory, passed native `systemd-analyze verify`, installed all units and activated none. The PAPER service remained boot-disabled.
+- Every controlled service start passed all seven Cloud Runtime Readiness checks. Initial resume reconstructed 1056 offline minutes as non-tradable startup catch-up before fresh PAPER processing.
+- After three fresh durable bars, one operator restart delivered `SIGINT`, stopped cleanly and started a second process with another readiness PASS and `resumed=True`; one provider replay at the accepted watermark was safely dropped.
+- The restarted service completed 10/10 fresh bars with `Result=success`, `ExecMainStatus=0` and no automatic failure restarts. The final report returned `PASS`, `audit_complete=True`, `resumed=True`, zero rejected bars, zero disconnects, zero recovery failures, `observed_gap=0.0m`, `MAX_BARS` and `REAL=0`.
+- Enabled only the persistent one-minute Operational Monitoring timer. Recurring journald evidence reports `OK / COMPLETED / MAX_BARS`, `REAL_orders=0` and zero alerts while the PAPER service is inactive and boot-disabled.
+- Cloud Service Supervision & Restart Validation v1 is closed. Next evidence boundary: a bounded multi-hour cloud PAPER soak; overnight, 24-hour, multi-day and any real execution capability remain gated.

@@ -340,10 +340,11 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
 - [x] Add deterministic `resumed=True/False` evidence to the existing forward-session report without changing trading behavior.
 - [x] Prove the deployment contract with 10/10 focused infrastructure tests, 22/22 combined supervision/report tests, systemd 255 security scores `3.0 OK` / `2.7 OK`, and an isolated 595/595 full suite.
 - [x] Confirm 22/22 combined supervision/report tests and the complete 595/595 local Windows/Python 3.14.6 suite before milestone commit/push.
-- [ ] Install the exact committed revision on CPX22 and require native `systemd-analyze verify` plus pre-start Cloud Runtime Readiness PASS.
-- [ ] Prove controlled process restart plus continuity resume on CPX22 before extending duration.
-- [ ] Enable the monitoring timer explicitly and verify recurring journal evidence without enabling the paper service at boot.
+- [x] Install exact commit `accedf0` on CPX22, pass 22/22 focused and 595/595 complete Ubuntu/Python 3.12.3 tests, native `systemd-analyze verify` and all seven pre-start Cloud Runtime Readiness checks.
+- [x] Prove controlled process restart after durable checkpoints: `SIGINT` stop, clean systemd result, second readiness PASS, `resumed=True`, safe provider replay drop and no automatic crash restart.
+- [x] Complete the restarted ten-bar session with report `PASS`, complete audit, zero rejected bars, zero disconnects, `observed_gap=0.0m`, `MAX_BARS`, `REAL=0` and process `success/0`.
+- [x] Enable only the one-minute monitoring timer and verify recurring `OK / COMPLETED / MAX_BARS`, zero-alert journal evidence while the PAPER service remains boot-disabled and inactive after completion.
 - [ ] Run a bounded multi-hour cloud paper session and review transport, recovery, strategy, Risk Engine and monitoring evidence.
 - [ ] Progress to overnight, 24-hour and multi-day soak gates only after each shorter gate passes.
 
-External notification delivery and any real execution capability remain deferred. A clean five-bar smoke test proves the deployment path, not unattended 24/7 production readiness.
+External notification delivery and any real execution capability remain deferred. The clean supervision/restart gate authorizes bounded multi-hour cloud PAPER validation, not unattended 24/7 production readiness.
