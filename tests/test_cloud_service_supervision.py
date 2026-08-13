@@ -70,11 +70,11 @@ def test_paper_service_has_fail_closed_readiness_and_execution_lock():
     ]
 
 
-def test_paper_service_uses_reviewed_three_hour_soak_bound():
+def test_paper_service_uses_reviewed_twelve_hour_overnight_soak_bound():
     environment = _environment("ai-alpha-paper.env")
 
-    assert environment == {"AI_ALPHA_SESSION_BARS": "180"}
-    assert int(environment["AI_ALPHA_SESSION_BARS"]) > 0
+    assert environment == {"AI_ALPHA_SESSION_BARS": "720"}
+    assert 0 < int(environment["AI_ALPHA_SESSION_BARS"]) < 1440
 
 
 def test_paper_service_uses_persistent_private_runtime_storage():

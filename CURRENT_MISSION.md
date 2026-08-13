@@ -141,5 +141,13 @@ The restarted attempt completed 180/180 fresh bars with zero rejected bars, comp
 
 Restart Incident Visibility v1 is closed. The recorder remains evidence-only and Strategy, Coinbase ordering, Feed Health, recovery, Risk Engine, PaperBroker and the structural `REAL_orders=0` lock remain unchanged.
 
-### Next Boundary — Overnight Cloud PAPER Soak v1 (Not Yet Activated)
-The multi-hour functional gate and restart-incident visibility gate now authorize preparation for a bounded overnight PAPER soak. Before activation, define one reviewed root-owned overnight bar bound in the repository, reproduce focused/full tests, deploy the exact commit and rerun native unit plus Cloud Runtime Readiness verification. The PAPER service remains boot-disabled and no ad hoc host duration edit is authorized. Overnight evidence remains an operational endurance gate, not profitability evidence or permission for 24-hour, multi-day or real execution.
+### Overnight Cloud PAPER Soak v1 — Preparation (Not Yet Activated)
+The multi-hour functional gate and restart-incident visibility gate authorize a bounded twelve-hour PAPER endurance test. The committed root-owned configuration now sets `AI_ALPHA_SESSION_BARS=720`, keeping the overnight gate explicit, reviewable and below the separate 24-hour boundary. The identical value is consumed by Cloud Runtime Readiness and `forward_paper_session`; no ad hoc host duration edit is authorized.
+
+This run will not inject a restart. A clean pass requires 720/720 fresh bars, zero rejected bars, complete audit, `MAX_BARS`, `observed_gap=0.0m`, zero recovery failures, zero reconnect exhaustion, 100% reconnect success when disconnects occur, systemd `Result=success`, `ExecMainStatus=0`, `NRestarts=0`, final monitoring `OK` and `REAL_orders=0`. Transient transport recovery remains allowed only when continuity is exact and its outage evidence remains visible. Any process incident, automatic restart, critical monitor decision or previous-process-failure warning prevents a clean pass and requires explicit review.
+
+Preparation changes only the reviewed deployment duration, its infrastructure contract and operator documentation. Strategy, Coinbase ordering, Feed Health, hybrid recovery, Risk Engine, PaperBroker, incident visibility and the structural real-execution lock are unchanged. The PAPER service remains boot-disabled and the installer remains non-activating. Pending before activation: commit/push, deploy the exact commit, rerun the cloud suite, native unit verification and all seven Cloud Runtime Readiness checks. Overnight evidence is not profitability evidence or permission for 24-hour, multi-day or real execution.
+
+Local isolated validation is complete on Python 3.12.13: 13/13 supervision-contract tests, 26/26 combined supervision/readiness tests and the complete 605/605 repository suite pass; whitespace and installer shell-syntax checks are clean.
+
+Windows/Python 3.14.6 validation is also complete: 26/26 combined supervision/readiness tests and the complete 605/605 repository suite pass, with a clean patch-format check.

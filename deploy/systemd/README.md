@@ -44,8 +44,8 @@ review.
 
 ## Reviewed session bound
 
-The current committed configuration sets `AI_ALPHA_SESSION_BARS=180`, which is
-approximately three hours of fresh one-minute PAPER evidence. Changing the
+The current committed configuration sets `AI_ALPHA_SESSION_BARS=720`, which is
+approximately twelve hours of fresh one-minute PAPER evidence. Changing the
 bound requires a reviewed repository change followed by the non-activating
 installer; do not edit the deployed file ad hoc. The service remains disabled
 at boot and every start remains an explicit operator action.
@@ -72,13 +72,16 @@ visible as `PREVIOUS_PROCESS_FAILURE WARNING` throughout that recovery attempt.
 A later healthy session is not allowed to erase the incident from append-only
 audit evidence.
 
-For the current multi-hour gate, require 180/180 processed bars,
-`audit_complete=True`, `observed_gap=0.0m`, zero recovery failures,
-`MAX_BARS`, `REAL_orders=0` and no `CRITICAL` monitoring decision. Transport
-disconnect, reconnect and outage metrics must be retained even when hybrid
-recovery preserves continuity; a transport warning is not silently upgraded to
-a production-readiness pass. Any `PREVIOUS_PROCESS_FAILURE` warning makes the
-complete soak a warning-bearing result and requires explicit incident review.
+For the current overnight gate, do not inject a restart or process failure.
+Require 720/720 processed bars, zero rejected bars, `audit_complete=True`,
+`observed_gap=0.0m`, zero recovery failures, zero reconnect exhaustion,
+100% reconnect success whenever disconnects occur, `MAX_BARS`,
+`REAL_orders=0`, systemd `Result=success`, `ExecMainStatus=0`, `NRestarts=0`
+and final Operational Monitoring status `OK`. Transport disconnect, reconnect
+and outage metrics must be retained even when hybrid recovery preserves
+continuity. Any process incident, automatic restart, `CRITICAL` result or
+`PREVIOUS_PROCESS_FAILURE` warning makes the soak non-passing until explicitly
+reviewed; it is never silently upgraded to an endurance pass.
 
 ## Monitoring schedule
 

@@ -355,6 +355,13 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
 - [x] Prove the controlled cloud lifecycle: `SIGKILL -> PROCESS_INCIDENT -> CRITICAL / PROCESS_FAILURE -> one ten-second systemd restart -> resumed=True -> PREVIOUS_PROCESS_FAILURE WARNING`, with all seven restart readiness checks passing and `REAL_orders=0` invariant.
 - [x] Complete the restarted 180-bar attempt with report `PASS`, complete audit, zero rejected bars, zero disconnects, zero recovery failures, `observed_gap=0.0m`, `MAX_BARS`, three filled PAPER orders and `REAL=0`.
 - [x] Prove direct and recurring timer monitoring retain `WARNING / COMPLETED / MAX_BARS` plus the exact previous process failure after healthy completion; PAPER ends inactive/boot-disabled and the monitor timer remains active/enabled.
-- [ ] Progress to overnight, 24-hour and multi-day soak gates only after each shorter gate passes.
+- [x] Define the next reviewed root-owned overnight bound as 720 completed one-minute bars, approximately twelve hours and strictly below the separate 24-hour gate.
+- [x] Define clean overnight acceptance: 720/720, zero rejected bars, complete audit, exact continuity, zero recovery failures/exhaustion, 100% reconnect success when needed, normal systemd completion with no automatic restart, final monitoring `OK` and `REAL_orders=0`.
+- [x] Validate preparation locally with 13/13 supervision-contract tests, 26/26 combined supervision/readiness tests, the complete 605/605 Python 3.12.13 suite, clean whitespace and installer shell syntax.
+- [x] Reproduce 26/26 combined supervision/readiness tests and the complete 605/605 suite on Windows/Python 3.14.6 with a clean patch-format check.
+- [ ] Commit and push the exact overnight-preparation revision.
+- [ ] Deploy the exact revision without activation; rerun cloud tests, native systemd verification and all seven Cloud Runtime Readiness checks.
+- [ ] Start one explicit overnight PAPER run with no injected failure and review systemd, deterministic report and recurring monitoring evidence after bounded completion.
+- [ ] Progress to 24-hour and multi-day soak gates only after the clean overnight gate passes.
 
-External notification delivery and any real execution capability remain deferred. The closed multi-hour and restart-visibility gates authorize preparation for a repository-reviewed bounded overnight PAPER soak, not ad hoc activation, unattended 24/7 production readiness or live-money execution.
+External notification delivery and any real execution capability remain deferred. The twelve-hour gate is bounded operational endurance evidence, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization.
