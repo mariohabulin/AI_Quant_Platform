@@ -350,8 +350,11 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
 - [x] Complete the 180-bar cloud PAPER gate: the recovered attempt passed 180/180, complete audit, `MAX_BARS`, `observed_gap=0.0m`, zero recovery failures and `REAL_orders=0`; classify the complete gate `PASS WITH ORDERING/RESTART WARNING` because an earlier out-of-order failure/restart was hidden by latest-session monitoring.
 - [x] Implement append-only systemd `PROCESS_INCIDENT` evidence plus current-attempt `CRITICAL` and recovered-attempt `PREVIOUS_PROCESS_FAILURE` monitoring policy without changing restart ownership or trading behavior.
 - [x] Validate Restart Incident Visibility locally with 39/39 focused tests, the complete 605/605 Python 3.12.13 suite and isolated native systemd 255 syntax verification.
-- [ ] Commit/push and reproduce the 605/605 suite on Windows/Python 3.14.6.
-- [ ] Deploy the exact incident-visibility commit, rerun cloud tests/native verification and prove the controlled `PROCESS_INCIDENT -> CRITICAL -> PREVIOUS_PROCESS_FAILURE WARNING` restart lifecycle.
+- [x] Commit/push exact incident-visibility commit `7d3a203` and reproduce 39/39 focused plus 605/605 complete tests on Windows/Python 3.14.6.
+- [x] Deploy exact commit `7d3a203`, reproduce 39/39 focused plus 605/605 complete cloud tests, pass native unit verification and install without activating PAPER.
+- [x] Prove the controlled cloud lifecycle: `SIGKILL -> PROCESS_INCIDENT -> CRITICAL / PROCESS_FAILURE -> one ten-second systemd restart -> resumed=True -> PREVIOUS_PROCESS_FAILURE WARNING`, with all seven restart readiness checks passing and `REAL_orders=0` invariant.
+- [x] Complete the restarted 180-bar attempt with report `PASS`, complete audit, zero rejected bars, zero disconnects, zero recovery failures, `observed_gap=0.0m`, `MAX_BARS`, three filled PAPER orders and `REAL=0`.
+- [x] Prove direct and recurring timer monitoring retain `WARNING / COMPLETED / MAX_BARS` plus the exact previous process failure after healthy completion; PAPER ends inactive/boot-disabled and the monitor timer remains active/enabled.
 - [ ] Progress to overnight, 24-hour and multi-day soak gates only after each shorter gate passes.
 
-External notification delivery and any real execution capability remain deferred. The multi-hour functional gate does not authorize overnight testing until restart-incident visibility is deployed and proven; no result authorizes unattended 24/7 production readiness.
+External notification delivery and any real execution capability remain deferred. The closed multi-hour and restart-visibility gates authorize preparation for a repository-reviewed bounded overnight PAPER soak, not ad hoc activation, unattended 24/7 production readiness or live-money execution.
