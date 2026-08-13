@@ -50,6 +50,23 @@ def session_rows(end_reason="MAX_BARS", real_orders=0):
     ]
 
 
+def process_incident(
+    recorded_at="2026-08-11T09:59:30+00:00",
+    service_result="exit-code",
+    exit_code="exited",
+    exit_status="1",
+):
+    return {
+        "type": "PROCESS_INCIDENT",
+        "recorded_at": recorded_at,
+        "reason": "UNEXPECTED_PROCESS_FAILURE",
+        "service_result": service_result,
+        "exit_code": exit_code,
+        "exit_status": exit_status,
+        "real_orders": 0,
+    }
+
+
 def write_state(path, *, kill_switch=False, pending=None):
     payload = {
         "version": 1,
@@ -90,6 +107,69 @@ def test_fresh_incomplete_session_is_running_not_critical(tmp_path):
     report = monitor(tmp_path, session_rows()[:-1])
     assert report.status == "OK"
     assert report.session_state == "RUNNING"
+
+
+def test_current_process_incident_is_critical_and_not_mislabeled_running(tmp_path):
+    rows = session_rows()[:-1] + [process_incident()]
+
+    report = monitor(tmp_path, rows)
+
+    assert report.status == "CRITICAL"
+    assert report.session_state == "FAILED"
+    assert report.end_reason == "PROCESS_FAILURE"
+    assert "PROCESS_FAILURE" in {alert.code for alert in report.alerts}
+
+
+def test_healthy_restart_retains_previous_process_failure_as_warning(tmp_path):
+    failed_attempt = [
+        {
+            "type": "SESSION_START",
+            "recorded_at": "2026-08-11T09:50:00+00:00",
+            "real_orders": 0,
+        },
+        paper_event(recorded_at="2026-08-11T09:51:00+00:00"),
+        process_incident(recorded_at="2026-08-11T09:52:00+00:00"),
+    ]
+
+    report = monitor(tmp_path, failed_attempt + session_rows())
+
+    assert report.status == "WARNING"
+    assert report.session_state == "COMPLETED"
+    assert report.end_reason == "MAX_BARS"
+    assert "PREVIOUS_PROCESS_FAILURE" in {
+        alert.code for alert in report.alerts
+    }
+
+
+def test_later_session_clears_incident_after_one_completed_recovery_session(tmp_path):
+    failed_attempt = [
+        {
+            "type": "SESSION_START",
+            "recorded_at": "2026-08-11T09:40:00+00:00",
+            "real_orders": 0,
+        },
+        process_incident(recorded_at="2026-08-11T09:42:00+00:00"),
+    ]
+    recovered_attempt = [
+        {
+            "type": "SESSION_START",
+            "recorded_at": "2026-08-11T09:45:00+00:00",
+            "real_orders": 0,
+        },
+        {
+            "type": "SESSION_END",
+            "recorded_at": "2026-08-11T09:50:00+00:00",
+            "reason": "MAX_BARS",
+            "real_orders": 0,
+        },
+    ]
+
+    report = monitor(tmp_path, failed_attempt + recovered_attempt + session_rows())
+
+    assert report.status == "OK"
+    assert "PREVIOUS_PROCESS_FAILURE" not in {
+        alert.code for alert in report.alerts
+    }
 
 
 def test_stale_running_audit_is_critical(tmp_path):

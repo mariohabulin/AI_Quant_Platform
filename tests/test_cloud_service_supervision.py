@@ -97,6 +97,15 @@ def test_paper_service_has_bounded_restart_policy_and_controlled_signal():
     assert _values(service, "SuccessExitStatus") == ["130"]
 
 
+def test_paper_service_persists_post_stop_failure_evidence_without_owning_policy():
+    service = _unit("ai-alpha-paper.service")
+
+    assert _values(service, "ExecStopPost") == [
+        "-/opt/ai-alpha/.venv/bin/python -m src.process_incident "
+        "--audit /var/lib/ai-alpha/forward_paper_audit.jsonl"
+    ]
+
+
 def test_paper_service_applies_minimum_process_hardening():
     service = _unit("ai-alpha-paper.service")
 

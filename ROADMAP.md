@@ -346,8 +346,12 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
 - [x] Enable only the one-minute monitoring timer and verify recurring `OK / COMPLETED / MAX_BARS`, zero-alert journal evidence while the PAPER service remains boot-disabled and inactive after completion.
 - [x] Replace duplicated ten-bar literals with one committed, root-owned `AI_ALPHA_SESSION_BARS` configuration consumed by both Cloud Runtime Readiness and the forward runner; current reviewed bound: 180 one-minute bars.
 - [x] Confirm the bounded-soak configuration with 25/25 focused supervision/readiness tests and the complete 597/597 local Windows/Python 3.14.6 suite before implementation commit/push.
-- [ ] Deploy the exact bounded-soak commit, rerun focused/full cloud tests, native unit verification and all seven pre-start readiness checks.
-- [ ] Run a bounded multi-hour cloud paper session and review transport, recovery, strategy, Risk Engine and monitoring evidence.
+- [x] Deploy exact bounded-soak commit `0d5477c`, rerun the 597/597 cloud suite, native unit verification and all seven pre-start readiness checks.
+- [x] Complete the 180-bar cloud PAPER gate: the recovered attempt passed 180/180, complete audit, `MAX_BARS`, `observed_gap=0.0m`, zero recovery failures and `REAL_orders=0`; classify the complete gate `PASS WITH ORDERING/RESTART WARNING` because an earlier out-of-order failure/restart was hidden by latest-session monitoring.
+- [x] Implement append-only systemd `PROCESS_INCIDENT` evidence plus current-attempt `CRITICAL` and recovered-attempt `PREVIOUS_PROCESS_FAILURE` monitoring policy without changing restart ownership or trading behavior.
+- [x] Validate Restart Incident Visibility locally with 39/39 focused tests, the complete 605/605 Python 3.12.13 suite and isolated native systemd 255 syntax verification.
+- [ ] Commit/push and reproduce the 605/605 suite on Windows/Python 3.14.6.
+- [ ] Deploy the exact incident-visibility commit, rerun cloud tests/native verification and prove the controlled `PROCESS_INCIDENT -> CRITICAL -> PREVIOUS_PROCESS_FAILURE WARNING` restart lifecycle.
 - [ ] Progress to overnight, 24-hour and multi-day soak gates only after each shorter gate passes.
 
-External notification delivery and any real execution capability remain deferred. The clean supervision/restart gate authorizes bounded multi-hour cloud PAPER validation, not unattended 24/7 production readiness.
+External notification delivery and any real execution capability remain deferred. The multi-hour functional gate does not authorize overnight testing until restart-incident visibility is deployed and proven; no result authorizes unattended 24/7 production readiness.

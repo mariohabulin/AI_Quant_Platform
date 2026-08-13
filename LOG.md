@@ -1148,3 +1148,19 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - Windows validation: 25/25 combined supervision/readiness tests and the complete 597/597 repository suite pass on Python 3.14.6.
 - Strategy, Risk Engine, Feed Health, hybrid recovery, PaperBroker decisions and the structural `REAL_orders=0` lock are unchanged.
 - Pending evidence: exact-commit cloud deployment validation and the controlled 180-bar cloud PAPER run with recurring monitoring and deterministic final reports.
+
+## 2026-08-13 — Bounded Multi-Hour Cloud PAPER Soak v1 — PASS WITH ORDERING/RESTART WARNING
+- Deployed exact commit `0d5477c` to CPX22 with root-owned `AI_ALPHA_SESSION_BARS=180`, boot-disabled PAPER activation and the enabled read-only monitor timer.
+- Reproduced the complete 597/597 Ubuntu/Python 3.12.3 suite, native systemd verification and all seven Cloud Runtime Readiness checks before starting.
+- The first attempt recovered four transient WebSocket disconnects, then correctly failed closed on a Coinbase trade arriving outside the strict reorder boundary. The process exited status 1; systemd restarted it after ten seconds with `resumed=True` and preserved PAPER continuity.
+- The recovered attempt completed 180/180 fresh bars, zero rejected bars, complete audit, `MAX_BARS`, two of two reconnects, 11.2 seconds total outage, zero recovery failures and `observed_gap=0.0m`.
+- Strategy/Risk evidence contained BUY/SELL/HOLD `1/0/179`, one exact-3R BUY reduced by the exposure cap, one PAPER fill and `REAL_orders=0`. Final equity was `4998.56`, final open PAPER position `0.01971055`, session mark-to-market change `+1.70` and max drawdown `0.0273%`; these are operational observations, not profitability evidence.
+- Final monitoring reported `OK / COMPLETED / MAX_BARS`, but review proved that latest-session selection hid the prior failed process. The functional continuity/safety gate passed; the complete milestone remains warning-bearing until restart incident visibility is deployed and proven.
+
+## 2026-08-13 — Restart Incident Visibility v1 (Local Implementation)
+- TDD RED proved three gaps: no persistent systemd post-stop incident record, a failed latest attempt was mislabeled `RUNNING`, and a later healthy restart hid the previous failure.
+- Added standard-library append-only `PROCESS_INCIDENT` persistence using systemd's `SERVICE_RESULT`, `EXIT_CODE` and `EXIT_STATUS` evidence. Clean results create no incident; missing evidence fails visible as unknown.
+- Added read-only monitoring policy: current process incidents are `CRITICAL / FAILED / PROCESS_FAILURE`; an incident in the immediately previous attempt remains `PREVIOUS_PROCESS_FAILURE WARNING` throughout the restarted attempt, including after `MAX_BARS`.
+- Preserved lifecycle ownership by ignoring only the recorder command's exit status at the systemd boundary. The recorder cannot start/restart PAPER, alter the original service result, classify alerts or enter trading logic.
+- TDD GREEN: 39/39 focused process-incident/monitoring/supervision tests and the complete 605/605 Python 3.12.13 suite pass. Native systemd 255 syntax verification passes in the isolated path-adjusted validation environment.
+- Strategy, Coinbase ordering policy, Feed Health, hybrid recovery, Risk Engine, PaperBroker and structural `REAL_orders=0` behavior are unchanged. Exact-commit Windows and cloud deployment validation remain the next operational gate.

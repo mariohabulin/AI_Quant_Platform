@@ -19,6 +19,9 @@ trading process or enable a boot-time service.
 - `Restart=on-failure` is rate-limited. A normal `MAX_BARS` completion does not
   restart. Operator stop/restart uses `SIGINT` and continuity is restored from
   the atomic state file on the next start.
+- `ExecStopPost` appends a `PROCESS_INCIDENT` only for a non-successful systemd
+  result. The recorder is evidence-only and its own exit status is ignored, so
+  it cannot create or suppress a PAPER restart.
 - The monitor calls the existing read-only policy every minute. `OK` and
   `WARNING` are accepted unit outcomes; `CRITICAL` remains a systemd failure.
 - Journald retains process output and monitoring decisions. External
@@ -63,12 +66,19 @@ The post-restart `SESSION_START` record must contain `resumed=true`. The final
 session must end with `MAX_BARS`, `REAL_orders=0`, a PASS forward report and an
 OK/WARNING-free Operational Monitoring result before the gate is accepted.
 
+An unexpected process failure must append `PROCESS_INCIDENT`. Before restart it
+is classified as `CRITICAL / FAILED / PROCESS_FAILURE`; after restart it remains
+visible as `PREVIOUS_PROCESS_FAILURE WARNING` throughout that recovery attempt.
+A later healthy session is not allowed to erase the incident from append-only
+audit evidence.
+
 For the current multi-hour gate, require 180/180 processed bars,
 `audit_complete=True`, `observed_gap=0.0m`, zero recovery failures,
 `MAX_BARS`, `REAL_orders=0` and no `CRITICAL` monitoring decision. Transport
 disconnect, reconnect and outage metrics must be retained even when hybrid
 recovery preserves continuity; a transport warning is not silently upgraded to
-a production-readiness pass.
+a production-readiness pass. Any `PREVIOUS_PROCESS_FAILURE` warning makes the
+complete soak a warning-bearing result and requires explicit incident review.
 
 ## Monitoring schedule
 

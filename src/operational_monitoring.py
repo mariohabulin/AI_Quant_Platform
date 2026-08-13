@@ -141,13 +141,29 @@ def build_operational_monitoring_report(
             "Forward audit has no session boundary.",
         ))
         session = rows
+        previous_session = []
     else:
         session = rows[starts[-1]:] if starts else []
+        previous_session = (
+            rows[starts[-2]:starts[-1]] if len(starts) >= 2 else []
+        )
 
     ends = [row for row in session if row.get("type") == "SESSION_END"]
     end = ends[-1] if ends else None
-    session_state = "COMPLETED" if end else ("RUNNING" if session else "UNKNOWN")
-    end_reason = str(end.get("reason", "UNKNOWN")) if end else "RUNNING"
+    process_incidents = [
+        row for row in session if row.get("type") == "PROCESS_INCIDENT"
+    ]
+    previous_process_incidents = [
+        row for row in previous_session if row.get("type") == "PROCESS_INCIDENT"
+    ]
+    if process_incidents:
+        session_state = "FAILED"
+        end_reason = "PROCESS_FAILURE"
+    else:
+        session_state = "COMPLETED" if end else (
+            "RUNNING" if session else "UNKNOWN"
+        )
+        end_reason = str(end.get("reason", "UNKNOWN")) if end else "RUNNING"
 
     last_recorded_at = _record_timestamp(session[-1]) if session else None
     audit_file = Path(audit_path)
@@ -171,6 +187,26 @@ def build_operational_monitoring_report(
         alerts.append(OperationalAlert(
             "CHECKPOINT_STALE", "CRITICAL",
             "Running session continuity checkpoint exceeded the stale threshold.",
+        ))
+
+    if process_incidents:
+        incident = process_incidents[-1]
+        alerts.append(OperationalAlert(
+            "PROCESS_FAILURE", "CRITICAL",
+            "Current supervised process failed unexpectedly "
+            f"(service_result={incident.get('service_result', 'unknown')} "
+            f"exit_code={incident.get('exit_code', 'unknown')} "
+            f"exit_status={incident.get('exit_status', 'unknown')}).",
+        ))
+    if previous_process_incidents:
+        incident = previous_process_incidents[-1]
+        alerts.append(OperationalAlert(
+            "PREVIOUS_PROCESS_FAILURE", "WARNING",
+            "The immediately previous supervised process failed before this "
+            "restart "
+            f"(service_result={incident.get('service_result', 'unknown')} "
+            f"exit_code={incident.get('exit_code', 'unknown')} "
+            f"exit_status={incident.get('exit_status', 'unknown')}).",
         ))
 
     fatal_reasons = {"BACKFILL_FATAL", "TRANSPORT_FATAL", "RUNTIME_HALTED"}

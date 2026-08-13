@@ -20,6 +20,7 @@ Environment=AI_ALPHA_STALE_AFTER_SECONDS=180
 Environment=AI_ALPHA_REAL_EXECUTION_ENABLED=false
 ExecStartPre=/opt/ai-alpha/.venv/bin/python -m src.cloud_readiness
 ExecStart=/opt/ai-alpha/.venv/bin/python -m src.forward_paper_session --bars ${AI_ALPHA_SESSION_BARS} --audit /var/lib/ai-alpha/forward_paper_audit.jsonl --state /var/lib/ai-alpha/forward_paper_state.json
+ExecStopPost=-/opt/ai-alpha/.venv/bin/python -m src.process_incident --audit /var/lib/ai-alpha/forward_paper_audit.jsonl
 Restart=on-failure
 RestartSec=10s
 SuccessExitStatus=130
