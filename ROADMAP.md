@@ -359,9 +359,17 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
 - [x] Define clean overnight acceptance: 720/720, zero rejected bars, complete audit, exact continuity, zero recovery failures/exhaustion, 100% reconnect success when needed, normal systemd completion with no automatic restart, final monitoring `OK` and `REAL_orders=0`.
 - [x] Validate preparation locally with 13/13 supervision-contract tests, 26/26 combined supervision/readiness tests, the complete 605/605 Python 3.12.13 suite, clean whitespace and installer shell syntax.
 - [x] Reproduce 26/26 combined supervision/readiness tests and the complete 605/605 suite on Windows/Python 3.14.6 with a clean patch-format check.
-- [ ] Commit and push the exact overnight-preparation revision.
-- [ ] Deploy the exact revision without activation; rerun cloud tests, native systemd verification and all seven Cloud Runtime Readiness checks.
-- [ ] Start one explicit overnight PAPER run with no injected failure and review systemd, deterministic report and recurring monitoring evidence after bounded completion.
+- [x] Commit and push exact overnight-preparation revision `d96c981`.
+- [x] Deploy exact revision `d96c981` without activation; reproduce 26/26 focused and 605/605 complete cloud tests, native systemd verification and all seven Cloud Runtime Readiness checks.
+- [x] Run the explicit overnight PAPER gate and classify it `FAIL WITH SAFETY PRESERVED`: seven out-of-order trade failures/restarts, no 720-bar terminal boundary and `REAL_orders=0` throughout.
+- [x] Prove that most ordering failures were not immediately reconnect-bound, and retain exact process-incident timestamps without widening the two-second reorder policy.
+- [x] Stop the final process safely and expose the missing controlled-stop `SESSION_END`: systemd success/130, but stale `RUNNING` monitoring and an intentionally refused incomplete forward report.
+- [x] Implement typed late-trade timing evidence, durable `LATE_TRADE_REJECTED` plus `ORDERING_FATAL`, explicit `OPERATOR_STOP`, MAX_BARS-only report PASS semantics and a two-start supervision budget.
+- [x] Validate the failure-closure implementation locally and from a detached clean overnight-base worktree with 97/97 focused tests, the complete 615/615 Python 3.12.13 suite, clean whitespace and installer shell syntax.
+- [ ] Apply the exact closure patch on Windows; reproduce focused and full-suite validation before commit/push.
+- [ ] Deploy the exact closure revision non-activating; rerun cloud tests, native systemd verification and all seven readiness checks.
+- [ ] Run a short bounded diagnostic cloud PAPER probe and verify late-trade/stop/monitor/report lifecycle evidence before any new overnight attempt.
+- [ ] Repeat a clean 720-bar overnight gate with `NRestarts=0` before progression.
 - [ ] Progress to 24-hour and multi-day soak gates only after the clean overnight gate passes.
 
 External notification delivery and any real execution capability remain deferred. The twelve-hour gate is bounded operational endurance evidence, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization.

@@ -17,6 +17,7 @@ from src.coinbase_market_data import (
     CoinbaseHybridGapRecovery,
     CoinbaseOneMinuteTradeAggregator,
     CoinbasePublicWebSocketTransport,
+    CoinbaseTradeOrderingError,
 )
 from src.operational_runtime import JsonCheckpointStore
 from src.realtime_market_data import FeedHealthError
@@ -247,7 +248,7 @@ def _strategy_activity_diagnostics(runtime):
     return diagnostics
 
 
-def run_forward_paper(
+def _run_forward_paper_once(
     transport=None,
     max_processed_bars=60,
     audit_path="runtime/forward_paper_audit.jsonl",
@@ -313,7 +314,43 @@ def run_forward_paper(
                 continuity.save(runtime, aggregator)
             continue
 
-        for bar in aggregator.ingest_message(message):
+        try:
+            completed_bars = aggregator.ingest_message(message)
+        except CoinbaseTradeOrderingError as exc:
+            audit.append({
+                "type": "LATE_TRADE_REJECTED",
+                **exc.diagnostics(),
+                "processed_events": session_processed,
+                "rejected_events": session_rejected,
+                "runtime_processed_events": runtime.health.processed_events,
+                "runtime_rejected_events": runtime.health.rejected_events,
+                "real_orders": 0,
+            })
+            continuity.save(runtime, aggregator)
+            broker = runtime.session.engine.paper_broker
+            mark = broker.last_market_price or 1.0
+            final = broker.account_snapshot(mark_price=mark)
+            audit.append({
+                "type": "SESSION_END",
+                "reason": "ORDERING_FATAL",
+                "processed_events": session_processed,
+                "rejected_events": session_rejected,
+                "runtime_processed_events": runtime.health.processed_events,
+                "runtime_rejected_events": runtime.health.rejected_events,
+                "paper_orders": len(broker.order_history),
+                "equity": final["equity"],
+                "position": broker.position_quantity,
+                "real_orders": 0,
+            })
+            output(
+                "LATE_TRADE_REJECTED: "
+                f"trade={exc.trade_timestamp.isoformat()} "
+                f"active_bucket={exc.active_bucket.isoformat()} "
+                f"lateness={exc.lateness_seconds:.3f}s"
+            )
+            raise
+
+        for bar in completed_bars:
             received_at = now_fn()
 
             # Coinbase can replay already-completed minutes after a stream boundary
@@ -538,6 +575,117 @@ def run_forward_paper(
         broker.position_quantity,
         str(audit.path),
     )
+
+
+def _audit_session_start_count(audit_path):
+    path = Path(audit_path)
+    if not path.exists():
+        return 0
+    if not path.is_file():
+        return None
+    try:
+        rows = [
+            json.loads(line)
+            for line in path.read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        ]
+    except (OSError, json.JSONDecodeError):
+        return None
+    return sum(row.get("type") == "SESSION_START" for row in rows)
+
+
+def _append_operator_stop(audit_path, state_path, prior_start_count):
+    """Close the latest open audit session from already-durable evidence."""
+    path = Path(audit_path)
+    if not path.exists() or not path.is_file():
+        return False
+    try:
+        rows = [
+            json.loads(line)
+            for line in path.read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        ]
+    except (OSError, json.JSONDecodeError):
+        return False
+    starts = [index for index, row in enumerate(rows) if row.get("type") == "SESSION_START"]
+    if not starts or prior_start_count is None or len(starts) <= prior_start_count:
+        return False
+    session = rows[starts[-1]:]
+    if any(row.get("type") == "SESSION_END" for row in session):
+        return False
+
+    paper = [row for row in session if row.get("type") == "PAPER_EVENT"]
+    rejected = [row for row in session if row.get("type") == "REJECTED_BAR"]
+    latest_paper = paper[-1] if paper else {}
+    snapshot = latest_paper.get("snapshot", {})
+    paper_orders = int(latest_paper.get("paper_orders", 0))
+    equity = snapshot.get("equity")
+    position = snapshot.get("position_quantity")
+    runtime_processed = len(paper)
+    runtime_rejected = len(rejected)
+
+    state_file = Path(state_path)
+    if state_file.exists() and state_file.is_file():
+        try:
+            state = json.loads(state_file.read_text(encoding="utf-8"))
+            runtime_state = state.get("runtime", {})
+            counters = runtime_state.get("runtime", {})
+            broker = runtime_state.get("broker", {})
+            runtime_processed = int(
+                counters.get("processed_events", runtime_processed)
+            )
+            runtime_rejected = int(
+                counters.get("rejected_events", runtime_rejected)
+            )
+            if equity is None:
+                cash = float(broker.get("cash", 0.0))
+                position = float(broker.get("position_quantity", 0.0))
+                mark = broker.get("last_market_price")
+                mark = 0.0 if mark is None else float(mark)
+                equity = cash + position * mark
+        except (OSError, json.JSONDecodeError, TypeError, ValueError):
+            pass
+
+    JsonlForwardAudit(path).append({
+        "type": "SESSION_END",
+        "reason": "OPERATOR_STOP",
+        "processed_events": len(paper),
+        "rejected_events": len(rejected),
+        "runtime_processed_events": runtime_processed,
+        "runtime_rejected_events": runtime_rejected,
+        "paper_orders": paper_orders,
+        "equity": equity,
+        "position": position,
+        "real_orders": 0,
+    })
+    return True
+
+
+def run_forward_paper(
+    transport=None,
+    max_processed_bars=60,
+    audit_path="runtime/forward_paper_audit.jsonl",
+    output=print,
+    now_fn=None,
+    state_path="runtime/forward_paper_state.json",
+    resume=True,
+    gap_recovery=None,
+):
+    prior_start_count = _audit_session_start_count(audit_path)
+    try:
+        return _run_forward_paper_once(
+            transport=transport,
+            max_processed_bars=max_processed_bars,
+            audit_path=audit_path,
+            output=output,
+            now_fn=now_fn,
+            state_path=state_path,
+            resume=resume,
+            gap_recovery=gap_recovery,
+        )
+    except KeyboardInterrupt:
+        _append_operator_stop(audit_path, state_path, prior_start_count)
+        raise
 
 
 DEFAULT_SESSION_AUDIT = "runtime/forward_paper_audit.jsonl"

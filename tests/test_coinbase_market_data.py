@@ -8,6 +8,7 @@ from src.coinbase_market_data import (
     CoinbaseOneMinuteBarAdapter,
     CoinbaseOneMinuteTradeAggregator,
     CoinbasePublicWebSocketTransport,
+    CoinbaseTradeOrderingError,
 )
 from src.realtime_market_data import FeedHealthError, RealTimeMarketDataFeed
 
@@ -162,6 +163,36 @@ def test_cross_message_late_trade_is_reordered_before_minute_is_finalized():
     assert len(bars) == 1
     assert bars[0].timestamp == pd.Timestamp("2026-08-08T12:00:00Z")
     assert (bars[0].open, bars[0].high, bars[0].low, bars[0].close, bars[0].volume) == pytest.approx((100, 102, 100, 102, 0.4))
+
+
+def test_trade_beyond_reorder_window_fails_with_actionable_timing_evidence():
+    aggregator = CoinbaseOneMinuteTradeAggregator(
+        product_id="BTC-USD", reorder_window="2s"
+    )
+    aggregator.ingest_message({
+        "channel": "market_trades",
+        "events": [{"trades": [trade("2026-08-08T12:01:00.100Z", 101)]}],
+    })
+    aggregator.ingest_message({
+        "channel": "market_trades",
+        "events": [{"trades": [trade("2026-08-08T12:01:03.000Z", 103)]}],
+    })
+
+    with pytest.raises(CoinbaseTradeOrderingError) as captured:
+        aggregator.ingest_message({
+            "channel": "market_trades",
+            "events": [{"trades": [trade("2026-08-08T12:00:59.000Z", 99)]}],
+        })
+
+    error = captured.value
+    assert error.trade_timestamp == pd.Timestamp("2026-08-08T12:00:59Z")
+    assert error.trade_bucket == pd.Timestamp("2026-08-08T12:00:00Z")
+    assert error.active_bucket == pd.Timestamp("2026-08-08T12:01:00Z")
+    assert error.latest_seen_timestamp == pd.Timestamp("2026-08-08T12:01:03Z")
+    assert error.watermark_timestamp == pd.Timestamp("2026-08-08T12:01:01Z")
+    assert error.reorder_window_seconds == pytest.approx(2.0)
+    assert error.lateness_seconds == pytest.approx(2.0)
+    assert "lateness_seconds=2.000" in str(error)
 
 
 def test_reorder_buffer_state_round_trips_without_losing_pending_trade():

@@ -21,6 +21,67 @@ class CoinbaseCompletedBar:
     volume: float
 
 
+class CoinbaseTradeOrderingError(ValueError):
+    """Fail-closed late-trade error with evidence for incident diagnosis."""
+
+    def __init__(
+        self,
+        *,
+        trade_timestamp,
+        trade_bucket,
+        active_bucket,
+        latest_seen_timestamp,
+        reorder_window,
+    ):
+        self.trade_timestamp = pd.Timestamp(trade_timestamp)
+        self.trade_bucket = pd.Timestamp(trade_bucket)
+        self.active_bucket = pd.Timestamp(active_bucket)
+        self.latest_seen_timestamp = (
+            None
+            if latest_seen_timestamp is None
+            else pd.Timestamp(latest_seen_timestamp)
+        )
+        self.reorder_window_seconds = float(
+            pd.Timedelta(reorder_window).total_seconds()
+        )
+        self.watermark_timestamp = (
+            None
+            if self.latest_seen_timestamp is None
+            else self.latest_seen_timestamp - pd.Timedelta(reorder_window)
+        )
+        self.lateness_seconds = (
+            max(
+                0.0,
+                (self.watermark_timestamp - self.trade_timestamp).total_seconds(),
+            )
+            if self.watermark_timestamp is not None
+            else max(
+                0.0,
+                (self.active_bucket - self.trade_timestamp).total_seconds(),
+            )
+        )
+        super().__init__(
+            "Out-of-order Coinbase trade rejected "
+            f"(trade_timestamp={self.trade_timestamp.isoformat()} "
+            f"active_bucket={self.active_bucket.isoformat()} "
+            f"latest_seen_timestamp="
+            f"{None if self.latest_seen_timestamp is None else self.latest_seen_timestamp.isoformat()} "
+            f"reorder_window_seconds={self.reorder_window_seconds:.3f} "
+            f"lateness_seconds={self.lateness_seconds:.3f})."
+        )
+
+    def diagnostics(self):
+        return {
+            "trade_timestamp": self.trade_timestamp,
+            "trade_bucket": self.trade_bucket,
+            "active_bucket": self.active_bucket,
+            "latest_seen_timestamp": self.latest_seen_timestamp,
+            "watermark_timestamp": self.watermark_timestamp,
+            "reorder_window_seconds": self.reorder_window_seconds,
+            "lateness_seconds": self.lateness_seconds,
+        }
+
+
 class CoinbaseOneMinuteTradeAggregator:
     """Aggregate Coinbase public market trades into completed one-minute OHLCV bars.
 
@@ -80,7 +141,13 @@ class CoinbaseOneMinuteTradeAggregator:
             self._ohlcv = [price, price, price, price, size]
             return None
         if bucket < self._bucket:
-            raise ValueError("Out-of-order Coinbase trade rejected.")
+            raise CoinbaseTradeOrderingError(
+                trade_timestamp=ts,
+                trade_bucket=bucket,
+                active_bucket=self._bucket,
+                latest_seen_timestamp=self._latest_seen_ts,
+                reorder_window=self.reorder_window,
+            )
         if bucket > self._bucket:
             completed = CoinbaseCompletedBar(self._bucket, *self._ohlcv)
             self._bucket = bucket

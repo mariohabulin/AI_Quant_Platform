@@ -16,9 +16,11 @@ trading process or enable a boot-time service.
   root-owned configuration. The same `AI_ALPHA_SESSION_BARS` value gates both
   Cloud Runtime Readiness and the forward runner, preventing configuration
   drift between validation and execution.
-- `Restart=on-failure` is rate-limited. A normal `MAX_BARS` completion does not
-  restart. Operator stop/restart uses `SIGINT` and continuity is restored from
-  the atomic state file on the next start.
+- `Restart=on-failure` permits at most one automatic recovery start after the
+  initial reviewed start. `StartLimitIntervalSec=infinity` and
+  `StartLimitBurst=2` prevent an unbounded overnight restart loop. A normal
+  `MAX_BARS` completion does not restart. Operator stop uses `SIGINT`, closes
+  the audit as `OPERATOR_STOP`, and continuity is restored on the next start.
 - `ExecStopPost` appends a `PROCESS_INCIDENT` only for a non-successful systemd
   result. The recorder is evidence-only and its own exit status is ignored, so
   it cannot create or suppress a PAPER restart.
@@ -56,11 +58,20 @@ Start the configured PAPER service, observe at least one checkpoint, then issue
 one controlled restart when restart evidence is part of the active gate:
 
 ```bash
+systemctl reset-failed ai-alpha-paper.service
 systemctl start ai-alpha-paper.service
 journalctl -u ai-alpha-paper.service -n 30 --no-pager
 systemctl restart ai-alpha-paper.service
 journalctl -u ai-alpha-paper.service -n 60 --no-pager
 ```
+
+`reset-failed` is required immediately before each reviewed activation because
+it explicitly opens a fresh two-start supervision budget: the initial start
+plus no more than one automatic failure restart. Do not reset that budget while
+the gate is running. A new manual gate requires another explicit review and
+reset after the prior service is inactive. A deliberate `systemctl restart`
+also consumes the second start, so it leaves no automatic recovery start in
+that same reviewed budget.
 
 The post-restart `SESSION_START` record must contain `resumed=true`. The final
 session must end with `MAX_BARS`, `REAL_orders=0`, a PASS forward report and an
@@ -71,6 +82,14 @@ is classified as `CRITICAL / FAILED / PROCESS_FAILURE`; after restart it remains
 visible as `PREVIOUS_PROCESS_FAILURE WARNING` throughout that recovery attempt.
 A later healthy session is not allowed to erase the incident from append-only
 audit evidence.
+
+A trade beyond the reviewed two-second event-time watermark remains fail-closed.
+The attempt records `LATE_TRADE_REJECTED` timing evidence, closes as
+`ORDERING_FATAL`, exits non-zero and consumes the single automatic recovery
+start. Do not widen the reorder window from a generic exception message; review
+the recorded trade, watermark and measured lateness first. A controlled
+`systemctl stop` instead closes as `OPERATOR_STOP`, returns accepted status 130
+and is reported as `WARNING / STOPPED` without stale-running alerts.
 
 For the current overnight gate, do not inject a restart or process failure.
 Require 720/720 processed bars, zero rejected bars, `audit_complete=True`,

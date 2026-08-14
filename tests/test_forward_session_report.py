@@ -68,6 +68,20 @@ def test_report_marks_real_order_evidence_as_failure(tmp_path):
     assert report.real_orders == 1
 
 
+@pytest.mark.parametrize("end_reason", ["OPERATOR_STOP", "ORDERING_FATAL"])
+def test_report_requires_max_bars_for_gate_pass(tmp_path, end_reason):
+    audit = tmp_path / f"{end_reason.lower()}.jsonl"
+    rows = session_rows()
+    rows[-1]["reason"] = end_reason
+    write_rows(audit, rows)
+
+    report = build_forward_session_report(audit)
+
+    assert report.status == "FAIL"
+    assert report.audit_complete is True
+    assert report.end_reason == end_reason
+
+
 def test_report_format_is_operator_readable(tmp_path):
     audit = tmp_path / "audit.jsonl"
     write_rows(audit, session_rows())

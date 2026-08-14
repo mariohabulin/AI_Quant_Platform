@@ -156,14 +156,28 @@ def build_operational_monitoring_report(
     previous_process_incidents = [
         row for row in previous_session if row.get("type") == "PROCESS_INCIDENT"
     ]
+    explicit_end_reason = str(end.get("reason", "UNKNOWN")) if end else None
+    fatal_reasons = {
+        "BACKFILL_FATAL", "TRANSPORT_FATAL", "RUNTIME_HALTED", "ORDERING_FATAL"
+    }
     if process_incidents:
         session_state = "FAILED"
-        end_reason = "PROCESS_FAILURE"
+        end_reason = (
+            explicit_end_reason
+            if explicit_end_reason in fatal_reasons
+            else "PROCESS_FAILURE"
+        )
+    elif explicit_end_reason == "OPERATOR_STOP":
+        session_state = "STOPPED"
+        end_reason = explicit_end_reason
+    elif explicit_end_reason in fatal_reasons:
+        session_state = "FAILED"
+        end_reason = explicit_end_reason
     else:
         session_state = "COMPLETED" if end else (
             "RUNNING" if session else "UNKNOWN"
         )
-        end_reason = str(end.get("reason", "UNKNOWN")) if end else "RUNNING"
+        end_reason = explicit_end_reason if end else "RUNNING"
 
     last_recorded_at = _record_timestamp(session[-1]) if session else None
     audit_file = Path(audit_path)
@@ -209,10 +223,32 @@ def build_operational_monitoring_report(
             f"exit_status={incident.get('exit_status', 'unknown')}).",
         ))
 
-    fatal_reasons = {"BACKFILL_FATAL", "TRANSPORT_FATAL", "RUNTIME_HALTED"}
-    if end_reason in fatal_reasons:
+    if explicit_end_reason in fatal_reasons:
+        message = f"Session ended with {explicit_end_reason}."
+        if explicit_end_reason == "ORDERING_FATAL":
+            ordering_records = [
+                row
+                for row in session
+                if row.get("type") == "LATE_TRADE_REJECTED"
+            ]
+            if ordering_records:
+                ordering = ordering_records[-1]
+                message = (
+                    "Session ended with ORDERING_FATAL "
+                    f"(trade_timestamp={ordering.get('trade_timestamp', 'unknown')} "
+                    f"active_bucket={ordering.get('active_bucket', 'unknown')} "
+                    f"watermark_timestamp={ordering.get('watermark_timestamp', 'unknown')} "
+                    f"reorder_window_seconds={ordering.get('reorder_window_seconds', 'unknown')} "
+                    f"lateness_seconds={ordering.get('lateness_seconds', 'unknown')})."
+                )
         alerts.append(OperationalAlert(
-            end_reason, "CRITICAL", f"Session ended with {end_reason}."
+            explicit_end_reason,
+            "CRITICAL",
+            message,
+        ))
+    if explicit_end_reason == "OPERATOR_STOP":
+        alerts.append(OperationalAlert(
+            "OPERATOR_STOP", "WARNING", "Session was stopped by the operator."
         ))
 
     if any(row.get("type") == "REST_BACKFILL_FAILED" for row in session):

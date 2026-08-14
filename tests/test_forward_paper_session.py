@@ -3,6 +3,8 @@ import json
 import pandas as pd
 import pytest
 
+import src.forward_paper_session as forward_paper_session_module
+from src.coinbase_market_data import CoinbaseTradeOrderingError
 from src.forward_paper_session import JsonlForwardAudit, run_forward_paper
 
 
@@ -73,6 +75,104 @@ def test_forward_runner_is_bounded_and_audited(tmp_path):
 def test_forward_runner_rejects_invalid_bound(tmp_path):
     with pytest.raises(ValueError, match="positive integer"):
         run_forward_paper(transport=[], max_processed_bars=0, audit_path=tmp_path / "x.jsonl")
+
+
+def test_controlled_operator_stop_closes_audit_and_preserves_continuity(tmp_path):
+    def interrupted_transport():
+        yield trade_message("2026-08-08T18:00:10Z", "100")
+        yield trade_message("2026-08-08T18:01:10Z", "101")
+        raise KeyboardInterrupt()
+
+    audit = tmp_path / "operator_stop.jsonl"
+    state = tmp_path / "state.json"
+
+    with pytest.raises(KeyboardInterrupt):
+        run_forward_paper(
+            transport=interrupted_transport(),
+            max_processed_bars=10,
+            audit_path=audit,
+            output=lambda _: None,
+            now_fn=lambda: pd.Timestamp("2026-08-08T18:01:20Z"),
+            state_path=state,
+            resume=False,
+        )
+
+    rows = [json.loads(line) for line in audit.read_text(encoding="utf-8").splitlines()]
+    assert [row["type"] for row in rows] == [
+        "SESSION_START", "PAPER_EVENT", "SESSION_END"
+    ]
+    assert rows[-1]["reason"] == "OPERATOR_STOP"
+    assert rows[-1]["processed_events"] == 1
+    assert rows[-1]["rejected_events"] == 0
+    assert rows[-1]["real_orders"] == 0
+    assert state.exists()
+
+
+def test_interrupt_before_new_session_does_not_relabel_previous_open_attempt(
+    monkeypatch, tmp_path
+):
+    audit = tmp_path / "previous_open.jsonl"
+    audit.write_text(
+        json.dumps({"type": "SESSION_START", "at": "2026-08-08T17:00:00Z"})
+        + "\n",
+        encoding="utf-8",
+    )
+
+    def interrupt_before_start(**kwargs):
+        raise KeyboardInterrupt()
+
+    monkeypatch.setattr(
+        forward_paper_session_module,
+        "_run_forward_paper_once",
+        interrupt_before_start,
+    )
+    with pytest.raises(KeyboardInterrupt):
+        forward_paper_session_module.run_forward_paper(
+            audit_path=audit,
+            state_path=tmp_path / "state.json",
+        )
+
+    rows = [json.loads(line) for line in audit.read_text(encoding="utf-8").splitlines()]
+    assert rows == [{"type": "SESSION_START", "at": "2026-08-08T17:00:00Z"}]
+
+
+def test_late_trade_failure_records_diagnostics_and_terminal_boundary(tmp_path):
+    messages = [
+        trade_message("2026-08-08T18:00:10Z", "100"),
+        trade_message("2026-08-08T18:01:10Z", "101"),
+        trade_message("2026-08-08T18:01:13Z", "102"),
+        trade_message("2026-08-08T18:00:59Z", "99"),
+    ]
+    audit = tmp_path / "ordering_fatal.jsonl"
+    state = tmp_path / "state.json"
+
+    with pytest.raises(CoinbaseTradeOrderingError):
+        run_forward_paper(
+            transport=messages,
+            max_processed_bars=10,
+            audit_path=audit,
+            output=lambda _: None,
+            now_fn=lambda: pd.Timestamp("2026-08-08T18:01:20Z"),
+            state_path=state,
+            resume=False,
+        )
+
+    rows = [json.loads(line) for line in audit.read_text(encoding="utf-8").splitlines()]
+    assert [row["type"] for row in rows] == [
+        "SESSION_START", "PAPER_EVENT", "LATE_TRADE_REJECTED", "SESSION_END"
+    ]
+    diagnostic = rows[-2]
+    assert diagnostic["trade_timestamp"] == "2026-08-08T18:00:59+00:00"
+    assert diagnostic["active_bucket"] == "2026-08-08T18:01:00+00:00"
+    assert diagnostic["latest_seen_timestamp"] == "2026-08-08T18:01:13+00:00"
+    assert diagnostic["watermark_timestamp"] == "2026-08-08T18:01:11+00:00"
+    assert diagnostic["reorder_window_seconds"] == pytest.approx(2.0)
+    assert diagnostic["lateness_seconds"] == pytest.approx(12.0)
+    assert diagnostic["real_orders"] == 0
+    assert rows[-1]["reason"] == "ORDERING_FATAL"
+    assert rows[-1]["processed_events"] == 1
+    assert rows[-1]["real_orders"] == 0
+    assert state.exists()
 
 
 def test_continuity_store_round_trip_preserves_position_history_and_bucket(tmp_path):

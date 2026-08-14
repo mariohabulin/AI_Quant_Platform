@@ -91,8 +91,8 @@ def test_paper_service_has_bounded_restart_policy_and_controlled_signal():
 
     assert _values(service, "Restart") == ["on-failure"]
     assert _values(service, "RestartSec") == ["10s"]
-    assert _values(service, "StartLimitIntervalSec") == ["300"]
-    assert _values(service, "StartLimitBurst") == ["5"]
+    assert _values(service, "StartLimitIntervalSec") == ["infinity"]
+    assert _values(service, "StartLimitBurst") == ["2"]
     assert _values(service, "KillSignal") == ["SIGINT"]
     assert _values(service, "SuccessExitStatus") == ["130"]
 
@@ -197,3 +197,12 @@ def test_installer_never_starts_or_enables_a_trading_process():
         "enable --now",
     )
     assert all(command not in installer for command in forbidden)
+
+
+def test_runbook_resets_restart_budget_before_each_reviewed_activation():
+    runbook = _unit("README.md")
+    reset = "systemctl reset-failed ai-alpha-paper.service"
+    start = "systemctl start ai-alpha-paper.service"
+
+    assert reset in runbook
+    assert runbook.index(reset) < runbook.index(start)

@@ -3,8 +3,8 @@ Description=AI Alpha bounded cloud paper session
 Documentation=file:/opt/ai-alpha/deploy/systemd/README.md
 Wants=network-online.target
 After=network-online.target
-StartLimitIntervalSec=300
-StartLimitBurst=5
+StartLimitIntervalSec=infinity
+StartLimitBurst=2
 
 [Service]
 Type=simple

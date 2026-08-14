@@ -186,12 +186,67 @@ def test_stale_running_audit_is_critical(tmp_path):
         ("BACKFILL_FATAL", "BACKFILL_FATAL"),
         ("TRANSPORT_FATAL", "TRANSPORT_FATAL"),
         ("RUNTIME_HALTED", "RUNTIME_HALTED"),
+        ("ORDERING_FATAL", "ORDERING_FATAL"),
     ],
 )
 def test_fatal_session_end_is_critical(tmp_path, reason, code):
     report = monitor(tmp_path, session_rows(end_reason=reason))
     assert report.status == "CRITICAL"
+    assert report.session_state == "FAILED"
     assert code in {alert.code for alert in report.alerts}
+
+
+def test_ordering_fatal_remains_root_cause_after_process_incident(tmp_path):
+    rows = session_rows(end_reason="ORDERING_FATAL")
+    rows.insert(-1, {
+        "type": "LATE_TRADE_REJECTED",
+        "recorded_at": "2026-08-11T09:59:30+00:00",
+        "trade_timestamp": "2026-08-11T09:58:57+00:00",
+        "active_bucket": "2026-08-11T09:59:00+00:00",
+        "watermark_timestamp": "2026-08-11T09:59:01+00:00",
+        "reorder_window_seconds": 2.0,
+        "lateness_seconds": 4.0,
+        "real_orders": 0,
+    })
+    rows.append(process_incident(recorded_at="2026-08-11T10:00:01+00:00"))
+
+    report = monitor(tmp_path, rows)
+
+    codes = {alert.code for alert in report.alerts}
+    assert report.status == "CRITICAL"
+    assert report.session_state == "FAILED"
+    assert report.end_reason == "ORDERING_FATAL"
+    assert {"ORDERING_FATAL", "PROCESS_FAILURE"} <= codes
+    ordering = next(alert for alert in report.alerts if alert.code == "ORDERING_FATAL")
+    assert "trade_timestamp=2026-08-11T09:58:57+00:00" in ordering.message
+    assert "watermark_timestamp=2026-08-11T09:59:01+00:00" in ordering.message
+    assert "lateness_seconds=4.0" in ordering.message
+
+
+def test_operator_stop_is_closed_warning_without_stale_alerts(tmp_path):
+    audit = tmp_path / "audit.jsonl"
+    state = tmp_path / "state.json"
+    rows = session_rows(end_reason="OPERATOR_STOP")
+    rows[0]["recorded_at"] = "2026-08-11T08:58:00+00:00"
+    rows[1]["recorded_at"] = "2026-08-11T08:59:00+00:00"
+    rows[2]["recorded_at"] = "2026-08-11T09:00:00+00:00"
+    write_audit(audit, rows)
+    write_state(state)
+
+    report = build_operational_monitoring_report(
+        audit,
+        state,
+        now="2026-08-11T11:00:00Z",
+        stale_after="5min",
+    )
+
+    codes = {alert.code for alert in report.alerts}
+    assert report.status == "WARNING"
+    assert report.session_state == "STOPPED"
+    assert report.end_reason == "OPERATOR_STOP"
+    assert "OPERATOR_STOP" in codes
+    assert "AUDIT_STALE" not in codes
+    assert "CHECKPOINT_STALE" not in codes
 
 
 def test_real_order_evidence_is_critical(tmp_path):

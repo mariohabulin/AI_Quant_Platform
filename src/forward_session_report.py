@@ -274,7 +274,7 @@ def build_forward_session_report(audit_path="runtime/forward_paper_audit.jsonl")
         and rejected_count == len(rejected)
         and real_orders == 0
     )
-    status = "PASS" if complete else "FAIL"
+    status = "PASS" if complete and end.get("reason") == "MAX_BARS" else "FAIL"
 
     return ForwardSessionReport(
         status=status,
