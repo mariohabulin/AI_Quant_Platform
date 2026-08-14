@@ -58,20 +58,42 @@ Start the configured PAPER service, observe at least one checkpoint, then issue
 one controlled restart when restart evidence is part of the active gate:
 
 ```bash
-systemctl reset-failed ai-alpha-paper.service
+if reset_output="$(systemctl reset-failed ai-alpha-paper.service 2>&1)"; then
+    :
+elif printf '%s\n' "${reset_output}" | \
+        grep -Fq "Unit ai-alpha-paper.service not loaded"; then
+    load_state="$(systemctl show ai-alpha-paper.service \
+        --property=LoadState --value)"
+    if [ "${load_state}" != "loaded" ]; then
+        printf '%s\n' "Installed PAPER unit is not loadable." >&2
+        exit 1
+    fi
+    printf '%s\n' \
+        "PAPER unit was unloaded; no retained start-limit counter exists."
+else
+    printf '%s\n' "${reset_output}" >&2
+    exit 1
+fi
 systemctl start ai-alpha-paper.service
 journalctl -u ai-alpha-paper.service -n 30 --no-pager
 systemctl restart ai-alpha-paper.service
 journalctl -u ai-alpha-paper.service -n 60 --no-pager
 ```
 
-`reset-failed` is required immediately before each reviewed activation because
-it explicitly opens a fresh two-start supervision budget: the initial start
-plus no more than one automatic failure restart. Do not reset that budget while
-the gate is running. A new manual gate requires another explicit review and
-reset after the prior service is inactive. A deliberate `systemctl restart`
-also consumes the second start, so it leaves no automatic recovery start in
-that same reviewed budget.
+The guarded `reset-failed` attempt explicitly opens a fresh two-start
+supervision budget: the initial start plus no more than one automatic failure
+restart. systemd may garbage-collect a successful inactive unit; unloading also
+flushes its start-rate counters. On the validated host this state is reported
+exactly as `Unit ai-alpha-paper.service not loaded`. Only that exact branch may
+continue after confirming that the installed unit file resolves with
+`LoadState=loaded`, because no retained start-limit counter remains to reset.
+Any other `reset-failed` error aborts activation. Do not replace this guard with
+`|| true` or otherwise hide permission, configuration or manager failures.
+
+Do not reset the budget while the gate is running. A new manual gate requires
+another explicit review and the guarded reset procedure after the prior service
+is inactive. A deliberate `systemctl restart` also consumes the second start,
+so it leaves no automatic recovery start in that same reviewed budget.
 
 The post-restart `SESSION_START` record must contain `resumed=true`. The final
 session must end with `MAX_BARS`, `REAL_orders=0`, a PASS forward report and an

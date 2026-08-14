@@ -366,9 +366,10 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
 - [x] Stop the final process safely and expose the missing controlled-stop `SESSION_END`: systemd success/130, but stale `RUNNING` monitoring and an intentionally refused incomplete forward report.
 - [x] Implement typed late-trade timing evidence, durable `LATE_TRADE_REJECTED` plus `ORDERING_FATAL`, explicit `OPERATOR_STOP`, MAX_BARS-only report PASS semantics and a two-start supervision budget.
 - [x] Validate the failure-closure implementation locally and from a detached clean overnight-base worktree with 97/97 focused tests, the complete 615/615 Python 3.12.13 suite, clean whitespace and installer shell syntax.
-- [ ] Apply the exact closure patch on Windows; reproduce focused and full-suite validation before commit/push.
-- [ ] Deploy the exact closure revision non-activating; rerun cloud tests, native systemd verification and all seven readiness checks.
-- [ ] Run a short bounded diagnostic cloud PAPER probe and verify late-trade/stop/monitor/report lifecycle evidence before any new overnight attempt.
+- [x] Apply the exact closure patch on Windows; reproduce 97/97 focused and 615/615 full-suite validation, then commit/push exact revision `93b7565`.
+- [x] Deploy exact closure revision `93b7565` non-activating; reproduce 97/97 focused and 615/615 complete cloud tests, native systemd verification and all seven readiness checks.
+- [x] Run a short bounded cloud PAPER diagnostic: six fresh contiguous bars after 121 startup catch-up bars, `NRestarts=0`, monitoring `OK / RUNNING`, then clean `OPERATOR_STOP`, `audit_complete=True`, no stale alerts, no new process incident, `observed_gap=0.0m` and `REAL_orders=0`. No live late-trade occurred; the typed `ORDERING_FATAL` path remains deterministic-test evidence rather than a live claim.
+- [x] Reconcile the observed systemd garbage-collection case: when the inactive unit is explicitly reported not loaded, its start-limit counters are already absent; verify the installed unit is loadable before direct start, and abort activation for every other `reset-failed` error.
 - [ ] Repeat a clean 720-bar overnight gate with `NRestarts=0` before progression.
 - [ ] Progress to 24-hour and multi-day soak gates only after the clean overnight gate passes.
 

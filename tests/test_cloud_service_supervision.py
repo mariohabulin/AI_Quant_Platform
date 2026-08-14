@@ -199,10 +199,16 @@ def test_installer_never_starts_or_enables_a_trading_process():
     assert all(command not in installer for command in forbidden)
 
 
-def test_runbook_resets_restart_budget_before_each_reviewed_activation():
+def test_runbook_opens_a_fresh_restart_budget_before_each_reviewed_activation():
     runbook = _unit("README.md")
+    normalized = " ".join(runbook.split())
     reset = "systemctl reset-failed ai-alpha-paper.service"
     start = "systemctl start ai-alpha-paper.service"
 
     assert reset in runbook
     assert runbook.index(reset) < runbook.index(start)
+    assert "Unit ai-alpha-paper.service not loaded" in normalized
+    assert "no retained start-limit counter" in normalized
+    assert "Installed PAPER unit is not loadable" in normalized
+    assert "Any other `reset-failed` error aborts activation" in normalized
+    assert "Do not replace this guard with `|| true`" in normalized
