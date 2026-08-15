@@ -981,3 +981,28 @@ SIGINT is a separate planned lifecycle boundary. The public runner records how m
 Operational Monitoring maps `OPERATOR_STOP` to `WARNING / STOPPED` and suppresses running-session staleness checks because the audit is closed. `ORDERING_FATAL` maps to `CRITICAL / FAILED`, and its root cause survives a later `PROCESS_INCIDENT` record. The forward report can show either terminal attempt with `audit_complete=True`, but only `MAX_BARS` can satisfy the endurance PASS gate.
 
 The systemd start limit is also a whole-activation safety boundary. `StartLimitIntervalSec=infinity` plus `StartLimitBurst=2` bounds a reviewed activation to the initial start and one automatic recovery attempt; `Restart=on-failure` and the ten-second delay remain unchanged. The guarded activation procedure resets retained counters only while PAPER is inactive and accepts a direct start only when systemd explicitly reports that garbage collection has already unloaded the unit and discarded those counters. This prevents a per-process bar counter from extending one failed soak through an unbounded restart loop without turning unrelated reset failures into an activation path.
+
+## Coinbase Cross-Channel Sequence Integrity Boundary v1
+Coinbase's public Advanced Trade connection is consumed as one ordered envelope
+stream before channel routing. A live CPX22 probe proved the exact interleaving:
+`market_trades=0`, two `subscriptions` acknowledgements at `1/2`,
+`market_trades=3`, `heartbeats=4`, then consecutive envelopes through `39`.
+Validating only trade-channel sequence values therefore creates false gaps even
+when the provider stream is complete.
+
+`CoinbaseMessageSequenceTracker` observes every inbound envelope carrying
+`sequence_num` before OHLCV aggregation or control-channel filtering. Only
+`market_trades` payloads may reach the trade aggregator. A missing sequence is
+immediately fatal when a market payload would otherwise be consumed; a
+non-market control envelope without the optional field remains transparent and
+the next sequenced envelope supplies the continuity check. Invalid sequence
+values and forward gaps on any sequenced channel invalidate the socket because
+the skipped envelope could have contained market data. Diagnostics retain the
+provider channel as well as previous, expected and observed sequence values.
+
+Lower/equal envelopes remain whole-message replays and are discarded before
+trading. A valid market-trades payload is still required to reset recovery after
+a sequence failure; subscription acknowledgements and heartbeats prove only
+transport liveness. The exact REST/partial-minute recovery boundary, strict
+two-second event-time rule, Strategy, Risk Engine, PaperBroker and structural
+`REAL_orders=0` lock are unchanged.

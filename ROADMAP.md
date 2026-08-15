@@ -391,12 +391,23 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
   evidence.
 - [x] Pass 112/112 focused provider/forward/report/monitoring/supervision tests
   and the complete 630/630 local repository suite.
-- [ ] Reproduce the exact provider-sequence patch and complete suite on Windows,
-  commit/push it, then deploy non-activating to CPX22 and reproduce focused/full
-  validation plus native readiness checks.
-- [ ] Run one short non-injected sequence-aware cloud PAPER diagnostic and review
-  message replay, sequence-gap, continuity, monitoring and `REAL_orders=0`
-  evidence before reopening the overnight gate.
+- [x] Reproduce the first provider-sequence patch on Windows, commit/push exact
+  revision `066852b`, deploy it non-activating to CPX22 and reproduce 112/112
+  focused plus 630/630 complete tests and all seven readiness checks.
+- [x] Reject and safely stop the first sequence-aware diagnostic after it exposed
+  false `0 -> 3/4/5` gaps; retain `success/0`, `NRestarts=0`, inactive/disabled
+  PAPER and `REAL_orders=0` evidence.
+- [x] Capture the public connection's exact sequenced interleaving through a
+  read-only probe: market trades, subscription acknowledgements and heartbeats
+  shared one consecutive envelope stream from 0 through 39.
+- [x] Correct validation to observe all sequence-bearing envelopes before channel
+  routing, retain the gap's provider channel and pass 114/114 focused plus
+  632/632 complete local tests.
+- [ ] Reproduce the cross-channel correction on Windows, commit/push it, deploy
+  non-activating to CPX22 and repeat focused/full/readiness validation.
+- [ ] Run a second short non-injected sequence-aware cloud PAPER diagnostic and
+  review message replay, true sequence-gap, continuity, monitoring and
+  `REAL_orders=0` evidence before reopening the overnight gate.
 - [ ] Repeat a clean 720-bar overnight gate with `NRestarts=0` before progression.
 - [ ] Progress to 24-hour and multi-day soak gates only after the clean overnight gate passes.
 

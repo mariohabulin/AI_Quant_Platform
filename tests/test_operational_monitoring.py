@@ -307,6 +307,7 @@ def test_provider_sequence_disconnect_exposes_exact_gap_diagnostics(tmp_path):
         "type": "TRANSPORT_EVENT",
         "event": "DISCONNECTED",
         "failure_kind": "PROVIDER_SEQUENCE_GAP",
+        "provider_channel": "heartbeats",
         "previous_sequence_num": 100,
         "expected_sequence_num": 101,
         "observed_sequence_num": 103,
@@ -323,6 +324,7 @@ def test_provider_sequence_disconnect_exposes_exact_gap_diagnostics(tmp_path):
     )
     assert report.status == "WARNING"
     assert "failure_kind=PROVIDER_SEQUENCE_GAP" in alert.message
+    assert "provider_channel=heartbeats" in alert.message
     assert "previous_sequence_num=100" in alert.message
     assert "expected_sequence_num=101" in alert.message
     assert "observed_sequence_num=103" in alert.message

@@ -161,7 +161,7 @@ Activation preparation also exposed a systemd lifecycle detail: a successful ina
 
 Final parked state is PAPER `inactive/dead/disabled`, monitor timer `inactive/dead/enabled`, repository clean on `93b7565`, last terminal audit reason `OPERATOR_STOP` and `REAL_orders=0`. Overnight Soak Failure Closure v1 is closed. The next authorized evidence boundary is one clean 720-bar PAPER soak with no injected restart or failure; 24-hour, multi-day, unattended production and real execution remain gated until that run reaches `MAX_BARS` with every existing acceptance condition satisfied.
 
-### Coinbase Provider Message Sequence Integrity v1 — LOCAL PASS / CLOUD VALIDATION PENDING
+### Coinbase Provider Message Sequence Integrity v1 — CLOUD DIAGNOSTIC BLOCKED / CROSS-CHANNEL CORRECTION LOCAL PASS
 The next non-injected 720-bar attempt on exact revision `e0592ff` again failed
 safely before `MAX_BARS`. It processed 266 fresh bars before a 19.637-second
 late-trade fatal, recovered through the one allowed automatic process start,
@@ -182,7 +182,7 @@ message could be misclassified as a genuinely late new trade. The old audit did
 not retain message sequence or `trade_id`, preventing a definitive distinction
 after the incident.
 
-The local implementation now validates every real `market_trades` envelope
+The first local implementation validated every real `market_trades` envelope
 before OHLCV aggregation. Lower/equal messages are wholly discarded and audited
 as `PROVIDER_MESSAGE_REPLAY_DROPPED`; gaps or missing/invalid sequence close the
 untrusted socket and use the existing bounded reconnect/exact-REST-continuity
@@ -196,10 +196,25 @@ now with message sequence/time, event type and `trade_id` evidence. The forward
 report separately counts message replay drops, and handled replay evidence does
 not create a monitoring alert.
 
-Local TDD is green with 112/112 focused provider/forward/report/monitoring/
-supervision tests and the complete 630/630 repository suite. The next
-authorized step is exact-diff Windows validation, commit/push, clean cloud
-reproduction and a short non-injected PAPER diagnostic while the service remains
-boot-disabled. A new 720-bar evidence gate is not authorized until that sequence
-boundary is deployed and verified; 24-hour, multi-day, unattended production
-and real execution remain gated.
+That first implementation passed 112/112 focused and 630/630 complete tests on
+Windows and CPX22, was committed as `066852b`, and passed all seven readiness
+checks. Its short cloud diagnostic was deliberately stopped after the transport
+repeatedly reported false gaps `0 -> 3/4/5`; systemd closed cleanly with
+`success/0`, `NRestarts=0`, PAPER inactive/disabled and `REAL_orders=0`.
+
+A separate read-only raw WebSocket probe then captured the missing contract
+detail: the single connection emitted `market_trades` sequence 0,
+`subscriptions` sequences 1 and 2, `market_trades` sequence 3, `heartbeats`
+sequence 4 and an uninterrupted cross-channel stream through 39. Filtering by
+channel before validation had hidden legitimate intervening envelopes.
+
+The correction now validates every sequence-bearing provider envelope before
+channel routing while allowing only `market_trades` into OHLCV aggregation.
+Forward gaps on any sequenced channel remain fail-closed and now retain the
+observed provider channel. Missing sequence remains fatal for a market payload;
+non-market control envelopes without the optional field remain transparent.
+Cross-channel cloud-fixture regression plus all existing behavior passes
+114/114 focused tests and the complete 632/632 local suite. The next authorized
+step is exact-diff Windows validation, commit/push, clean cloud reproduction and
+a second short non-injected diagnostic. The 720-bar, 24-hour, multi-day,
+unattended-production and real-execution gates remain closed.

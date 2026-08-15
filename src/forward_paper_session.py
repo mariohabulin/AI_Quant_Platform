@@ -296,6 +296,7 @@ def _run_forward_paper_once(
                 audit.append({
                     "type": "PROVIDER_MESSAGE_REPLAY_DROPPED",
                     "failure_kind": message.get("failure_kind"),
+                    "provider_channel": message.get("provider_channel"),
                     "previous_sequence_num": message.get(
                         "previous_sequence_num"
                     ),
@@ -314,6 +315,7 @@ def _run_forward_paper_once(
                 })
                 output(
                     "PROVIDER_MESSAGE_REPLAY_DROPPED: "
+                    f"channel={message.get('provider_channel')} "
                     f"sequence={message.get('observed_sequence_num')} "
                     f"previous={message.get('previous_sequence_num')} "
                     f"trades={message.get('trade_count')}"
@@ -324,6 +326,7 @@ def _run_forward_paper_once(
                 "event": event,
                 "reason": message.get("reason"),
                 "failure_kind": message.get("failure_kind"),
+                "provider_channel": message.get("provider_channel"),
                 "attempt": message.get("attempt"),
                 "reconnect_count": message.get("reconnect_count"),
                 "outage_seconds": message.get("outage_seconds"),

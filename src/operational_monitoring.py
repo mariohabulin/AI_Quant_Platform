@@ -68,6 +68,7 @@ def _provider_sequence_diagnostics(row):
     return (
         " "
         f"(failure_kind={failure_kind} "
+        f"provider_channel={row.get('provider_channel', 'unknown')} "
         f"previous_sequence_num={row.get('previous_sequence_num', 'unknown')} "
         f"expected_sequence_num={row.get('expected_sequence_num', 'unknown')} "
         f"observed_sequence_num={row.get('observed_sequence_num', 'unknown')} "

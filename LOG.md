@@ -1256,3 +1256,29 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - Exact-diff Windows and CPX22 validation remain pending. PAPER stays parked and
   boot-disabled; the monitor timer stays stopped/enabled; no 720-bar, 24-hour,
   multi-day, unattended-production or real-execution progression is authorized.
+
+## 2026-08-15 — Coinbase Cross-Channel Sequence Integrity v1
+- Applied and committed the first provider-sequence implementation on Windows as
+  `066852b`; reproduced 112/112 focused and 630/630 complete tests on Windows and
+  CPX22, followed by all seven Cloud Runtime Readiness checks.
+- Started one short non-injected cloud diagnostic with PAPER boot-disabled. The
+  process remained `success/0`, `NRestarts=0` and `REAL_orders=0`, but repeatedly
+  classified healthy `market_trades` jumps from 0 to 3/4/5 as
+  `PROVIDER_SEQUENCE_GAP`. The diagnostic was rejected and stopped through
+  SIGINT; systemd parked PAPER `inactive/dead/disabled` without a new process
+  incident.
+- Ran a separate public read-only WebSocket probe with no Strategy, Risk,
+  PaperBroker or service process. It captured one consecutive cross-channel
+  stream: `market_trades=0`, `subscriptions=1/2`, `market_trades=3`,
+  `heartbeats=4`, then every envelope through 39. The first implementation had
+  filtered out the exact messages required to prove continuity.
+- Added TDD coverage from the exact cloud fixture and moved sequence observation
+  before channel routing. Every sequenced envelope advances the connection-local
+  tracker; only market-trade payloads reach OHLCV aggregation. Gap diagnostics
+  now retain `provider_channel`; market payloads without sequence remain fatal;
+  non-market control messages without the optional field remain transparent.
+- Correction validation passes 114/114 focused tests and the complete 632/632
+  local suite. The two-second trade watermark, bounded reconnect/REST recovery,
+  Strategy, Risk Engine, PAPER execution and `REAL_orders=0` are unchanged.
+- The correction still requires exact-diff Windows and CPX22 reproduction plus a
+  second short cloud diagnostic. No 720-bar or longer gate is authorized.

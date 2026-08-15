@@ -109,7 +109,7 @@ class CoinbaseTradeOrderingError(ValueError):
 
 
 class CoinbaseMessageSequenceError(ValueError):
-    """Connection-local Coinbase message-sequence integrity failure."""
+    """Connection-local Coinbase provider-envelope integrity failure."""
 
     def __init__(
         self,
@@ -119,15 +119,18 @@ class CoinbaseMessageSequenceError(ValueError):
         expected_sequence_num=None,
         observed_sequence_num=None,
         message_timestamp=None,
+        provider_channel=None,
     ):
         self.failure_kind = str(failure_kind)
         self.previous_sequence_num = previous_sequence_num
         self.expected_sequence_num = expected_sequence_num
         self.observed_sequence_num = observed_sequence_num
         self.message_timestamp = message_timestamp
+        self.provider_channel = provider_channel
         super().__init__(
-            "Coinbase market_trades sequence integrity failure "
+            "Coinbase provider message sequence integrity failure "
             f"(failure_kind={self.failure_kind} "
+            f"provider_channel={self.provider_channel} "
             f"previous_sequence_num={self.previous_sequence_num} "
             f"expected_sequence_num={self.expected_sequence_num} "
             f"observed_sequence_num={self.observed_sequence_num} "
@@ -140,16 +143,19 @@ class CoinbaseMessageSequenceError(ValueError):
             "expected_sequence_num": self.expected_sequence_num,
             "observed_sequence_num": self.observed_sequence_num,
             "message_timestamp": self.message_timestamp,
+            "provider_channel": self.provider_channel,
         }
 
 
 class CoinbaseMessageSequenceTracker:
-    """Validate provider ordering before market-trade payloads reach aggregation.
+    """Validate the complete provider-envelope stream before aggregation.
 
-    Coinbase sequence numbers are scoped to a live websocket connection here.
-    A new transport connection creates a new tracker and therefore a new trusted
-    baseline. Lower/equal messages are provider replays that Coinbase documents as
-    ignorable; forward gaps are integrity failures and must force recovery.
+    The validated public endpoint interleaves ``market_trades``, subscription
+    acknowledgements and heartbeats inside one connection-local sequence. A new
+    transport connection therefore creates one tracker for every sequenced
+    envelope, not one tracker filtered to a single channel. Lower/equal messages
+    are provider replays; forward gaps must force recovery before a trade payload
+    can reach aggregation.
     """
 
     def __init__(self):
@@ -173,6 +179,7 @@ class CoinbaseMessageSequenceTracker:
             "channel": "_coinbase_transport",
             "event": "PROVIDER_MESSAGE_REPLAY_DROPPED",
             "failure_kind": "PROVIDER_SEQUENCE_REPLAY",
+            "provider_channel": message.get("channel"),
             "previous_sequence_num": previous_sequence_num,
             "observed_sequence_num": observed_sequence_num,
             "message_timestamp": message.get("timestamp"),
@@ -184,10 +191,16 @@ class CoinbaseMessageSequenceTracker:
     def observe(self, message):
         if not isinstance(message, dict):
             raise TypeError("Coinbase message must be a dict.")
-        if message.get("channel") != "market_trades":
-            return None
+        provider_channel = message.get("channel")
 
         if "sequence_num" not in message:
+            # Only market payloads are unsafe to consume without sequence
+            # evidence. Coinbase documents that most, rather than all, feed
+            # envelopes carry the field, so non-market control messages without
+            # it remain transparent and the next sequenced envelope provides the
+            # continuity check.
+            if provider_channel != "market_trades":
+                return None
             raise CoinbaseMessageSequenceError(
                 failure_kind="PROVIDER_SEQUENCE_MISSING",
                 previous_sequence_num=self.previous_sequence_num,
@@ -197,6 +210,7 @@ class CoinbaseMessageSequenceTracker:
                     else self.previous_sequence_num + 1
                 ),
                 message_timestamp=message.get("timestamp"),
+                provider_channel=provider_channel,
             )
         observed = message.get("sequence_num")
         if (
@@ -214,6 +228,7 @@ class CoinbaseMessageSequenceTracker:
                 ),
                 observed_sequence_num=observed,
                 message_timestamp=message.get("timestamp"),
+                provider_channel=provider_channel,
             )
 
         previous = self.previous_sequence_num
@@ -231,6 +246,7 @@ class CoinbaseMessageSequenceTracker:
                 expected_sequence_num=expected,
                 observed_sequence_num=observed,
                 message_timestamp=message.get("timestamp"),
+                provider_channel=provider_channel,
             )
         self.previous_sequence_num = observed
         return None

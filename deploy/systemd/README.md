@@ -105,22 +105,31 @@ visible as `PREVIOUS_PROCESS_FAILURE WARNING` throughout that recovery attempt.
 A later healthy session is not allowed to erase the incident from append-only
 audit evidence.
 
-A `market_trades` payload is now checked against Coinbase's connection-local
-`sequence_num` before OHLCV aggregation. A lower or equal sequence is discarded
-as a complete provider message and recorded as
-`PROVIDER_MESSAGE_REPLAY_DROPPED`; the forward report exposes the total as
-`message_replay_drops`. After a sequence-integrity reconnect, any completed
-minute that began before the socket's trusted live boundary is discarded as
-`PROVIDER_SEQUENCE_BOUNDARY_BAR_DROPPED`, exposed as
+Every inbound Coinbase envelope carrying `sequence_num` is checked against one
+connection-local stream before channel routing and before OHLCV aggregation. A
+validated CPX22 read-only probe observed `market_trades=0`, two `subscriptions`
+acknowledgements at `1/2`, `market_trades=3`, `heartbeats=4` and then every
+cross-channel sequence through 39. Do not filter sequence observation to the
+trade channel. Only `market_trades` payloads may enter aggregation.
+
+A lower or equal sequence is discarded as a complete provider message and
+recorded as `PROVIDER_MESSAGE_REPLAY_DROPPED`; the forward report exposes the
+total as `message_replay_drops`. After a sequence-integrity reconnect, any
+completed minute that began before the socket's trusted live boundary is
+discarded as `PROVIDER_SEQUENCE_BOUNDARY_BAR_DROPPED`, exposed as
 `sequence_boundary_drops`, and reconstructed through exact REST continuity
 before a later fully observed live bar may trade. These handled records do not
 enter Feed Health, Strategy, Risk or PaperBroker and do not by themselves make
 monitoring non-OK.
 
-A forward sequence gap never reaches aggregation. It closes the untrusted
-socket as `PROVIDER_SEQUENCE_GAP` and enters the existing bounded reconnect plus
-exact REST continuity path. Missing or invalid sequence evidence is similarly
-classified as `PROVIDER_SEQUENCE_MISSING` or `PROVIDER_SEQUENCE_INVALID`.
+A forward sequence gap on any sequenced channel never reaches aggregation. It
+closes the untrusted socket as `PROVIDER_SEQUENCE_GAP`, retains the observed
+provider channel and enters the existing bounded reconnect plus exact REST
+continuity path. Invalid sequence evidence is classified as
+`PROVIDER_SEQUENCE_INVALID`. Missing sequence on a `market_trades` payload is
+`PROVIDER_SEQUENCE_MISSING`; a non-market control envelope without the optional
+field remains transparent and the next sequenced envelope supplies the
+continuity check.
 Review all such disconnect causes, recovery evidence and final continuity;
 heartbeats alone do not reset this recovery budget—a validly sequenced `market_trades` payload must arrive on the new socket. Reconnect exhaustion
 remains `TRANSPORT_FATAL`. This provider-envelope guard

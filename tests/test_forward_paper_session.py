@@ -181,6 +181,7 @@ def test_provider_message_replay_is_audited_without_reaching_trading(tmp_path):
             "channel": "_coinbase_transport",
             "event": "PROVIDER_MESSAGE_REPLAY_DROPPED",
             "failure_kind": "PROVIDER_SEQUENCE_REPLAY",
+            "provider_channel": "market_trades",
             "previous_sequence_num": 80,
             "observed_sequence_num": 79,
             "message_timestamp": "2026-08-08T18:00:09Z",
@@ -210,6 +211,7 @@ def test_provider_message_replay_is_audited_without_reaching_trading(tmp_path):
     )
     assert result.processed_events == 1
     assert replay["previous_sequence_num"] == 80
+    assert replay["provider_channel"] == "market_trades"
     assert replay["observed_sequence_num"] == 79
     assert replay["trade_count"] == 2
     assert replay["first_trade_id"] == "7001"
@@ -392,6 +394,7 @@ def test_forward_session_audits_reconnect_and_rebases_without_trading_boundary_b
             "attempt": 1,
             "reason": "provider sequence gap",
             "failure_kind": "PROVIDER_SEQUENCE_GAP",
+            "provider_channel": "heartbeats",
             "previous_sequence_num": 100,
             "expected_sequence_num": 101,
             "observed_sequence_num": 102,
@@ -433,6 +436,7 @@ def test_forward_session_audits_reconnect_and_rebases_without_trading_boundary_b
     paper = [row for row in rows if row["type"] == "PAPER_EVENT"]
     assert [row["event"] for row in transport_events] == ["DISCONNECTED", "RECONNECTED"]
     assert transport_events[0]["failure_kind"] == "PROVIDER_SEQUENCE_GAP"
+    assert transport_events[0]["provider_channel"] == "heartbeats"
     assert transport_events[0]["previous_sequence_num"] == 100
     assert transport_events[0]["expected_sequence_num"] == 101
     assert transport_events[0]["observed_sequence_num"] == 102

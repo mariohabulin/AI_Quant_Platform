@@ -223,5 +223,8 @@ def test_runbook_requires_provider_message_sequence_integrity_evidence():
     assert "message_replay_drops" in runbook
     assert "sequence_boundary_drops" in runbook
     assert "before OHLCV aggregation" in runbook
+    assert "before channel routing" in runbook
+    assert "`subscriptions`" in runbook
+    assert "Do not filter sequence observation to the" in runbook
     assert "validly sequenced `market_trades` payload" in runbook
     assert "does not authorize widening the two-second event-time window" in runbook

@@ -34,6 +34,15 @@ def sequenced_trade_message(sequence_num, time, price, *, trade_id, message_time
     }
 
 
+def sequenced_control_message(channel, sequence_num, timestamp):
+    return {
+        "channel": channel,
+        "timestamp": timestamp,
+        "sequence_num": sequence_num,
+        "events": [{}],
+    }
+
+
 def test_aggregator_emits_only_completed_minute():
     agg = CoinbaseOneMinuteTradeAggregator()
     assert agg.ingest_trade(trade("2026-08-08T12:00:05Z", 100)) is None
@@ -284,6 +293,7 @@ def test_transport_drops_out_of_order_or_duplicate_message_before_aggregation(
         "channel": "_coinbase_transport",
         "event": "PROVIDER_MESSAGE_REPLAY_DROPPED",
         "failure_kind": "PROVIDER_SEQUENCE_REPLAY",
+        "provider_channel": "market_trades",
         "previous_sequence_num": 40,
         "observed_sequence_num": observed,
         "message_timestamp": "2026-08-08T12:00:59Z",
@@ -346,6 +356,7 @@ def test_transport_turns_sequence_gap_into_reconnect_before_yielding_gap_message
     disconnected = next(iterator)
     assert disconnected["event"] == "DISCONNECTED"
     assert disconnected["failure_kind"] == "PROVIDER_SEQUENCE_GAP"
+    assert disconnected["provider_channel"] == "market_trades"
     assert disconnected["previous_sequence_num"] == 100
     assert disconnected["expected_sequence_num"] == 101
     assert disconnected["observed_sequence_num"] == 102
@@ -355,6 +366,81 @@ def test_transport_turns_sequence_gap_into_reconnect_before_yielding_gap_message
     assert next(iterator)["event"] == "RECONNECTED"
     assert next(iterator)["sequence_num"] == 7
     assert len(calls) == 2
+
+
+def test_transport_tracks_one_sequence_across_all_subscribed_channels():
+    """Mirror the exact envelope ordering observed by the cloud probe."""
+
+    class FakeSocket:
+        def __init__(self):
+            self.messages = [
+                sequenced_trade_message(
+                    0, "2026-08-15T17:39:50.500Z", 100, trade_id="snapshot"
+                ),
+                sequenced_control_message(
+                    "subscriptions", 1, "2026-08-15T17:39:50.544801046Z"
+                ),
+                sequenced_control_message(
+                    "subscriptions", 2, "2026-08-15T17:39:50.544834060Z"
+                ),
+                sequenced_trade_message(
+                    3, "2026-08-15T17:39:50.620Z", 101, trade_id="update-1"
+                ),
+                sequenced_control_message(
+                    "heartbeats", 4, "2026-08-15T17:39:50.635873127Z"
+                ),
+                sequenced_trade_message(
+                    5, "2026-08-15T17:39:51.220Z", 102, trade_id="update-2"
+                ),
+            ]
+
+        def send(self, _):
+            pass
+
+        def recv(self):
+            return json.dumps(self.messages.pop(0))
+
+        def close(self):
+            pass
+
+    iterator = iter(CoinbasePublicWebSocketTransport(
+        websocket_factory=lambda _: FakeSocket(),
+        max_reconnect_attempts=0,
+        ping_interval_seconds=0,
+    ))
+
+    messages = [next(iterator) for _ in range(6)]
+
+    assert [message["sequence_num"] for message in messages] == list(range(6))
+    assert [message["channel"] for message in messages] == [
+        "market_trades",
+        "subscriptions",
+        "subscriptions",
+        "market_trades",
+        "heartbeats",
+        "market_trades",
+    ]
+
+
+def test_tracker_reports_channel_where_connection_wide_gap_is_observed():
+    tracker = CoinbaseMessageSequenceTracker()
+    tracker.observe(sequenced_trade_message(
+        0, "2026-08-15T17:39:50.500Z", 100, trade_id="snapshot"
+    ))
+    tracker.observe(sequenced_control_message(
+        "subscriptions", 1, "2026-08-15T17:39:50.544801046Z"
+    ))
+
+    with pytest.raises(CoinbaseMessageSequenceError) as captured:
+        tracker.observe(sequenced_control_message(
+            "heartbeats", 3, "2026-08-15T17:39:50.635873127Z"
+        ))
+
+    assert captured.value.failure_kind == "PROVIDER_SEQUENCE_GAP"
+    assert captured.value.provider_channel == "heartbeats"
+    assert captured.value.previous_sequence_num == 1
+    assert captured.value.expected_sequence_num == 2
+    assert captured.value.observed_sequence_num == 3
 
 
 def test_sequence_recovery_budget_is_not_reset_by_heartbeat_only_connection():
