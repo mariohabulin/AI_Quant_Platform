@@ -160,3 +160,46 @@ The controlled stop at 10:02 UTC delivered SIGINT and completed with systemd `Re
 Activation preparation also exposed a systemd lifecycle detail: a successful inactive unit may be garbage-collected, causing `reset-failed` to report `Unit ai-alpha-paper.service not loaded`. In that exact state no retained start-limit counter exists. The runbook now uses a guarded branch that verifies the installed unit is loadable before a direct explicit start and aborts on every other reset error; it never hides failures with `|| true`. The two-start policy, PAPER configuration and runtime code are unchanged.
 
 Final parked state is PAPER `inactive/dead/disabled`, monitor timer `inactive/dead/enabled`, repository clean on `93b7565`, last terminal audit reason `OPERATOR_STOP` and `REAL_orders=0`. Overnight Soak Failure Closure v1 is closed. The next authorized evidence boundary is one clean 720-bar PAPER soak with no injected restart or failure; 24-hour, multi-day, unattended production and real execution remain gated until that run reaches `MAX_BARS` with every existing acceptance condition satisfied.
+
+### Coinbase Provider Message Sequence Integrity v1 — LOCAL PASS / CLOUD VALIDATION PENDING
+The next non-injected 720-bar attempt on exact revision `e0592ff` again failed
+safely before `MAX_BARS`. It processed 266 fresh bars before a 19.637-second
+late-trade fatal, recovered through the one allowed automatic process start,
+then processed 46 fresh bars before a second 56.435-second late-trade fatal.
+systemd blocked a third process start at the reviewed two-start boundary.
+Operational Monitoring retained `CRITICAL / FAILED / ORDERING_FATAL`, the
+deterministic report remained structurally complete but non-passing, and
+`REAL_orders=0` remained invariant. No transport disconnect immediately
+preceded either late trade, so the retained evidence did not justify widening
+the two-second event-time window.
+
+The root evidence gap was provider-envelope ordering: Advanced Trade documents
+that most messages carry increasing per-product `sequence_num` values, that a
+larger jump identifies a dropped message, and that a lower value can be ignored
+or can represent an out-of-order message. The prior transport ignored this
+field and passed every envelope into trade-time aggregation, so a replayed whole
+message could be misclassified as a genuinely late new trade. The old audit did
+not retain message sequence or `trade_id`, preventing a definitive distinction
+after the incident.
+
+The local implementation now validates every real `market_trades` envelope
+before OHLCV aggregation. Lower/equal messages are wholly discarded and audited
+as `PROVIDER_MESSAGE_REPLAY_DROPPED`; gaps or missing/invalid sequence close the
+untrusted socket and use the existing bounded reconnect/exact-REST-continuity
+path. A partial minute that began before the reconnected socket's trusted
+full-minute boundary is audit-dropped and REST-reconstructed before a later
+fully observed live bar may trade; the report counts these boundary drops.
+Heartbeats cannot reset the sequence-recovery budget; a valid market-trades
+payload is required. Reconnect exhaustion remains terminal. A late trade in a correctly
+sequenced envelope still fails closed under the unchanged two-second watermark,
+now with message sequence/time, event type and `trade_id` evidence. The forward
+report separately counts message replay drops, and handled replay evidence does
+not create a monitoring alert.
+
+Local TDD is green with 112/112 focused provider/forward/report/monitoring/
+supervision tests and the complete 630/630 repository suite. The next
+authorized step is exact-diff Windows validation, commit/push, clean cloud
+reproduction and a short non-injected PAPER diagnostic while the service remains
+boot-disabled. A new 720-bar evidence gate is not authorized until that sequence
+boundary is deployed and verified; 24-hour, multi-day, unattended production
+and real execution remain gated.

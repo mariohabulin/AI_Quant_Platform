@@ -212,3 +212,16 @@ def test_runbook_opens_a_fresh_restart_budget_before_each_reviewed_activation():
     assert "Installed PAPER unit is not loadable" in normalized
     assert "Any other `reset-failed` error aborts activation" in normalized
     assert "Do not replace this guard with `|| true`" in normalized
+
+
+def test_runbook_requires_provider_message_sequence_integrity_evidence():
+    runbook = _unit("README.md")
+
+    assert "sequence_num" in runbook
+    assert "PROVIDER_MESSAGE_REPLAY_DROPPED" in runbook
+    assert "PROVIDER_SEQUENCE_GAP" in runbook
+    assert "message_replay_drops" in runbook
+    assert "sequence_boundary_drops" in runbook
+    assert "before OHLCV aggregation" in runbook
+    assert "validly sequenced `market_trades` payload" in runbook
+    assert "does not authorize widening the two-second event-time window" in runbook

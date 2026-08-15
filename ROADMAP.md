@@ -370,6 +370,33 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
 - [x] Deploy exact closure revision `93b7565` non-activating; reproduce 97/97 focused and 615/615 complete cloud tests, native systemd verification and all seven readiness checks.
 - [x] Run a short bounded cloud PAPER diagnostic: six fresh contiguous bars after 121 startup catch-up bars, `NRestarts=0`, monitoring `OK / RUNNING`, then clean `OPERATOR_STOP`, `audit_complete=True`, no stale alerts, no new process incident, `observed_gap=0.0m` and `REAL_orders=0`. No live late-trade occurred; the typed `ORDERING_FATAL` path remains deterministic-test evidence rather than a live claim.
 - [x] Reconcile the observed systemd garbage-collection case: when the inactive unit is explicitly reported not loaded, its start-limit counters are already absent; verify the installed unit is loadable before direct start, and abort activation for every other `reset-failed` error.
+- [x] Review the second non-injected 720-bar attempt on `e0592ff`: two
+  `ORDERING_FATAL` attempts after 266 and 46 fresh bars, exact 19.637/56.435s
+  timing evidence, enforced two-start ceiling and `REAL_orders=0`.
+- [x] Verify Coinbase's provider-message contract and add connection-local
+  `market_trades.sequence_num` validation before trade-time aggregation.
+- [x] Drop lower/equal provider envelopes whole as audit-visible
+  `PROVIDER_MESSAGE_REPLAY_DROPPED`; never allow their trades into OHLCV, Feed
+  Health, Strategy, Risk or PaperBroker.
+- [x] Treat missing/invalid/forward-gap sequence evidence as a socket-integrity
+  failure before payload consumption; reuse bounded reconnect plus exact
+  non-tradable REST recovery and retain `TRANSPORT_FATAL` on exhaustion.
+- [x] Prevent partial-minute leakage after sequence reconnect: audit-drop every
+  completed bucket before the socket's first trusted full-minute boundary,
+  recover it exactly through REST, and expose `sequence_boundary_drops`.
+- [x] Keep sequence recovery genuinely bounded: heartbeat-only reconnects do
+  not reset consecutive failures; only a valid `market_trades` payload does.
+- [x] Preserve the strict two-second late-trade rule for correctly sequenced
+  payloads and add `trade_id`, message sequence/time and event type to fatal
+  evidence.
+- [x] Pass 112/112 focused provider/forward/report/monitoring/supervision tests
+  and the complete 630/630 local repository suite.
+- [ ] Reproduce the exact provider-sequence patch and complete suite on Windows,
+  commit/push it, then deploy non-activating to CPX22 and reproduce focused/full
+  validation plus native readiness checks.
+- [ ] Run one short non-injected sequence-aware cloud PAPER diagnostic and review
+  message replay, sequence-gap, continuity, monitoring and `REAL_orders=0`
+  evidence before reopening the overnight gate.
 - [ ] Repeat a clean 720-bar overnight gate with `NRestarts=0` before progression.
 - [ ] Progress to 24-hour and multi-day soak gates only after the clean overnight gate passes.
 

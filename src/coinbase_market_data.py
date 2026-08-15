@@ -32,6 +32,10 @@ class CoinbaseTradeOrderingError(ValueError):
         active_bucket,
         latest_seen_timestamp,
         reorder_window,
+        trade_id=None,
+        message_sequence_num=None,
+        message_timestamp=None,
+        event_type=None,
     ):
         self.trade_timestamp = pd.Timestamp(trade_timestamp)
         self.trade_bucket = pd.Timestamp(trade_bucket)
@@ -60,9 +64,27 @@ class CoinbaseTradeOrderingError(ValueError):
                 (self.active_bucket - self.trade_timestamp).total_seconds(),
             )
         )
+        self.trade_id = None if trade_id is None else str(trade_id)
+        self.message_sequence_num = (
+            message_sequence_num
+            if isinstance(message_sequence_num, int)
+            and not isinstance(message_sequence_num, bool)
+            else None
+        )
+        try:
+            self.message_timestamp = (
+                None
+                if message_timestamp is None
+                else pd.Timestamp(message_timestamp)
+            )
+        except Exception:
+            self.message_timestamp = None
+        self.event_type = None if event_type is None else str(event_type)
         super().__init__(
             "Out-of-order Coinbase trade rejected "
             f"(trade_timestamp={self.trade_timestamp.isoformat()} "
+            f"trade_id={self.trade_id} "
+            f"message_sequence_num={self.message_sequence_num} "
             f"active_bucket={self.active_bucket.isoformat()} "
             f"latest_seen_timestamp="
             f"{None if self.latest_seen_timestamp is None else self.latest_seen_timestamp.isoformat()} "
@@ -79,7 +101,139 @@ class CoinbaseTradeOrderingError(ValueError):
             "watermark_timestamp": self.watermark_timestamp,
             "reorder_window_seconds": self.reorder_window_seconds,
             "lateness_seconds": self.lateness_seconds,
+            "trade_id": self.trade_id,
+            "message_sequence_num": self.message_sequence_num,
+            "message_timestamp": self.message_timestamp,
+            "event_type": self.event_type,
         }
+
+
+class CoinbaseMessageSequenceError(ValueError):
+    """Connection-local Coinbase message-sequence integrity failure."""
+
+    def __init__(
+        self,
+        *,
+        failure_kind,
+        previous_sequence_num=None,
+        expected_sequence_num=None,
+        observed_sequence_num=None,
+        message_timestamp=None,
+    ):
+        self.failure_kind = str(failure_kind)
+        self.previous_sequence_num = previous_sequence_num
+        self.expected_sequence_num = expected_sequence_num
+        self.observed_sequence_num = observed_sequence_num
+        self.message_timestamp = message_timestamp
+        super().__init__(
+            "Coinbase market_trades sequence integrity failure "
+            f"(failure_kind={self.failure_kind} "
+            f"previous_sequence_num={self.previous_sequence_num} "
+            f"expected_sequence_num={self.expected_sequence_num} "
+            f"observed_sequence_num={self.observed_sequence_num} "
+            f"message_timestamp={self.message_timestamp})."
+        )
+
+    def diagnostics(self):
+        return {
+            "previous_sequence_num": self.previous_sequence_num,
+            "expected_sequence_num": self.expected_sequence_num,
+            "observed_sequence_num": self.observed_sequence_num,
+            "message_timestamp": self.message_timestamp,
+        }
+
+
+class CoinbaseMessageSequenceTracker:
+    """Validate provider ordering before market-trade payloads reach aggregation.
+
+    Coinbase sequence numbers are scoped to a live websocket connection here.
+    A new transport connection creates a new tracker and therefore a new trusted
+    baseline. Lower/equal messages are provider replays that Coinbase documents as
+    ignorable; forward gaps are integrity failures and must force recovery.
+    """
+
+    def __init__(self):
+        self.previous_sequence_num = None
+
+    @staticmethod
+    def _replay_notice(message, previous_sequence_num, observed_sequence_num):
+        trades = [
+            trade
+            for event in message.get("events", [])
+            if isinstance(event, dict)
+            for trade in event.get("trades", [])
+            if isinstance(trade, dict)
+        ]
+        trade_ids = [
+            str(trade["trade_id"])
+            for trade in trades
+            if trade.get("trade_id") is not None
+        ]
+        return {
+            "channel": "_coinbase_transport",
+            "event": "PROVIDER_MESSAGE_REPLAY_DROPPED",
+            "failure_kind": "PROVIDER_SEQUENCE_REPLAY",
+            "previous_sequence_num": previous_sequence_num,
+            "observed_sequence_num": observed_sequence_num,
+            "message_timestamp": message.get("timestamp"),
+            "trade_count": len(trades),
+            "first_trade_id": trade_ids[0] if trade_ids else None,
+            "last_trade_id": trade_ids[-1] if trade_ids else None,
+        }
+
+    def observe(self, message):
+        if not isinstance(message, dict):
+            raise TypeError("Coinbase message must be a dict.")
+        if message.get("channel") != "market_trades":
+            return None
+
+        if "sequence_num" not in message:
+            raise CoinbaseMessageSequenceError(
+                failure_kind="PROVIDER_SEQUENCE_MISSING",
+                previous_sequence_num=self.previous_sequence_num,
+                expected_sequence_num=(
+                    None
+                    if self.previous_sequence_num is None
+                    else self.previous_sequence_num + 1
+                ),
+                message_timestamp=message.get("timestamp"),
+            )
+        observed = message.get("sequence_num")
+        if (
+            not isinstance(observed, int)
+            or isinstance(observed, bool)
+            or observed < 0
+        ):
+            raise CoinbaseMessageSequenceError(
+                failure_kind="PROVIDER_SEQUENCE_INVALID",
+                previous_sequence_num=self.previous_sequence_num,
+                expected_sequence_num=(
+                    None
+                    if self.previous_sequence_num is None
+                    else self.previous_sequence_num + 1
+                ),
+                observed_sequence_num=observed,
+                message_timestamp=message.get("timestamp"),
+            )
+
+        previous = self.previous_sequence_num
+        if previous is None:
+            self.previous_sequence_num = observed
+            return None
+        if observed <= previous:
+            return self._replay_notice(message, previous, observed)
+
+        expected = previous + 1
+        if observed != expected:
+            raise CoinbaseMessageSequenceError(
+                failure_kind="PROVIDER_SEQUENCE_GAP",
+                previous_sequence_num=previous,
+                expected_sequence_num=expected,
+                observed_sequence_num=observed,
+                message_timestamp=message.get("timestamp"),
+            )
+        self.previous_sequence_num = observed
+        return None
 
 
 class CoinbaseOneMinuteTradeAggregator:
@@ -147,6 +301,12 @@ class CoinbaseOneMinuteTradeAggregator:
                 active_bucket=self._bucket,
                 latest_seen_timestamp=self._latest_seen_ts,
                 reorder_window=self.reorder_window,
+                trade_id=trade.get("trade_id"),
+                message_sequence_num=trade.get(
+                    "_coinbase_message_sequence_num"
+                ),
+                message_timestamp=trade.get("_coinbase_message_timestamp"),
+                event_type=trade.get("_coinbase_event_type"),
             )
         if bucket > self._bucket:
             completed = CoinbaseCompletedBar(self._bucket, *self._ohlcv)
@@ -178,7 +338,18 @@ class CoinbaseOneMinuteTradeAggregator:
             for trade in event.get("trades", []):
                 ts = self._timestamp(trade.get("time"))
                 self._arrival_sequence += 1
-                heapq.heappush(self._pending_trades, (ts.value, self._arrival_sequence, dict(trade)))
+                buffered_trade = dict(trade)
+                buffered_trade["_coinbase_message_sequence_num"] = message.get(
+                    "sequence_num"
+                )
+                buffered_trade["_coinbase_message_timestamp"] = message.get(
+                    "timestamp"
+                )
+                buffered_trade["_coinbase_event_type"] = event.get("type")
+                heapq.heappush(
+                    self._pending_trades,
+                    (ts.value, self._arrival_sequence, buffered_trade),
+                )
                 if self._latest_seen_ts is None or ts > self._latest_seen_ts:
                     self._latest_seen_ts = ts
 
@@ -481,6 +652,8 @@ class CoinbasePublicWebSocketTransport:
 
     @staticmethod
     def _failure_kind(exc):
+        if isinstance(exc, CoinbaseMessageSequenceError):
+            return exc.failure_kind
         text = str(exc).lower()
         name = type(exc).__name__.lower()
         if isinstance(exc, socket.gaierror) or "getaddrinfo" in text or "address" in name:
@@ -517,11 +690,13 @@ class CoinbasePublicWebSocketTransport:
         consecutive_failures = 0
         reconnect_count = 0
         reconnect_pending = False
+        reconnect_requires_market_trades = False
         outage_started_at = None
         while True:
             ws = None
             try:
                 ws = self._connect()
+                sequence_tracker = CoinbaseMessageSequenceTracker()
                 for payload in self.subscription_messages:
                     ws.send(json.dumps(payload))
                 last_ping_at = self.monotonic_fn()
@@ -531,10 +706,18 @@ class CoinbasePublicWebSocketTransport:
                     if raw is None or raw == "":
                         raise ConnectionError("Coinbase websocket closed.")
                     message = json.loads(raw) if isinstance(raw, str) else raw
-                    if reconnect_pending:
+                    sequence_notice = sequence_tracker.observe(message)
+                    if sequence_notice is not None:
+                        yield sequence_notice
+                        continue
+                    if reconnect_pending and (
+                        not reconnect_requires_market_trades
+                        or message.get("channel") == "market_trades"
+                    ):
                         reconnect_count += 1
                         consecutive_failures = 0
                         reconnect_pending = False
+                        reconnect_requires_market_trades = False
                         outage_seconds = None
                         if outage_started_at is not None:
                             outage_seconds = max(0.0, self.monotonic_fn() - outage_started_at)
@@ -544,6 +727,11 @@ class CoinbasePublicWebSocketTransport:
                             "event": "RECONNECTED",
                             "reconnect_count": reconnect_count,
                             "outage_seconds": outage_seconds,
+                            "message_timestamp": (
+                                message.get("timestamp")
+                                if isinstance(message, dict)
+                                else None
+                            ),
                         }
                     yield message
             except GeneratorExit:
@@ -552,6 +740,13 @@ class CoinbasePublicWebSocketTransport:
                 consecutive_failures += 1
                 reason = f"{type(exc).__name__}: {exc}"
                 failure_kind = self._failure_kind(exc)
+                sequence_diagnostics = (
+                    exc.diagnostics()
+                    if isinstance(exc, CoinbaseMessageSequenceError)
+                    else {}
+                )
+                if isinstance(exc, CoinbaseMessageSequenceError):
+                    reconnect_requires_market_trades = True
                 if outage_started_at is None:
                     outage_started_at = self.monotonic_fn()
                 if consecutive_failures > self.max_reconnect_attempts:
@@ -562,6 +757,7 @@ class CoinbasePublicWebSocketTransport:
                         "reason": reason,
                         "failure_kind": failure_kind,
                         "outage_seconds": max(0.0, self.monotonic_fn() - outage_started_at),
+                        **sequence_diagnostics,
                     }
                     return
                 reconnect_pending = True
@@ -571,6 +767,7 @@ class CoinbasePublicWebSocketTransport:
                     "attempt": consecutive_failures,
                     "reason": reason,
                     "failure_kind": failure_kind,
+                    **sequence_diagnostics,
                 }
                 delay = self._backoff_for_attempt(consecutive_failures)
                 if delay:

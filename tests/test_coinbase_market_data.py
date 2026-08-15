@@ -5,6 +5,8 @@ import pytest
 
 from src.coinbase_market_data import (
     COINBASE_WS_URL,
+    CoinbaseMessageSequenceError,
+    CoinbaseMessageSequenceTracker,
     CoinbaseOneMinuteBarAdapter,
     CoinbaseOneMinuteTradeAggregator,
     CoinbasePublicWebSocketTransport,
@@ -15,6 +17,21 @@ from src.realtime_market_data import FeedHealthError, RealTimeMarketDataFeed
 
 def trade(time, price, size="0.1", product_id="BTC-USD"):
     return {"time": time, "price": str(price), "size": str(size), "product_id": product_id}
+
+
+def sequenced_trade_message(sequence_num, time, price, *, trade_id, message_time=None):
+    return {
+        "channel": "market_trades",
+        "timestamp": message_time or time,
+        "sequence_num": sequence_num,
+        "events": [{
+            "type": "update",
+            "trades": [{
+                **trade(time, price),
+                "trade_id": str(trade_id),
+            }],
+        }],
+    }
 
 
 def test_aggregator_emits_only_completed_minute():
@@ -193,6 +210,230 @@ def test_trade_beyond_reorder_window_fails_with_actionable_timing_evidence():
     assert error.reorder_window_seconds == pytest.approx(2.0)
     assert error.lateness_seconds == pytest.approx(2.0)
     assert "lateness_seconds=2.000" in str(error)
+
+
+def test_genuine_late_trade_retains_provider_sequence_and_trade_identity():
+    aggregator = CoinbaseOneMinuteTradeAggregator(
+        product_id="BTC-USD", reorder_window="2s"
+    )
+    aggregator.ingest_message(sequenced_trade_message(
+        80, "2026-08-08T12:01:00.100Z", 101,
+        trade_id="9001", message_time="2026-08-08T12:01:00.200Z",
+    ))
+    aggregator.ingest_message(sequenced_trade_message(
+        81, "2026-08-08T12:01:03.000Z", 103,
+        trade_id="9002", message_time="2026-08-08T12:01:03.100Z",
+    ))
+
+    with pytest.raises(CoinbaseTradeOrderingError) as captured:
+        aggregator.ingest_message(sequenced_trade_message(
+            82, "2026-08-08T12:00:59.000Z", 99,
+            trade_id="9003", message_time="2026-08-08T12:01:03.200Z",
+        ))
+
+    diagnostics = captured.value.diagnostics()
+    assert diagnostics["trade_id"] == "9003"
+    assert diagnostics["message_sequence_num"] == 82
+    assert diagnostics["message_timestamp"] == pd.Timestamp(
+        "2026-08-08T12:01:03.200Z"
+    )
+    assert diagnostics["event_type"] == "update"
+
+
+@pytest.mark.parametrize("observed", [39, 40])
+def test_transport_drops_out_of_order_or_duplicate_message_before_aggregation(
+    observed,
+):
+    class FakeSocket:
+        def __init__(self):
+            self.sent = []
+            self.messages = [
+                sequenced_trade_message(
+                    40, "2026-08-08T12:01:03Z", 103, trade_id="first"
+                ),
+                sequenced_trade_message(
+                    observed, "2026-08-08T12:00:59Z", 99, trade_id="replay"
+                ),
+                sequenced_trade_message(
+                    41, "2026-08-08T12:01:04Z", 104, trade_id="next"
+                ),
+            ]
+
+        def send(self, payload):
+            self.sent.append(json.loads(payload))
+
+        def recv(self):
+            return json.dumps(self.messages.pop(0))
+
+        def close(self):
+            pass
+
+    transport = CoinbasePublicWebSocketTransport(
+        websocket_factory=lambda _: FakeSocket(),
+        max_reconnect_attempts=0,
+        ping_interval_seconds=0,
+    )
+    iterator = iter(transport)
+
+    first = next(iterator)
+    replay = next(iterator)
+    following = next(iterator)
+
+    assert first["sequence_num"] == 40
+    assert replay == {
+        "channel": "_coinbase_transport",
+        "event": "PROVIDER_MESSAGE_REPLAY_DROPPED",
+        "failure_kind": "PROVIDER_SEQUENCE_REPLAY",
+        "previous_sequence_num": 40,
+        "observed_sequence_num": observed,
+        "message_timestamp": "2026-08-08T12:00:59Z",
+        "trade_count": 1,
+        "first_trade_id": "replay",
+        "last_trade_id": "replay",
+    }
+    assert following["sequence_num"] == 41
+
+    aggregator = CoinbaseOneMinuteTradeAggregator(reorder_window="2s")
+    assert aggregator.ingest_message(first) == []
+    assert aggregator.ingest_message(following) == []
+
+
+def test_transport_turns_sequence_gap_into_reconnect_before_yielding_gap_message():
+    class FakeSocket:
+        def __init__(self, messages):
+            self.sent = []
+            self.messages = list(messages)
+
+        def send(self, payload):
+            self.sent.append(json.loads(payload))
+
+        def recv(self):
+            return json.dumps(self.messages.pop(0))
+
+        def close(self):
+            pass
+
+    sockets = [
+        FakeSocket([
+            sequenced_trade_message(
+                100, "2026-08-08T12:00:10Z", 100, trade_id="100"
+            ),
+            sequenced_trade_message(
+                102, "2026-08-08T12:00:20Z", 102, trade_id="102"
+            ),
+        ]),
+        FakeSocket([
+            sequenced_trade_message(
+                7, "2026-08-08T12:01:10Z", 103, trade_id="new-connection"
+            ),
+        ]),
+    ]
+    calls = []
+
+    def factory(_):
+        calls.append(True)
+        return sockets[len(calls) - 1]
+
+    transport = CoinbasePublicWebSocketTransport(
+        websocket_factory=factory,
+        max_reconnect_attempts=1,
+        backoff_seconds=0,
+        ping_interval_seconds=0,
+    )
+    iterator = iter(transport)
+
+    assert next(iterator)["sequence_num"] == 100
+    disconnected = next(iterator)
+    assert disconnected["event"] == "DISCONNECTED"
+    assert disconnected["failure_kind"] == "PROVIDER_SEQUENCE_GAP"
+    assert disconnected["previous_sequence_num"] == 100
+    assert disconnected["expected_sequence_num"] == 101
+    assert disconnected["observed_sequence_num"] == 102
+    assert disconnected["message_timestamp"] == "2026-08-08T12:00:20Z"
+    assert "expected_sequence_num=101" in disconnected["reason"]
+
+    assert next(iterator)["event"] == "RECONNECTED"
+    assert next(iterator)["sequence_num"] == 7
+    assert len(calls) == 2
+
+
+def test_sequence_recovery_budget_is_not_reset_by_heartbeat_only_connection():
+    class FakeSocket:
+        def __init__(self, messages):
+            self.messages = list(messages)
+
+        def send(self, _):
+            pass
+
+        def recv(self):
+            return json.dumps(self.messages.pop(0))
+
+        def close(self):
+            pass
+
+    sockets = [
+        FakeSocket([
+            sequenced_trade_message(
+                10, "2026-08-08T12:00:10Z", 100, trade_id="10"
+            ),
+            sequenced_trade_message(
+                12, "2026-08-08T12:00:20Z", 102, trade_id="12"
+            ),
+        ]),
+        FakeSocket([
+            {
+                "channel": "heartbeats",
+                "timestamp": "2026-08-08T12:00:21Z",
+                "sequence_num": 0,
+                "events": [],
+            },
+            {
+                "channel": "market_trades",
+                "timestamp": "2026-08-08T12:00:22Z",
+                "events": [],
+            },
+        ]),
+    ]
+    calls = []
+
+    def factory(_):
+        calls.append(True)
+        return sockets[len(calls) - 1]
+
+    iterator = iter(CoinbasePublicWebSocketTransport(
+        websocket_factory=factory,
+        max_reconnect_attempts=1,
+        backoff_seconds=0,
+        ping_interval_seconds=0,
+    ))
+
+    assert next(iterator)["sequence_num"] == 10
+    assert next(iterator)["event"] == "DISCONNECTED"
+    assert next(iterator)["channel"] == "heartbeats"
+    exhausted = next(iterator)
+    assert exhausted["event"] == "RECONNECT_EXHAUSTED"
+    assert exhausted["attempt"] == 2
+    assert exhausted["failure_kind"] == "PROVIDER_SEQUENCE_MISSING"
+    assert len(calls) == 2
+
+
+@pytest.mark.parametrize(
+    "message,kind",
+    [
+        ({"channel": "market_trades", "events": []}, "PROVIDER_SEQUENCE_MISSING"),
+        (
+            {"channel": "market_trades", "sequence_num": "1", "events": []},
+            "PROVIDER_SEQUENCE_INVALID",
+        ),
+    ],
+)
+def test_sequence_tracker_fails_closed_on_missing_or_invalid_sequence(message, kind):
+    tracker = CoinbaseMessageSequenceTracker()
+
+    with pytest.raises(CoinbaseMessageSequenceError) as captured:
+        tracker.observe(message)
+
+    assert captured.value.failure_kind == kind
 
 
 def test_reorder_buffer_state_round_trips_without_losing_pending_trade():

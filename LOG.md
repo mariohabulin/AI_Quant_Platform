@@ -1214,3 +1214,45 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - Stopped the process deliberately at 10:02 UTC. systemd returned `success/0` with no restart; the audit appended `SESSION_END reason=OPERATOR_STOP`; monitoring returned `WARNING / STOPPED / OPERATOR_STOP` without stale alerts; and the deterministic report returned the expected non-gate `FAIL` with `audit_complete=True`, six processed bars, `observed_gap=0.0m`, flat final position and `REAL_orders=0`.
 - The append-only audit contains no new `PROCESS_INCIDENT` after the diagnostic `SESSION_START`. Historical incidents remain retained as intended. No truly late trade occurred during the short live probe, so `ORDERING_FATAL` remains covered by the 97 deterministic focused tests rather than being presented as live cloud evidence.
 - Final parked state: PAPER `inactive/dead/disabled`, monitor timer `inactive/dead/enabled`, cloud repository clean on `93b7565`. Overnight Soak Failure Closure v1 is closed; the next authorized gate is a clean, non-injected 720-bar PAPER soak. No 24-hour, multi-day, unattended production or real execution progression is authorized yet.
+
+## 2026-08-15 — Coinbase Provider Message Sequence Integrity v1 (Local Implementation)
+- Reviewed the second non-injected 720-bar attempt from exact revision `e0592ff`.
+  The first process reached 266 fresh bars before a 19.637-second
+  `ORDERING_FATAL`; the one allowed recovery process reached 46 fresh bars before
+  a 56.435-second `ORDERING_FATAL`; systemd then enforced the two-start ceiling.
+  Both attempts retained complete terminal audit evidence and `REAL_orders=0`.
+- Verified the official Advanced Trade WebSocket contract: `sequence_num`
+  increments exactly once per product message, a forward jump identifies a
+  dropped message, and a lower number may be ignored or represents out-of-order
+  delivery. `market_trades` batches one or more identified trades every 250 ms.
+- Root cause classification remains deliberately bounded: the old consumer did
+  not inspect message sequence or retain `trade_id`, so historical evidence
+  cannot prove whether either cloud event was a replayed envelope or a genuinely
+  late trade. The two-second event-time window was not widened.
+- Added connection-local sequence validation before OHLCV aggregation.
+  Lower/equal envelopes become audit-visible
+  `PROVIDER_MESSAGE_REPLAY_DROPPED` controls and never reach trading layers.
+  Missing, invalid or forward-gap sequence evidence invalidates the socket and
+  enters the existing bounded reconnect/exact REST recovery boundary before any
+  contained trade is consumed.
+- Closed the partial-boundary edge case: a reconnecting socket cannot trade a
+  minute it observed only in part. Such a completed bar is durably recorded as
+  `PROVIDER_SEQUENCE_BOUNDARY_BAR_DROPPED`, reconstructed through exact REST
+  continuity, and summarized as `sequence_boundary_drops`; only a bar observed
+  from its minute start may return to the live decision path.
+- Kept the recovery budget honest across reconnects: heartbeats may demonstrate
+  socket liveness but cannot reset a sequence-integrity failure. The consecutive
+  failure counter resets only after the new socket delivers a validly sequenced
+  `market_trades` payload.
+- Extended genuine late-trade evidence with `trade_id`, message sequence,
+  provider message timestamp and event type. Extended the deterministic report
+  with a distinct message-replay count; handled replay records remain visible
+  but non-alerting.
+- TDD RED covered replay/duplicate suppression, gap-before-payload recovery,
+  malformed sequence failure, provider identity on genuine late trades, forward
+  audit persistence, report counting and monitoring neutrality. TDD GREEN:
+  112/112 focused provider/forward/report/monitoring/supervision tests and the
+  complete 630/630 repository suite pass.
+- Exact-diff Windows and CPX22 validation remain pending. PAPER stays parked and
+  boot-disabled; the monitor timer stays stopped/enabled; no 720-bar, 24-hour,
+  multi-day, unattended-production or real-execution progression is authorized.

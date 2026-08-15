@@ -61,6 +61,20 @@ def _record_timestamp(row):
     return None
 
 
+def _provider_sequence_diagnostics(row):
+    failure_kind = str(row.get("failure_kind") or "")
+    if not failure_kind.startswith("PROVIDER_SEQUENCE_"):
+        return ""
+    return (
+        " "
+        f"(failure_kind={failure_kind} "
+        f"previous_sequence_num={row.get('previous_sequence_num', 'unknown')} "
+        f"expected_sequence_num={row.get('expected_sequence_num', 'unknown')} "
+        f"observed_sequence_num={row.get('observed_sequence_num', 'unknown')} "
+        f"message_timestamp={row.get('message_timestamp', 'unknown')})"
+    )
+
+
 def _read_audit(path, alerts):
     path = Path(path)
     if not path.exists() or not path.is_file():
@@ -278,16 +292,22 @@ def build_operational_monitoring_report(
 
     transport_events = [row for row in session if row.get("type") == "TRANSPORT_EVENT"]
     if transport_events:
-        latest_transport = str(transport_events[-1].get("event", "UNKNOWN"))
+        latest_transport_record = transport_events[-1]
+        latest_transport = str(latest_transport_record.get("event", "UNKNOWN"))
+        sequence_diagnostics = _provider_sequence_diagnostics(
+            latest_transport_record
+        )
         if latest_transport == "RECONNECT_EXHAUSTED":
             alerts.append(OperationalAlert(
                 "TRANSPORT_RECONNECT_EXHAUSTED", "CRITICAL",
-                "Transport reconnect budget is exhausted.",
+                "Transport reconnect budget is exhausted."
+                f"{sequence_diagnostics}",
             ))
         elif latest_transport == "DISCONNECTED" and session_state == "RUNNING":
             alerts.append(OperationalAlert(
                 "TRANSPORT_DISCONNECTED", "WARNING",
-                "Latest transport state is disconnected.",
+                "Latest transport state is disconnected."
+                f"{sequence_diagnostics}",
             ))
 
     if state is not None:

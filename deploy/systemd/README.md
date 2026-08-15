@@ -105,11 +105,34 @@ visible as `PREVIOUS_PROCESS_FAILURE WARNING` throughout that recovery attempt.
 A later healthy session is not allowed to erase the incident from append-only
 audit evidence.
 
+A `market_trades` payload is now checked against Coinbase's connection-local
+`sequence_num` before OHLCV aggregation. A lower or equal sequence is discarded
+as a complete provider message and recorded as
+`PROVIDER_MESSAGE_REPLAY_DROPPED`; the forward report exposes the total as
+`message_replay_drops`. After a sequence-integrity reconnect, any completed
+minute that began before the socket's trusted live boundary is discarded as
+`PROVIDER_SEQUENCE_BOUNDARY_BAR_DROPPED`, exposed as
+`sequence_boundary_drops`, and reconstructed through exact REST continuity
+before a later fully observed live bar may trade. These handled records do not
+enter Feed Health, Strategy, Risk or PaperBroker and do not by themselves make
+monitoring non-OK.
+
+A forward sequence gap never reaches aggregation. It closes the untrusted
+socket as `PROVIDER_SEQUENCE_GAP` and enters the existing bounded reconnect plus
+exact REST continuity path. Missing or invalid sequence evidence is similarly
+classified as `PROVIDER_SEQUENCE_MISSING` or `PROVIDER_SEQUENCE_INVALID`.
+Review all such disconnect causes, recovery evidence and final continuity;
+heartbeats alone do not reset this recovery budget—a validly sequenced `market_trades` payload must arrive on the new socket. Reconnect exhaustion
+remains `TRANSPORT_FATAL`. This provider-envelope guard
+does not authorize widening the two-second event-time window or dropping a
+genuinely late trade that arrived in a correctly sequenced message.
+
 A trade beyond the reviewed two-second event-time watermark remains fail-closed.
 The attempt records `LATE_TRADE_REJECTED` timing evidence, closes as
 `ORDERING_FATAL`, exits non-zero and consumes the single automatic recovery
-start. Do not widen the reorder window from a generic exception message; review
-the recorded trade, watermark and measured lateness first. A controlled
+start. Review the recorded trade, `trade_id`, provider message sequence/time,
+watermark and measured lateness before classifying the cause. Do not widen the
+reorder window from a generic exception message. A controlled
 `systemctl stop` instead closes as `OPERATOR_STOP`, returns accepted status 130
 and is reported as `WARNING / STOPPED` without stale-running alerts.
 

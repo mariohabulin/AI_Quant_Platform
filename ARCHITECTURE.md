@@ -826,6 +826,50 @@ Extended forward observation exposed event-time reordering across separate Coinb
 
 - Completed-bar freshness semantics: adapters may define `freshness_reference(timestamp, timeframe)`; Coinbase completed 1m bars are aged from interval close, while timestamp ordering remains anchored to interval start.
 
+## Coinbase Provider Message Sequence Integrity v1
+The Advanced Trade `market_trades` envelope is validated at the websocket
+transport boundary before any contained trade can enter event-time buffering or
+OHLCV aggregation. The connection-local `sequence_num` contract is distinct
+from trade event time: the first valid non-negative integer establishes the
+socket baseline and each subsequent accepted message must increment it by
+exactly one.
+
+A lower or equal sequence is a provider message replay/out-of-order delivery
+that Coinbase documents as ignorable. The entire envelope is dropped before
+aggregation and emitted as the typed internal control event
+`PROVIDER_MESSAGE_REPLAY_DROPPED`; append-only audit retains previous/observed
+sequence, provider message time, trade count and bounded first/last `trade_id`
+evidence. It never reaches Feed Health, Strategy, Risk or PaperBroker and is not
+itself an operational alert.
+
+A forward sequence gap, missing sequence or invalid sequence is an integrity
+failure before payload consumption. The socket is closed, the cause is
+classified as `PROVIDER_SEQUENCE_GAP`, `PROVIDER_SEQUENCE_MISSING` or
+`PROVIDER_SEQUENCE_INVALID`, and the existing bounded transport reconnect path
+owns recovery. Forward PAPER discards the untrusted partial aggregation
+boundary. A completed minute that began before the reconnected socket's first
+trusted full-minute boundary is audit-dropped rather than traded; that minute is
+then reconstructed by exact non-tradable REST recovery when the first fully
+observed live bar arrives. The report exposes these events separately as
+`sequence_boundary_drops`. Only that later live bar may resume normal decisions. Reconnect exhaustion still
+closes the session as `TRANSPORT_FATAL`. Sequence state is never checkpointed
+across sockets because a new connection establishes a new provider baseline.
+After a sequence-integrity failure, heartbeats alone do not reset the consecutive
+recovery budget or declare the market feed reconnected; that requires a validly
+sequenced `market_trades` payload on the new socket.
+
+The two-second event-time watermark remains independently enforced for payloads
+whose message sequence is valid. A genuine late trade therefore still raises
+`CoinbaseTradeOrderingError`; its diagnostics now also retain `trade_id`,
+message `sequence_num`, provider message timestamp and event type. Provider
+sequence handling does not widen the event-time window, fabricate candles,
+change Strategy/Risk/Paper behavior or add real-execution capability.
+
+Official provider contract:
+[Advanced Trade WebSocket sequence numbers](https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/websocket/websocket-overview#sequence-numbers)
+and
+[market trades channel](https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/websocket/websocket-channels#market-trades-channel).
+
 ## Coinbase Transport Resilience v1
 `CoinbasePublicWebSocketTransport` now emits explicit internal transport-control events around reconnects while preserving the public market-data contract. Reconnect attempts are bounded per consecutive outage and reset after the reconnected socket successfully delivers data; healthy periods therefore do not consume a lifetime reconnect budget.
 

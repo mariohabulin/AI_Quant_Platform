@@ -118,10 +118,15 @@ def test_report_adds_operational_transport_and_activity_diagnostics(tmp_path):
         {"type": "PAPER_EVENT", "paper_orders": 0, "real_orders": 0,
          "snapshot": {"timestamp": "2026-08-09T10:47:00+00:00", "equity": 5000.0, "position_quantity": 0.0},
          "event": {"signal": 0, "status": "NO_ACTION", "risk_status": "ALLOW", "reason": "Strategy emitted HOLD."}},
-        {"type": "TRANSPORT_EVENT", "event": "DISCONNECTED", "reason": "reset", "real_orders": 0},
+        {"type": "TRANSPORT_EVENT", "event": "DISCONNECTED", "reason": "sequence gap",
+         "failure_kind": "PROVIDER_SEQUENCE_GAP", "real_orders": 0},
         {"type": "TRANSPORT_EVENT", "event": "RECONNECTED", "reconnect_count": 1, "real_orders": 0},
         {"type": "RECONNECT_REBASE", "timestamp": "2026-08-09T10:55:00+00:00", "real_orders": 0},
         {"type": "PROVIDER_REPLAY_DROPPED", "timestamp": "2026-08-09T10:47:00+00:00", "real_orders": 0},
+        {"type": "PROVIDER_MESSAGE_REPLAY_DROPPED", "previous_sequence_num": 50,
+         "observed_sequence_num": 49, "trade_count": 2, "real_orders": 0},
+        {"type": "PROVIDER_SEQUENCE_BOUNDARY_BAR_DROPPED",
+         "timestamp": "2026-08-09T10:54:00+00:00", "real_orders": 0},
         {"type": "PAPER_EVENT", "paper_orders": 0, "real_orders": 0,
          "snapshot": {"timestamp": "2026-08-09T10:56:00+00:00", "equity": 5000.0, "position_quantity": 0.0},
          "event": {"signal": 1, "status": "REJECTED", "risk_status": "REJECT", "reason": "Minimum reward/risk requirement not met.",
@@ -136,7 +141,10 @@ def test_report_adds_operational_transport_and_activity_diagnostics(tmp_path):
     assert report.transport_disconnects == 1
     assert report.transport_reconnects == 1
     assert report.reconnect_success_rate == pytest.approx(1.0)
+    assert report.disconnect_reason_counts == {"PROVIDER_SEQUENCE_GAP": 1}
     assert report.provider_replay_drops == 1
+    assert report.provider_message_replay_drops == 1
+    assert report.provider_sequence_boundary_bar_drops == 1
     assert report.market_span_minutes == pytest.approx(9.0)
     assert report.expected_contiguous_minutes == pytest.approx(1.0)
     assert report.observed_gap_minutes == pytest.approx(8.0)
@@ -150,6 +158,8 @@ def test_report_adds_operational_transport_and_activity_diagnostics(tmp_path):
     assert report.minimum_reward_risk_values == (3.0,)
     text = format_forward_session_report(report)
     assert "disconnects=1 reconnects=1 success=100.0%" in text
+    assert "message_replay_drops=1" in text
+    assert "sequence_boundary_drops=1" in text
     assert "observed_gap=8.0m" in text
     assert "signal_rate=50.0%" in text
     assert "reward_risk: evaluations=1 rejected=1" in text

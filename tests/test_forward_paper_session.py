@@ -175,6 +175,49 @@ def test_late_trade_failure_records_diagnostics_and_terminal_boundary(tmp_path):
     assert state.exists()
 
 
+def test_provider_message_replay_is_audited_without_reaching_trading(tmp_path):
+    messages = [
+        {
+            "channel": "_coinbase_transport",
+            "event": "PROVIDER_MESSAGE_REPLAY_DROPPED",
+            "failure_kind": "PROVIDER_SEQUENCE_REPLAY",
+            "previous_sequence_num": 80,
+            "observed_sequence_num": 79,
+            "message_timestamp": "2026-08-08T18:00:09Z",
+            "trade_count": 2,
+            "first_trade_id": "7001",
+            "last_trade_id": "7002",
+        },
+        trade_message("2026-08-08T18:00:10Z", "100"),
+        trade_message("2026-08-08T18:01:10Z", "101"),
+        trade_message("2026-08-08T18:02:10Z", "102"),
+    ]
+    audit = tmp_path / "provider_message_replay.jsonl"
+
+    result = run_forward_paper(
+        transport=messages,
+        max_processed_bars=1,
+        audit_path=audit,
+        output=lambda _: None,
+        now_fn=lambda: pd.Timestamp("2026-08-08T18:01:20Z"),
+        state_path=tmp_path / "state.json",
+        resume=False,
+    )
+
+    rows = [json.loads(line) for line in audit.read_text(encoding="utf-8").splitlines()]
+    replay = next(
+        row for row in rows if row["type"] == "PROVIDER_MESSAGE_REPLAY_DROPPED"
+    )
+    assert result.processed_events == 1
+    assert replay["previous_sequence_num"] == 80
+    assert replay["observed_sequence_num"] == 79
+    assert replay["trade_count"] == 2
+    assert replay["first_trade_id"] == "7001"
+    assert replay["last_trade_id"] == "7002"
+    assert replay["real_orders"] == 0
+    assert rows[-1]["reason"] == "MAX_BARS"
+
+
 def test_continuity_store_round_trip_preserves_position_history_and_bucket(tmp_path):
     from src.coinbase_live_paper import build_live_paper_runtime
     from src.coinbase_market_data import CoinbaseOneMinuteTradeAggregator
@@ -343,8 +386,23 @@ def test_forward_session_audits_reconnect_and_rebases_without_trading_boundary_b
         trade_message("2026-08-09T08:00:10Z", "100"),
         trade_message("2026-08-09T08:01:10Z", "101"),
         trade_message("2026-08-09T08:02:10Z", "102"),
-        {"channel": "_coinbase_transport", "event": "DISCONNECTED", "attempt": 1, "reason": "test"},
-        {"channel": "_coinbase_transport", "event": "RECONNECTED", "reconnect_count": 1},
+        {
+            "channel": "_coinbase_transport",
+            "event": "DISCONNECTED",
+            "attempt": 1,
+            "reason": "provider sequence gap",
+            "failure_kind": "PROVIDER_SEQUENCE_GAP",
+            "previous_sequence_num": 100,
+            "expected_sequence_num": 101,
+            "observed_sequence_num": 102,
+            "message_timestamp": "2026-08-09T08:02:11Z",
+        },
+        {
+            "channel": "_coinbase_transport",
+            "event": "RECONNECTED",
+            "reconnect_count": 1,
+            "message_timestamp": "2026-08-09T08:09:20Z",
+        },
         trade_message("2026-08-09T08:10:10Z", "110"),
         trade_message("2026-08-09T08:11:10Z", "111"),
         trade_message("2026-08-09T08:12:10Z", "112"),
@@ -374,6 +432,11 @@ def test_forward_session_audits_reconnect_and_rebases_without_trading_boundary_b
     backfill = [row for row in rows if row["type"] == "REST_BACKFILL_BAR"]
     paper = [row for row in rows if row["type"] == "PAPER_EVENT"]
     assert [row["event"] for row in transport_events] == ["DISCONNECTED", "RECONNECTED"]
+    assert transport_events[0]["failure_kind"] == "PROVIDER_SEQUENCE_GAP"
+    assert transport_events[0]["previous_sequence_num"] == 100
+    assert transport_events[0]["expected_sequence_num"] == 101
+    assert transport_events[0]["observed_sequence_num"] == 102
+    assert transport_events[0]["message_timestamp"] == "2026-08-09T08:02:11Z"
     assert len(backfill) == 8
     assert len(paper) == 3
     assert result.processed_events == 3
@@ -513,6 +576,93 @@ def test_reconnect_boundary_recovers_exactly_one_missing_minute(tmp_path):
     assert result.processed_events == 1
     assert result.rejected_events == 0
     assert result.paper_orders == 0
+
+
+@pytest.mark.parametrize(
+    "reconnect_message_timestamp",
+    ["2026-08-10T12:01:20Z", "2026-08-10T12:01:20", None],
+)
+def test_sequence_gap_discards_partial_reconnect_minute_before_exact_recovery(
+    tmp_path, reconnect_message_timestamp,
+):
+    from src.coinbase_live_paper import build_live_paper_runtime
+    from src.coinbase_market_data import CoinbaseOneMinuteTradeAggregator
+    from src.forward_paper_session import ForwardContinuityStore
+
+    state = tmp_path / "state.json"
+    runtime = build_live_paper_runtime()
+    runtime.realtime_feed._last_timestamp = pd.Timestamp(
+        "2026-08-10T12:00:00Z"
+    )
+    runtime.realtime_feed._accepted = 1
+    runtime.session.session._last_timestamp = pd.Timestamp(
+        "2026-08-10T12:00:00Z"
+    )
+    runtime._processed = 1
+    runtime._last_event_at = pd.Timestamp("2026-08-10T12:00:00Z")
+    ForwardContinuityStore(state).save(
+        runtime, CoinbaseOneMinuteTradeAggregator()
+    )
+
+    messages = [
+        {
+            "channel": "_coinbase_transport",
+            "event": "DISCONNECTED",
+            "failure_kind": "PROVIDER_SEQUENCE_GAP",
+            "previous_sequence_num": 100,
+            "expected_sequence_num": 101,
+            "observed_sequence_num": 102,
+        },
+        {
+            "channel": "_coinbase_transport",
+            "event": "RECONNECTED",
+            "message_timestamp": reconnect_message_timestamp,
+        },
+        trade_message("2026-08-10T12:01:30Z", "101"),
+        trade_message("2026-08-10T12:02:10Z", "102"),
+        trade_message("2026-08-10T12:03:10Z", "103"),
+    ]
+    recovery = FakeGapRecovery()
+    audit = tmp_path / "sequence_gap_boundary.jsonl"
+
+    result = run_forward_paper(
+        transport=messages,
+        max_processed_bars=1,
+        audit_path=audit,
+        output=lambda _: None,
+        now_fn=lambda: pd.Timestamp("2026-08-10T12:03:20Z"),
+        state_path=state,
+        gap_recovery=recovery,
+    )
+
+    rows = [
+        json.loads(line)
+        for line in audit.read_text(encoding="utf-8").splitlines()
+    ]
+    boundary_drops = [
+        row
+        for row in rows
+        if row["type"] == "PROVIDER_SEQUENCE_BOUNDARY_BAR_DROPPED"
+    ]
+    backfill = [row for row in rows if row["type"] == "REST_BACKFILL_BAR"]
+    paper = [row for row in rows if row["type"] == "PAPER_EVENT"]
+
+    assert recovery.calls == [(
+        pd.Timestamp("2026-08-10T12:00:00Z"),
+        pd.Timestamp("2026-08-10T12:02:00Z"),
+    )]
+    assert [row["timestamp"] for row in boundary_drops] == [
+        "2026-08-10T12:01:00+00:00"
+    ]
+    assert boundary_drops[0]["trusted_live_bucket"] == (
+        "2026-08-10T12:02:00+00:00"
+    )
+    assert [row["timestamp"] for row in backfill] == [
+        "2026-08-10T12:01:00+00:00"
+    ]
+    assert paper[0]["snapshot"]["timestamp"] == "2026-08-10T12:02:00+00:00"
+    assert result.processed_events == 1
+    assert result.rejected_events == 0
 
 
 def test_forward_session_fails_closed_when_rest_backfill_is_incomplete(tmp_path):

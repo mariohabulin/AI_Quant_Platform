@@ -223,6 +223,25 @@ def test_ordering_fatal_remains_root_cause_after_process_incident(tmp_path):
     assert "lateness_seconds=4.0" in ordering.message
 
 
+def test_handled_provider_message_replay_is_visible_but_not_an_alert(tmp_path):
+    rows = session_rows()
+    rows.insert(-1, {
+        "type": "PROVIDER_MESSAGE_REPLAY_DROPPED",
+        "recorded_at": "2026-08-11T09:59:30+00:00",
+        "previous_sequence_num": 500,
+        "observed_sequence_num": 499,
+        "trade_count": 1,
+        "real_orders": 0,
+    })
+
+    report = monitor(tmp_path, rows)
+
+    assert report.status == "OK"
+    assert "PROVIDER_MESSAGE_REPLAY_DROPPED" not in {
+        alert.code for alert in report.alerts
+    }
+
+
 def test_operator_stop_is_closed_warning_without_stale_alerts(tmp_path):
     audit = tmp_path / "audit.jsonl"
     state = tmp_path / "state.json"
@@ -280,6 +299,60 @@ def test_current_transport_disconnect_is_warning(tmp_path):
     report = monitor(tmp_path, rows)
     assert report.status == "WARNING"
     assert "TRANSPORT_DISCONNECTED" in {alert.code for alert in report.alerts}
+
+
+def test_provider_sequence_disconnect_exposes_exact_gap_diagnostics(tmp_path):
+    rows = session_rows()[:-1]
+    rows.append({
+        "type": "TRANSPORT_EVENT",
+        "event": "DISCONNECTED",
+        "failure_kind": "PROVIDER_SEQUENCE_GAP",
+        "previous_sequence_num": 100,
+        "expected_sequence_num": 101,
+        "observed_sequence_num": 103,
+        "message_timestamp": "2026-08-11T09:59:29+00:00",
+        "recorded_at": "2026-08-11T09:59:30+00:00",
+        "real_orders": 0,
+    })
+
+    report = monitor(tmp_path, rows)
+
+    alert = next(
+        alert for alert in report.alerts
+        if alert.code == "TRANSPORT_DISCONNECTED"
+    )
+    assert report.status == "WARNING"
+    assert "failure_kind=PROVIDER_SEQUENCE_GAP" in alert.message
+    assert "previous_sequence_num=100" in alert.message
+    assert "expected_sequence_num=101" in alert.message
+    assert "observed_sequence_num=103" in alert.message
+    assert "message_timestamp=2026-08-11T09:59:29+00:00" in alert.message
+
+
+def test_exhausted_provider_sequence_recovery_exposes_root_diagnostics(tmp_path):
+    rows = session_rows(end_reason="TRANSPORT_FATAL")
+    rows.insert(-1, {
+        "type": "TRANSPORT_EVENT",
+        "event": "RECONNECT_EXHAUSTED",
+        "failure_kind": "PROVIDER_SEQUENCE_INVALID",
+        "previous_sequence_num": 80,
+        "expected_sequence_num": 81,
+        "observed_sequence_num": "bad",
+        "message_timestamp": "2026-08-11T09:59:29+00:00",
+        "recorded_at": "2026-08-11T09:59:30+00:00",
+        "real_orders": 0,
+    })
+
+    report = monitor(tmp_path, rows)
+
+    alert = next(
+        alert for alert in report.alerts
+        if alert.code == "TRANSPORT_RECONNECT_EXHAUSTED"
+    )
+    assert report.status == "CRITICAL"
+    assert "failure_kind=PROVIDER_SEQUENCE_INVALID" in alert.message
+    assert "expected_sequence_num=81" in alert.message
+    assert "observed_sequence_num=bad" in alert.message
 
 
 def test_active_kill_switch_is_critical(tmp_path):

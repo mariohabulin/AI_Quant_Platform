@@ -284,12 +284,41 @@ def _run_forward_paper_once(
     session_rejected = 0
     rebase_boundary_pending = resumed
     rebase_boundary_kind = "RESTART" if resumed else None
+    sequence_boundary_pending = False
+    sequence_trusted_live_bucket = None
     transport_fatal = False
     backfill_fatal = False
 
     for message in transport:
         if isinstance(message, dict) and message.get("channel") == "_coinbase_transport":
             event = str(message.get("event", "UNKNOWN"))
+            if event == "PROVIDER_MESSAGE_REPLAY_DROPPED":
+                audit.append({
+                    "type": "PROVIDER_MESSAGE_REPLAY_DROPPED",
+                    "failure_kind": message.get("failure_kind"),
+                    "previous_sequence_num": message.get(
+                        "previous_sequence_num"
+                    ),
+                    "observed_sequence_num": message.get(
+                        "observed_sequence_num"
+                    ),
+                    "message_timestamp": message.get("message_timestamp"),
+                    "trade_count": message.get("trade_count"),
+                    "first_trade_id": message.get("first_trade_id"),
+                    "last_trade_id": message.get("last_trade_id"),
+                    "processed_events": session_processed,
+                    "rejected_events": session_rejected,
+                    "runtime_processed_events": runtime.health.processed_events,
+                    "runtime_rejected_events": runtime.health.rejected_events,
+                    "real_orders": 0,
+                })
+                output(
+                    "PROVIDER_MESSAGE_REPLAY_DROPPED: "
+                    f"sequence={message.get('observed_sequence_num')} "
+                    f"previous={message.get('previous_sequence_num')} "
+                    f"trades={message.get('trade_count')}"
+                )
+                continue
             audit.append({
                 "type": "TRANSPORT_EVENT",
                 "event": event,
@@ -298,6 +327,16 @@ def _run_forward_paper_once(
                 "attempt": message.get("attempt"),
                 "reconnect_count": message.get("reconnect_count"),
                 "outage_seconds": message.get("outage_seconds"),
+                "previous_sequence_num": message.get(
+                    "previous_sequence_num"
+                ),
+                "expected_sequence_num": message.get(
+                    "expected_sequence_num"
+                ),
+                "observed_sequence_num": message.get(
+                    "observed_sequence_num"
+                ),
+                "message_timestamp": message.get("message_timestamp"),
                 "real_orders": 0,
             })
             output(f"TRANSPORT {event}: {message.get('reason') or 'connection restored'}")
@@ -305,10 +344,40 @@ def _run_forward_paper_once(
                 aggregator.reset_stream_boundary()
                 rebase_boundary_pending = True
                 rebase_boundary_kind = "RECONNECT"
+                if message.get("failure_kind") in {
+                    "PROVIDER_SEQUENCE_GAP",
+                    "PROVIDER_SEQUENCE_MISSING",
+                    "PROVIDER_SEQUENCE_INVALID",
+                }:
+                    sequence_boundary_pending = True
+                    sequence_trusted_live_bucket = None
                 continuity.save(runtime, aggregator)
             elif event == "RECONNECTED":
                 rebase_boundary_pending = True
                 rebase_boundary_kind = "RECONNECT"
+                if sequence_boundary_pending:
+                    try:
+                        reconnect_timestamp = pd.Timestamp(
+                            message.get("message_timestamp")
+                        )
+                        if pd.isna(reconnect_timestamp):
+                            raise ValueError(
+                                "Reconnect message timestamp is missing."
+                            )
+                        if reconnect_timestamp.tzinfo is None:
+                            reconnect_timestamp = reconnect_timestamp.tz_localize(
+                                "UTC"
+                            )
+                        else:
+                            reconnect_timestamp = reconnect_timestamp.tz_convert(
+                                "UTC"
+                            )
+                        sequence_trusted_live_bucket = (
+                            reconnect_timestamp.floor("min")
+                            + runtime.realtime_feed.timeframe
+                        )
+                    except Exception:
+                        sequence_trusted_live_bucket = None
             elif event == "RECONNECT_EXHAUSTED":
                 transport_fatal = True
                 continuity.save(runtime, aggregator)
@@ -374,6 +443,39 @@ def _run_forward_paper_once(
                 })
                 output(f"REPLAY_DROP {bar.timestamp}: already at/below accepted feed watermark")
                 continue
+
+            if sequence_boundary_pending:
+                bar_timestamp = pd.Timestamp(bar.timestamp)
+                if sequence_trusted_live_bucket is None:
+                    # Without a trustworthy reconnect timestamp, conservatively
+                    # treat the first completed bucket as partial and require the
+                    # following bucket to establish a fully observed live boundary.
+                    sequence_trusted_live_bucket = (
+                        bar_timestamp + runtime.realtime_feed.timeframe
+                    )
+                if bar_timestamp < sequence_trusted_live_bucket:
+                    audit.append({
+                        "type": "PROVIDER_SEQUENCE_BOUNDARY_BAR_DROPPED",
+                        "timestamp": bar_timestamp,
+                        "trusted_live_bucket": sequence_trusted_live_bucket,
+                        "reason": (
+                            "Bar may contain only post-reconnect trades after a "
+                            "provider sequence integrity failure."
+                        ),
+                        "processed_events": session_processed,
+                        "rejected_events": session_rejected,
+                        "runtime_processed_events": runtime.health.processed_events,
+                        "runtime_rejected_events": runtime.health.rejected_events,
+                        "real_orders": 0,
+                    })
+                    output(
+                        "PROVIDER_SEQUENCE_BOUNDARY_BAR_DROPPED: "
+                        f"bar={bar_timestamp.isoformat()} "
+                        f"trusted_from={sequence_trusted_live_bucket.isoformat()}"
+                    )
+                    continue
+                sequence_boundary_pending = False
+                sequence_trusted_live_bucket = None
 
             if rebase_boundary_pending:
                 last_accepted = runtime.realtime_feed._last_timestamp
