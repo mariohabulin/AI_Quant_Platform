@@ -1280,5 +1280,26 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - Correction validation passes 114/114 focused tests and the complete 632/632
   local suite. The two-second trade watermark, bounded reconnect/REST recovery,
   Strategy, Risk Engine, PAPER execution and `REAL_orders=0` are unchanged.
-- The correction still requires exact-diff Windows and CPX22 reproduction plus a
-  second short cloud diagnostic. No 720-bar or longer gate is authorized.
+- Applied the exact correction on Windows/Python 3.14.6, reproduced 114/114
+  focused plus 632/632 complete tests, committed `4ff9070` and pushed it from a
+  clean worktree. CPX22 fast-forwarded to that exact revision and reproduced the
+  same 114/114 focused and 632/632 complete Ubuntu/Python 3.12 suites.
+- Re-ran the non-activating installer and all seven Cloud Runtime Readiness
+  checks. PAPER remained boot-disabled and inactive before the explicit start.
+- The second short cloud diagnostic started at 18:24 UTC with `resumed=True`,
+  completed 1559 startup-catch-up bars without retroactive execution and then 13
+  fresh contiguous PAPER bars. One post-recovery SELL flattened the inherited
+  PAPER position; the remaining 12 decisions were HOLD.
+- Diagnostic report evidence: zero rejected bars, rebases, disconnects,
+  reconnects, exhaustion, provider bar replays, provider message replays,
+  sequence-boundary drops and hybrid failures; 1571/1571 expected market minutes,
+  `observed_gap=0.0m`, final position flat and `REAL_orders=0`.
+- Stopped through controlled SIGINT. systemd returned `success/0`, `NRestarts=0`
+  and PAPER `inactive/dead/disabled`; monitoring reported only the expected
+  `WARNING / STOPPED / OPERATOR_STOP`. The report was complete and intentionally
+  `FAIL` because the short test did not claim `MAX_BARS`. No process incident was
+  created; the monitor timer remained inactive/dead/enabled.
+- Coinbase Provider Message Sequence Integrity v1 is closed. One clean,
+  non-injected 720-bar PAPER soak is now the next authorized evidence gate; no
+  24-hour, multi-day, unattended-production or real-execution progression is
+  authorized.

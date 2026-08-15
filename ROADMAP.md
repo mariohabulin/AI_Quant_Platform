@@ -403,11 +403,13 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
 - [x] Correct validation to observe all sequence-bearing envelopes before channel
   routing, retain the gap's provider channel and pass 114/114 focused plus
   632/632 complete local tests.
-- [ ] Reproduce the cross-channel correction on Windows, commit/push it, deploy
-  non-activating to CPX22 and repeat focused/full/readiness validation.
-- [ ] Run a second short non-injected sequence-aware cloud PAPER diagnostic and
-  review message replay, true sequence-gap, continuity, monitoring and
-  `REAL_orders=0` evidence before reopening the overnight gate.
+- [x] Reproduce the cross-channel correction on Windows with 114/114 focused and
+  632/632 complete tests, commit/push exact revision `4ff9070`, deploy it
+  non-activating to CPX22 and repeat both suites plus all seven readiness checks.
+- [x] Pass the second short non-injected sequence-aware cloud diagnostic: 1559
+  startup catch-up bars, 13 fresh bars, zero rejected/rebase/transport/replay/
+  sequence-boundary/recovery failures, exact 1571-minute continuity,
+  `NRestarts=0`, clean `OPERATOR_STOP` and `REAL_orders=0`.
 - [ ] Repeat a clean 720-bar overnight gate with `NRestarts=0` before progression.
 - [ ] Progress to 24-hour and multi-day soak gates only after the clean overnight gate passes.
 

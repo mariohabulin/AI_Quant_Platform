@@ -161,7 +161,7 @@ Activation preparation also exposed a systemd lifecycle detail: a successful ina
 
 Final parked state is PAPER `inactive/dead/disabled`, monitor timer `inactive/dead/enabled`, repository clean on `93b7565`, last terminal audit reason `OPERATOR_STOP` and `REAL_orders=0`. Overnight Soak Failure Closure v1 is closed. The next authorized evidence boundary is one clean 720-bar PAPER soak with no injected restart or failure; 24-hour, multi-day, unattended production and real execution remain gated until that run reaches `MAX_BARS` with every existing acceptance condition satisfied.
 
-### Coinbase Provider Message Sequence Integrity v1 — CLOUD DIAGNOSTIC BLOCKED / CROSS-CHANNEL CORRECTION LOCAL PASS
+### Coinbase Provider Message Sequence Integrity v1 — PASS
 The next non-injected 720-bar attempt on exact revision `e0592ff` again failed
 safely before `MAX_BARS`. It processed 266 fresh bars before a 19.637-second
 late-trade fatal, recovered through the one allowed automatic process start,
@@ -214,7 +214,31 @@ Forward gaps on any sequenced channel remain fail-closed and now retain the
 observed provider channel. Missing sequence remains fatal for a market payload;
 non-market control envelopes without the optional field remain transparent.
 Cross-channel cloud-fixture regression plus all existing behavior passes
-114/114 focused tests and the complete 632/632 local suite. The next authorized
-step is exact-diff Windows validation, commit/push, clean cloud reproduction and
-a second short non-injected diagnostic. The 720-bar, 24-hour, multi-day,
-unattended-production and real-execution gates remain closed.
+114/114 focused tests and the complete 632/632 local suite. Windows committed
+the exact correction as `4ff9070`; CPX22 fast-forwarded to that revision and
+reproduced 114/114 focused plus 632/632 complete Ubuntu/Python 3.12 tests. The
+non-activating installer left PAPER inactive/disabled, and all seven Cloud
+Runtime Readiness checks passed with the reviewed 720-bar bound.
+
+The second short diagnostic started at 2026-08-15 18:24 UTC with
+`resumed=True`, reconstructed 1559 startup-catch-up bars without retroactive
+execution and processed 13 fresh contiguous bars. It recorded one intended
+post-recovery SELL that flattened the inherited PAPER position, then 12 HOLDs.
+The report retained zero rejected bars, zero rebases, zero disconnects,
+reconnects, exhaustion, bar replays, message replays, sequence-boundary drops or
+recovery failures; market continuity covered 1571 expected minutes with
+`observed_gap=0.0m` and `REAL_orders=0`.
+
+The controlled SIGINT stop closed the audit as `OPERATOR_STOP`; systemd retained
+`success/0`, `NRestarts=0` and PAPER `inactive/dead/disabled`. Operational
+Monitoring returned only the intended `WARNING / STOPPED / OPERATOR_STOP`; the
+forward report was structurally complete and intentionally non-passing because
+only `MAX_BARS` may pass an endurance gate. Final position was flat, no process
+incident was created and the timer remained inactive/dead/enabled.
+
+Cross-channel provider sequence integrity is now locally and cloud verified.
+The next authorized boundary is one clean non-injected 720-bar PAPER soak on the
+documented closure revision. It must still reach `MAX_BARS` with every existing
+continuity, transport, supervision, monitoring and `REAL_orders=0` acceptance
+condition. The 24-hour, multi-day, unattended-production and real-execution
+gates remain closed.
