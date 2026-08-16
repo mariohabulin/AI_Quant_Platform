@@ -136,6 +136,24 @@ remains `TRANSPORT_FATAL`. This provider-envelope guard
 does not authorize widening the two-second event-time window or dropping a
 genuinely late trade that arrived in a correctly sequenced message.
 
+An explicit `market_trades` event with `type=snapshot` is provider state, not a
+new incremental 250-ms update batch. It is sequence-validated first, then its
+trade payload is excluded before OHLCV aggregation and recorded as
+`PROVIDER_SNAPSHOT_BOUNDARY`. Snapshot trades never enter Strategy, Risk or
+PaperBroker. The in-progress WebSocket minute is reset because its complete
+incremental coverage can no longer be proven.
+
+The first completed partial minute before the trusted post-snapshot boundary is
+recorded as `PROVIDER_SNAPSHOT_BOUNDARY_BAR_DROPPED` and reconstructed through
+the existing exact non-tradable REST path before the next full live bar may
+trade. A startup snapshot must preserve the existing `RESTART` boundary and its
+larger startup catch-up allowance. Review `snapshot_boundaries` and
+`snapshot_boundary_drops` in the forward report; these handled counters do not
+fail a gate by themselves when REST recovery is exact, monitoring remains OK and
+all other acceptance conditions pass. Any future `LATE_TRADE_REJECTED` should
+identify `event_type=update`; an ordering fatal attributed to `snapshot` means
+this boundary did not hold and the run must be rejected.
+
 A trade beyond the reviewed two-second event-time watermark remains fail-closed.
 The attempt records `LATE_TRADE_REJECTED` timing evidence, closes as
 `ORDERING_FATAL`, exits non-zero and consumes the single automatic recovery

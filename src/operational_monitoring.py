@@ -251,6 +251,10 @@ def build_operational_monitoring_report(
                 message = (
                     "Session ended with ORDERING_FATAL "
                     f"(trade_timestamp={ordering.get('trade_timestamp', 'unknown')} "
+                    f"trade_id={ordering.get('trade_id', 'unknown')} "
+                    f"message_sequence_num={ordering.get('message_sequence_num', 'unknown')} "
+                    f"message_timestamp={ordering.get('message_timestamp', 'unknown')} "
+                    f"event_type={ordering.get('event_type', 'unknown')} "
                     f"active_bucket={ordering.get('active_bucket', 'unknown')} "
                     f"watermark_timestamp={ordering.get('watermark_timestamp', 'unknown')} "
                     f"reorder_window_seconds={ordering.get('reorder_window_seconds', 'unknown')} "

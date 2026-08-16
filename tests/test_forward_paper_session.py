@@ -220,6 +220,109 @@ def test_provider_message_replay_is_audited_without_reaching_trading(tmp_path):
     assert rows[-1]["reason"] == "MAX_BARS"
 
 
+def test_snapshot_boundary_discards_history_and_recovers_partial_minute(tmp_path):
+    from src.coinbase_live_paper import build_live_paper_runtime
+    from src.coinbase_market_data import CoinbaseOneMinuteTradeAggregator
+    from src.forward_paper_session import ForwardContinuityStore
+
+    state = tmp_path / "state.json"
+    runtime = build_live_paper_runtime()
+    runtime.realtime_feed._last_timestamp = pd.Timestamp(
+        "2026-08-16T05:12:00Z"
+    )
+    runtime.realtime_feed._accepted = 1
+    runtime.session.session._last_timestamp = pd.Timestamp(
+        "2026-08-16T05:12:00Z"
+    )
+    runtime._processed = 1
+    runtime._last_event_at = pd.Timestamp("2026-08-16T05:12:00Z")
+    ForwardContinuityStore(state).save(
+        runtime, CoinbaseOneMinuteTradeAggregator()
+    )
+
+    messages = [
+        {
+            "channel": "_coinbase_transport",
+            "event": "PROVIDER_SNAPSHOT_BOUNDARY",
+            "provider_channel": "market_trades",
+            "message_sequence_num": 102964,
+            "message_timestamp": "2026-08-16T05:13:56.580642159Z",
+            "snapshot_event_count": 1,
+            "trade_count": 100,
+            "first_trade_id": "newest",
+            "last_trade_id": "1070883132",
+            "oldest_trade_timestamp": "2026-08-16T05:12:54.738994Z",
+            "newest_trade_timestamp": "2026-08-16T05:13:55.651086Z",
+        },
+        trade_message("2026-08-16T05:13:57Z", "101"),
+        trade_message("2026-08-16T05:14:01Z", "102"),
+        trade_message("2026-08-16T05:14:03Z", "103"),
+        trade_message("2026-08-16T05:15:01Z", "104"),
+        trade_message("2026-08-16T05:15:03Z", "105"),
+    ]
+    class SnapshotStartupRecovery(FakeGapRecovery):
+        def recover_startup(self, last_accepted, next_live):
+            bars = super().recover(last_accepted, next_live)
+            self.calls[-1] = (*self.calls[-1], "startup")
+            return bars
+
+    recovery = SnapshotStartupRecovery()
+    audit = tmp_path / "snapshot_boundary.jsonl"
+
+    result = run_forward_paper(
+        transport=messages,
+        max_processed_bars=1,
+        audit_path=audit,
+        output=lambda _: None,
+        now_fn=lambda: pd.Timestamp("2026-08-16T05:15:10Z"),
+        state_path=state,
+        gap_recovery=recovery,
+    )
+
+    rows = [
+        json.loads(line)
+        for line in audit.read_text(encoding="utf-8").splitlines()
+    ]
+    snapshot = next(
+        row for row in rows if row["type"] == "PROVIDER_SNAPSHOT_BOUNDARY"
+    )
+    boundary_drops = [
+        row
+        for row in rows
+        if row["type"] == "PROVIDER_SNAPSHOT_BOUNDARY_BAR_DROPPED"
+    ]
+    catchup = [row for row in rows if row["type"] == "STARTUP_CATCHUP_BAR"]
+    paper = [row for row in rows if row["type"] == "PAPER_EVENT"]
+
+    assert snapshot["message_sequence_num"] == 102964
+    assert snapshot["trade_count"] == 100
+    assert snapshot["oldest_trade_timestamp"] == (
+        "2026-08-16T05:12:54.738994Z"
+    )
+    assert snapshot["real_orders"] == 0
+    assert [row["timestamp"] for row in boundary_drops] == [
+        "2026-08-16T05:13:00+00:00"
+    ]
+    assert boundary_drops[0]["trusted_live_bucket"] == (
+        "2026-08-16T05:14:00+00:00"
+    )
+    assert recovery.calls == [(
+        pd.Timestamp("2026-08-16T05:12:00Z"),
+        pd.Timestamp("2026-08-16T05:14:00Z"),
+        "startup",
+    )]
+    assert [row["timestamp"] for row in catchup] == [
+        "2026-08-16T05:13:00+00:00"
+    ]
+    assert catchup[0]["boundary_kind"] == "RESTART"
+    assert paper[0]["snapshot"]["timestamp"] == (
+        "2026-08-16T05:14:00+00:00"
+    )
+    assert not any(row["type"] == "LATE_TRADE_REJECTED" for row in rows)
+    assert result.processed_events == 1
+    assert result.rejected_events == 0
+
+
 def test_continuity_store_round_trip_preserves_position_history_and_bucket(tmp_path):
     from src.coinbase_live_paper import build_live_paper_runtime
     from src.coinbase_market_data import CoinbaseOneMinuteTradeAggregator

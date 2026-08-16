@@ -228,3 +228,17 @@ def test_runbook_requires_provider_message_sequence_integrity_evidence():
     assert "Do not filter sequence observation to the" in runbook
     assert "validly sequenced `market_trades` payload" in runbook
     assert "does not authorize widening the two-second event-time window" in runbook
+
+
+def test_runbook_requires_market_trades_snapshot_boundary_evidence():
+    runbook = _unit("README.md")
+
+    assert "type=snapshot" in runbook
+    assert "PROVIDER_SNAPSHOT_BOUNDARY" in runbook
+    assert "PROVIDER_SNAPSHOT_BOUNDARY_BAR_DROPPED" in runbook
+    assert "before OHLCV aggregation" in runbook
+    assert "Snapshot trades never enter Strategy, Risk or" in runbook
+    assert "startup snapshot must preserve the existing `RESTART` boundary" in runbook
+    assert "snapshot_boundaries" in runbook
+    assert "snapshot_boundary_drops" in runbook
+    assert "event_type=update" in runbook

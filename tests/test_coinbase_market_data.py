@@ -19,13 +19,21 @@ def trade(time, price, size="0.1", product_id="BTC-USD"):
     return {"time": time, "price": str(price), "size": str(size), "product_id": product_id}
 
 
-def sequenced_trade_message(sequence_num, time, price, *, trade_id, message_time=None):
+def sequenced_trade_message(
+    sequence_num,
+    time,
+    price,
+    *,
+    trade_id,
+    message_time=None,
+    event_type="update",
+):
     return {
         "channel": "market_trades",
         "timestamp": message_time or time,
         "sequence_num": sequence_num,
         "events": [{
-            "type": "update",
+            "type": event_type,
             "trades": [{
                 **trade(time, price),
                 "trade_id": str(trade_id),
@@ -247,6 +255,90 @@ def test_genuine_late_trade_retains_provider_sequence_and_trade_identity():
         "2026-08-08T12:01:03.200Z"
     )
     assert diagnostics["event_type"] == "update"
+
+
+def test_snapshot_trades_never_mutate_incremental_aggregation_state():
+    aggregator = CoinbaseOneMinuteTradeAggregator(
+        product_id="BTC-USD", reorder_window="2s"
+    )
+    aggregator.ingest_message(sequenced_trade_message(
+        80, "2026-08-16T05:13:00.100Z", 101,
+        trade_id="live-1", message_time="2026-08-16T05:13:00.200Z",
+    ))
+    aggregator.ingest_message(sequenced_trade_message(
+        81, "2026-08-16T05:13:03.000Z", 103,
+        trade_id="live-2", message_time="2026-08-16T05:13:03.100Z",
+    ))
+    before = aggregator.export_state()
+
+    assert aggregator.ingest_message(sequenced_trade_message(
+        82, "2026-08-16T05:12:54.738994Z", 99,
+        trade_id="1070883132",
+        message_time="2026-08-16T05:13:56.580642159Z",
+        event_type="snapshot",
+    )) == []
+
+    assert aggregator.export_state() == before
+
+
+def test_transport_turns_snapshot_into_boundary_without_yielding_its_trades():
+    class FakeSocket:
+        def __init__(self):
+            snapshot = sequenced_trade_message(
+                0,
+                "2026-08-16T05:13:55.651086Z",
+                101,
+                trade_id="newest",
+                message_time="2026-08-16T05:13:56.580642159Z",
+                event_type="snapshot",
+            )
+            snapshot["events"][0]["trades"].append({
+                **trade("2026-08-16T05:12:54.738994Z", 99),
+                "trade_id": "1070883132",
+            })
+            self.messages = [
+                snapshot,
+                sequenced_trade_message(
+                    1,
+                    "2026-08-16T05:13:57.000Z",
+                    102,
+                    trade_id="live-update",
+                ),
+            ]
+
+        def send(self, _):
+            pass
+
+        def recv(self):
+            return json.dumps(self.messages.pop(0))
+
+        def close(self):
+            pass
+
+    iterator = iter(CoinbasePublicWebSocketTransport(
+        websocket_factory=lambda _: FakeSocket(),
+        max_reconnect_attempts=0,
+        ping_interval_seconds=0,
+    ))
+
+    boundary = next(iterator)
+    following = next(iterator)
+
+    assert boundary == {
+        "channel": "_coinbase_transport",
+        "event": "PROVIDER_SNAPSHOT_BOUNDARY",
+        "provider_channel": "market_trades",
+        "message_sequence_num": 0,
+        "message_timestamp": "2026-08-16T05:13:56.580642159Z",
+        "snapshot_event_count": 1,
+        "trade_count": 2,
+        "first_trade_id": "newest",
+        "last_trade_id": "1070883132",
+        "oldest_trade_timestamp": "2026-08-16T05:12:54.738994Z",
+        "newest_trade_timestamp": "2026-08-16T05:13:55.651086Z",
+    }
+    assert following["sequence_num"] == 1
+    assert following["events"][0]["type"] == "update"
 
 
 @pytest.mark.parametrize("observed", [39, 40])

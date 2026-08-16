@@ -1006,3 +1006,41 @@ a sequence failure; subscription acknowledgements and heartbeats prove only
 transport liveness. The exact REST/partial-minute recovery boundary, strict
 two-second event-time rule, Strategy, Risk Engine, PaperBroker and structural
 `REAL_orders=0` lock are unchanged.
+
+## Coinbase Market-Trades Snapshot Boundary v1
+Coinbase documents `market_trades` events as either `snapshot` or `update`, and
+describes `update` as the incremental batch of trades collected over the prior
+250 milliseconds. The 603-bar cloud attempt proved why that distinction is a
+correctness boundary: a correctly sequenced `snapshot` envelope contained trade
+`1070883132`, whose event time was 58.912 seconds behind the live watermark.
+Treating provider state as a new incremental trade caused `ORDERING_FATAL` even
+though the cross-channel sequence, transport and market-time continuity were
+otherwise intact.
+
+Every envelope still crosses `CoinbaseMessageSequenceTracker` first. After
+sequence validation, the transport removes snapshot events from the data path
+and emits `PROVIDER_SNAPSHOT_BOUNDARY` with message sequence/time, trade count,
+trade IDs and oldest/newest trade timestamps. Snapshot trades never enter the
+incremental reorder heap or OHLCV calculation. If one envelope contains both
+snapshot and non-snapshot events, only the non-snapshot events may continue.
+The aggregator independently ignores an explicit snapshot as a defensive
+provider-adapter invariant.
+
+A snapshot invalidates the in-progress WebSocket minute because its incremental
+coverage cannot be proven. Forward PAPER resets only that partial aggregation
+state, checkpoints the boundary and requires the first full bucket after the
+provider message minute. Any earlier completed bucket is retained as
+`PROVIDER_SNAPSHOT_BOUNDARY_BAR_DROPPED`; exact public REST candles reconstruct
+the missing minute as non-tradable recovery before a fully observed live bar may
+reach Strategy, Risk or PaperBroker. An existing startup `RESTART` boundary is
+preserved, so a first-connection snapshot cannot accidentally replace the
+separate seven-day startup-catch-up allowance with the smaller reconnect limit.
+
+The forward report exposes `snapshot_boundaries` and
+`snapshot_boundary_drops`. Both are handled continuity evidence, not alerts by
+themselves. A genuinely late trade inside a correctly sequenced `update`
+continues to raise `CoinbaseTradeOrderingError` under the unchanged two-second
+watermark. Operational Monitoring now includes event type, trade ID and provider
+message identity in any future `ORDERING_FATAL` alert. Strategy, Feed Health,
+Risk Engine, PaperBroker, the two-start supervision budget and the structural
+`REAL_orders=0` lock remain unchanged.

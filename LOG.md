@@ -1303,3 +1303,36 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
   non-injected 720-bar PAPER soak is now the next authorized evidence gate; no
   24-hour, multi-day, unattended-production or real-execution progression is
   authorized.
+
+## 2026-08-16 — Coinbase Market-Trades Snapshot Boundary v1 (Local Implementation)
+- Reviewed the clean 720-bar attempt on exact revision `46ed877`. The fatal
+  attempt completed 603 fresh bars, six PAPER fills and exact 635-minute market
+  continuity with zero rejected bars, disconnects, reconnects, exhaustion,
+  provider replays, sequence-boundary drops or recovery failures before one
+  automatic restart. Its report was complete but correctly failed at 603/720;
+  final position was flat and `REAL_orders=0` remained invariant.
+- Isolated the exact provider record: `market_trades` message sequence `102964`
+  at `05:13:56.580642159Z`, `event_type=snapshot`, carrying trade
+  `1070883132` from `05:12:54.738994Z`, 58.912 seconds behind the active
+  two-second watermark. This correctly sequenced snapshot proves the prior
+  cross-channel fix and does not justify widening live update tolerance.
+- Confirmed the official Advanced Trade channel distinction: market-trades
+  events may be `snapshot` or `update`, while `update` is the incremental batch
+  collected over the preceding 250 milliseconds.
+- Added pre-aggregation snapshot classification after full envelope-sequence
+  validation. Snapshot trades are excluded from incremental OHLCV and converted
+  into `PROVIDER_SNAPSHOT_BOUNDARY` with message/trade identity and event-time
+  range; the aggregator also ignores snapshots defensively.
+- Reset only the untrusted partial WebSocket minute, record it as
+  `PROVIDER_SNAPSHOT_BOUNDARY_BAR_DROPPED`, and reuse exact REST recovery before
+  the first fully observed live bucket. Existing `RESTART` startup catch-up
+  ownership survives the initial snapshot; recovery remains non-tradable.
+- Added deterministic report counts for snapshot boundaries/drops, kept handled
+  snapshot evidence monitoring-neutral, and extended future `ORDERING_FATAL`
+  alerts with event type, trade ID and provider message identity. Genuine late
+  `update` trades remain fail-closed under the unchanged two-second watermark.
+- TDD RED reproduced the exact old snapshot failure and the startup-boundary
+  ownership edge case. TDD GREEN passes 119/119 focused tests and the complete
+  637/637 local Python 3.12.13 suite. Windows and CPX22 reproduction remain
+  pending; PAPER and the monitoring timer stay parked and real execution remains
+  impossible.

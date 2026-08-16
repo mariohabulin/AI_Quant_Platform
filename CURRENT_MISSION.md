@@ -242,3 +242,37 @@ documented closure revision. It must still reach `MAX_BARS` with every existing
 continuity, transport, supervision, monitoring and `REAL_orders=0` acceptance
 condition. The 24-hour, multi-day, unattended-production and real-execution
 gates remain closed.
+
+### Coinbase Market-Trades Snapshot Boundary v1 — LOCAL IMPLEMENTATION READY
+The clean 720-bar attempt on exact revision `46ed877` ran from 2026-08-15
+19:11 UTC until 2026-08-16 05:13 UTC and completed 603 fresh bars before one
+automatic restart. The fatal attempt retained complete audit evidence, six
+filled PAPER orders, exact 635-minute market continuity, zero rejected bars,
+zero disconnects/reconnects/exhaustion/replays/sequence-boundary drops/recovery
+failures, final flat position and `REAL_orders=0`. It therefore validated the
+cross-channel sequence correction but failed the endurance gate at 603/720.
+
+The decisive record was a correctly sequenced `market_trades` envelope at
+`sequence_num=102964`, message time `05:13:56.580642159Z`, with
+`event_type=snapshot`. It carried trade `1070883132` from
+`05:12:54.738994Z`, 58.912 seconds behind the two-second event-time watermark.
+This is provider snapshot history, not evidence that the live update tolerance
+should be widened.
+
+The local correction validates the full cross-channel envelope first, converts
+every explicit market-trades snapshot into audit-visible
+`PROVIDER_SNAPSHOT_BOUNDARY`, and prevents its trades from entering incremental
+OHLCV. The in-progress bucket is reset, the partial boundary minute is recorded
+as `PROVIDER_SNAPSHOT_BOUNDARY_BAR_DROPPED`, and exact REST continuity is applied
+without retroactive orders before the next full live minute. Startup snapshots
+preserve `RESTART` catch-up semantics. The report adds `snapshot_boundaries` and
+`snapshot_boundary_drops`; handled boundaries remain monitoring-neutral, while
+a truly late `update` remains fatal under the unchanged two-second rule.
+
+Local TDD validation passes 119/119 focused provider/forward/report/monitoring/
+supervision tests and the complete 637/637 repository suite. Next boundary:
+apply the exact patch on Windows, reproduce both suites, commit/push, deploy
+without activation, reproduce cloud tests/readiness, then run a short snapshot-
+aware diagnostic before authorizing another clean 720-bar attempt. PAPER and
+monitoring remain parked; 24-hour, multi-day, unattended-production and real
+execution gates remain closed.

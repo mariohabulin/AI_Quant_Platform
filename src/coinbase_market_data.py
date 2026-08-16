@@ -346,11 +346,28 @@ class CoinbaseOneMinuteTradeAggregator:
         if channel != "market_trades":
             return []
 
+        # ``snapshot`` is provider state, not an incremental trade batch. It can
+        # contain trades that predate the active event-time watermark (the cloud
+        # soak observed one almost a minute old), so merging it into live OHLCV
+        # would either double-count history or create a false ordering fatal.
+        # The production transport turns snapshots into explicit stream-boundary
+        # controls; this filter is the defensive provider-adapter backstop.
+        events = [
+            event
+            for event in message.get("events", [])
+            if not (
+                isinstance(event, dict)
+                and event.get("type") == "snapshot"
+            )
+        ]
+        if not events:
+            return []
+
         # Coinbase messages can arrive slightly out of event-time order across
         # websocket frames. Buffer a small event-time window before handing trades
         # to the strict minute aggregator. This preserves OHLCV correctness instead
         # of silently dropping a late trade after its minute has already been emitted.
-        for event in message.get("events", []):
+        for event in events:
             for trade in event.get("trades", []):
                 ts = self._timestamp(trade.get("time"))
                 self._arrival_sequence += 1
@@ -667,6 +684,83 @@ class CoinbasePublicWebSocketTransport:
         )
 
     @staticmethod
+    def _snapshot_boundary(message):
+        """Return boundary evidence plus any non-snapshot events in a message."""
+        if not isinstance(message, dict) or message.get("channel") != "market_trades":
+            return None, message
+        events = message.get("events", [])
+        if not isinstance(events, list):
+            return None, message
+        snapshot_events = [
+            event
+            for event in events
+            if isinstance(event, dict) and event.get("type") == "snapshot"
+        ]
+        if not snapshot_events:
+            return None, message
+
+        trades = [
+            trade
+            for event in snapshot_events
+            for trade in event.get("trades", [])
+            if isinstance(trade, dict)
+        ]
+        trade_ids = [
+            str(trade["trade_id"])
+            for trade in trades
+            if trade.get("trade_id") is not None
+        ]
+        timestamp_values = []
+        for trade in trades:
+            raw_timestamp = trade.get("time")
+            if raw_timestamp is None:
+                continue
+            try:
+                timestamp = pd.Timestamp(raw_timestamp)
+                if pd.isna(timestamp):
+                    continue
+                if timestamp.tzinfo is None:
+                    timestamp = timestamp.tz_localize("UTC")
+                else:
+                    timestamp = timestamp.tz_convert("UTC")
+                timestamp_values.append((timestamp, str(raw_timestamp)))
+            except Exception:
+                continue
+
+        remaining_events = [
+            event
+            for event in events
+            if not (
+                isinstance(event, dict)
+                and event.get("type") == "snapshot"
+            )
+        ]
+        incremental_message = None
+        if remaining_events:
+            incremental_message = dict(message)
+            incremental_message["events"] = remaining_events
+
+        return {
+            "channel": "_coinbase_transport",
+            "event": "PROVIDER_SNAPSHOT_BOUNDARY",
+            "provider_channel": "market_trades",
+            "message_sequence_num": message.get("sequence_num"),
+            "message_timestamp": message.get("timestamp"),
+            "snapshot_event_count": len(snapshot_events),
+            "trade_count": len(trades),
+            "first_trade_id": trade_ids[0] if trade_ids else None,
+            "last_trade_id": trade_ids[-1] if trade_ids else None,
+            "oldest_trade_timestamp": (
+                min(timestamp_values, key=lambda item: item[0])[1]
+                if timestamp_values else None
+            ),
+            "newest_trade_timestamp": (
+                max(timestamp_values, key=lambda item: item[0])[1]
+                if timestamp_values else None
+            ),
+        }, incremental_message
+
+    @staticmethod
     def _failure_kind(exc):
         if isinstance(exc, CoinbaseMessageSequenceError):
             return exc.failure_kind
@@ -749,7 +843,13 @@ class CoinbasePublicWebSocketTransport:
                                 else None
                             ),
                         }
-                    yield message
+                    snapshot_boundary, incremental_message = (
+                        self._snapshot_boundary(message)
+                    )
+                    if snapshot_boundary is not None:
+                        yield snapshot_boundary
+                    if incremental_message is not None:
+                        yield incremental_message
             except GeneratorExit:
                 raise
             except Exception as exc:

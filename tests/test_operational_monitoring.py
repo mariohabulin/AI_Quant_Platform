@@ -206,6 +206,10 @@ def test_ordering_fatal_remains_root_cause_after_process_incident(tmp_path):
         "watermark_timestamp": "2026-08-11T09:59:01+00:00",
         "reorder_window_seconds": 2.0,
         "lateness_seconds": 4.0,
+        "trade_id": "1070883132",
+        "message_sequence_num": 102964,
+        "message_timestamp": "2026-08-11T09:59:02+00:00",
+        "event_type": "update",
         "real_orders": 0,
     })
     rows.append(process_incident(recorded_at="2026-08-11T10:00:01+00:00"))
@@ -221,6 +225,9 @@ def test_ordering_fatal_remains_root_cause_after_process_incident(tmp_path):
     assert "trade_timestamp=2026-08-11T09:58:57+00:00" in ordering.message
     assert "watermark_timestamp=2026-08-11T09:59:01+00:00" in ordering.message
     assert "lateness_seconds=4.0" in ordering.message
+    assert "trade_id=1070883132" in ordering.message
+    assert "message_sequence_num=102964" in ordering.message
+    assert "event_type=update" in ordering.message
 
 
 def test_handled_provider_message_replay_is_visible_but_not_an_alert(tmp_path):
@@ -240,6 +247,28 @@ def test_handled_provider_message_replay_is_visible_but_not_an_alert(tmp_path):
     assert "PROVIDER_MESSAGE_REPLAY_DROPPED" not in {
         alert.code for alert in report.alerts
     }
+
+
+def test_handled_snapshot_boundary_is_visible_but_not_an_alert(tmp_path):
+    rows = session_rows()
+    rows.insert(-1, {
+        "type": "PROVIDER_SNAPSHOT_BOUNDARY",
+        "recorded_at": "2026-08-11T09:59:20+00:00",
+        "message_sequence_num": 102964,
+        "trade_count": 100,
+        "real_orders": 0,
+    })
+    rows.insert(-1, {
+        "type": "PROVIDER_SNAPSHOT_BOUNDARY_BAR_DROPPED",
+        "recorded_at": "2026-08-11T09:59:30+00:00",
+        "timestamp": "2026-08-11T09:59:00+00:00",
+        "real_orders": 0,
+    })
+
+    report = monitor(tmp_path, rows)
+
+    assert report.status == "OK"
+    assert report.alerts == ()
 
 
 def test_operator_stop_is_closed_warning_without_stale_alerts(tmp_path):

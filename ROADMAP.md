@@ -410,6 +410,23 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
   startup catch-up bars, 13 fresh bars, zero rejected/rebase/transport/replay/
   sequence-boundary/recovery failures, exact 1571-minute continuity,
   `NRestarts=0`, clean `OPERATOR_STOP` and `REAL_orders=0`.
+- [x] Review the clean 720-bar attempt on `46ed877`: 603/720 fresh bars before
+  one correctly sequenced `snapshot` carried a 58.912-second-old trade and
+  triggered fail-closed `ORDERING_FATAL`; preserve complete audit and
+  `REAL_orders=0` evidence.
+- [x] Keep cross-channel sequence validation ahead of event routing, but prevent
+  explicit market-trades snapshot history from entering the incremental reorder
+  heap or OHLCV aggregation.
+- [x] Convert every snapshot into an audit-visible provider boundary, reset the
+  partial WebSocket minute, discard it explicitly, recover exact REST continuity
+  without trading and preserve startup `RESTART` catch-up semantics.
+- [x] Expose handled `snapshot_boundaries` / `snapshot_boundary_drops`, retain
+  monitoring neutrality and enrich future ordering-fatals with event/trade/
+  provider-message identity without widening the two-second update rule.
+- [x] Pass 119/119 focused snapshot/provider/forward/report/monitoring/
+  supervision tests and the complete 637/637 local suite.
+- [ ] Reproduce the exact snapshot-boundary patch on Windows and CPX22, including
+  non-activating install, Cloud Runtime Readiness and a short live diagnostic.
 - [ ] Repeat a clean 720-bar overnight gate with `NRestarts=0` before progression.
 - [ ] Progress to 24-hour and multi-day soak gates only after the clean overnight gate passes.
 
