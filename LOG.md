@@ -1336,3 +1336,40 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
   637/637 local Python 3.12.13 suite. Windows and CPX22 reproduction remain
   pending; PAPER and the monitoring timer stay parked and real execution remains
   impossible.
+
+## 2026-08-17 — Coinbase Post-Snapshot Trade Quarantine v1 (Local Implementation)
+- Reproduced Snapshot Boundary v1 on Windows and CPX22 as revision `370664d`:
+  119/119 focused and 637/637 complete tests, non-activating install and all
+  seven readiness checks passed. A short cloud diagnostic processed 112 fresh
+  bars after 204 startup-catch-up bars with exact continuity, one handled
+  snapshot boundary/drop, no transport/recovery failure and `REAL_orders=0`.
+- Reviewed the subsequent 720-bar gate as a failure. Attempt one processed 443
+  bars before snapshot sequence `10784` and update `10786` exposed trade
+  `1071015409` from `21:33:09.501792Z` at 57.988 seconds lateness. The one
+  recovery attempt processed 27 bars before snapshot `7423` and update `7425`
+  exposed trade `1071026960` from `22:02:55.664795Z` at 6.013 seconds lateness.
+  Both attempts failed closed as `ORDERING_FATAL`; systemd blocked a third start
+  and real execution remained impossible.
+- Identified the remaining boundary gap: removing the snapshot payload did not
+  stop a later sequence-valid `update` from replaying snapshot-era trade rows.
+  Provider envelope integrity and incremental trade provenance are separate
+  correctness boundaries.
+- Added a monotonic trusted snapshot floor in Forward PAPER. Every snapshot,
+  including a nonzero in-band snapshot, resets partial aggregation and causes
+  later trades strictly older than the next full minute to be copied out before
+  the reorder heap. The audit records
+  `PROVIDER_SNAPSHOT_QUARANTINE_TRADES_DROPPED` with snapshot/update identity,
+  trusted floor, trade IDs/count and event-time range.
+- Preserved explicit boundary-minute suppression and exact REST state catch-up
+  before live decisions. The quarantine floor remains after PAPER resumes so
+  delayed snapshot history cannot poison a later active minute.
+- Added `snapshot_quarantine_trades` to the deterministic report and kept this
+  handled evidence monitoring-neutral. Invalid timestamps remain visible to
+  strict validation; a trade at or after the trusted floor that arrives behind
+  an active later minute still produces `LATE_TRADE_REJECTED` and
+  `ORDERING_FATAL` under the unchanged two-second watermark.
+- TDD covers both exact cloud sequence/trade pairs, persistent quarantine,
+  startup REST recovery, input immutability/invalid-time fail-closed behavior,
+  true post-boundary fatality and `REAL_orders=0`. GREEN passes 124/124 focused
+  tests and the complete 642/642 local Python 3.12 suite. Windows/CPX22
+  reproduction is pending; cloud services stay parked.

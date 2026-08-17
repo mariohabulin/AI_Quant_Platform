@@ -210,6 +210,84 @@ def _trusted_live_bucket(message_timestamp, timeframe):
         return None
 
 
+def _utc_timestamp_or_none(value):
+    """Normalize provider event time without weakening downstream validation."""
+    try:
+        timestamp = pd.Timestamp(value)
+        if pd.isna(timestamp):
+            return None
+        if timestamp.tzinfo is None:
+            return timestamp.tz_localize("UTC")
+        return timestamp.tz_convert("UTC")
+    except Exception:
+        return None
+
+
+def _quarantine_pre_snapshot_boundary_trades(message, trusted_live_bucket):
+    """Remove provider history older than the latest trusted snapshot floor.
+
+    Coinbase can send a new ``market_trades`` snapshot on an established
+    connection and then replay snapshot-era trades in later ``update`` events.
+    Those rows are provider history, not new incremental evidence.  The returned
+    message is a copy, so transport evidence remains unchanged for callers and
+    tests. Invalid trade timestamps are deliberately retained for the strict
+    aggregator to reject rather than being silently discarded.
+    """
+    if (
+        not isinstance(message, dict)
+        or message.get("channel") != "market_trades"
+    ):
+        return message, None
+    floor = _utc_timestamp_or_none(trusted_live_bucket)
+    events = message.get("events")
+    if floor is None or not isinstance(events, list):
+        return message, None
+
+    filtered_events = []
+    dropped = []
+    for event in events:
+        if not isinstance(event, dict) or not isinstance(
+            event.get("trades"), list
+        ):
+            filtered_events.append(event)
+            continue
+        retained = []
+        for trade in event["trades"]:
+            timestamp = (
+                _utc_timestamp_or_none(trade.get("time"))
+                if isinstance(trade, dict)
+                else None
+            )
+            if timestamp is not None and timestamp < floor:
+                dropped.append((trade, timestamp))
+            else:
+                retained.append(trade)
+        if len(retained) == len(event["trades"]):
+            filtered_events.append(event)
+        else:
+            filtered_event = dict(event)
+            filtered_event["trades"] = retained
+            filtered_events.append(filtered_event)
+
+    if not dropped:
+        return message, None
+    filtered_message = dict(message)
+    filtered_message["events"] = filtered_events
+    trade_ids = [
+        str(trade["trade_id"])
+        for trade, _ in dropped
+        if isinstance(trade, dict) and trade.get("trade_id") is not None
+    ]
+    timestamps = [timestamp for _, timestamp in dropped]
+    return filtered_message, {
+        "trade_count": len(dropped),
+        "first_trade_id": trade_ids[0] if trade_ids else None,
+        "last_trade_id": trade_ids[-1] if trade_ids else None,
+        "oldest_trade_timestamp": min(timestamps),
+        "newest_trade_timestamp": max(timestamps),
+    }
+
+
 def _apply_rest_backfill_bar(runtime, bar):
     """Catch up market/strategy/risk state without retroactive order execution."""
     market_event = runtime.realtime_feed.ingest_backfill(bar)
@@ -302,6 +380,9 @@ def _run_forward_paper_once(
     stream_boundary_pending = False
     stream_trusted_live_bucket = None
     stream_boundary_source = None
+    snapshot_quarantine_floor = None
+    snapshot_boundary_sequence_num = None
+    snapshot_boundary_bar_drops = set()
     transport_fatal = False
     backfill_fatal = False
 
@@ -369,10 +450,60 @@ def _run_forward_paper_once(
                 rebase_boundary_pending = True
                 stream_boundary_pending = True
                 stream_boundary_source = "SNAPSHOT"
-                stream_trusted_live_bucket = _trusted_live_bucket(
+                candidate_trusted_live_bucket = _trusted_live_bucket(
                     message.get("message_timestamp"),
                     runtime.realtime_feed.timeframe,
                 )
+                if candidate_trusted_live_bucket is None:
+                    candidate_trusted_live_bucket = _trusted_live_bucket(
+                        message.get("newest_trade_timestamp"),
+                        runtime.realtime_feed.timeframe,
+                    )
+                if candidate_trusted_live_bucket is not None:
+                    if snapshot_quarantine_floor is None:
+                        snapshot_quarantine_floor = (
+                            candidate_trusted_live_bucket
+                        )
+                    else:
+                        snapshot_quarantine_floor = max(
+                            snapshot_quarantine_floor,
+                            candidate_trusted_live_bucket,
+                        )
+                snapshot_boundary_sequence_num = message.get(
+                    "message_sequence_num"
+                )
+                stream_trusted_live_bucket = snapshot_quarantine_floor
+                if stream_trusted_live_bucket is not None:
+                    boundary_bar = (
+                        stream_trusted_live_bucket
+                        - runtime.realtime_feed.timeframe
+                    )
+                    if boundary_bar not in snapshot_boundary_bar_drops:
+                        snapshot_boundary_bar_drops.add(boundary_bar)
+                        audit.append({
+                            "type": "PROVIDER_SNAPSHOT_BOUNDARY_BAR_DROPPED",
+                            "timestamp": boundary_bar,
+                            "trusted_live_bucket": stream_trusted_live_bucket,
+                            "boundary_source": "SNAPSHOT",
+                            "reason": (
+                                "Bar intersects the provider snapshot boundary "
+                                "and is quarantined before aggregation."
+                            ),
+                            "processed_events": session_processed,
+                            "rejected_events": session_rejected,
+                            "runtime_processed_events": (
+                                runtime.health.processed_events
+                            ),
+                            "runtime_rejected_events": (
+                                runtime.health.rejected_events
+                            ),
+                            "real_orders": 0,
+                        })
+                        output(
+                            "PROVIDER_SNAPSHOT_BOUNDARY_BAR_DROPPED: "
+                            f"bar={boundary_bar.isoformat()} "
+                            f"trusted_from={stream_trusted_live_bucket.isoformat()}"
+                        )
                 continuity.save(runtime, aggregator)
                 output(
                     "PROVIDER_SNAPSHOT_BOUNDARY: "
@@ -429,6 +560,40 @@ def _run_forward_paper_once(
                 transport_fatal = True
                 continuity.save(runtime, aggregator)
             continue
+
+        message, quarantined = _quarantine_pre_snapshot_boundary_trades(
+            message, snapshot_quarantine_floor
+        )
+        if quarantined is not None:
+            audit.append({
+                "type": "PROVIDER_SNAPSHOT_QUARANTINE_TRADES_DROPPED",
+                "snapshot_message_sequence_num": (
+                    snapshot_boundary_sequence_num
+                ),
+                "message_sequence_num": (
+                    message.get("sequence_num")
+                    if isinstance(message, dict)
+                    else None
+                ),
+                "message_timestamp": (
+                    message.get("timestamp")
+                    if isinstance(message, dict)
+                    else None
+                ),
+                "trusted_live_bucket": snapshot_quarantine_floor,
+                **quarantined,
+                "processed_events": session_processed,
+                "rejected_events": session_rejected,
+                "runtime_processed_events": runtime.health.processed_events,
+                "runtime_rejected_events": runtime.health.rejected_events,
+                "real_orders": 0,
+            })
+            output(
+                "PROVIDER_SNAPSHOT_QUARANTINE_TRADES_DROPPED: "
+                f"sequence={message.get('sequence_num')} "
+                f"trades={quarantined['trade_count']} "
+                f"trusted_from={snapshot_quarantine_floor.isoformat()}"
+            )
 
         try:
             completed_bars = aggregator.ingest_message(message)
@@ -514,23 +679,28 @@ def _run_forward_paper_once(
                         else "Bar may contain only post-reconnect trades after "
                         "a provider sequence integrity failure."
                     )
-                    audit.append({
-                        "type": audit_type,
-                        "timestamp": bar_timestamp,
-                        "trusted_live_bucket": stream_trusted_live_bucket,
-                        "boundary_source": stream_boundary_source,
-                        "reason": reason,
-                        "processed_events": session_processed,
-                        "rejected_events": session_rejected,
-                        "runtime_processed_events": runtime.health.processed_events,
-                        "runtime_rejected_events": runtime.health.rejected_events,
-                        "real_orders": 0,
-                    })
-                    output(
-                        f"{audit_type}: "
-                        f"bar={bar_timestamp.isoformat()} "
-                        f"trusted_from={stream_trusted_live_bucket.isoformat()}"
+                    already_audited = (
+                        snapshot_boundary
+                        and bar_timestamp in snapshot_boundary_bar_drops
                     )
+                    if not already_audited:
+                        audit.append({
+                            "type": audit_type,
+                            "timestamp": bar_timestamp,
+                            "trusted_live_bucket": stream_trusted_live_bucket,
+                            "boundary_source": stream_boundary_source,
+                            "reason": reason,
+                            "processed_events": session_processed,
+                            "rejected_events": session_rejected,
+                            "runtime_processed_events": runtime.health.processed_events,
+                            "runtime_rejected_events": runtime.health.rejected_events,
+                            "real_orders": 0,
+                        })
+                        output(
+                            f"{audit_type}: "
+                            f"bar={bar_timestamp.isoformat()} "
+                            f"trusted_from={stream_trusted_live_bucket.isoformat()}"
+                        )
                     continue
                 stream_boundary_pending = False
                 stream_trusted_live_bucket = None

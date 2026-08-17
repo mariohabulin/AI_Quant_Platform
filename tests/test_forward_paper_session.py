@@ -15,6 +15,27 @@ def trade_message(ts, price="100", size="1"):
     }
 
 
+def provider_update_message(sequence_num, message_timestamp, *trades):
+    return {
+        "channel": "market_trades",
+        "sequence_num": sequence_num,
+        "timestamp": message_timestamp,
+        "events": [{"type": "update", "trades": list(trades)}],
+    }
+
+
+def provider_trade(trade_id, timestamp, price="100", size="1"):
+    if isinstance(timestamp, pd.Timestamp):
+        timestamp = timestamp.isoformat()
+    return {
+        "trade_id": str(trade_id),
+        "product_id": "BTC-USD",
+        "price": price,
+        "size": size,
+        "time": timestamp,
+    }
+
+
 class FakeGapRecovery:
     def __init__(self, fail=False):
         self.calls = []
@@ -254,7 +275,14 @@ def test_snapshot_boundary_discards_history_and_recovers_partial_minute(tmp_path
             "oldest_trade_timestamp": "2026-08-16T05:12:54.738994Z",
             "newest_trade_timestamp": "2026-08-16T05:13:55.651086Z",
         },
-        trade_message("2026-08-16T05:13:57Z", "101"),
+        provider_update_message(
+            102965,
+            "2026-08-16T05:13:56.700000Z",
+            provider_trade(
+                "1070883132", "2026-08-16T05:12:54.738994Z", "99"
+            ),
+            provider_trade("101", "2026-08-16T05:13:57Z", "101"),
+        ),
         trade_message("2026-08-16T05:14:01Z", "102"),
         trade_message("2026-08-16T05:14:03Z", "103"),
         trade_message("2026-08-16T05:15:01Z", "104"),
@@ -291,6 +319,11 @@ def test_snapshot_boundary_discards_history_and_recovers_partial_minute(tmp_path
         for row in rows
         if row["type"] == "PROVIDER_SNAPSHOT_BOUNDARY_BAR_DROPPED"
     ]
+    quarantine = [
+        row
+        for row in rows
+        if row["type"] == "PROVIDER_SNAPSHOT_QUARANTINE_TRADES_DROPPED"
+    ]
     catchup = [row for row in rows if row["type"] == "STARTUP_CATCHUP_BAR"]
     paper = [row for row in rows if row["type"] == "PAPER_EVENT"]
 
@@ -306,6 +339,15 @@ def test_snapshot_boundary_discards_history_and_recovers_partial_minute(tmp_path
     assert boundary_drops[0]["trusted_live_bucket"] == (
         "2026-08-16T05:14:00+00:00"
     )
+    assert len(quarantine) == 1
+    assert quarantine[0]["trade_count"] == 2
+    assert quarantine[0]["first_trade_id"] == "1070883132"
+    assert quarantine[0]["last_trade_id"] == "101"
+    assert quarantine[0]["message_sequence_num"] == 102965
+    assert quarantine[0]["trusted_live_bucket"] == (
+        "2026-08-16T05:14:00+00:00"
+    )
+    assert quarantine[0]["real_orders"] == 0
     assert recovery.calls == [(
         pd.Timestamp("2026-08-16T05:12:00Z"),
         pd.Timestamp("2026-08-16T05:14:00Z"),
@@ -321,6 +363,255 @@ def test_snapshot_boundary_discards_history_and_recovers_partial_minute(tmp_path
     assert not any(row["type"] == "LATE_TRADE_REJECTED" for row in rows)
     assert result.processed_events == 1
     assert result.rejected_events == 0
+
+
+@pytest.mark.parametrize(
+    (
+        "snapshot_sequence",
+        "update_sequence",
+        "message_timestamp",
+        "late_trade_timestamp",
+        "late_trade_id",
+        "trusted_live_bucket",
+    ),
+    [
+        (
+            10784,
+            10786,
+            "2026-08-16T21:34:51.524555043Z",
+            "2026-08-16T21:33:09.501792Z",
+            "1071015409",
+            "2026-08-16T21:35:00Z",
+        ),
+        (
+            7423,
+            7425,
+            "2026-08-16T22:03:14.943949939Z",
+            "2026-08-16T22:02:55.664795Z",
+            "1071026960",
+            "2026-08-16T22:04:00Z",
+        ),
+    ],
+)
+def test_cloud_post_snapshot_history_is_quarantined_without_ordering_fatal(
+    tmp_path,
+    snapshot_sequence,
+    update_sequence,
+    message_timestamp,
+    late_trade_timestamp,
+    late_trade_id,
+    trusted_live_bucket,
+):
+    trusted = pd.Timestamp(trusted_live_bucket)
+    messages = [
+        {
+            "channel": "_coinbase_transport",
+            "event": "PROVIDER_SNAPSHOT_BOUNDARY",
+            "provider_channel": "market_trades",
+            "message_sequence_num": snapshot_sequence,
+            "message_timestamp": message_timestamp,
+            "snapshot_event_count": 1,
+            "trade_count": 100,
+            "first_trade_id": "snapshot-newest",
+            "last_trade_id": late_trade_id,
+            "oldest_trade_timestamp": late_trade_timestamp,
+            "newest_trade_timestamp": message_timestamp,
+        },
+        provider_update_message(
+            update_sequence,
+            message_timestamp,
+            provider_trade(late_trade_id, late_trade_timestamp, "99"),
+        ),
+        provider_update_message(
+            update_sequence + 1,
+            (trusted + pd.Timedelta(seconds=1)).isoformat(),
+            provider_trade("trusted-1", trusted + pd.Timedelta(seconds=1)),
+        ),
+        provider_update_message(
+            update_sequence + 2,
+            (trusted + pd.Timedelta(seconds=4)).isoformat(),
+            provider_trade("trusted-2", trusted + pd.Timedelta(seconds=4)),
+        ),
+        provider_update_message(
+            update_sequence + 3,
+            (trusted + pd.Timedelta(minutes=1, seconds=1)).isoformat(),
+            provider_trade(
+                "next-1", trusted + pd.Timedelta(minutes=1, seconds=1)
+            ),
+        ),
+        provider_update_message(
+            update_sequence + 4,
+            (trusted + pd.Timedelta(minutes=1, seconds=4)).isoformat(),
+            provider_trade(
+                "next-2", trusted + pd.Timedelta(minutes=1, seconds=4)
+            ),
+        ),
+        # The quarantine floor remains active after PAPER processing resumes.
+        provider_update_message(
+            update_sequence + 5,
+            (trusted + pd.Timedelta(minutes=1, seconds=5)).isoformat(),
+            provider_trade(
+                f"{late_trade_id}-replay", late_trade_timestamp, "98"
+            ),
+        ),
+        provider_update_message(
+            update_sequence + 6,
+            (trusted + pd.Timedelta(minutes=2, seconds=1)).isoformat(),
+            provider_trade(
+                "later-1", trusted + pd.Timedelta(minutes=2, seconds=1)
+            ),
+        ),
+        provider_update_message(
+            update_sequence + 7,
+            (trusted + pd.Timedelta(minutes=2, seconds=4)).isoformat(),
+            provider_trade(
+                "later-2", trusted + pd.Timedelta(minutes=2, seconds=4)
+            ),
+        ),
+    ]
+    audit = tmp_path / f"post_snapshot_{snapshot_sequence}.jsonl"
+
+    result = run_forward_paper(
+        transport=messages,
+        max_processed_bars=2,
+        audit_path=audit,
+        output=lambda _: None,
+        now_fn=lambda: trusted + pd.Timedelta(minutes=2, seconds=10),
+        state_path=tmp_path / f"post_snapshot_{snapshot_sequence}.json",
+        resume=False,
+    )
+
+    rows = [
+        json.loads(line)
+        for line in audit.read_text(encoding="utf-8").splitlines()
+    ]
+    quarantines = [
+        row
+        for row in rows
+        if row["type"] == "PROVIDER_SNAPSHOT_QUARANTINE_TRADES_DROPPED"
+    ]
+    paper = [row for row in rows if row["type"] == "PAPER_EVENT"]
+
+    assert result.processed_events == 2
+    assert sum(row["trade_count"] for row in quarantines) == 2
+    assert quarantines[0]["snapshot_message_sequence_num"] == (
+        snapshot_sequence
+    )
+    assert quarantines[0]["message_sequence_num"] == update_sequence
+    assert quarantines[0]["first_trade_id"] == late_trade_id
+    assert quarantines[0]["trusted_live_bucket"] == trusted.isoformat()
+    assert all(row["real_orders"] == 0 for row in quarantines)
+    assert [row["snapshot"]["timestamp"] for row in paper] == [
+        trusted.isoformat(),
+        (trusted + pd.Timedelta(minutes=1)).isoformat(),
+    ]
+    assert not any(row["type"] == "LATE_TRADE_REJECTED" for row in rows)
+    assert rows[-1]["type"] == "SESSION_END"
+    assert rows[-1]["reason"] == "MAX_BARS"
+    assert rows[-1]["real_orders"] == 0
+
+
+def test_snapshot_quarantine_does_not_mutate_or_hide_invalid_trade_time():
+    message = provider_update_message(
+        9002,
+        "2026-08-16T20:00:10Z",
+        provider_trade("history", "2026-08-16T19:59:59Z"),
+        provider_trade("trusted", "2026-08-16T20:00:01Z"),
+        provider_trade("invalid", "not-a-timestamp"),
+    )
+
+    filtered, summary = (
+        forward_paper_session_module
+        ._quarantine_pre_snapshot_boundary_trades(
+            message, pd.Timestamp("2026-08-16T20:00:00Z")
+        )
+    )
+
+    assert [
+        trade["trade_id"] for trade in message["events"][0]["trades"]
+    ] == ["history", "trusted", "invalid"]
+    assert [
+        trade["trade_id"] for trade in filtered["events"][0]["trades"]
+    ] == ["trusted", "invalid"]
+    assert summary["trade_count"] == 1
+    assert summary["first_trade_id"] == "history"
+
+
+def test_true_post_boundary_late_trade_remains_fatal(tmp_path):
+    trusted = pd.Timestamp("2026-08-16T18:01:00Z")
+    messages = [
+        {
+            "channel": "_coinbase_transport",
+            "event": "PROVIDER_SNAPSHOT_BOUNDARY",
+            "provider_channel": "market_trades",
+            "message_sequence_num": 7000,
+            "message_timestamp": "2026-08-16T18:00:45Z",
+            "snapshot_event_count": 1,
+            "trade_count": 100,
+            "oldest_trade_timestamp": "2026-08-16T17:59:01Z",
+            "newest_trade_timestamp": "2026-08-16T18:00:44Z",
+        },
+        provider_update_message(
+            7001,
+            "2026-08-16T18:00:46Z",
+            provider_trade("snapshot-history", "2026-08-16T17:59:59Z"),
+        ),
+        provider_update_message(
+            7002,
+            "2026-08-16T18:01:01Z",
+            provider_trade("trusted-1", "2026-08-16T18:01:01Z"),
+        ),
+        provider_update_message(
+            7003,
+            "2026-08-16T18:01:04Z",
+            provider_trade("trusted-2", "2026-08-16T18:01:04Z"),
+        ),
+        provider_update_message(
+            7004,
+            "2026-08-16T18:02:01Z",
+            provider_trade("next-1", "2026-08-16T18:02:01Z"),
+        ),
+        provider_update_message(
+            7005,
+            "2026-08-16T18:02:04Z",
+            provider_trade("next-2", "2026-08-16T18:02:04Z"),
+        ),
+        provider_update_message(
+            7006,
+            "2026-08-16T18:02:05Z",
+            provider_trade("true-late", "2026-08-16T18:01:30Z"),
+        ),
+    ]
+    audit = tmp_path / "post_boundary_ordering_fatal.jsonl"
+
+    with pytest.raises(CoinbaseTradeOrderingError):
+        run_forward_paper(
+            transport=messages,
+            max_processed_bars=10,
+            audit_path=audit,
+            output=lambda _: None,
+            now_fn=lambda: trusted + pd.Timedelta(minutes=1, seconds=10),
+            state_path=tmp_path / "post_boundary_ordering_fatal.json",
+            resume=False,
+        )
+
+    rows = [
+        json.loads(line)
+        for line in audit.read_text(encoding="utf-8").splitlines()
+    ]
+    quarantine = [
+        row
+        for row in rows
+        if row["type"] == "PROVIDER_SNAPSHOT_QUARANTINE_TRADES_DROPPED"
+    ]
+    fatal = next(row for row in rows if row["type"] == "LATE_TRADE_REJECTED")
+
+    assert sum(row["trade_count"] for row in quarantine) == 1
+    assert fatal["trade_id"] == "true-late"
+    assert fatal["trade_timestamp"] == "2026-08-16T18:01:30+00:00"
+    assert fatal["active_bucket"] == "2026-08-16T18:02:00+00:00"
+    assert rows[-1]["reason"] == "ORDERING_FATAL"
+    assert rows[-1]["real_orders"] == 0
 
 
 def test_continuity_store_round_trip_preserves_position_history_and_bucket(tmp_path):

@@ -276,3 +276,41 @@ without activation, reproduce cloud tests/readiness, then run a short snapshot-
 aware diagnostic before authorizing another clean 720-bar attempt. PAPER and
 monitoring remain parked; 24-hour, multi-day, unattended-production and real
 execution gates remain closed.
+
+### Coinbase Post-Snapshot Trade Quarantine v1 — LOCAL IMPLEMENTATION READY
+Snapshot Boundary v1 was reproduced on Windows and CPX22 as exact revision
+`370664d`, with 119/119 focused and 637/637 complete tests, a non-activating
+install and all seven Cloud Runtime Readiness checks passing. A controlled live
+diagnostic then processed 112 contiguous fresh bars after 204 startup-catch-up
+bars. It observed one snapshot boundary/drop, no transport or recovery failure,
+`observed_gap=0.0m`, clean `OPERATOR_STOP` and `REAL_orders=0`.
+
+The next non-injected 720-bar attempt did not pass. Its first process completed
+443 fresh bars before an in-band snapshot at sequence `10784` was followed by a
+correctly sequenced update `10786` carrying trade `1071015409` from
+`21:33:09.501792Z`; the trade was 57.988 seconds behind the live watermark.
+The single allowed recovery process completed 27 bars before snapshot `7423`
+was followed by update `7425` carrying trade `1071026960` from
+`22:02:55.664795Z`, 6.013 seconds behind the watermark. Both attempts closed
+with complete `ORDERING_FATAL` evidence, systemd enforced the two-start ceiling,
+and `REAL_orders=0` remained invariant. PAPER and both monitoring units are now
+inactive; PAPER remains disabled and the timer remains enabled but stopped.
+
+The local correction gives every snapshot—including nonzero in-band
+snapshots—a persistent trusted event-time floor. Subsequent trades older than
+that floor are removed before the reorder heap and audited as
+`PROVIDER_SNAPSHOT_QUARANTINE_TRADES_DROPPED`; the report totals them as
+`snapshot_quarantine_trades`. The boundary minute remains non-tradable and exact
+REST recovery restores it before the first complete live minute reaches the
+decision pipeline. A true late trade at or after the floor remains fatal under
+the unchanged two-second policy.
+
+TDD reproduces both exact cloud sequence/trade pairs, verifies the quarantine
+continues after PAPER processing resumes, preserves startup REST recovery,
+proves invalid timestamps are not hidden and proves a genuine post-boundary late
+trade still closes `ORDERING_FATAL`. Local validation passes 124/124 focused
+provider/forward/report/monitoring/supervision tests and the complete 642/642
+suite. Next boundary: reproduce this exact patch on Windows, commit/push, deploy
+without activation, repeat cloud tests/readiness and run a short diagnostic
+before another clean 720-bar gate. No 24-hour, multi-day, unattended-production
+or real-execution progression is authorized.

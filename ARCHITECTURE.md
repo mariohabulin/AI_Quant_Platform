@@ -1044,3 +1044,40 @@ watermark. Operational Monitoring now includes event type, trade ID and provider
 message identity in any future `ORDERING_FATAL` alert. Strategy, Feed Health,
 Risk Engine, PaperBroker, the two-start supervision budget and the structural
 `REAL_orders=0` lock remain unchanged.
+
+## Coinbase Post-Snapshot Trade Quarantine v1
+The next cloud gate proved that excluding the snapshot payload is necessary but
+not sufficient. Twice, Coinbase emitted a new nonzero-sequence snapshot on an
+established connection and then delivered a correctly sequenced `update`
+containing provider history older than the new trusted boundary. The observed
+pairs were `10784 -> 10786` with trade `1071015409` from 57.988 seconds behind
+the live watermark, and `7423 -> 7425` with trade `1071026960` from 6.013
+seconds behind it. Both messages were sequence-valid, but neither old trade was
+new incremental evidence.
+
+Every `PROVIDER_SNAPSHOT_BOUNDARY`, including a nonzero in-band snapshot,
+therefore establishes a monotonic event-time quarantine floor at the first full
+minute after the snapshot message. Before any subsequent `market_trades`
+payload reaches the reorder heap, trades strictly older than that floor are
+removed from a copied message and recorded as
+`PROVIDER_SNAPSHOT_QUARANTINE_TRADES_DROPPED`. Evidence includes the snapshot
+and update sequence identities, provider message time, trusted floor, trade
+count/IDs and oldest/newest event time. Invalid timestamps are never hidden by
+this filter; they remain subject to strict aggregator validation.
+
+The boundary minute is explicitly retained as
+`PROVIDER_SNAPSHOT_BOUNDARY_BAR_DROPPED`, and no Strategy, Risk or PaperBroker
+decision is allowed until a complete minute at or after the trusted floor is
+observed. Existing exact REST recovery reconstructs suppressed minutes only as
+non-tradable state catch-up. The floor remains available after live PAPER
+processing resumes so a later replay of snapshot-era history cannot poison the
+active bucket.
+
+This is a narrow provenance quarantine, not a wider lateness policy. A trade at
+or after the trusted snapshot floor that arrives behind an already active later
+minute still raises `CoinbaseTradeOrderingError`, closes the attempt as
+`ORDERING_FATAL` and consumes the supervised recovery budget. The forward
+report exposes the number of filtered trades as `snapshot_quarantine_trades`;
+handled quarantine evidence remains monitoring-neutral. Cross-channel sequence
+validation, the two-second update watermark, exact continuity, Strategy, Feed
+Health, Risk Engine, PaperBroker and `REAL_orders=0` remain unchanged.

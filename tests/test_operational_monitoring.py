@@ -264,6 +264,13 @@ def test_handled_snapshot_boundary_is_visible_but_not_an_alert(tmp_path):
         "timestamp": "2026-08-11T09:59:00+00:00",
         "real_orders": 0,
     })
+    rows.insert(-1, {
+        "type": "PROVIDER_SNAPSHOT_QUARANTINE_TRADES_DROPPED",
+        "recorded_at": "2026-08-11T09:59:35+00:00",
+        "message_sequence_num": 102966,
+        "trade_count": 2,
+        "real_orders": 0,
+    })
 
     report = monitor(tmp_path, rows)
 

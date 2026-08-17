@@ -425,8 +425,21 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
   provider-message identity without widening the two-second update rule.
 - [x] Pass 119/119 focused snapshot/provider/forward/report/monitoring/
   supervision tests and the complete 637/637 local suite.
-- [ ] Reproduce the exact snapshot-boundary patch on Windows and CPX22, including
-  non-activating install, Cloud Runtime Readiness and a short live diagnostic.
+- [x] Reproduce exact snapshot-boundary revision `370664d` on Windows and CPX22
+  with 119/119 focused and 637/637 complete tests, non-activating install, all
+  seven readiness checks and a 112-bar clean diagnostic after 204 catch-up bars.
+- [x] Review the next 720-bar failure: 443-bar and 27-bar attempts ended on the
+  exact in-band snapshot/update pairs `10784 -> 10786` and `7423 -> 7425`;
+  retain complete fatal evidence, the two-start ceiling and `REAL_orders=0`.
+- [x] Quarantine only post-snapshot provider history older than the trusted full-
+  minute floor before aggregation, keep the floor after live processing resumes,
+  preserve exact non-tradable REST recovery and expose audit/report evidence.
+- [x] Prove both cloud incidents now continue safely while a genuinely late
+  post-boundary trade remains `ORDERING_FATAL`; pass 124/124 focused and 642/642
+  complete local tests without widening the two-second watermark.
+- [ ] Reproduce the exact post-snapshot quarantine patch on Windows and CPX22,
+  including non-activating install, Cloud Runtime Readiness and a short live
+  diagnostic.
 - [ ] Repeat a clean 720-bar overnight gate with `NRestarts=0` before progression.
 - [ ] Progress to 24-hour and multi-day soak gates only after the clean overnight gate passes.
 

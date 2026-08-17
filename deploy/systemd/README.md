@@ -154,6 +154,22 @@ all other acceptance conditions pass. Any future `LATE_TRADE_REJECTED` should
 identify `event_type=update`; an ordering fatal attributed to `snapshot` means
 this boundary did not hold and the run must be rejected.
 
+A provider may also emit an in-band nonzero-sequence snapshot and then include
+snapshot-era history in a later, correctly sequenced `update`. Every snapshot
+therefore establishes a trusted event-time floor at the next full minute.
+Subsequent trades strictly before that floor are quarantined before the reorder
+heap as `PROVIDER_SNAPSHOT_QUARANTINE_TRADES_DROPPED`; review their snapshot and
+message sequences, trade IDs/times and `trusted_live_bucket`. The forward report
+totals these rows as `snapshot_quarantine_trades`. They never enter OHLCV, Feed
+Health, Strategy, Risk or PaperBroker, and the suppressed boundary minute is
+reconstructed only through exact non-tradable REST recovery.
+
+This exception applies only to provider history before the trusted snapshot
+floor. A trade at or after the trusted snapshot floor remains subject to the
+unchanged two-second event-time rule and is still fatal if it arrives behind an
+active later minute. Do not classify arbitrary late updates as snapshot history,
+raise the reorder window, or bypass the exact recovery gate.
+
 A trade beyond the reviewed two-second event-time watermark remains fail-closed.
 The attempt records `LATE_TRADE_REJECTED` timing evidence, closes as
 `ORDERING_FATAL`, exits non-zero and consumes the single automatic recovery

@@ -131,6 +131,8 @@ def test_report_adds_operational_transport_and_activity_diagnostics(tmp_path):
          "trade_count": 100, "real_orders": 0},
         {"type": "PROVIDER_SNAPSHOT_BOUNDARY_BAR_DROPPED",
          "timestamp": "2026-08-09T10:55:00+00:00", "real_orders": 0},
+        {"type": "PROVIDER_SNAPSHOT_QUARANTINE_TRADES_DROPPED",
+         "message_sequence_num": 53, "trade_count": 2, "real_orders": 0},
         {"type": "PAPER_EVENT", "paper_orders": 0, "real_orders": 0,
          "snapshot": {"timestamp": "2026-08-09T10:56:00+00:00", "equity": 5000.0, "position_quantity": 0.0},
          "event": {"signal": 1, "status": "REJECTED", "risk_status": "REJECT", "reason": "Minimum reward/risk requirement not met.",
@@ -151,6 +153,7 @@ def test_report_adds_operational_transport_and_activity_diagnostics(tmp_path):
     assert report.provider_sequence_boundary_bar_drops == 1
     assert report.provider_snapshot_boundaries == 1
     assert report.provider_snapshot_boundary_bar_drops == 1
+    assert report.provider_snapshot_quarantine_trade_drops == 2
     assert report.market_span_minutes == pytest.approx(9.0)
     assert report.expected_contiguous_minutes == pytest.approx(1.0)
     assert report.observed_gap_minutes == pytest.approx(8.0)
@@ -168,6 +171,7 @@ def test_report_adds_operational_transport_and_activity_diagnostics(tmp_path):
     assert "sequence_boundary_drops=1" in text
     assert "snapshot_boundaries=1" in text
     assert "snapshot_boundary_drops=1" in text
+    assert "snapshot_quarantine_trades=2" in text
     assert "observed_gap=8.0m" in text
     assert "signal_rate=50.0%" in text
     assert "reward_risk: evaluations=1 rejected=1" in text

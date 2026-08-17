@@ -242,3 +242,15 @@ def test_runbook_requires_market_trades_snapshot_boundary_evidence():
     assert "snapshot_boundaries" in runbook
     assert "snapshot_boundary_drops" in runbook
     assert "event_type=update" in runbook
+
+
+def test_runbook_requires_post_snapshot_trade_quarantine_evidence():
+    runbook = _unit("README.md")
+
+    assert "in-band nonzero-sequence snapshot" in runbook
+    assert "PROVIDER_SNAPSHOT_QUARANTINE_TRADES_DROPPED" in runbook
+    assert "snapshot_quarantine_trades" in runbook
+    assert "before the reorder" in runbook
+    assert "strictly before that floor" in runbook
+    assert "at or after the trusted snapshot floor remains" in runbook
+    assert "Do not classify arbitrary late updates as snapshot history" in runbook
