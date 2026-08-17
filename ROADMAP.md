@@ -437,9 +437,13 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
 - [x] Prove both cloud incidents now continue safely while a genuinely late
   post-boundary trade remains `ORDERING_FATAL`; pass 124/124 focused and 642/642
   complete local tests without widening the two-second watermark.
-- [ ] Reproduce the exact post-snapshot quarantine patch on Windows and CPX22,
-  including non-activating install, Cloud Runtime Readiness and a short live
-  diagnostic.
+- [x] Reproduce exact post-snapshot quarantine revision `e7a95ac` on Windows and
+  CPX22 with 124/124 focused and 642/642 complete tests, non-activating install
+  and all seven Cloud Runtime Readiness checks.
+- [x] Pass the short live quarantine diagnostic: 630 snapshot-era trades safely
+  filtered, one boundary bar dropped, 942 startup-catch-up bars, six fresh
+  contiguous bars, exact 947-minute continuity, no transport/recovery failure,
+  no ordering fatal, `NRestarts=0`, clean `OPERATOR_STOP` and `REAL_orders=0`.
 - [ ] Repeat a clean 720-bar overnight gate with `NRestarts=0` before progression.
 - [ ] Progress to 24-hour and multi-day soak gates only after the clean overnight gate passes.
 

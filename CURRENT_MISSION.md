@@ -277,7 +277,7 @@ aware diagnostic before authorizing another clean 720-bar attempt. PAPER and
 monitoring remain parked; 24-hour, multi-day, unattended-production and real
 execution gates remain closed.
 
-### Coinbase Post-Snapshot Trade Quarantine v1 — LOCAL IMPLEMENTATION READY
+### Coinbase Post-Snapshot Trade Quarantine v1 — CLOUD DIAGNOSTIC VERIFIED
 Snapshot Boundary v1 was reproduced on Windows and CPX22 as exact revision
 `370664d`, with 119/119 focused and 637/637 complete tests, a non-activating
 install and all seven Cloud Runtime Readiness checks passing. A controlled live
@@ -308,9 +308,31 @@ the unchanged two-second policy.
 TDD reproduces both exact cloud sequence/trade pairs, verifies the quarantine
 continues after PAPER processing resumes, preserves startup REST recovery,
 proves invalid timestamps are not hidden and proves a genuine post-boundary late
-trade still closes `ORDERING_FATAL`. Local validation passes 124/124 focused
-provider/forward/report/monitoring/supervision tests and the complete 642/642
-suite. Next boundary: reproduce this exact patch on Windows, commit/push, deploy
-without activation, repeat cloud tests/readiness and run a short diagnostic
-before another clean 720-bar gate. No 24-hour, multi-day, unattended-production
+trade still closes `ORDERING_FATAL`. Windows/Python 3.14.6 reproduced 124/124
+focused and 642/642 complete tests, then committed and pushed exact revision
+`e7a95ac`. CPX22 fast-forwarded to that revision and reproduced the same 124/124
+focused and 642/642 complete Ubuntu/Python 3.12 suites. The installer activated
+nothing, and all seven Cloud Runtime Readiness checks passed with the reviewed
+720-bar bound.
+
+The controlled cloud diagnostic encountered one provider snapshot and proved
+the new boundary against live traffic: 630 snapshot-era trades were quarantined
+before aggregation, one partial boundary bar was explicitly dropped, and exact
+recovery completed 942 startup-catch-up bars before PAPER resumed. Six fresh
+contiguous bars then completed as HOLD with zero rejected bars, zero PAPER or
+REAL orders, zero transport disconnects/reconnects/exhaustion/replay drops,
+zero recovery failures and exact 947-minute market continuity
+(`observed_gap=0.0m`). The process remained healthy with `NRestarts=0`; no
+`LATE_TRADE_REJECTED`, `ORDERING_FATAL` or new process incident occurred.
+
+Controlled SIGINT closed the audit as `OPERATOR_STOP`, so the short report is
+intentionally `FAIL` rather than an endurance `MAX_BARS` pass. Monitoring
+reported only the historical `PREVIOUS_PROCESS_FAILURE` and expected
+`OPERATOR_STOP` warnings; safety remained `REAL_orders=0`. Final position was
+flat, all three units are inactive, PAPER remains boot-disabled, the timer
+remains enabled but stopped, and the cloud repository is clean on `e7a95ac`.
+
+Coinbase Post-Snapshot Trade Quarantine v1 is closed. The next authorized
+boundary is one clean non-injected 720-bar PAPER soak with `NRestarts=0` and all
+existing acceptance conditions. No 24-hour, multi-day, unattended-production
 or real-execution progression is authorized.

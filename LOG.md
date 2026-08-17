@@ -1373,3 +1373,33 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
   true post-boundary fatality and `REAL_orders=0`. GREEN passes 124/124 focused
   tests and the complete 642/642 local Python 3.12 suite. Windows/CPX22
   reproduction is pending; cloud services stay parked.
+
+## 2026-08-17 — Coinbase Post-Snapshot Trade Quarantine v1 (Cloud Closure)
+- Applied the exact patch on Windows/Python 3.14.6, reproduced 124/124 focused
+  and 642/642 complete tests, committed `e7a95ac` and pushed it from a clean
+  worktree.
+- CPX22 fast-forwarded to exact revision `e7a95ac`, reproduced the same 124/124
+  focused and 642/642 complete Ubuntu/Python 3.12 suites, ran the non-activating
+  installer and passed all seven Cloud Runtime Readiness checks with the
+  root-owned 720-bar bound.
+- The short live diagnostic observed one provider snapshot and safely
+  quarantined 630 snapshot-era trades before aggregation. It explicitly dropped
+  one partial snapshot boundary bar, completed 942 non-tradable startup-catch-up
+  bars and then processed six fresh contiguous HOLD bars.
+- Diagnostic evidence retained zero rejected bars, PAPER orders, REAL orders,
+  disconnects, reconnects, exhaustion, replay drops and recovery failures;
+  continuity covered exactly 947 expected market minutes with
+  `observed_gap=0.0m`. No late-trade rejection, ordering fatal or new process
+  incident occurred, and systemd retained `NRestarts=0`.
+- Controlled SIGINT closed the bounded diagnostic as `OPERATOR_STOP`. Its report
+  was complete and intentionally `FAIL` because only `MAX_BARS` can pass an
+  endurance gate. Monitoring retained only the reviewed historical
+  `PREVIOUS_PROCESS_FAILURE` plus expected operator-stop warning; safety stayed
+  `REAL_orders=0` and the final position was flat.
+- Final parked state: PAPER, monitor service and monitor timer are all inactive;
+  PAPER remains boot-disabled, the timer remains enabled but stopped, and the
+  cloud repository is clean on `e7a95ac`.
+- Coinbase Post-Snapshot Trade Quarantine v1 is closed. One clean non-injected
+  720-bar PAPER soak with `NRestarts=0` is the next authorized evidence gate;
+  24-hour, multi-day, unattended-production and real-execution progression
+  remain closed.
