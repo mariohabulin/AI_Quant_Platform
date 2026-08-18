@@ -1434,3 +1434,28 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - The 720-bar overnight gate is closed as PASS. The next authorized change is
   repository-reviewed preparation for a bounded 1,440-bar 24-hour PAPER gate.
   Multi-day soak, unattended production and real execution remain gated.
+
+## 2026-08-18 — Bounded 24-Hour Cloud PAPER Soak v1 (Preparation)
+- Promoted only the committed root-owned duration from 720 to 1,440 completed
+  one-minute bars after the clean 720-bar gate passed. Cloud Runtime Readiness
+  and Forward PAPER continue to consume the identical installed bound; no
+  market-data, Strategy, Risk, recovery, broker or monitoring behavior changed.
+- Defined the 24-hour run as a non-injected endurance gate. It requires exactly
+  1,440/1,440 processed bars, zero rejected/rebased bars, complete audit,
+  `MAX_BARS`, exact market-time continuity, zero recovery failures or reconnect
+  exhaustion and 100% reconnect success whenever disconnects occur.
+- Retained every provider/recovery diagnostic for review, including snapshot
+  boundaries, post-snapshot quarantines, replay drops, backfills, outage causes
+  and transport quality. Successful recovery may preserve continuity but may not
+  hide the evidence that produced it.
+- Required systemd `Result=success`, `ExecMainStatus=0`, `NRestarts=0`, final
+  Operational Monitoring `OK / COMPLETED / MAX_BARS` with zero alerts and the
+  invariant `REAL_orders=0`. Any process incident, restart, warning or critical
+  decision blocks a clean pass.
+- Kept installation deliberately non-activating and PAPER boot-disabled. The
+  exact revision must pass focused/full Windows tests, commit/push review, the
+  same CPX22 tests, non-activating installation and all seven readiness checks
+  before an operator may explicitly start the gate.
+- A future pass will be 24-hour operational evidence only, not profitability
+  proof, unattended-production readiness or live-money authorization. Multi-day
+  soak and all real execution remain gated.

@@ -372,6 +372,38 @@ repository remains clean on `db5615e`.
 The clean overnight gate is closed. The next authorized repository change is
 reviewed preparation for a bounded 24-hour PAPER gate, expected to use 1,440
 fresh one-minute bars while preserving every current safety, continuity,
-supervision and monitoring condition. The installed bound remains 720 until
-that separate change passes tests and non-activating deployment review.
-Multi-day soak, unattended production and real execution remain closed.
+supervision and monitoring condition. At closure, the installed bound remained
+720 pending that separate repository change and non-activating deployment
+review. Multi-day soak, unattended production and real execution remained
+closed.
+
+### Bounded 24-Hour Cloud PAPER Soak v1 — PREPARATION
+The successful clean 720-bar gate authorizes the next bounded duration step.
+The committed root-controlled configuration now sets
+`AI_ALPHA_SESSION_BARS=1440`, exactly 24 hours of fresh one-minute bars. Cloud
+Runtime Readiness and the forward runner still consume the same installed
+value, so validation and execution cannot drift. This preparation changes no
+market-data, Strategy, Risk, recovery, broker or monitoring logic; PAPER stays
+boot-disabled and real execution remains structurally disabled.
+
+The reviewed run is non-injected: do not restart the process or introduce a
+failure. Acceptance requires 1,440/1,440 processed bars, zero rejected bars,
+zero rebases, `audit_complete=True`, normal `MAX_BARS`, exact expected market
+continuity with `observed_gap=0.0m`, zero recovery failures, zero reconnect
+exhaustion and 100% reconnect success if any disconnect occurs. All provider
+snapshot, quarantine, replay, recovery and transport counters remain reviewable
+rather than being hidden by successful continuity repair.
+
+The service must finish with systemd `Result=success`, `ExecMainStatus=0` and
+`NRestarts=0`. Final Operational Monitoring must be `OK / COMPLETED / MAX_BARS`
+with zero alerts and `REAL_orders=0`. Any process incident, automatic restart,
+`PREVIOUS_PROCESS_FAILURE`, `WARNING` or `CRITICAL` decision blocks the gate
+pending explicit review. The final PAPER position and P&L remain reportable
+observations, not acceptance targets.
+
+Next, reproduce the focused and complete suites on Windows, commit and push the
+exact revision, deploy it through the non-activating installer, repeat the same
+tests and all seven readiness checks on CPX22, then explicitly start one
+reviewed bounded run. A pass will be operational endurance evidence, not a
+profitability claim or live-money authorization. Multi-day soak, unattended
+production and real execution remain closed until later reviewed gates.

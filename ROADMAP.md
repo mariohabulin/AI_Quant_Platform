@@ -261,8 +261,9 @@ After single-symbol operational stability and extended forward evidence are prov
 - [x] Verify state continuity through reconnect/backfill and zero retroactive orders from recovery bars.
 - [x] Record recovery evidence: 191 reconnect backfill bars + 56 startup catch-up bars across a 306-minute market span with zero observed market gap.
 - [x] Record transport warning: 16 disconnects, 12 reconnects (75% success), ~2697.2s total outage, ~1967.4s max outage; causes included RESET and DNS.
-- [ ] Progress to multi-hour -> overnight -> 24h -> multi-day soak tests with transport quality as an explicit acceptance dimension.
-- [ ] Before unattended 24/7 live deployment, validate transport in the controlled cloud runtime and add operational monitoring/alerting.
+- [x] Progress through multi-hour and overnight soak tests with transport quality as an explicit acceptance dimension.
+- [ ] Complete the reviewed 24-hour gate, then progress to a multi-day soak only if it passes.
+- [x] Validate transport in the controlled cloud runtime and add operational monitoring/alert classification before any unattended 24/7 live claim.
 
 ### Post-Recovery Position Reconciliation v1
 - [x] Prove the lifecycle failure from forward evidence: LONG open before downtime; EMA20/EMA50 `ABOVE -> BELOW` occurs during startup catch-up; no retroactive SELL is allowed; later live bars are already BELOW/HOLD.
@@ -453,11 +454,13 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
   and `observed_gap=0.0m` across 760 expected market minutes.
 - [x] Finish the overnight gate with systemd `success/0`, final monitoring
   `OK / COMPLETED / MAX_BARS`, zero alerts and all cloud units safely parked.
-- [ ] Prepare a repository-reviewed 1,440-bar 24-hour PAPER gate without changing
-  the installed 720-bar bound ad hoc; reproduce tests, non-activating deployment
-  and readiness before any activation.
+- [x] Prepare a repository-reviewed 1,440-bar 24-hour PAPER gate through the
+  committed root-owned bound, preserving non-activating installation, PAPER
+  boot-disablement and all existing acceptance conditions.
+- [ ] Reproduce focused/full tests, non-activating deployment and all seven
+  readiness checks on the exact committed 1,440-bar revision before activation.
 - [ ] Run and review the bounded 24-hour PAPER gate with all existing continuity,
   transport, supervision, monitoring and `REAL_orders=0` conditions.
 - [ ] Progress to a multi-day soak only after the 24-hour gate passes.
 
-External notification delivery and any real execution capability remain deferred. The twelve-hour gate is bounded operational endurance evidence, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization.
+External notification delivery and any real execution capability remain deferred. The completed twelve-hour gate and prepared 24-hour gate are bounded operational endurance work, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization.

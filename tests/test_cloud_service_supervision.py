@@ -70,11 +70,11 @@ def test_paper_service_has_fail_closed_readiness_and_execution_lock():
     ]
 
 
-def test_paper_service_uses_reviewed_twelve_hour_overnight_soak_bound():
+def test_paper_service_uses_reviewed_twenty_four_hour_soak_bound():
     environment = _environment("ai-alpha-paper.env")
 
-    assert environment == {"AI_ALPHA_SESSION_BARS": "720"}
-    assert 0 < int(environment["AI_ALPHA_SESSION_BARS"]) < 1440
+    assert environment == {"AI_ALPHA_SESSION_BARS": "1440"}
+    assert int(environment["AI_ALPHA_SESSION_BARS"]) == 24 * 60
 
 
 def test_paper_service_uses_persistent_private_runtime_storage():
@@ -212,6 +212,22 @@ def test_runbook_opens_a_fresh_restart_budget_before_each_reviewed_activation():
     assert "Installed PAPER unit is not loadable" in normalized
     assert "Any other `reset-failed` error aborts activation" in normalized
     assert "Do not replace this guard with `|| true`" in normalized
+
+
+def test_runbook_requires_reviewed_twenty_four_hour_gate_evidence():
+    runbook = _unit("README.md")
+
+    assert "AI_ALPHA_SESSION_BARS=1440" in runbook
+    assert "1,440/1,440 processed bars" in runbook
+    assert "successful 720-bar gate" in runbook
+    assert "do not inject a restart or process failure" in runbook
+    assert "`audit_complete=True`" in runbook
+    assert "`MAX_BARS`" in runbook
+    assert "`NRestarts=0`" in runbook
+    assert "final Operational Monitoring status `OK`" in runbook
+    assert "`REAL_orders=0`" in runbook
+    assert "not profitability evidence" in runbook
+    assert "multi-day" in runbook
 
 
 def test_runbook_requires_provider_message_sequence_integrity_evidence():
