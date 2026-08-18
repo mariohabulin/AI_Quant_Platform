@@ -1403,3 +1403,34 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
   720-bar PAPER soak with `NRestarts=0` is the next authorized evidence gate;
   24-hour, multi-day, unattended-production and real-execution progression
   remain closed.
+
+## 2026-08-18 — Clean 720-Bar Cloud PAPER Soak v1 (Pass)
+- Reproduced exact closure revision `db5615e` on Windows and CPX22 with 17/17
+  supervision tests and the complete 642/642 suite. The cloud repository was
+  clean, installation remained unchanged and non-activating, all units were
+  parked, and all seven readiness checks passed under `ai-alpha` with
+  `AI_ALPHA_SESSION_BARS=720` and real execution disabled.
+- Started one non-injected bounded gate at 2026-08-17 14:19 UTC. The same process
+  reached normal `MAX_BARS` completion at 2026-08-18 02:32 UTC with systemd
+  `Result=success`, `ExecMainStatus=0`, `NRestarts=0` and PAPER ending
+  `inactive/dead/disabled`.
+- The deterministic report returned `PASS` and `audit_complete=True`: 720/720
+  processed, zero rejected/rebased bars, 10 BUY, 10 SELL and 700 HOLD signals,
+  20/20 filled PAPER orders, final flat position and `REAL=0`.
+- Provider-boundary handling remained safe under live load: 13 snapshot
+  boundaries/drops and 5,777 quarantined snapshot-era trades never entered
+  incremental decisions. Exact recovery consumed 29 startup-catch-up and 12
+  REST backfill bars with zero failures or retroactive orders.
+- Transport evidence was clean: zero disconnects, reconnects, exhaustion, bar
+  replays, message replays and sequence-boundary drops. Exact continuity covered
+  760/760 expected market minutes with `observed_gap=0.0m`.
+- Operational Monitoring independently returned `OK / COMPLETED / MAX_BARS`,
+  `REAL_orders=0` and zero alerts. PAPER equity moved from 4,983.17 to 4,986.83
+  (`net_pnl=+3.66`, maximum drawdown 0.1610%); this remains bounded operational
+  evidence rather than a profitability claim.
+- Final parked state: PAPER, monitor service and timer are all inactive; PAPER
+  remains boot-disabled, the timer remains enabled but stopped, and CPX22 is
+  clean on `db5615e`.
+- The 720-bar overnight gate is closed as PASS. The next authorized change is
+  repository-reviewed preparation for a bounded 1,440-bar 24-hour PAPER gate.
+  Multi-day soak, unattended production and real execution remain gated.

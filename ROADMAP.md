@@ -444,7 +444,20 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
   filtered, one boundary bar dropped, 942 startup-catch-up bars, six fresh
   contiguous bars, exact 947-minute continuity, no transport/recovery failure,
   no ordering fatal, `NRestarts=0`, clean `OPERATOR_STOP` and `REAL_orders=0`.
-- [ ] Repeat a clean 720-bar overnight gate with `NRestarts=0` before progression.
-- [ ] Progress to 24-hour and multi-day soak gates only after the clean overnight gate passes.
+- [x] Pass the clean 720-bar overnight gate on exact revision `db5615e`: normal
+  `MAX_BARS`, 720/720 processed, zero rejected/rebased bars, complete audit,
+  `NRestarts=0`, 20 PAPER fills, final flat position and `REAL_orders=0`.
+- [x] Preserve exact live provider/recovery evidence across that gate: 13
+  snapshot boundaries/drops, 5,777 quarantined snapshot-era trades, 29 startup
+  catch-up plus 12 REST backfill bars, zero recovery/transport/replay failures
+  and `observed_gap=0.0m` across 760 expected market minutes.
+- [x] Finish the overnight gate with systemd `success/0`, final monitoring
+  `OK / COMPLETED / MAX_BARS`, zero alerts and all cloud units safely parked.
+- [ ] Prepare a repository-reviewed 1,440-bar 24-hour PAPER gate without changing
+  the installed 720-bar bound ad hoc; reproduce tests, non-activating deployment
+  and readiness before any activation.
+- [ ] Run and review the bounded 24-hour PAPER gate with all existing continuity,
+  transport, supervision, monitoring and `REAL_orders=0` conditions.
+- [ ] Progress to a multi-day soak only after the 24-hour gate passes.
 
 External notification delivery and any real execution capability remain deferred. The twelve-hour gate is bounded operational endurance evidence, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization.

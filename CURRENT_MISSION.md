@@ -336,3 +336,42 @@ Coinbase Post-Snapshot Trade Quarantine v1 is closed. The next authorized
 boundary is one clean non-injected 720-bar PAPER soak with `NRestarts=0` and all
 existing acceptance conditions. No 24-hour, multi-day, unattended-production
 or real-execution progression is authorized.
+
+### Clean 720-Bar Cloud PAPER Soak v1 — PASS
+Exact revision `db5615e` was cleanly reproduced on Windows and CPX22 with 17/17
+supervision tests and the complete 642/642 repository suite. Before activation,
+the cloud repository was clean, all units were parked, PAPER remained
+boot-disabled, and all seven Cloud Runtime Readiness checks passed under the
+`ai-alpha` identity with the reviewed 720-bar bound and real execution disabled.
+
+The non-injected gate started on 2026-08-17 at 14:19 UTC and completed normally
+on 2026-08-18 at 02:32 UTC. systemd reported `Result=success`,
+`ExecMainStatus=0`, `NRestarts=0` and final PAPER state
+`inactive/dead/disabled`. The deterministic report returned `PASS`,
+`audit_complete=True` and `MAX_BARS` with exactly 720 processed bars, zero
+rejected bars and zero rebases. All 20 PAPER orders filled, no REAL order was
+possible, and the final position was flat.
+
+Provider and recovery evidence remained exact throughout the run: 13 snapshot
+boundaries produced 13 explicit boundary drops, 5,777 snapshot-era trades were
+quarantined before aggregation, 29 startup-catch-up bars and 12 exact REST
+backfill bars were consumed without retroactive execution, and recovery
+failures remained zero. There were no transport disconnects, reconnects,
+exhaustion, provider replay drops, message replay drops or sequence-boundary
+drops. Market continuity covered all 760 expected minutes with
+`observed_gap=0.0m`.
+
+Operational Monitoring independently returned
+`OK / COMPLETED / MAX_BARS`, `REAL_orders=0` and zero alerts. The final PAPER
+equity moved from 4,983.17 to 4,986.83 (`net_pnl=+3.66`, maximum drawdown
+0.1610%), but this single bounded run is operational evidence, not a
+profitability claim. After review, PAPER, the monitor service and the monitor
+timer were all parked; the timer remains enabled but stopped, and the cloud
+repository remains clean on `db5615e`.
+
+The clean overnight gate is closed. The next authorized repository change is
+reviewed preparation for a bounded 24-hour PAPER gate, expected to use 1,440
+fresh one-minute bars while preserving every current safety, continuity,
+supervision and monitoring condition. The installed bound remains 720 until
+that separate change passes tests and non-activating deployment review.
+Multi-day soak, unattended production and real execution remain closed.
