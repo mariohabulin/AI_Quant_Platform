@@ -457,10 +457,18 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
 - [x] Prepare a repository-reviewed 1,440-bar 24-hour PAPER gate through the
   committed root-owned bound, preserving non-activating installation, PAPER
   boot-disablement and all existing acceptance conditions.
-- [ ] Reproduce focused/full tests, non-activating deployment and all seven
+- [x] Reproduce focused/full tests, non-activating deployment and all seven
   readiness checks on the exact committed 1,440-bar revision before activation.
-- [ ] Run and review the bounded 24-hour PAPER gate with all existing continuity,
+- [x] Run and review the bounded 24-hour PAPER gate with all existing continuity,
   transport, supervision, monitoring and `REAL_orders=0` conditions.
-- [ ] Progress to a multi-day soak only after the 24-hour gate passes.
+- [x] Close the 24-hour gate as PASS: 1,440/1,440, complete audit, systemd
+  `success/0`, `NRestarts=0`, 100% recovery across six disconnects, exact
+  1,947-minute continuity, final monitoring `OK`, zero alerts and `REAL=0`.
+- [ ] Define the exact multi-day PAPER bound and acceptance contract in a
+  separate reviewed repository change; do not edit the cloud host ad hoc.
+- [ ] Reproduce tests, non-activating deployment and readiness before any
+  multi-day activation.
+- [ ] Run and review the bounded multi-day PAPER gate before making any
+  unattended-production claim.
 
-External notification delivery and any real execution capability remain deferred. The completed twelve-hour gate and prepared 24-hour gate are bounded operational endurance work, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization.
+External notification delivery and any real execution capability remain deferred. The completed twelve-hour and 24-hour gates are bounded operational endurance evidence, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization.

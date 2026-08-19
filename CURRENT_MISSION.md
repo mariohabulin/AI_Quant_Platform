@@ -407,3 +407,40 @@ tests and all seven readiness checks on CPX22, then explicitly start one
 reviewed bounded run. A pass will be operational endurance evidence, not a
 profitability claim or live-money authorization. Multi-day soak, unattended
 production and real execution remain closed until later reviewed gates.
+
+### Bounded 24-Hour Cloud PAPER Soak v1 — PASS
+Exact preparation revision `f0a7ea8` was reproduced on Windows and CPX22 with
+31/31 combined supervision/readiness tests and the complete 643/643 repository
+suite. The installer remained non-activating, the committed and installed bound
+was `AI_ALPHA_SESSION_BARS=1440`, native unit verification was clean, and all
+seven Cloud Runtime Readiness checks passed before the explicit start. PAPER
+remained boot-disabled and real execution remained structurally impossible.
+
+The non-injected gate started at 2026-08-18 10:44 UTC and ended normally at
+2026-08-19 11:00 UTC. One process completed all 1,440 fresh bars with systemd
+`Result=success`, `ExecMainStatus=0` and `NRestarts=0`; the deterministic report
+returned `PASS`, `audit_complete=True`, `resumed=True`, zero rejected bars, zero
+rebases and `MAX_BARS`. It recorded 12 BUY, 12 SELL and 1,416 HOLD signals,
+23/23 filled PAPER orders and `REAL=0`.
+
+The 24-hour transport evidence included six genuine disconnects and six
+successful reconnects: 100% recovery, 34.9 seconds total outage and 5.8 seconds
+maximum outage, with zero exhaustion or replay drops. Provider boundaries
+remained explicit: 15 snapshot boundaries/drops and 4,126 quarantined
+snapshot-era trades. Exact non-tradable recovery consumed 493 startup-catch-up
+and 15 REST backfill bars with zero failures. Continuity covered all
+1,947/1,947 expected market minutes with `observed_gap=0.0m`.
+
+Operational Monitoring independently returned
+`OK / COMPLETED / MAX_BARS`, `REAL_orders=0` and zero alerts. Equity moved from
+4,986.83 to 4,992.03 (`net_pnl=+5.20`, maximum drawdown 0.2289%). The final
+PAPER position remained open at 0.01938861 BTC; this is valid report evidence,
+not a gate failure or live position. Neither P&L nor final position is treated
+as a profitability conclusion.
+
+After review, PAPER, the monitor service and the timer were all parked. PAPER
+is `inactive/dead/disabled`; the timer is `inactive/dead/enabled`; every unit
+retains `Result=success`, and CPX22 is clean on `f0a7ea8`. The bounded 24-hour
+gate is closed as PASS. The next authorized change is repository-reviewed
+multi-day PAPER-soak preparation with an explicit duration and acceptance
+contract. Unattended production and all real execution remain closed.

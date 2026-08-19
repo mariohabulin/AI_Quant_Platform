@@ -1459,3 +1459,34 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - A future pass will be 24-hour operational evidence only, not profitability
   proof, unattended-production readiness or live-money authorization. Multi-day
   soak and all real execution remain gated.
+
+## 2026-08-19 — Bounded 24-Hour Cloud PAPER Soak v1 (Pass)
+- Reproduced exact revision `f0a7ea8` on Windows and CPX22 with 31/31 combined
+  supervision/readiness tests and the complete 643/643 suite. The non-activating
+  install placed the reviewed root-owned `AI_ALPHA_SESSION_BARS=1440`; native
+  systemd verification and all seven readiness checks passed before activation.
+- Ran one non-injected process from 2026-08-18 10:44 UTC to 2026-08-19 11:00
+  UTC. It completed 1,440/1,440 fresh bars with zero rejected/rebased bars,
+  complete audit, `MAX_BARS`, systemd `success/0` and `NRestarts=0`.
+- The deterministic report returned `PASS`: 12 BUY, 12 SELL and 1,416 HOLD
+  signals; 23/23 filled PAPER orders; zero Risk rejects; 12 exact 3R
+  evaluations; and `REAL=0`.
+- Six real WebSocket disconnects recovered six times for 100% success. Total
+  outage was 34.9 seconds, maximum outage 5.8 seconds, with zero reconnect
+  exhaustion, bar replay, message replay or sequence-boundary drop.
+- Retained 15 provider snapshot boundaries/drops and quarantined 4,126
+  snapshot-era trades before aggregation. Recovery processed 493 startup
+  catch-up plus 15 REST backfill bars without failure or retroactive execution.
+  Market continuity was exact across 1,947/1,947 expected minutes with
+  `observed_gap=0.0m`.
+- Operational Monitoring returned `OK / COMPLETED / MAX_BARS`, zero alerts and
+  `REAL_orders=0`. Equity changed from 4,986.83 to 4,992.03 (`+5.20`, maximum
+  drawdown 0.2289%); this is operational evidence, not profitability proof.
+  The final open PAPER position of 0.01938861 BTC is reportable state rather
+  than an endurance-gate failure.
+- Parked all three units after review: PAPER remains boot-disabled, the monitor
+  timer remains enabled but stopped, all results are `success`, and the cloud
+  repository is clean on `f0a7ea8`.
+- Bounded 24-Hour Cloud PAPER Soak v1 is closed as PASS. A separately reviewed
+  multi-day bound and acceptance contract is next; unattended production and
+  real execution remain unauthorized.
