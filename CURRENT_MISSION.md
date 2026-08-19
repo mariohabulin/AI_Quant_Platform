@@ -444,3 +444,34 @@ retains `Result=success`, and CPX22 is clean on `f0a7ea8`. The bounded 24-hour
 gate is closed as PASS. The next authorized change is repository-reviewed
 multi-day PAPER-soak preparation with an explicit duration and acceptance
 contract. Unattended production and all real execution remain closed.
+
+### Bounded Three-Day Cloud PAPER Soak v1 — PREPARATION
+The successful 1,440-bar gate authorizes one further infrastructure-duration
+step. The committed root-controlled configuration now sets
+`AI_ALPHA_SESSION_BARS=4320`, exactly three days of fresh one-minute bars. Cloud
+Runtime Readiness and the forward runner continue to consume the same installed
+value. This preparation changes no provider validation, aggregation, Strategy,
+Risk, recovery, broker, persistence or monitoring behavior; PAPER remains
+boot-disabled and real execution remains structurally impossible.
+
+The reviewed run is non-injected. Acceptance requires 4,320/4,320 processed
+bars, zero rejected bars, zero rebases, `audit_complete=True`, normal
+`MAX_BARS`, exact expected market continuity with `observed_gap=0.0m`, zero
+recovery failures, zero reconnect exhaustion and 100% reconnect success if any
+disconnect occurs. Snapshot boundaries, quarantined trades, replay counters,
+backfills, outage causes and durations remain explicit evidence even when
+continuity is successfully repaired.
+
+The service must finish with systemd `Result=success`, `ExecMainStatus=0` and
+`NRestarts=0`. Final Operational Monitoring must be `OK / COMPLETED / MAX_BARS`
+with zero alerts and `REAL_orders=0`. Any incident, automatic restart,
+`PREVIOUS_PROCESS_FAILURE`, `WARNING` or `CRITICAL` result blocks a clean pass.
+Final systemd CPU time, memory peak and swap/OOM evidence must be captured and
+reviewed for unexpected resource growth; no arbitrary profitability or final-
+position target is added to this infrastructure gate.
+
+Next, reproduce focused/full Windows tests, commit and push the exact revision,
+deploy it through the non-activating installer, repeat the tests and all seven
+readiness checks on CPX22, then explicitly start one bounded run. A pass will
+authorize Strategy Evaluation v1 preparation, not unattended production or
+live-money execution. Those remain separately reviewed future boundaries.

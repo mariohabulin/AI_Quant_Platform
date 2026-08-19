@@ -262,7 +262,7 @@ After single-symbol operational stability and extended forward evidence are prov
 - [x] Record recovery evidence: 191 reconnect backfill bars + 56 startup catch-up bars across a 306-minute market span with zero observed market gap.
 - [x] Record transport warning: 16 disconnects, 12 reconnects (75% success), ~2697.2s total outage, ~1967.4s max outage; causes included RESET and DNS.
 - [x] Progress through multi-hour and overnight soak tests with transport quality as an explicit acceptance dimension.
-- [ ] Complete the reviewed 24-hour gate, then progress to a multi-day soak only if it passes.
+- [x] Complete the reviewed 24-hour gate and authorize multi-day preparation only after it passes.
 - [x] Validate transport in the controlled cloud runtime and add operational monitoring/alert classification before any unattended 24/7 live claim.
 
 ### Post-Recovery Position Reconciliation v1
@@ -464,11 +464,17 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
 - [x] Close the 24-hour gate as PASS: 1,440/1,440, complete audit, systemd
   `success/0`, `NRestarts=0`, 100% recovery across six disconnects, exact
   1,947-minute continuity, final monitoring `OK`, zero alerts and `REAL=0`.
-- [ ] Define the exact multi-day PAPER bound and acceptance contract in a
-  separate reviewed repository change; do not edit the cloud host ad hoc.
+- [x] Define the exact multi-day PAPER bound as 4,320 fresh one-minute bars
+  (three days) with the existing safety/continuity gates plus explicit final
+  CPU-time, memory-peak and swap/OOM review; do not edit the cloud host ad hoc.
+- [x] Prepare the committed root-owned 4,320-bar configuration without changing
+  runtime, Strategy, Risk, recovery, broker or monitoring behavior.
 - [ ] Reproduce tests, non-activating deployment and readiness before any
   multi-day activation.
 - [ ] Run and review the bounded multi-day PAPER gate before making any
   unattended-production claim.
+- [ ] Begin Strategy Evaluation v1 preparation after the three-day
+  infrastructure gate passes; profitability and live-money authorization remain
+  separate evidence boundaries.
 
-External notification delivery and any real execution capability remain deferred. The completed twelve-hour and 24-hour gates are bounded operational endurance evidence, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization.
+External notification delivery and any real execution capability remain deferred. The completed twelve-hour and 24-hour gates plus the prepared three-day gate are bounded infrastructure-endurance work, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization.

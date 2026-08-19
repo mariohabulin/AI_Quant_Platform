@@ -1490,3 +1490,30 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - Bounded 24-Hour Cloud PAPER Soak v1 is closed as PASS. A separately reviewed
   multi-day bound and acceptance contract is next; unattended production and
   real execution remain unauthorized.
+
+## 2026-08-19 — Bounded Three-Day Cloud PAPER Soak v1 (Preparation)
+- Promoted only the committed root-owned duration from 1,440 to 4,320 completed
+  one-minute bars after the 24-hour gate passed. The same value gates Cloud
+  Runtime Readiness and Forward PAPER; no runtime, provider, Strategy, Risk,
+  recovery, broker, persistence or monitoring logic changed.
+- Defined one non-injected three-day run with exact requirements: 4,320/4,320,
+  zero rejected/rebased bars, complete audit, `MAX_BARS`, exact market-time
+  continuity, zero recovery failure or reconnect exhaustion and 100% reconnect
+  success whenever disconnects occur.
+- Retained all provider snapshot/quarantine, replay, backfill, transport-cause
+  and outage-duration counters. Successful continuity repair does not erase the
+  evidence that exercised it.
+- Required systemd `Result=success`, `ExecMainStatus=0`, `NRestarts=0`, final
+  Operational Monitoring `OK / COMPLETED / MAX_BARS`, zero alerts and
+  `REAL_orders=0`. Any incident, restart, warning or critical decision blocks a
+  clean pass.
+- Added final CPU-time, memory-peak and swap/OOM review to detect resource growth
+  that shorter gates might miss without inventing an arbitrary performance
+  threshold.
+- Kept installation non-activating, PAPER boot-disabled and real execution
+  impossible. The exact revision must pass Windows/cloud focused and complete
+  tests, non-activating installation and all seven readiness checks before an
+  explicit operator start.
+- A future three-day pass authorizes Strategy Evaluation v1 preparation only.
+  It is not profitability proof, unattended-production readiness or live-money
+  authorization.

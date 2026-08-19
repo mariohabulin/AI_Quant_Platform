@@ -46,13 +46,13 @@ review.
 
 ## Reviewed session bound
 
-The current committed configuration sets `AI_ALPHA_SESSION_BARS=1440`, which is
-approximately twenty-four hours of fresh one-minute PAPER evidence. This
-duration increase is authorized by the successful 720-bar gate; it does not
-change market-data handling, Strategy, Risk or execution behavior. Changing the
-bound requires a reviewed repository change followed by the non-activating
-installer; do not edit the deployed file ad hoc. The service remains disabled
-at boot and every start remains an explicit operator action.
+The current committed configuration sets `AI_ALPHA_SESSION_BARS=4320`, exactly
+three days of fresh one-minute PAPER evidence. This duration increase is
+authorized by the successful 1,440-bar gate; it does not change market-data
+handling, Strategy, Risk or execution behavior. Changing the bound requires a
+reviewed repository change followed by the non-activating installer; do not edit
+the deployed file ad hoc. The service remains disabled at boot and every start
+remains an explicit operator action.
 
 ## Bounded restart/resume gate
 
@@ -181,8 +181,8 @@ reorder window from a generic exception message. A controlled
 `systemctl stop` instead closes as `OPERATOR_STOP`, returns accepted status 130
 and is reported as `WARNING / STOPPED` without stale-running alerts.
 
-For the current 24-hour gate, do not inject a restart or process failure.
-Require 1,440/1,440 processed bars, zero rejected bars, `audit_complete=True`,
+For the current three-day gate, do not inject a restart or process failure.
+Require 4,320/4,320 processed bars, zero rejected bars, `audit_complete=True`,
 `observed_gap=0.0m`, zero recovery failures, zero reconnect exhaustion,
 100% reconnect success whenever disconnects occur, `MAX_BARS`,
 `REAL_orders=0`, systemd `Result=success`, `ExecMainStatus=0`, `NRestarts=0`
@@ -190,9 +190,11 @@ and final Operational Monitoring status `OK`. Transport disconnect, reconnect
 and outage metrics must be retained even when hybrid recovery preserves
 continuity. Any process incident, automatic restart, `CRITICAL` result or
 `PREVIOUS_PROCESS_FAILURE` warning makes the soak non-passing until explicitly
-reviewed; it is never silently upgraded to an endurance pass. This bounded
-24-hour result is operational endurance evidence, not profitability evidence,
-and a multi-day soak remains gated until it passes.
+reviewed; it is never silently upgraded to an endurance pass. Retain the final
+systemd CPU time and memory peak and review them for unexpected resource growth
+or an out-of-memory event. This bounded three-day result is infrastructure
+endurance evidence, not strategy profitability evidence; unattended production
+remains gated after it passes.
 
 ## Monitoring schedule
 
