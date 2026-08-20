@@ -475,3 +475,44 @@ deploy it through the non-activating installer, repeat the tests and all seven
 readiness checks on CPX22, then explicitly start one bounded run. A pass will
 authorize Strategy Evaluation v1 preparation, not unattended production or
 live-money execution. Those remain separately reviewed future boundaries.
+
+### Bounded Three-Day Cloud PAPER Soak v1 — RUNNING
+Exact preparation revision `62e517c` was reproduced with 31/31 focused and
+643/643 complete tests, installed through the non-activating path and verified
+by all seven Cloud Runtime Readiness checks with the committed
+`AI_ALPHA_SESSION_BARS=4320` bound. The operator then explicitly started one
+non-injected run at 2026-08-19 15:14 UTC; PAPER remains boot-disabled and real
+execution remains structurally impossible.
+
+The reviewed 2026-08-20 12:45 UTC progress snapshot retains systemd
+`Result=success`, `ExecMainStatus=0`, `NRestarts=0` and PAPER
+`active/running`. The monitor timer is `active/waiting`; three recent one-shot
+cycles independently returned `OK / RUNNING / RUNNING`, fresh audit/checkpoint
+ages, `REAL_orders=0` and zero alerts. Recent PAPER bars remained current with
+equity 5,081.14, final observed position flat and 27 PAPER orders. These are
+interim operational observations only. The process must remain untouched until
+normal completion or a genuine safety event, and only the complete final report
+plus systemd/resource evidence can decide the three-day gate.
+
+### Strategy Evaluation Protocol v1 — LOCAL PREPARATION
+Repository-only preparation now freezes the strategy-research decision before
+any candidate is tested. A candidate declaration binds identity, hypothesis,
+parameter-set ID, data version, timeframe and exact asset scope. The existing
+Multi-Asset Validator is then run twice with identical chronological,
+walk-forward and statistical settings: once with reviewed nonzero baseline
+costs and once with a component-wise equal-or-higher cost-stress profile.
+
+Promotion requires both aggregate results to be `VALIDATED`, at least five
+non-overlapping walk-forward windows and 30 unseen completed trades per asset,
+and no unseen OOS drawdown above the configured 20% research ceiling. A hard
+edge or evidence-integrity failure is `REJECTED`; incomplete but non-rejected
+evidence is `RESEARCH_HOLD`; complete evidence is `PAPER_CANDIDATE`. Every
+report fixes `live_execution_authorized=False`; even `PAPER_CANDIDATE` means
+only eligibility for a separately bounded forward-PAPER gate.
+
+The implementation is isolated in `strategy_evaluation_protocol.py` and adds
+no cloud/runtime, provider, Strategy, Risk, broker, persistence or systemd
+behavior. TDD passes 84/84 focused validation/protocol tests and the complete
+663/663 Python 3.12 suite. Windows reproduction and Git integration remain
+pending. No real candidate evaluation may be promoted until the active
+three-day infrastructure run closes as a clean PASS.

@@ -1517,3 +1517,42 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - A future three-day pass authorizes Strategy Evaluation v1 preparation only.
   It is not profitability proof, unattended-production readiness or live-money
   authorization.
+
+## 2026-08-20 — Bounded Three-Day Cloud PAPER Soak v1 (Running Evidence)
+- Reproduced exact revision `62e517c` with 31/31 focused and 643/643 complete
+  tests, the non-activating installer and all seven readiness checks under the
+  committed 4,320-bar bound before the explicit operator start.
+- Started one non-injected process at 2026-08-19 15:14 UTC. The reviewed
+  2026-08-20 12:45 UTC snapshot retains systemd `success/0`, `NRestarts=0` and
+  PAPER `active/running`; PAPER remains boot-disabled and real execution remains
+  impossible.
+- Three recent monitor cycles returned `OK / RUNNING / RUNNING`, fresh audit and
+  checkpoint ages, zero alerts and `REAL_orders=0`. Current strategy/P&L/order
+  observations remain interim diagnostics rather than acceptance evidence.
+- The process is deliberately left untouched. Exact 4,320-bar completion,
+  report/continuity/transport evidence, systemd result and CPU/memory/swap/OOM
+  review are still required before the gate can pass.
+
+## 2026-08-20 — Strategy Evaluation Protocol v1 (Local Preparation)
+- Added an immutable candidate declaration covering candidate and strategy
+  identity, written hypothesis, parameter-set ID, dataset version, timeframe and
+  exact named-asset scope. Evidence with changed identity or scope is rejected.
+- Added explicit nonzero baseline and strictly harsher component-wise execution-
+  cost profiles. The same frozen Multi-Asset Validation configuration now runs
+  independently under both profiles; zero-cost research cannot be promoted.
+- Added initial configurable evidence-volume and risk gates: at least five
+  non-overlapping walk-forward test windows, at least 30 completed unseen trades
+  per asset and at most 20% unseen OOS drawdown under either cost profile.
+- Added deterministic `PAPER_CANDIDATE`, `RESEARCH_HOLD` and `REJECTED`
+  decisions with failed-gate, per-asset and threshold evidence. Every result
+  retains `live_execution_authorized=False`; the protocol can promote only to a
+  later bounded forward-PAPER review.
+- TDD RED proved the new module was absent. GREEN passes 84/84 focused
+  protocol/OOS/walk-forward/falsification/multi-asset tests and the complete
+  663/663 Python 3.12.13 suite, including one real integration through the
+  existing Multi-Asset Validator.
+- The change is repository-only and does not alter the active cloud process,
+  Strategy logic, Risk Engine, provider, broker, persistence, monitoring or
+  systemd configuration. Windows reproduction and Git integration remain
+  pending; first candidate promotion remains blocked by the active three-day
+  infrastructure gate.

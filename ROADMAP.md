@@ -469,12 +469,16 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
   CPU-time, memory-peak and swap/OOM review; do not edit the cloud host ad hoc.
 - [x] Prepare the committed root-owned 4,320-bar configuration without changing
   runtime, Strategy, Risk, recovery, broker or monitoring behavior.
-- [ ] Reproduce tests, non-activating deployment and readiness before any
+- [x] Reproduce tests, non-activating deployment and readiness before any
   multi-day activation.
-- [ ] Run and review the bounded multi-day PAPER gate before making any
+- [ ] Complete and review the active bounded multi-day PAPER gate before making any
   unattended-production claim.
-- [ ] Begin Strategy Evaluation v1 preparation after the three-day
-  infrastructure gate passes; profitability and live-money authorization remain
-  separate evidence boundaries.
+- [x] Prepare Strategy Evaluation Protocol v1 locally without touching the
+  active cloud run: freeze candidate identity/scope, require reviewed baseline
+  and cost-stress passes, minimum unseen evidence and explicit research-only
+  outcomes.
+- [ ] After the three-day infrastructure gate passes, pre-register and execute
+  the first strategy candidate evaluation. Profitability evidence, bounded
+  forward-PAPER promotion and live-money authorization remain separate gates.
 
-External notification delivery and any real execution capability remain deferred. The completed twelve-hour and 24-hour gates plus the prepared three-day gate are bounded infrastructure-endurance work, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization.
+External notification delivery and any real execution capability remain deferred. The completed twelve-hour and 24-hour gates plus the active three-day gate are bounded infrastructure-endurance work, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization. Local Strategy Evaluation Protocol preparation cannot override the unfinished three-day gate.

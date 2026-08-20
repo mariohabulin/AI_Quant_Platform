@@ -624,6 +624,46 @@ Regime-conditioned analysis attributes unseen OOS trades by the regime present a
 
 ---
 
+# Strategy Evaluation Protocol v1 Contract
+
+Strategy Evaluation Protocol v1 is a research-governance layer above the
+existing Strategy Validation Pipeline and Multi-Asset Validator. It does not
+create indicators, optimize parameters, change signals, size positions or send
+orders. Its only promotion target is a later bounded forward-PAPER candidate.
+
+Every evaluation begins with an immutable candidate declaration containing a
+candidate ID, exact Strategy Engine name, written hypothesis, parameter-set ID,
+data version, timeframe and a fixed named-asset scope. The same engine,
+chronological split sizes, non-overlapping walk-forward test windows, random
+seed and asset scope are used for both evaluation passes. A strategy-name or
+asset-scope mismatch is an evidence-integrity failure, not a result that may be
+silently normalized.
+
+Execution assumptions are explicit inputs rather than zero-cost defaults. The
+baseline cost profile must be nonzero and reviewed for the intended venue. The
+cost-stress profile may not lower commission, slippage or spread, and at least
+one component must be strictly higher. Both passes independently retain each
+asset's OOS, benchmark, walk-forward and statistical-falsification evidence.
+
+The initial configurable promotion gates are:
+
+- baseline multi-asset classification must be `VALIDATED`
+- cost-stress multi-asset classification must also be `VALIDATED`
+- each asset must supply at least five non-overlapping walk-forward test windows
+- each asset must supply at least 30 completed unseen walk-forward trades
+- the maximum unseen OOS drawdown under either cost profile must not exceed 20%
+
+These are versioned research thresholds, not calibrated live-risk limits. A
+hard edge failure or identity/scope violation returns `REJECTED`. Evidence that
+has not failed but lacks one or more promotion gates returns `RESEARCH_HOLD`.
+Only complete evidence returns `PAPER_CANDIDATE`, with next stage
+`BOUNDED_FORWARD_PAPER` and `live_execution_authorized=False` invariant in
+every outcome. The separate three-day infrastructure gate must pass before the
+first candidate evaluation is operationally promoted; this protocol cannot
+override that boundary.
+
+---
+
 # Phase 3 Risk Engine v1 — Position Sizing Foundation Contract
 
 Risk sizing is a separate decision layer between a strategy signal and execution. Strategy logic decides *when* to trade; the Risk Engine decides *how much* may be traded; the Backtesting Engine remains responsible for execution simulation.
