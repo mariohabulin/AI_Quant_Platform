@@ -482,11 +482,12 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
 - [x] Reproduce Strategy Evaluation Protocol v1 on Windows with 84/84 focused
   and 663/663 complete tests, commit/push exact revision `b69f5b1`, and leave
   the active cloud process untouched until the three-day gate closes.
-- [ ] Fast-forward the parked cloud repository through the non-activating path,
-  reproduce the exact focused/full suites and readiness boundary, and keep all
-  trading units parked.
+- [x] Fast-forward the parked cloud repository non-activating to exact
+  `9a063fa`; reproduce 20/20 standalone, 84/84 focused and 663/663 complete
+  cloud tests, pass all seven readiness checks, and keep every trading and
+  monitoring unit parked.
 - [ ] Pre-register and execute the first strategy candidate evaluation.
   Profitability evidence, bounded forward-PAPER promotion and live-money
   authorization remain separate gates.
 
-External notification delivery and any real execution capability remain deferred. The completed twelve-hour, 24-hour and three-day gates are bounded infrastructure-endurance evidence, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization. The clean three-day PASS authorizes controlled Strategy Evaluation Protocol integration and first-candidate research only.
+External notification delivery and any real execution capability remain deferred. The completed twelve-hour, 24-hour and three-day gates are bounded infrastructure-endurance evidence, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization. The clean three-day PASS and completed Strategy Evaluation Protocol cloud integration authorize pre-registration and offline evaluation of the first strategy candidate only.

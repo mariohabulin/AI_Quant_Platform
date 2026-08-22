@@ -528,7 +528,7 @@ infrastructure gate is closed as PASS. This authorizes controlled Strategy
 Evaluation Protocol integration and first-candidate preparation only;
 unattended production and all live-money execution remain unauthorized.
 
-### Strategy Evaluation Protocol v1 — READY FOR CONTROLLED INTEGRATION
+### Strategy Evaluation Protocol v1 — CLOUD INTEGRATION PASS
 Repository-only preparation now freezes the strategy-research decision before
 any candidate is tested. A candidate declaration binds identity, hypothesis,
 parameter-set ID, data version, timeframe and exact asset scope. The existing
@@ -547,9 +547,22 @@ only eligibility for a separately bounded forward-PAPER gate.
 The implementation is isolated in `strategy_evaluation_protocol.py` and adds
 no cloud/runtime, provider, Strategy, Risk, broker, persistence or systemd
 behavior. TDD passes 84/84 focused validation/protocol tests and the complete
-663/663 suite. Windows/Python 3.14.6 reproduced both suites, exact revision
-`b69f5b1` is committed and pushed, and it was deliberately kept off the cloud
-while the three-day gate ran. With that external prerequisite now satisfied,
-the next authorized action is a non-activating cloud fast-forward and exact
-focused/full reproduction before pre-registering the first strategy candidate.
-No protocol result can authorize live execution.
+663/663 suite. Windows/Python 3.14.6 reproduced both suites and committed the
+implementation as exact revision `b69f5b1`; the three-day closure followed as
+`9a063fa` without changing protocol behavior.
+
+After the external three-day gate passed, the parked CPX22 repository
+fast-forwarded non-activating from `62e517c` through both revisions to exact
+`9a063fa`. Ubuntu/Python 3.12 reproduced 20/20 standalone protocol tests,
+84/84 focused protocol/validation tests and the complete 663/663 suite. The
+standard installer explicitly started or enabled nothing, and all seven Cloud
+Runtime Readiness checks passed with PAPER mode, real execution disabled and
+the committed 4,320-bar bound.
+
+Final cloud state remains deliberately parked: PAPER is
+`inactive/dead/disabled`, the monitor service is `inactive/dead/static`, the
+timer is `inactive/dead/enabled`, every unit retains `Result=success`, and the
+repository is clean on `9a063fa`. Strategy Evaluation Protocol v1 cloud
+integration is closed as PASS. The next authorized action is pre-registration
+and offline execution of the first strategy candidate evaluation. No protocol
+result can authorize live execution.

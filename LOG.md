@@ -1596,3 +1596,24 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - Bounded Three-Day Cloud PAPER Soak v1 is closed as PASS. Controlled
   Strategy Evaluation Protocol integration and first-candidate research are
   now authorized; unattended production and live-money execution remain closed.
+
+## 2026-08-22 — Strategy Evaluation Protocol v1 (Cloud Integration)
+- Fast-forwarded the parked CPX22 repository non-activating from exact soak
+  revision `62e517c` through `b69f5b1` to closure revision `9a063fa`. The
+  working tree remained clean and no trading or monitoring process was started.
+- Reproduced 20/20 standalone protocol tests, 84/84 focused
+  protocol/validation tests and the complete 663/663 suite on Ubuntu/Python
+  3.12. This matches the previously completed Windows/Python 3.14.6 focused
+  and complete validation boundary.
+- Ran the standard installer, which explicitly started and enabled nothing.
+  All seven Cloud Runtime Readiness checks passed with PAPER mode, the committed
+  4,320-bar bound, one-minute monitoring cadence, persistent storage, importable
+  runtime components and real execution disabled.
+- Confirmed the final parked state: PAPER `inactive/dead/disabled`, monitor
+  service `inactive/dead/static`, monitor timer `inactive/dead/enabled`, all
+  unit results `success`, zero retained restarts and clean repository
+  `9a063fa`.
+- Closed Strategy Evaluation Protocol v1 cloud integration as PASS. The next
+  authorized activity is pre-registration and offline evaluation of the first
+  strategy candidate. `PAPER_CANDIDATE` remains only eligibility for a separate
+  bounded forward-PAPER gate and cannot authorize live execution.
