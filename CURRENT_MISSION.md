@@ -654,3 +654,35 @@ downloaded, no performance result was calculated or viewed, and no parameter
 was selected from outcomes. Next: reproduce focused/full suites on Windows,
 commit/push and perform non-activating cloud integration. Only then acquire the
 frozen data and record its SHA-256 lock as a separate evidence step.
+
+### First Strategy Candidate Pre-registration v1 — CLOUD INTEGRATION PASS
+
+Windows/Python 3.14.6 applied the frozen candidate patch on exact closure base
+`5168dd8`. The first focused run exposed two Windows-only test-helper failures:
+the helper rewrote `manifest.sha256` through text mode and therefore produced
+`CRLF`, while the canonical lock correctly requires exact ASCII bytes with
+`LF`. Production acquisition already used byte writes and was unaffected. The
+helper was corrected to use `write_bytes`; focused validation then passed
+160/160 and the complete suite passed 714/714.
+
+The reviewed nine-file scope passed staged whitespace validation, was committed
+as `27dacb3` (`Add First Strategy Candidate Preregistration v1`), pushed to
+`origin/main` and left the Windows repository clean. No historical dataset was
+downloaded, no strategy result was calculated or inspected, and no runtime was
+started.
+
+CPX22 was first confirmed parked and clean on `5168dd8`: PAPER and monitoring
+were inactive, all unit results were `success` and restart counts were zero.
+The repository fast-forwarded non-activating to exact `27dacb3`; Ubuntu/Python
+3.12 reproduced 160/160 focused and 714/714 complete tests. The standard
+installer explicitly started and enabled nothing, and all seven Cloud Runtime
+Readiness checks passed using the installed 4,320-bar PAPER configuration,
+persistent storage and explicit real-execution lock.
+
+Final cloud state remains clean on `27dacb3`: PAPER is
+`inactive/dead/disabled`, monitor service is `inactive/dead/static`, monitor
+timer is `inactive/dead/enabled`, all results are `success` and retained restart
+counts are zero. First Strategy Candidate Pre-registration v1 is closed as a
+cross-platform PASS. The next authorized action is acquisition and independent
+SHA-256 locking of the exact frozen dataset. Evaluation, optimization, forward
+PAPER and live-money execution remain unauthorized.

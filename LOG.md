@@ -1689,3 +1689,28 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - Windows reproduction, exact Git integration and non-activating cloud
   verification remain required before the real dataset may be acquired and
   hashed. Optimization, forward PAPER and live execution remain unauthorized.
+
+## 2026-08-22 — First Strategy Candidate Pre-registration v1 (Windows/Cloud Closure)
+- Windows initially returned 158/160 focused tests because the test-only
+  manifest mutation helper wrote its SHA sidecar through platform text mode,
+  producing `CRLF`. The production builder already used exact bytes and the
+  lock correctly rejected the noncanonical sidecar before later assertions.
+- Changed only that helper to write explicit ASCII/LF bytes. Windows then
+  reproduced 160/160 focused and 714/714 complete tests; the staged nine-file
+  scope passed diff checks and was committed/pushed as exact revision
+  `27dacb3`. The repository remained clean.
+- Confirmed the cloud safety boundary before integration: PAPER and monitoring
+  were inactive, unit results were `success`, restart counts were zero and the
+  clean repository was on `5168dd8`.
+- Fast-forwarded non-activating to `27dacb3`, reproduced 160/160 focused and
+  714/714 complete tests on Ubuntu/Python 3.12, and ran the standard installer,
+  which explicitly started and enabled nothing.
+- Reproduced all seven Cloud Runtime Readiness checks with the exact installed
+  PAPER environment, persistent storage, 4,320-bar bound and real execution
+  disabled.
+- Final verification retained PAPER `inactive/dead/disabled`, monitor service
+  `inactive/dead/static`, monitor timer `inactive/dead/enabled`, every result
+  `success`, zero restarts and a clean cloud repository on `27dacb3`.
+- Closed First Strategy Candidate Pre-registration v1 as PASS without acquiring
+  historical data, inspecting a result, optimizing a parameter or activating a
+  runtime. The exact dataset SHA-256 lock is the next separate gate.

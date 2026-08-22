@@ -502,8 +502,9 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
 - [x] Validate pre-registration locally with 160/160 focused and 714/714 full
   tests using injected provider responses and without downloading or evaluating
   the historical dataset.
-- [ ] Reproduce focused/full Windows tests, commit/push the exact candidate-
-  preparation revision, then integrate and verify it on parked CPX22 without
+- [x] Reproduce 160/160 focused and 714/714 full Windows tests, close a test-only
+  ASCII/LF portability issue, commit/push exact revision `27dacb3`, then
+  reproduce both suites plus all seven readiness checks on parked CPX22 without
   activating any systemd unit.
 - [ ] Acquire the exact frozen BTC/ETH dataset and record its canonical manifest
   SHA-256 without inspecting strategy performance.
