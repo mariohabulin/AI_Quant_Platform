@@ -1639,3 +1639,27 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
   the full 684/684 suite locally. Divergent Open/Close manual checks, Python
   compilation and `git diff --check` also pass. Windows/cloud integration and
   Git closure remain pending; all live-money capability remains absent.
+
+## 2026-08-22 — Research Execution Timing Integrity v1 (Windows and Cloud Closure)
+- Windows/Python 3.14.6 reproduced 130/130 focused timing/validation/protocol
+  tests and the complete 684/684 suite. The reviewed 19-file scope passed both
+  unstaged and staged diff checks, was committed as `daf6c5d` and pushed to
+  `origin/main`; the local repository remained clean.
+- Confirmed the cloud safety boundary before integration: PAPER and monitoring
+  were inactive, results were `success`, restart counts were zero and the clean
+  repository was on exact `7f2e7fc`.
+- Fast-forwarded non-activating to exact `daf6c5d`, then reproduced 130/130
+  focused and 684/684 complete tests on Ubuntu/Python 3.12. The systemd
+  installer explicitly started and enabled nothing.
+- An initial direct readiness command omitted the unit environment and returned
+  `FAIL` with `None` configuration values as designed. No unit started and no
+  runtime or audit state changed. A corrected invocation used the installed
+  4,320-bar configuration plus the exact service environment under the
+  `ai-alpha` identity and returned seven of seven checks `PASS`.
+- Final verification retained PAPER `inactive/dead/disabled`, monitor service
+  `inactive/dead/static`, monitor timer `inactive/dead/enabled`, all results
+  `success`, zero restarts and a clean repository on `daf6c5d`.
+- Closed Research Execution Timing Integrity v1 as PASS. First-candidate
+  pre-registration may now begin, but no strategy result has been inspected,
+  no parameters optimized, no forward PAPER authorized and real execution
+  remains structurally unavailable.

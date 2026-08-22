@@ -596,3 +596,30 @@ syntax/diff validation. Windows reproduction, Git integration and cloud
 non-activating verification remain required before candidate pre-registration.
 The next research step after closure is an immutable first-candidate/data/cost
 declaration, not parameter optimization.
+
+### Research Execution Timing Integrity v1 — CLOUD INTEGRATION PASS
+
+Windows/Python 3.14.6 reproduced 130/130 focused research-stack tests and the
+complete 684/684 suite. The exact 19-file change was committed as `daf6c5d`
+(`Add Research Execution Timing Integrity v1`), pushed to `origin/main`, and
+left the local repository clean.
+
+The parked cloud repository then fast-forwarded from exact `7f2e7fc` to
+`daf6c5d` without activating PAPER or monitoring. Ubuntu/Python 3.12 reproduced
+the same 130/130 focused and 684/684 complete suites. The standard installer
+again confirmed that it started and enabled nothing.
+
+One manual readiness invocation omitted the systemd environment and therefore
+failed transparently with unset configuration values. It did not start a
+service, change persistent state or create a process incident. Repeating the
+gate as the `ai-alpha` service identity with the installed 4,320-bar bound and
+the exact PAPER/runtime/monitoring/real-execution environment produced all
+seven `PASS` checks, including the persistent-storage probe.
+
+Final cloud state remains parked and clean on `daf6c5d`: PAPER is
+`inactive/dead/disabled`, monitor service is `inactive/dead/static`, monitor
+timer is `inactive/dead/enabled`, all unit results are `success`, and retained
+restart counts are zero. Research Execution Timing Integrity v1 is closed as
+PASS. The next authorized action is immutable pre-registration of the first
+strategy candidate, dataset evidence and reviewed cost profiles; optimization,
+bounded forward PAPER and live-money execution remain separate later gates.
