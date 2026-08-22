@@ -1556,3 +1556,43 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
   systemd configuration. Windows reproduction and Git integration remain
   pending; first candidate promotion remains blocked by the active three-day
   infrastructure gate.
+
+## 2026-08-20 — Strategy Evaluation Protocol v1 (Windows Integration)
+- Applied the exact repository-only protocol change on Windows/Python 3.14.6,
+  reproduced 84/84 focused validation/protocol tests and the complete 663/663
+  repository suite, and retained a clean reviewed file scope.
+- Committed `b69f5b1` (`Add Strategy Evaluation Protocol v1`) and pushed it to
+  `origin/main`. The active CPX22 process remained untouched on exact soak
+  revision `62e517c`; no runtime or systemd unit was changed or restarted.
+- Candidate execution remained blocked until the external three-day
+  infrastructure gate could finish and be reviewed independently.
+
+## 2026-08-22 — Bounded Three-Day Cloud PAPER Soak v1 (Pass)
+- The one non-injected process started on exact revision `62e517c` at
+  2026-08-19 15:14 UTC and reached normal completion at 2026-08-22 15:55 UTC.
+  systemd retained `Result=success`, `ExecMainStatus=0`, `NRestarts=0` and no
+  process incident.
+- The deterministic report returned `PASS`, `audit_complete=True`,
+  `resumed=True` and `MAX_BARS`: 4,320/4,320 fresh bars, zero rejected/rebased
+  bars, 44 BUY, 47 SELL and 4,229 HOLD signals, 89/89 filled PAPER orders,
+  zero Risk rejects, 44 exact 3R evaluations, final flat position and `REAL=0`.
+- Fifteen genuine WebSocket disconnects recovered 15 times for 100% success.
+  Total outage was 88.2 seconds and maximum outage 6.0 seconds, with zero
+  reconnect exhaustion, bar replay, message replay or sequence-boundary drop.
+- Provider handling retained 39 snapshot boundaries/drops and quarantined
+  18,200 snapshot-era trades before aggregation. Exact recovery processed 255
+  startup-catch-up and 40 REST backfill bars with zero failure or retroactive
+  order. Continuity covered exactly 4,614/4,614 expected market minutes with
+  `observed_gap=0.0m`.
+- Operational Monitoring independently returned `OK / COMPLETED / MAX_BARS`,
+  zero alerts and `REAL_orders=0`. Equity changed from 5,037.72 to 5,134.30
+  (`net_pnl=+96.58`, maximum drawdown 1.1202%); this is infrastructure and
+  strategy-behavior evidence, not a profitability conclusion.
+- Final resource review retained 59 minutes 43.025 seconds CPU time, 97.0 MB
+  memory peak, 0 B swap peak and no kernel OOM/killed-process evidence.
+- Parked all units after review: PAPER is `inactive/dead/disabled`, the monitor
+  service is `inactive/dead/static`, the timer is `inactive/dead/enabled`, all
+  results are `success`, and CPX22 remains clean on `62e517c`.
+- Bounded Three-Day Cloud PAPER Soak v1 is closed as PASS. Controlled
+  Strategy Evaluation Protocol integration and first-candidate research are
+  now authorized; unattended production and live-money execution remain closed.

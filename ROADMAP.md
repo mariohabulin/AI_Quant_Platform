@@ -471,14 +471,22 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
   runtime, Strategy, Risk, recovery, broker or monitoring behavior.
 - [x] Reproduce tests, non-activating deployment and readiness before any
   multi-day activation.
-- [ ] Complete and review the active bounded multi-day PAPER gate before making any
-  unattended-production claim.
+- [x] Complete and review the bounded multi-day PAPER gate: 4,320/4,320,
+  complete audit, `MAX_BARS`, systemd `success/0`, `NRestarts=0`, exact
+  4,614-minute continuity, 100% recovery across 15 disconnects, final
+  monitoring `OK`, zero alerts, `REAL=0` and clean resource/OOM review.
 - [x] Prepare Strategy Evaluation Protocol v1 locally without touching the
   active cloud run: freeze candidate identity/scope, require reviewed baseline
   and cost-stress passes, minimum unseen evidence and explicit research-only
   outcomes.
-- [ ] After the three-day infrastructure gate passes, pre-register and execute
-  the first strategy candidate evaluation. Profitability evidence, bounded
-  forward-PAPER promotion and live-money authorization remain separate gates.
+- [x] Reproduce Strategy Evaluation Protocol v1 on Windows with 84/84 focused
+  and 663/663 complete tests, commit/push exact revision `b69f5b1`, and leave
+  the active cloud process untouched until the three-day gate closes.
+- [ ] Fast-forward the parked cloud repository through the non-activating path,
+  reproduce the exact focused/full suites and readiness boundary, and keep all
+  trading units parked.
+- [ ] Pre-register and execute the first strategy candidate evaluation.
+  Profitability evidence, bounded forward-PAPER promotion and live-money
+  authorization remain separate gates.
 
-External notification delivery and any real execution capability remain deferred. The completed twelve-hour and 24-hour gates plus the active three-day gate are bounded infrastructure-endurance work, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization. Local Strategy Evaluation Protocol preparation cannot override the unfinished three-day gate.
+External notification delivery and any real execution capability remain deferred. The completed twelve-hour, 24-hour and three-day gates are bounded infrastructure-endurance evidence, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization. The clean three-day PASS authorizes controlled Strategy Evaluation Protocol integration and first-candidate research only.

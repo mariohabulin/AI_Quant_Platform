@@ -494,7 +494,41 @@ interim operational observations only. The process must remain untouched until
 normal completion or a genuine safety event, and only the complete final report
 plus systemd/resource evidence can decide the three-day gate.
 
-### Strategy Evaluation Protocol v1 — LOCAL PREPARATION
+### Bounded Three-Day Cloud PAPER Soak v1 — PASS
+The untouched non-injected process ran on exact revision `62e517c` from
+2026-08-19 15:14 UTC to normal completion at 2026-08-22 15:55 UTC. systemd
+retained `Result=success`, `ExecMainStatus=0` and `NRestarts=0`; the final
+report returned `PASS`, `audit_complete=True`, `resumed=True` and `MAX_BARS`
+with all 4,320 fresh bars processed, zero rejected bars and zero rebases. It
+recorded 44 BUY, 47 SELL and 4,229 HOLD signals, 89/89 filled PAPER orders,
+zero Risk rejects, 44 exact 3R evaluations, a flat final PAPER position and
+`REAL=0`.
+
+The real transport evidence exercised recovery without losing continuity:
+15 disconnects recovered 15 times for 100% success, 88.2 seconds total outage
+and 6.0 seconds maximum outage, with zero exhaustion, bar replay, message replay
+or sequence-boundary drop. Thirty-nine provider snapshot boundaries produced
+39 explicit boundary-bar drops and quarantined 18,200 snapshot-era trades
+before aggregation. Exact non-tradable recovery consumed 255 startup-catch-up
+and 40 REST backfill bars with zero failure or retroactive order. Continuity
+covered all 4,614/4,614 expected market minutes with `observed_gap=0.0m`.
+
+Operational Monitoring independently returned `OK / COMPLETED / MAX_BARS`,
+zero alerts and `REAL_orders=0`. Equity moved from 5,037.72 to 5,134.30
+(`net_pnl=+96.58`, maximum drawdown 1.1202%); this remains infrastructure and
+strategy-behavior evidence rather than a profitability claim. Final systemd
+resource evidence was 59 minutes 43.025 seconds CPU time, 97.0 MB memory peak,
+0 B swap peak and no kernel OOM/killed-process evidence.
+
+After review, PAPER, the monitor service and the timer were parked. PAPER is
+`inactive/dead/disabled`; the monitor service is `inactive/dead/static`; the
+timer is `inactive/dead/enabled`; every unit retains `Result=success`, and the
+cloud repository remains clean on `62e517c`. The bounded three-day
+infrastructure gate is closed as PASS. This authorizes controlled Strategy
+Evaluation Protocol integration and first-candidate preparation only;
+unattended production and all live-money execution remain unauthorized.
+
+### Strategy Evaluation Protocol v1 — READY FOR CONTROLLED INTEGRATION
 Repository-only preparation now freezes the strategy-research decision before
 any candidate is tested. A candidate declaration binds identity, hypothesis,
 parameter-set ID, data version, timeframe and exact asset scope. The existing
@@ -513,6 +547,9 @@ only eligibility for a separately bounded forward-PAPER gate.
 The implementation is isolated in `strategy_evaluation_protocol.py` and adds
 no cloud/runtime, provider, Strategy, Risk, broker, persistence or systemd
 behavior. TDD passes 84/84 focused validation/protocol tests and the complete
-663/663 Python 3.12 suite. Windows reproduction and Git integration remain
-pending. No real candidate evaluation may be promoted until the active
-three-day infrastructure run closes as a clean PASS.
+663/663 suite. Windows/Python 3.14.6 reproduced both suites, exact revision
+`b69f5b1` is committed and pushed, and it was deliberately kept off the cloud
+while the three-day gate ran. With that external prerequisite now satisfied,
+the next authorized action is a non-activating cloud fast-forward and exact
+focused/full reproduction before pre-registering the first strategy candidate.
+No protocol result can authorize live execution.
