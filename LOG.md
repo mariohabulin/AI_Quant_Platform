@@ -1663,3 +1663,29 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
   pre-registration may now begin, but no strategy result has been inspected,
   no parameters optimized, no forward PAPER authorized and real execution
   remains structurally unavailable.
+
+## 2026-08-22 — First Strategy Candidate Pre-registration v1 (Local Preparation)
+- Froze the first candidate before data acquisition or result inspection as
+  `ema-crossover-20-50-btc-eth-native-6h-v1`: existing long-only EMA 20/50,
+  `BTC-USD` plus `ETH-USD`, native six-hour candles, no leverage, completed-
+  Close signal, next-Open execution and final-Close terminal reporting.
+- Froze the public Coinbase research range at
+  `[2019-01-01T00:00:00Z, 2026-08-01T00:00:00Z)`, exactly 11,076 expected rows
+  per asset. The builder is read-only, credential-free and separate from the
+  live transport and every broker/order path.
+- Added finite 300-candle-aware chunk/retry acquisition, strict UTC continuity
+  and OHLCV validation, canonical CSV bytes, per-asset SHA-256 evidence,
+  canonical manifest metadata and a manifest SHA-256 sidecar.
+- Added an independent candidate lock that rejects noncanonical manifests,
+  checksum/source/contract drift, path escape, hash or row mismatch, incomplete
+  time grids and invalid/non-finite OHLCV before binding the manifest digest to
+  the immutable data version.
+- Froze conservative low-volume taker research costs: 0.60% commission per
+  side, 0.05% baseline slippage and 0.10% full spread; stress retains
+  commission and raises slippage to 0.15% and full spread to 0.30%.
+- Added declaration and dataset-lock CLIs that explicitly do not evaluate the
+  strategy. Injected provider tests pass 160/160 focused and 714/714 complete
+  locally without downloading historical data or observing performance.
+- Windows reproduction, exact Git integration and non-activating cloud
+  verification remain required before the real dataset may be acquired and
+  hashed. Optimization, forward PAPER and live execution remain unauthorized.

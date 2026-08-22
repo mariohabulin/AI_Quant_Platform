@@ -1140,3 +1140,50 @@ report exposes the number of filtered trades as `snapshot_quarantine_trades`;
 handled quarantine evidence remains monitoring-neutral. Cross-channel sequence
 validation, the two-second update watermark, exact continuity, Strategy, Feed
 Health, Risk Engine, PaperBroker and `REAL_orders=0` remain unchanged.
+
+# First Strategy Candidate Pre-registration v1 Contract
+
+The first offline candidate is frozen before any dataset result or performance
+metric is inspected. Its immutable ID is
+`ema-crossover-20-50-btc-eth-native-6h-v1`: the existing long-only
+`ema_crossover` implementation with fast period 20 and slow period 50, no
+leverage, exact `BTC-USD` / `ETH-USD` scope and native six-hour candles.
+Signals are observed only at a completed Close and execute at the following
+Open; any remaining terminal position is force-closed at the final Close for
+reporting. Changing strategy, parameters, assets, timeframe, data range,
+execution semantics, cost profiles or validation thresholds creates a new
+candidate identity rather than mutating this one.
+
+`coinbase_research_dataset.py` is a read-only research acquisition boundary
+separate from the live Coinbase transport. It uses the public Exchange candles
+endpoint without credentials and has no broker/order dependency. The frozen
+range is `[2019-01-01T00:00:00Z, 2026-08-01T00:00:00Z)` at provider-native
+`21600`-second granularity, yielding exactly 11,076 expected observations per
+asset. Requests are deterministically chunked within Coinbase's 300-candle
+response bound, retried only through a finite budget and accepted only when the
+complete UTC grid, finite positive prices, non-negative volume and OHLC
+geometry all pass. Missing, extra, misaligned or conflicting duplicate candles
+fail closed.
+
+Accepted frames are serialized into canonical UTF-8/LF CSV bytes with UTC
+second-precision timestamps, fixed `Timestamp/Open/High/Low/Close/Volume`
+column order and `.17g` float representation. A canonical sorted JSON manifest
+binds the acquisition contract, provider/source metadata, serialization rules,
+file names, row boundaries and per-asset SHA-256 values. A separate
+`manifest.sha256` binds the manifest bytes. The candidate lock independently
+rechecks the manifest format and sidecar, asset scope, basename-only paths,
+every file hash, exact row/time grid, numeric finiteness and OHLCV geometry.
+Only then may the manifest digest become part of `data_version`.
+
+Baseline execution assumptions are 0.60% commission per side, 0.05% slippage
+per side and 0.10% full spread; the stress profile retains 0.60% commission and
+raises slippage to 0.15% and full spread to 0.30%. The commission deliberately
+uses Coinbase's published low-volume taker tier, while slippage/spread are
+reviewed conservative research assumptions. Actual account pricing must be
+re-frozen before any future venue integration.
+
+Pre-registration and data locking never invoke Strategy Evaluation Protocol,
+optimization, forward PAPER or any execution adapter. Until all bytes are
+locked, status remains `DATASET_LOCK_PENDING`; after validation it becomes
+`DATASET_LOCKED` with `evaluation_executed=False`. Even a later
+`PAPER_CANDIDATE` result cannot authorize live trading.

@@ -623,3 +623,34 @@ restart counts are zero. Research Execution Timing Integrity v1 is closed as
 PASS. The next authorized action is immutable pre-registration of the first
 strategy candidate, dataset evidence and reviewed cost profiles; optimization,
 bounded forward PAPER and live-money execution remain separate later gates.
+
+### First Strategy Candidate Pre-registration v1 — LOCAL PREPARATION
+
+The first candidate is now declared but deliberately unevaluated:
+`ema-crossover-20-50-btc-eth-native-6h-v1`, using the existing long-only EMA
+20/50 implementation on exact `BTC-USD` and `ETH-USD` native six-hour candles.
+Completed-close signals execute only at the following Open, terminal reporting
+uses the already frozen final-Close policy, initial research capital is 5,000,
+and no leverage or optimization is allowed.
+
+The data contract is frozen before acquisition: public Coinbase Exchange REST,
+`2019-01-01T00:00:00Z` inclusive through `2026-08-01T00:00:00Z` exclusive,
+21,600-second candles and exactly 11,076 continuous rows per asset. A separate
+read-only builder performs finite retry/chunk handling, strict grid/OHLCV
+validation, canonical CSV serialization and SHA-256 evidence for every asset
+plus the canonical manifest. The candidate lock independently verifies those
+bytes and binds the manifest digest into `data_version`; it cannot evaluate the
+strategy or place any order.
+
+Baseline research costs are frozen at 0.60% commission, 0.05% slippage and
+0.10% full spread. The adverse profile retains the commission and raises
+slippage to 0.15% and full spread to 0.30%. Evaluation remains blocked until
+the two data files, canonical manifest and checksum sidecar exist and pass all
+lock checks.
+
+Injected, network-free TDD passes 160/160 focused candidate/data/research-stack
+tests and the complete 714/714 suite locally. No historical dataset was
+downloaded, no performance result was calculated or viewed, and no parameter
+was selected from outcomes. Next: reproduce focused/full suites on Windows,
+commit/push and perform non-activating cloud integration. Only then acquire the
+frozen data and record its SHA-256 lock as a separate evidence step.

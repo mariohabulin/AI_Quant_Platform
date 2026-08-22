@@ -492,8 +492,24 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
   reproduce 130/130 focused and 684/684 complete tests on Windows and cloud,
   pass all seven readiness checks, and keep runtime units parked on exact
   closure revision `daf6c5d`.
-- [ ] Pre-register and execute the first strategy candidate evaluation.
-  Profitability evidence, bounded forward-PAPER promotion and live-money
-  authorization remain separate gates.
+- [x] Freeze the first candidate before inspecting results: existing long-only
+  EMA 20/50, BTC-USD plus ETH-USD, native six-hour candles, next-Open causal
+  execution, exact historical range, conservative baseline/stress costs and no
+  optimization.
+- [x] Add a read-only Coinbase historical builder with exact continuous-grid
+  validation, canonical CSV/manifest bytes and per-file plus manifest SHA-256
+  evidence; independently reject any data/manifest drift before candidate lock.
+- [x] Validate pre-registration locally with 160/160 focused and 714/714 full
+  tests using injected provider responses and without downloading or evaluating
+  the historical dataset.
+- [ ] Reproduce focused/full Windows tests, commit/push the exact candidate-
+  preparation revision, then integrate and verify it on parked CPX22 without
+  activating any systemd unit.
+- [ ] Acquire the exact frozen BTC/ETH dataset and record its canonical manifest
+  SHA-256 without inspecting strategy performance.
+- [ ] Execute the immutable first-candidate Strategy Evaluation Protocol once,
+  classify its baseline/stress evidence, and prohibit post-result parameter
+  mutation. Profitability evidence, bounded forward-PAPER promotion and live-
+  money authorization remain separate gates.
 
 External notification delivery and any real execution capability remain deferred. The completed twelve-hour, 24-hour and three-day gates are bounded infrastructure-endurance evidence, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization. The clean three-day PASS and completed Strategy Evaluation Protocol cloud integration authorize pre-registration and offline evaluation of the first strategy candidate only.
