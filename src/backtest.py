@@ -12,6 +12,10 @@ class BacktestingEngine:
     Zero-cost defaults preserve the behavior of the original backtester.
     """
 
+    SAME_BAR_CLOSE = "same_bar_close"
+    NEXT_BAR_OPEN = "next_bar_open"
+    EXECUTION_TIMINGS = {SAME_BAR_CLOSE, NEXT_BAR_OPEN}
+
     def __init__(
         self,
         strategy_engine,
@@ -19,6 +23,7 @@ class BacktestingEngine:
         commission_rate=0.0,
         slippage_rate=0.0,
         spread_rate=0.0,
+        execution_timing=SAME_BAR_CLOSE,
         risk_engine=None,
         risk_stop_column="Stop",
         risk_target_column="Target",
@@ -43,6 +48,9 @@ class BacktestingEngine:
         self.spread_rate = self._validate_rate(
             spread_rate,
             "Spread rate",
+        )
+        self.execution_timing = self._validate_execution_timing(
+            execution_timing,
         )
 
         self._reset_state()
@@ -74,6 +82,16 @@ class BacktestingEngine:
 
         return value
 
+    @classmethod
+    def _validate_execution_timing(cls, value):
+        if not isinstance(value, str):
+            raise TypeError("Execution timing must be a string.")
+        value = value.strip()
+        if value not in cls.EXECUTION_TIMINGS:
+            allowed = ", ".join(sorted(cls.EXECUTION_TIMINGS))
+            raise ValueError(f"Execution timing must be one of: {allowed}.")
+        return value
+
     def _reset_state(self):
         self.capital = self.initial_capital
         self.shares = 0.0
@@ -82,6 +100,7 @@ class BacktestingEngine:
         self.entry_market_price = 0.0
         self.entry_commission = 0.0
         self.entry_index = None
+        self.entry_signal_index = None
         self.entry_risk_decision = None
         self.trade_history = []
         self.equity_curve = []
@@ -108,7 +127,14 @@ class BacktestingEngine:
             }
         )
 
-    def _buy(self, price, index, position_size=None, risk_decision=None):
+    def _buy(
+        self,
+        price,
+        index,
+        position_size=None,
+        risk_decision=None,
+        signal_index=None,
+    ):
         execution_price = self._calculate_execution_price(price, "buy")
 
         # All-in sizing is preserved when no Risk Engine is configured.
@@ -130,8 +156,9 @@ class BacktestingEngine:
         self.entry_price = execution_price
         self.entry_market_price = float(price)
         self.entry_index = index
+        self.entry_signal_index = signal_index
 
-    def _sell(self, price, index):
+    def _sell(self, price, index, signal_index=None):
         exit_market_price = float(price)
         execution_price = self._calculate_execution_price(
             exit_market_price,
@@ -159,6 +186,9 @@ class BacktestingEngine:
             {
                 "entry_index": self.entry_index,
                 "exit_index": index,
+                "entry_signal_index": self.entry_signal_index,
+                "exit_signal_index": signal_index,
+                "execution_timing": self.execution_timing,
                 "entry_market_price": self.entry_market_price,
                 "exit_market_price": exit_market_price,
                 "entry_price": self.entry_price,
@@ -200,9 +230,14 @@ class BacktestingEngine:
         self.entry_market_price = 0.0
         self.entry_commission = 0.0
         self.entry_index = None
+        self.entry_signal_index = None
         self.entry_risk_decision = None
 
     def _process_signals(self, data):
+        if self.execution_timing == self.NEXT_BAR_OPEN:
+            self._process_signals_next_bar_open(data)
+            return
+
         for index, row in data.iterrows():
             price = float(row["Close"])
             signal = int(row["Signal"])
@@ -215,7 +250,7 @@ class BacktestingEngine:
 
             if signal == 1 and self.position == 0:
                 if self.risk_engine is None:
-                    self._buy(price, index)
+                    self._buy(price, index, signal_index=index)
                 elif protection.status != "REJECT":
                     if self.risk_stop_column not in data.columns:
                         raise ValueError(
@@ -243,12 +278,87 @@ class BacktestingEngine:
                             price, index,
                             position_size=decision.position_size,
                             risk_decision=decision,
+                            signal_index=index,
                         )
 
             elif signal == -1 and self.position == 1:
-                self._sell(price, index)
+                self._sell(price, index, signal_index=index)
 
             self._record_equity(price, index)
+
+    @staticmethod
+    def _validate_next_bar_open_data(data):
+        if "Open" not in data.columns:
+            raise ValueError(
+                "Next-bar-open execution requires an 'Open' column."
+            )
+        open_prices = pd.to_numeric(data["Open"], errors="coerce")
+        if open_prices.isna().any() or (open_prices <= 0.0).any():
+            raise ValueError(
+                "Next-bar-open execution requires positive numeric Open prices."
+            )
+
+    def _process_signals_next_bar_open(self, data):
+        self._validate_next_bar_open_data(data)
+        pending = None
+
+        for index, row in data.iterrows():
+            open_price = float(row["Open"])
+            close_price = float(row["Close"])
+            protection = None
+            if self.risk_engine is not None:
+                protection = self.risk_engine.observe_equity(
+                    self._calculate_equity(open_price), index
+                )
+
+            if pending is not None:
+                signal, signal_index, signal_row = pending
+                if signal == 1 and self.position == 0:
+                    if self.risk_engine is None:
+                        self._buy(
+                            open_price,
+                            index,
+                            signal_index=signal_index,
+                        )
+                    elif protection.status != "REJECT":
+                        if self.risk_stop_column not in signal_row.index:
+                            raise ValueError(
+                                f"Risk-managed backtest requires '{self.risk_stop_column}' column."
+                            )
+                        stop_price = float(signal_row[self.risk_stop_column])
+                        target_price = None
+                        if self.risk_engine.min_reward_risk is not None:
+                            if self.risk_target_column not in signal_row.index:
+                                raise ValueError(
+                                    f"Reward/risk policy requires '{self.risk_target_column}' column."
+                                )
+                            target_price = float(signal_row[self.risk_target_column])
+                        elif self.risk_target_column in signal_row.index:
+                            target_price = float(signal_row[self.risk_target_column])
+
+                        decision = self.risk_engine.assess_long(
+                            equity=self._calculate_equity(open_price),
+                            entry_price=open_price,
+                            stop_price=stop_price,
+                            target_price=target_price,
+                        )
+                        if decision.status != "REJECT":
+                            self._buy(
+                                open_price,
+                                index,
+                                position_size=decision.position_size,
+                                risk_decision=decision,
+                                signal_index=signal_index,
+                            )
+                elif signal == -1 and self.position == 1:
+                    self._sell(
+                        open_price,
+                        index,
+                        signal_index=signal_index,
+                    )
+
+            self._record_equity(close_price, index)
+            pending = (int(row["Signal"]), index, row.copy())
 
     def _close_open_position(self, data):
         if self.position == 1:

@@ -7,6 +7,7 @@ import pytest
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "src")))
 
 from out_of_sample import ChronologicalDataSplitter, OutOfSampleValidator
+from backtest import BacktestingEngine
 
 
 class ThresholdStrategyEngine:
@@ -144,3 +145,25 @@ def test_oos_validator_rejects_invalid_execution_configuration():
             ThresholdStrategyEngine(),
             commission_rate=-0.001,
         )
+
+
+def test_oos_validator_propagates_canonical_next_bar_open_semantics():
+    data = market_data()
+    data["Open"] = data["Close"] + 10.0
+    validator = OutOfSampleValidator(
+        ThresholdStrategyEngine(),
+        execution_timing=" next_bar_open ",
+    )
+
+    result = validator.run(data)
+
+    assert validator.execution_timing == BacktestingEngine.NEXT_BAR_OPEN
+    for partition_name in ("in_sample", "out_of_sample"):
+        partition = result[partition_name]
+        trade = partition["trade_history"][0]
+        assert partition["execution_timing"] == "next_bar_open"
+        assert trade["entry_index"] != trade["entry_signal_index"]
+        assert trade["entry_market_price"] == pytest.approx(
+            data.loc[trade["entry_index"], "Open"]
+        )
+        assert partition["benchmark"]["entry_price_column"] == "Open"

@@ -486,6 +486,11 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
   `9a063fa`; reproduce 20/20 standalone, 84/84 focused and 663/663 complete
   cloud tests, pass all seven readiness checks, and keep every trading and
   monitoring unit parked.
+- [ ] Close Research Execution Timing Integrity v1 before inspecting a first
+  candidate result: require completed-close signals to execute only at the
+  following Open, retain signal/execution provenance, align the benchmark,
+  reproduce focused/full tests on Windows and cloud, and keep runtime units
+  parked.
 - [ ] Pre-register and execute the first strategy candidate evaluation.
   Profitability evidence, bounded forward-PAPER promotion and live-money
   authorization remain separate gates.

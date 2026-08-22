@@ -71,6 +71,7 @@ class OutOfSampleValidator:
         commission_rate=0.0,
         slippage_rate=0.0,
         spread_rate=0.0,
+        execution_timing=BacktestingEngine.SAME_BAR_CLOSE,
     ):
         self.strategy_engine = strategy_engine
         self.splitter = ChronologicalDataSplitter(in_sample_fraction)
@@ -78,15 +79,16 @@ class OutOfSampleValidator:
         self.commission_rate = commission_rate
         self.slippage_rate = slippage_rate
         self.spread_rate = spread_rate
-
         # Reuse existing engines as validation authorities for configuration.
-        BacktestingEngine(
+        validated_backtester = BacktestingEngine(
             strategy_engine,
             initial_capital=initial_capital,
             commission_rate=commission_rate,
             slippage_rate=slippage_rate,
             spread_rate=spread_rate,
+            execution_timing=execution_timing,
         )
+        self.execution_timing = validated_backtester.execution_timing
 
     def _evaluate_partition(self, data):
         backtester = BacktestingEngine(
@@ -95,6 +97,7 @@ class OutOfSampleValidator:
             commission_rate=self.commission_rate,
             slippage_rate=self.slippage_rate,
             spread_rate=self.spread_rate,
+            execution_timing=self.execution_timing,
         )
         backtester.run(data)
 
@@ -109,6 +112,11 @@ class OutOfSampleValidator:
             commission_rate=self.commission_rate,
             slippage_rate=self.slippage_rate,
             spread_rate=self.spread_rate,
+            entry_price_column=(
+                "Open"
+                if self.execution_timing == BacktestingEngine.NEXT_BAR_OPEN
+                else "Close"
+            ),
         ).run(data)
 
         comparison = compare_strategy_to_benchmark(
@@ -118,6 +126,7 @@ class OutOfSampleValidator:
 
         return {
             "initial_capital": backtester.initial_capital,
+            "execution_timing": backtester.execution_timing,
             "final_capital": backtester.capital,
             "trade_history": list(backtester.trade_history),
             "equity_curve": list(backtester.equity_curve),

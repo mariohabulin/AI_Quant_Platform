@@ -454,3 +454,151 @@ def test_zero_cost_configuration_preserves_legacy_trade_results():
     assert trade["gross_profit_loss"] == pytest.approx(1000.0)
     assert trade["total_costs"] == pytest.approx(0.0)
     assert trade["profit_loss"] == pytest.approx(1000.0)
+
+
+def test_default_execution_timing_preserves_same_bar_close_semantics():
+    class SignalStrategyEngine:
+        def run(self, data):
+            result = data.copy()
+            result["Signal"] = [1, 0, -1, 0]
+            return result
+
+    data = pd.DataFrame(
+        {
+            "Open": [100.0, 110.0, 80.0, 90.0],
+            "High": [106.0, 116.0, 86.0, 96.0],
+            "Low": [99.0, 109.0, 79.0, 89.0],
+            "Close": [105.0, 115.0, 85.0, 95.0],
+            "Volume": [1000.0] * 4,
+        }
+    )
+
+    engine = BacktestingEngine(SignalStrategyEngine())
+    engine.run(data)
+
+    trade = engine.trade_history[0]
+    assert trade["execution_timing"] == "same_bar_close"
+    assert trade["entry_index"] == trade["entry_signal_index"] == 0
+    assert trade["exit_index"] == trade["exit_signal_index"] == 2
+    assert trade["entry_market_price"] == 105.0
+    assert trade["exit_market_price"] == 85.0
+
+
+def test_next_bar_open_executes_only_after_the_signal_bar_closes():
+    class SignalStrategyEngine:
+        def run(self, data):
+            result = data.copy()
+            result["Signal"] = [1, 0, -1, 0]
+            return result
+
+    data = pd.DataFrame(
+        {
+            "Open": [100.0, 110.0, 80.0, 90.0],
+            "High": [106.0, 116.0, 86.0, 96.0],
+            "Low": [99.0, 109.0, 79.0, 89.0],
+            "Close": [105.0, 115.0, 85.0, 95.0],
+            "Volume": [1000.0] * 4,
+        }
+    )
+
+    engine = BacktestingEngine(
+        SignalStrategyEngine(),
+        execution_timing=BacktestingEngine.NEXT_BAR_OPEN,
+    )
+    engine.run(data)
+
+    trade = engine.trade_history[0]
+    assert trade["execution_timing"] == "next_bar_open"
+    assert trade["entry_signal_index"] == 0
+    assert trade["entry_index"] == 1
+    assert trade["entry_market_price"] == 110.0
+    assert trade["exit_signal_index"] == 2
+    assert trade["exit_index"] == 3
+    assert trade["exit_market_price"] == 90.0
+    assert engine.capital == pytest.approx(10000.0 * 90.0 / 110.0)
+
+
+def test_next_bar_open_never_executes_a_signal_from_the_final_bar():
+    class FinalBarSignalEngine:
+        def run(self, data):
+            result = data.copy()
+            result["Signal"] = [0, 1]
+            return result
+
+    data = pd.DataFrame(
+        {
+            "Open": [100.0, 110.0],
+            "Close": [105.0, 115.0],
+        }
+    )
+    engine = BacktestingEngine(
+        FinalBarSignalEngine(),
+        execution_timing=BacktestingEngine.NEXT_BAR_OPEN,
+    )
+
+    engine.run(data)
+
+    assert engine.trade_history == []
+    assert engine.position == 0
+    assert engine.capital == 10000.0
+
+
+def test_next_bar_open_forced_close_records_no_synthetic_exit_signal():
+    class OpenPositionEngine:
+        def run(self, data):
+            result = data.copy()
+            result["Signal"] = [1, 0, 0]
+            return result
+
+    data = pd.DataFrame(
+        {
+            "Open": [100.0, 110.0, 120.0],
+            "Close": [105.0, 115.0, 125.0],
+        }
+    )
+    engine = BacktestingEngine(
+        OpenPositionEngine(),
+        execution_timing=BacktestingEngine.NEXT_BAR_OPEN,
+    )
+
+    engine.run(data)
+
+    trade = engine.trade_history[0]
+    assert trade["entry_signal_index"] == 0
+    assert trade["entry_index"] == 1
+    assert trade["exit_signal_index"] is None
+    assert trade["exit_index"] == 2
+    assert trade["exit_market_price"] == 125.0
+
+
+@pytest.mark.parametrize(
+    "execution_timing, error",
+    [(42, TypeError), ("future_close", ValueError)],
+)
+def test_backtesting_engine_rejects_invalid_execution_timing(
+    execution_timing,
+    error,
+):
+    with pytest.raises(error, match="Execution timing"):
+        BacktestingEngine(
+            DummyStrategyEngine(),
+            execution_timing=execution_timing,
+        )
+
+
+@pytest.mark.parametrize(
+    "data",
+    [
+        pd.DataFrame({"Close": [100.0, 101.0]}),
+        pd.DataFrame({"Open": [100.0, 0.0], "Close": [100.0, 101.0]}),
+        pd.DataFrame({"Open": [100.0, "bad"], "Close": [100.0, 101.0]}),
+    ],
+)
+def test_next_bar_open_requires_positive_numeric_open_prices(data):
+    engine = BacktestingEngine(
+        DummyStrategyEngine(),
+        execution_timing=BacktestingEngine.NEXT_BAR_OPEN,
+    )
+
+    with pytest.raises(ValueError, match="Open"):
+        engine.run(data)

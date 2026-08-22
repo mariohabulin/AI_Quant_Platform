@@ -10,11 +10,18 @@ class BuyAndHoldBenchmark:
         commission_rate=0.0,
         slippage_rate=0.0,
         spread_rate=0.0,
+        entry_price_column="Close",
     ):
         self.initial_capital = self._validate_positive_number(initial_capital, "Initial capital")
         self.commission_rate = self._validate_rate(commission_rate, "Commission rate")
         self.slippage_rate = self._validate_rate(slippage_rate, "Slippage rate")
         self.spread_rate = self._validate_rate(spread_rate, "Spread rate")
+        if not isinstance(entry_price_column, str):
+            raise TypeError("Benchmark entry price column must be a string.")
+        entry_price_column = entry_price_column.strip()
+        if entry_price_column not in {"Open", "Close"}:
+            raise ValueError("Benchmark entry price column must be Open or Close.")
+        self.entry_price_column = entry_price_column
 
     @staticmethod
     def _validate_positive_number(value, name):
@@ -49,14 +56,23 @@ class BuyAndHoldBenchmark:
             raise TypeError("Input data must be a pandas DataFrame.")
         if data.empty:
             raise ValueError("Input DataFrame cannot be empty.")
-        if "Close" not in data.columns:
-            raise ValueError("Input DataFrame must contain a Close column.")
+        required = {"Close", self.entry_price_column}
+        missing = sorted(required - set(data.columns))
+        if missing:
+            raise ValueError(
+                f"Input DataFrame is missing required price columns: {missing}."
+            )
 
         close = pd.to_numeric(data["Close"], errors="coerce")
         if close.isna().any() or (close <= 0).any():
             raise ValueError("Close prices must be positive numeric values.")
+        entry = pd.to_numeric(data[self.entry_price_column], errors="coerce")
+        if entry.isna().any() or (entry <= 0).any():
+            raise ValueError(
+                f"{self.entry_price_column} prices must be positive numeric values."
+            )
 
-        entry_market_price = float(close.iloc[0])
+        entry_market_price = float(entry.iloc[0])
         exit_market_price = float(close.iloc[-1])
         entry_price = self._execution_price(entry_market_price, "buy")
         exit_price = self._execution_price(exit_market_price, "sell")
@@ -80,6 +96,7 @@ class BuyAndHoldBenchmark:
 
         return {
             "benchmark": "buy_and_hold",
+            "entry_price_column": self.entry_price_column,
             "initial_capital": self.initial_capital,
             "final_capital": final_capital,
             "total_return": total_return,

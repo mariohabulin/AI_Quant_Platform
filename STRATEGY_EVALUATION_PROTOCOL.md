@@ -9,10 +9,10 @@ infrastructure gates.
 
 ## Activation boundary
 
-The protocol may be implemented and reviewed while the three-day cloud PAPER
-soak is running. Do not promote or start the first real candidate evaluation
-until that soak closes with a complete clean PASS. A `PAPER_CANDIDATE` result
-then authorizes only a separately reviewed bounded forward-PAPER experiment.
+The three-day cloud PAPER soak and protocol cloud integration are closed as
+PASS. Offline pre-registration and evaluation of the first real candidate are
+therefore authorized. A `PAPER_CANDIDATE` result authorizes only a separately
+reviewed bounded forward-PAPER experiment.
 
 ## Pre-registration
 
@@ -30,6 +30,24 @@ Freeze these fields before inspecting final evaluation results:
 
 Changing one of these fields creates a new candidate. It is not a continuation
 of the old experiment.
+
+## Execution timing integrity
+
+Protocol v1 freezes these attainable execution semantics:
+
+- a signal may observe a completed bar only after its close
+- the signal executes, if actionable, at the following bar's open
+- trade evidence retains both the signal-bar index and execution-bar index
+- a signal from the final dataset bar is not executed because no following open
+  exists
+- an open terminal position is force-closed at the final bar's close for
+  deterministic reporting, without inventing an exit signal
+- buy-and-hold enters at the first bar's open and exits at the final close
+
+The lower-level Backtesting Engine retains its legacy same-close default for
+backward compatibility. The Strategy Evaluation configuration rejects that
+mode: baseline and stressed evidence must both use `next_bar_open`, propagated
+unchanged through OOS, walk-forward, pipeline and multi-asset evaluation.
 
 ## Initial promotion gates
 
@@ -93,6 +111,8 @@ configuration = StrategyEvaluationConfig(
         slippage_rate=0.001,
         spread_rate=0.002,
     ),
+    execution_timing="next_bar_open",
+    terminal_position_policy="force_close_at_final_close",
 )
 
 report = StrategyEvaluationProtocol(

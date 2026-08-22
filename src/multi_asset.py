@@ -1,6 +1,7 @@
 
 import pandas as pd
 
+from backtest import BacktestingEngine
 from validation_pipeline import StrategyValidationPipeline, ValidationPolicy
 
 
@@ -78,6 +79,7 @@ class MultiAssetValidator:
         min_assets=2,
         min_validated_asset_rate=0.60,
         max_rejected_asset_rate=0.20,
+        execution_timing=BacktestingEngine.SAME_BAR_CLOSE,
     ):
         self.strategy_engine = strategy_engine
         self.pipeline_kwargs = dict(
@@ -88,6 +90,7 @@ class MultiAssetValidator:
             simulations=simulations, confidence_level=confidence_level,
             random_seed=random_seed,
             min_positive_walk_forward_excess_rate=min_positive_walk_forward_excess_rate,
+            execution_timing=execution_timing,
         )
         self.policy = MultiAssetValidationPolicy(
             min_assets=min_assets,

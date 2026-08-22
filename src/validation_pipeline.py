@@ -1,6 +1,7 @@
 from out_of_sample import OutOfSampleValidator
 from walk_forward import WalkForwardValidator
 from falsification import StatisticalFalsificationEngine
+from backtest import BacktestingEngine
 
 
 class ValidationPolicy:
@@ -81,6 +82,7 @@ class StrategyValidationPipeline:
         confidence_level=0.95,
         random_seed=42,
         min_positive_walk_forward_excess_rate=0.60,
+        execution_timing=BacktestingEngine.SAME_BAR_CLOSE,
     ):
         self.strategy_engine = strategy_engine
         self.oos_validator = OutOfSampleValidator(
@@ -90,6 +92,7 @@ class StrategyValidationPipeline:
             commission_rate=commission_rate,
             slippage_rate=slippage_rate,
             spread_rate=spread_rate,
+            execution_timing=execution_timing,
         )
         self.walk_forward_validator = WalkForwardValidator(
             strategy_engine,
@@ -101,6 +104,7 @@ class StrategyValidationPipeline:
             commission_rate=commission_rate,
             slippage_rate=slippage_rate,
             spread_rate=spread_rate,
+            execution_timing=execution_timing,
         )
         self.falsification_engine = StatisticalFalsificationEngine(
             simulations=simulations,

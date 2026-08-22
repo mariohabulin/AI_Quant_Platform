@@ -145,3 +145,23 @@ def test_validator_rejects_invalid_execution_configuration():
             2,
             commission_rate=-0.001,
         )
+
+
+def test_validator_propagates_next_bar_open_to_every_window_partition():
+    data = market_data(12)
+    data["Open"] = data["Close"] + 10.0
+    validator = WalkForwardValidator(
+        ThresholdStrategyEngine(),
+        6,
+        2,
+        execution_timing=" next_bar_open ",
+    )
+
+    result = validator.run(data)
+
+    assert validator.execution_timing == "next_bar_open"
+    for window in result["windows"]:
+        for partition_name in ("train", "test"):
+            partition = window[partition_name]
+            assert partition["execution_timing"] == "next_bar_open"
+            assert partition["benchmark"]["entry_price_column"] == "Open"

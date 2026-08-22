@@ -163,6 +163,8 @@ class StrategyEvaluationConfig:
     min_walk_forward_windows: int = 5
     min_unseen_trades_per_asset: int = 30
     max_oos_drawdown_percent: float = 20.0
+    execution_timing: str = "next_bar_open"
+    terminal_position_policy: str = "force_close_at_final_close"
 
     def __post_init__(self):
         for field_name, display_name in (
@@ -267,6 +269,24 @@ class StrategyEvaluationConfig:
             )
         object.__setattr__(self, "max_oos_drawdown_percent", max_drawdown)
 
+        if not isinstance(self.execution_timing, str):
+            raise TypeError("Execution timing must be a string.")
+        execution_timing = self.execution_timing.strip()
+        if execution_timing != "next_bar_open":
+            raise ValueError(
+                "Strategy Evaluation Protocol v1 requires next_bar_open execution."
+            )
+        object.__setattr__(self, "execution_timing", execution_timing)
+
+        if not isinstance(self.terminal_position_policy, str):
+            raise TypeError("Terminal position policy must be a string.")
+        terminal_policy = self.terminal_position_policy.strip()
+        if terminal_policy != "force_close_at_final_close":
+            raise ValueError(
+                "Strategy Evaluation Protocol v1 requires force_close_at_final_close."
+            )
+        object.__setattr__(self, "terminal_position_policy", terminal_policy)
+
     def validator_kwargs(self, costs):
         return {
             "train_size": self.train_size,
@@ -287,6 +307,7 @@ class StrategyEvaluationConfig:
             "min_assets": self.min_assets,
             "min_validated_asset_rate": self.min_validated_asset_rate,
             "max_rejected_asset_rate": self.max_rejected_asset_rate,
+            "execution_timing": self.execution_timing,
         }
 
     def as_dict(self):
@@ -309,6 +330,10 @@ class StrategyEvaluationConfig:
             "min_walk_forward_windows": self.min_walk_forward_windows,
             "min_unseen_trades_per_asset": self.min_unseen_trades_per_asset,
             "max_oos_drawdown_percent": self.max_oos_drawdown_percent,
+            "execution_timing": self.execution_timing,
+            "signal_observation": "bar_close",
+            "terminal_position_policy": self.terminal_position_policy,
+            "benchmark_entry_timing": "first_bar_open",
             "baseline_costs": self.baseline_costs.as_dict(),
             "stressed_costs": self.stressed_costs.as_dict(),
         }
@@ -557,6 +582,12 @@ class StrategyEvaluationProtocol:
         report["execution_assumptions"] = {
             "baseline": self.configuration.baseline_costs.as_dict(),
             "stress": self.configuration.stressed_costs.as_dict(),
+            "signal_observation": "bar_close",
+            "order_execution": self.configuration.execution_timing,
+            "terminal_position_policy": (
+                self.configuration.terminal_position_policy
+            ),
+            "benchmark_entry_timing": "first_bar_open",
         }
         report["baseline_evaluation"] = baseline
         report["cost_stress_evaluation"] = stressed

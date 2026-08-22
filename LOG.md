@@ -1617,3 +1617,25 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
   authorized activity is pre-registration and offline evaluation of the first
   strategy candidate. `PAPER_CANDIDATE` remains only eligibility for a separate
   bounded forward-PAPER gate and cannot authorize live execution.
+
+## 2026-08-22 — Research Execution Timing Integrity v1 (Local Preparation)
+- Architecture review before the first candidate exposed look-ahead execution
+  semantics: a signal derived from the current completed Close could receive a
+  fill at that same Close even though the signal is known only afterward.
+- Added explicit `same_bar_close` and `next_bar_open` modes. The former remains
+  the backward-compatible engine default; Strategy Evaluation Protocol v1
+  permits only the causal next-open mode.
+- Next-open execution retains separate signal and execution indexes, ignores a
+  terminal-bar signal without a following Open, values each execution bar at
+  its Close and force-closes any remaining terminal position at the final Close
+  without inventing an exit signal.
+- Aligned buy-and-hold evidence to first-bar Open entry/final-bar Close exit and
+  propagated one canonical timing value through OOS, walk-forward, validation
+  pipeline and multi-asset passes under both baseline and stressed costs.
+- Added report/configuration evidence for signal observation, order execution,
+  terminal-position policy and benchmark entry timing. No candidate identity,
+  parameter, dataset or result has been selected or inspected.
+- TDD and integration evidence pass 130/130 focused research-stack tests and
+  the full 684/684 suite locally. Divergent Open/Close manual checks, Python
+  compilation and `git diff --check` also pass. Windows/cloud integration and
+  Git closure remain pending; all live-money capability remains absent.

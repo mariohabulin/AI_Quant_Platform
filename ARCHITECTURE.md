@@ -645,6 +645,25 @@ cost-stress profile may not lower commission, slippage or spread, and at least
 one component must be strictly higher. Both passes independently retain each
 asset's OOS, benchmark, walk-forward and statistical-falsification evidence.
 
+Research execution timing is also an explicit integrity boundary. A strategy
+signal produced from a completed bar may observe that bar's close, but the
+formal protocol may execute it only at the following bar's open. The execution
+bar and originating signal bar are both retained in trade evidence. A signal
+from the final dataset bar has no attainable next-bar price and is therefore
+never executed. An already-open terminal position is closed at the final close
+under the frozen `force_close_at_final_close` reporting policy, with no
+synthetic exit signal attributed to the strategy.
+
+The general Backtesting Engine keeps `same_bar_close` as its legacy default so
+existing replay and paper-consistency contracts do not change implicitly.
+Strategy Evaluation Protocol v1 rejects that mode and requires
+`next_bar_open`. Its buy-and-hold benchmark enters at the first bar's open and
+exits at the final close. The same timing choice is propagated unchanged
+through OOS, walk-forward, validation-pipeline and multi-asset layers for both
+baseline and stressed-cost passes. This prevents final-close knowledge from
+being converted into an unattainable fill while preserving explicit backward
+compatibility outside governed candidate evaluation.
+
 The initial configurable promotion gates are:
 
 - baseline multi-asset classification must be `VALIDATED`

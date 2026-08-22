@@ -566,3 +566,33 @@ repository is clean on `9a063fa`. Strategy Evaluation Protocol v1 cloud
 integration is closed as PASS. The next authorized action is pre-registration
 and offline execution of the first strategy candidate evaluation. No protocol
 result can authorize live execution.
+
+### Research Execution Timing Integrity v1 — LOCAL PREPARATION
+
+The first candidate has not been pre-registered or evaluated. Architecture
+review found that the legacy Backtesting Engine calculates a signal from the
+current completed close and, by default, can fill on that same close. Such a
+fill is not attainable after the close becomes known and could manufacture an
+optimistic research edge.
+
+The candidate protocol now requires causal `next_bar_open` execution while the
+general Backtesting Engine keeps `same_bar_close` only as an explicit legacy
+default. Each completed trade records its originating signal indexes separately
+from its entry/exit execution indexes. Final-bar signals are never executed;
+open terminal positions retain the frozen `force_close_at_final_close` policy
+without receiving a synthetic strategy exit signal. The benchmark is aligned
+to first-bar Open entry and final-bar Close exit.
+
+The timing choice flows through OOS, walk-forward, Strategy Validation and
+Multi-Asset Validation for both baseline and cost-stress passes. Protocol v1
+rejects any other execution timing or terminal policy and includes all
+assumptions in its report. The change does not alter Strategy logic, candidate
+parameters, Risk policy, provider/runtime behavior, PaperBroker, systemd or the
+structural real-execution lock.
+
+Local evidence passes 130/130 focused research-stack tests and the complete
+684/684 suite, plus direct divergent Open/Close execution checks and clean
+syntax/diff validation. Windows reproduction, Git integration and cloud
+non-activating verification remain required before candidate pre-registration.
+The next research step after closure is an immutable first-candidate/data/cost
+declaration, not parameter optimization.

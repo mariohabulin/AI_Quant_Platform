@@ -93,3 +93,50 @@ def test_compare_rejects_invalid_inputs():
         compare_strategy_to_benchmark(11000, [])
     with pytest.raises(ValueError, match="required fields"):
         compare_strategy_to_benchmark(11000, {})
+
+
+def test_benchmark_can_enter_at_first_open_and_exit_at_final_close():
+    data = pd.DataFrame(
+        {
+            "Open": [90.0, 100.0],
+            "Close": [100.0, 110.0],
+        }
+    )
+
+    result = BuyAndHoldBenchmark(
+        initial_capital=10000.0,
+        entry_price_column="Open",
+    ).run(data)
+
+    assert result["entry_price_column"] == "Open"
+    assert result["entry_market_price"] == 90.0
+    assert result["exit_market_price"] == 110.0
+    assert result["final_capital"] == pytest.approx(10000.0 * 110.0 / 90.0)
+
+
+@pytest.mark.parametrize(
+    "entry_price_column, error",
+    [(42, TypeError), ("High", ValueError)],
+)
+def test_benchmark_rejects_invalid_entry_price_column(
+    entry_price_column,
+    error,
+):
+    with pytest.raises(error, match="entry price column"):
+        BuyAndHoldBenchmark(entry_price_column=entry_price_column)
+
+
+def test_open_entry_benchmark_requires_valid_open_prices():
+    engine = BuyAndHoldBenchmark(entry_price_column="Open")
+
+    with pytest.raises(ValueError, match="required price columns"):
+        engine.run(market_data())
+    with pytest.raises(ValueError, match="Open prices"):
+        engine.run(
+            pd.DataFrame(
+                {
+                    "Open": [90.0, 0.0],
+                    "Close": [100.0, 110.0],
+                }
+            )
+        )

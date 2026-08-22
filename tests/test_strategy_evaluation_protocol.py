@@ -187,6 +187,43 @@ def test_config_blocks_overlapping_walk_forward_test_windows():
         config(step_size=10)
 
 
+def test_config_freezes_attainable_execution_and_terminal_semantics():
+    frozen = config(execution_timing=" next_bar_open ")
+
+    assert frozen.execution_timing == "next_bar_open"
+    assert frozen.terminal_position_policy == "force_close_at_final_close"
+    assert frozen.validator_kwargs(frozen.baseline_costs)[
+        "execution_timing"
+    ] == "next_bar_open"
+    assert frozen.as_dict()["signal_observation"] == "bar_close"
+    assert frozen.as_dict()["benchmark_entry_timing"] == "first_bar_open"
+
+
+@pytest.mark.parametrize(
+    "overrides, error, message",
+    [
+        ({"execution_timing": 42}, TypeError, "Execution timing"),
+        (
+            {"execution_timing": "same_bar_close"},
+            ValueError,
+            "requires next_bar_open",
+        ),
+        (
+            {"terminal_position_policy": "leave_open"},
+            ValueError,
+            "requires force_close_at_final_close",
+        ),
+    ],
+)
+def test_config_rejects_unattainable_or_ambiguous_execution_semantics(
+    overrides,
+    error,
+    message,
+):
+    with pytest.raises(error, match=message):
+        config(**overrides)
+
+
 def test_policy_promotes_only_complete_baseline_and_stress_evidence():
     report = StrategyEvaluationPolicy(config()).review(
         candidate(),
@@ -324,8 +361,19 @@ def test_protocol_runs_same_frozen_pipeline_under_baseline_and_stress_costs(monk
     assert calls[0]["commission_rate"] == pytest.approx(0.001)
     assert calls[1]["commission_rate"] == pytest.approx(0.002)
     assert calls[0]["train_size"] == calls[1]["train_size"] == 60
+    assert calls[0]["execution_timing"] == calls[1]["execution_timing"] == (
+        "next_bar_open"
+    )
     assert report["execution_assumptions"]["baseline"]["label"] == "reviewed_baseline"
     assert report["execution_assumptions"]["stress"]["label"] == "two_x_stress"
+    assert report["execution_assumptions"]["signal_observation"] == "bar_close"
+    assert report["execution_assumptions"]["order_execution"] == "next_bar_open"
+    assert report["execution_assumptions"]["terminal_position_policy"] == (
+        "force_close_at_final_close"
+    )
+    assert report["execution_assumptions"]["benchmark_entry_timing"] == (
+        "first_bar_open"
+    )
 
 
 def test_protocol_integrates_with_existing_multi_asset_validation_stack():

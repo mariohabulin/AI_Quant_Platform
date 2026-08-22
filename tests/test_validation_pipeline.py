@@ -151,3 +151,24 @@ def test_pipeline_rejects_data_too_short_for_walk_forward():
     )
     with pytest.raises(ValueError, match="at least 30 rows"):
         pipeline.run(market_data(25))
+
+
+def test_pipeline_propagates_next_bar_open_through_all_validation_layers():
+    result = StrategyValidationPipeline(
+        RepeatedTradeEngine(),
+        train_size=20,
+        test_size=12,
+        step_size=12,
+        simulations=100,
+        execution_timing="next_bar_open",
+    ).run(market_data())
+
+    assert result["out_of_sample"]["in_sample"]["execution_timing"] == (
+        "next_bar_open"
+    )
+    assert result["out_of_sample"]["out_of_sample"]["benchmark"][
+        "entry_price_column"
+    ] == "Open"
+    for window in result["walk_forward"]["windows"]:
+        assert window["train"]["execution_timing"] == "next_bar_open"
+        assert window["test"]["execution_timing"] == "next_bar_open"

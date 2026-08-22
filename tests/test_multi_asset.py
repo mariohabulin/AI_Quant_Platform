@@ -110,3 +110,21 @@ def test_validator_does_not_mutate_input_frames():
     MultiAssetValidator(RepeatedTradeEngine(), 20, 12, simulations=100).run(assets)
     for name in assets:
         pd.testing.assert_frame_equal(assets[name], originals[name])
+
+
+def test_validator_propagates_next_bar_open_to_every_asset():
+    result = MultiAssetValidator(
+        RepeatedTradeEngine(),
+        20,
+        12,
+        simulations=100,
+        execution_timing="next_bar_open",
+    ).run({"A": market_data(), "B": market_data(slope=0.6)})
+
+    for asset in result["assets"].values():
+        assert asset["out_of_sample"]["out_of_sample"][
+            "execution_timing"
+        ] == "next_bar_open"
+        assert asset["walk_forward"]["windows"][0]["test"][
+            "execution_timing"
+        ] == "next_bar_open"

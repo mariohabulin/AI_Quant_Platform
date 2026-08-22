@@ -1,5 +1,6 @@
 import pandas as pd
 
+from backtest import BacktestingEngine
 from out_of_sample import OutOfSampleValidator
 
 
@@ -89,6 +90,7 @@ class WalkForwardValidator:
         commission_rate=0.0,
         slippage_rate=0.0,
         spread_rate=0.0,
+        execution_timing=BacktestingEngine.SAME_BAR_CLOSE,
     ):
         self.strategy_engine = strategy_engine
         self.splitter = WalkForwardSplitter(train_size, test_size, step_size, expanding)
@@ -96,7 +98,6 @@ class WalkForwardValidator:
         self.commission_rate = commission_rate
         self.slippage_rate = slippage_rate
         self.spread_rate = spread_rate
-
         # Reuse the existing OOS validator as the authority for execution configuration.
         self._partition_validator = OutOfSampleValidator(
             strategy_engine,
@@ -104,7 +105,9 @@ class WalkForwardValidator:
             commission_rate=commission_rate,
             slippage_rate=slippage_rate,
             spread_rate=spread_rate,
+            execution_timing=execution_timing,
         )
+        self.execution_timing = self._partition_validator.execution_timing
 
     def _evaluate(self, data):
         return self._partition_validator._evaluate_partition(data)
