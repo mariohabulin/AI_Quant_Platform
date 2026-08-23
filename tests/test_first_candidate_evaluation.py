@@ -5,6 +5,8 @@ from pathlib import Path
 import sys
 from types import SimpleNamespace
 
+import numpy as np
+import pandas as pd
 import pytest
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "src")))
@@ -200,6 +202,61 @@ def test_runner_rejects_non_finite_evidence_before_creating_output(tmp_path):
     )
 
     with pytest.raises(ValueError, match="Out of range float values"):
+        runner.run(tmp_path / "manifest.json")
+
+    assert not (tmp_path / EVALUATION_DIRECTORY_NAME).exists()
+    assert not (tmp_path / STAGING_DIRECTORY_NAME).exists()
+
+
+def test_runner_canonicalizes_timestamp_and_numpy_evidence(tmp_path):
+    preregistration = FakePreregistration()
+    timestamp = pd.Timestamp("2024-01-01T06:00:00Z")
+    RecordingProtocol.result = protocol_report()
+    RecordingProtocol.result["baseline_evaluation"] = {
+        "assets": {
+            "BTC-USD": {
+                "out_of_sample": {
+                    "in_sample": {
+                        "benchmark": {
+                            "entry_index": timestamp,
+                            "trade_count": np.int64(3),
+                            "excess_return": np.float32(1.25),
+                            "valid": np.bool_(True),
+                        }
+                    }
+                }
+            }
+        }
+    }
+    runner = FirstCandidateEvaluationRunner(
+        preregistration=preregistration,
+        protocol_factory=RecordingProtocol,
+    )
+
+    recorded = runner.run(tmp_path / "manifest.json")
+    payload = json.loads(recorded.report_path.read_bytes())
+    benchmark = payload["protocol_report"]["baseline_evaluation"]["assets"][
+        "BTC-USD"
+    ]["out_of_sample"]["in_sample"]["benchmark"]
+
+    assert benchmark == {
+        "entry_index": "2024-01-01T06:00:00+00:00",
+        "excess_return": 1.25,
+        "trade_count": 3,
+        "valid": True,
+    }
+
+
+def test_runner_rejects_missing_timestamp_before_creating_output(tmp_path):
+    preregistration = FakePreregistration()
+    RecordingProtocol.result = protocol_report()
+    RecordingProtocol.result["baseline_evaluation"]["entry_index"] = pd.NaT
+    runner = FirstCandidateEvaluationRunner(
+        preregistration=preregistration,
+        protocol_factory=RecordingProtocol,
+    )
+
+    with pytest.raises(ValueError, match="Timestamp evidence must not be missing"):
         runner.run(tmp_path / "manifest.json")
 
     assert not (tmp_path / EVALUATION_DIRECTORY_NAME).exists()

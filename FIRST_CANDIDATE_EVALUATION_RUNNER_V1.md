@@ -23,10 +23,13 @@ the full suite, code review, Git commit and Git push are complete.
    engine and configuration.
 5. Run the protocol once. The protocol itself owns both baseline and stressed
    evaluation, all statistical evidence and the promotion decision.
-6. Reject an unknown outcome, missing baseline/stress evidence, any report that
-   authorizes live execution, or any non-finite JSON value.
-7. Write canonical JSON and its SHA-256 into a staging directory.
-8. Rename the complete staging directory to `evaluation_v1`; existing evidence
+6. Normalize expected Pandas/NumPy timestamps, timedeltas, arrays and scalar
+   values into deterministic JSON primitives.
+7. Reject an unknown outcome, missing baseline/stress evidence, any report that
+   authorizes live execution, any missing time value, or any non-finite JSON
+   value.
+8. Write canonical JSON and its SHA-256 into a staging directory.
+9. Rename the complete staging directory to `evaluation_v1`; existing evidence
    is never overwritten.
 
 No partial evaluation result is printed. The CLI prints only a persisted
@@ -75,3 +78,11 @@ python src/first_candidate_evaluation.py --manifest data/research/first_candidat
 
 The command has no output-directory override. This deliberately prevents a
 second evaluation from bypassing the fixed evidence directory.
+
+## Recovery boundary
+
+A failed attempt that prints or persists no strategy result may be recovered
+only after its technical cause is documented, regression-tested, reviewed,
+committed and pushed. Recovery must reuse the exact frozen candidate, manifest,
+configuration and random seed. It is not an authorization to modify the
+hypothesis or tune parameters after execution.
