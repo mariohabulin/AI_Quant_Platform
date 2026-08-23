@@ -23,6 +23,12 @@ try:
     )
     from multi_asset import MultiAssetValidator
     from research_evidence import canonical_json_bytes
+    from calendar_validation import CALENDAR_WINDOWING, CalendarMultiAssetValidator
+    from sparse_coinbase_research_dataset import (
+        SPARSE_NATIVE_GAP_POLICY,
+        SparseCoinbaseResearchDatasetBuilder,
+        SparseCoinbaseResearchDatasetLock,
+    )
 except ImportError:  # package import when src is not placed directly on sys.path
     from src.coinbase_research_dataset import (
         FIRST_CANDIDATE_DATASET_CONTRACT,
@@ -40,9 +46,18 @@ except ImportError:  # package import when src is not placed directly on sys.pat
     )
     from src.multi_asset import MultiAssetValidator
     from src.research_evidence import canonical_json_bytes
+    from src.calendar_validation import (
+        CALENDAR_WINDOWING,
+        CalendarMultiAssetValidator,
+    )
+    from src.sparse_coinbase_research_dataset import (
+        SPARSE_NATIVE_GAP_POLICY,
+        SparseCoinbaseResearchDatasetBuilder,
+        SparseCoinbaseResearchDatasetLock,
+    )
 
 
-STUDY_SCHEMA_VERSION = 1
+STUDY_SCHEMA_VERSION = 2
 STUDY_ID = "ema-20-50-btc-eth-timeframe-sensitivity-v1"
 TIMEFRAME_ORDER = ("1h", "6h", "1d")
 BASELINE_REFERENCE_TIMEFRAME = "6h"
@@ -113,10 +128,16 @@ class TimeframeStudySpec:
 
 
 def _study_contract(timeframe, granularity_seconds):
+    version = (
+        "timeframe-study-v1-gap-aware-v2"
+        if timeframe == "1h"
+        else "timeframe-study-v1"
+    )
+    observation = "observed-native" if timeframe == "1h" else "native"
     return CoinbaseResearchDatasetContract(
         dataset_id=(
-            "coinbase-exchange-btc-eth-native-"
-            f"{timeframe}-20190101-20260801-timeframe-study-v1"
+            f"coinbase-exchange-btc-eth-{observation}-"
+            f"{timeframe}-20190101-20260801-{version}"
         ),
         products=("BTC-USD", "ETH-USD"),
         granularity_seconds=granularity_seconds,
@@ -188,6 +209,8 @@ def study_declaration():
             "Use equal 720-day train and 180-day non-overlapping test durations; "
             "report fixed-order evidence without ranking or winner selection."
         ),
+        "one_hour_gap_policy": dict(SPARSE_NATIVE_GAP_POLICY),
+        "one_hour_windowing": CALENDAR_WINDOWING,
         "development_data_only": True,
         "candidate_v1_reopened": False,
         "automatic_timeframe_selection": False,
@@ -204,7 +227,7 @@ def study_declaration():
 def acquire_timeframe_dataset(
     timeframe,
     output_directory,
-    builder_factory=CoinbaseResearchDatasetBuilder,
+    builder_factory=None,
 ):
     if timeframe == BASELINE_REFERENCE_TIMEFRAME:
         raise ValueError(
@@ -212,6 +235,12 @@ def acquire_timeframe_dataset(
         )
     if timeframe not in EXPLORATORY_TIMEFRAMES:
         raise ValueError("Unsupported study timeframe.")
+    if builder_factory is None:
+        builder_factory = (
+            SparseCoinbaseResearchDatasetBuilder
+            if timeframe == "1h"
+            else CoinbaseResearchDatasetBuilder
+        )
     builder = builder_factory(TIMEFRAME_SPECS[timeframe].contract)
     return builder.build(output_directory, overwrite=False)
 
@@ -249,7 +278,9 @@ class TimeframeSensitivityStudyRunner:
         output_root=DEFAULT_OUTPUT_ROOT,
         reference_report_sha256=FIRST_CANDIDATE_REPORT_SHA256,
         dataset_locker_factory=CoinbaseResearchDatasetLock,
+        sparse_dataset_locker_factory=None,
         validator_factory=MultiAssetValidator,
+        calendar_validator_factory=None,
         strategy_engine_factory=timeframe_study_strategy_engine,
     ):
         self.output_root = Path(output_root)
@@ -257,7 +288,21 @@ class TimeframeSensitivityStudyRunner:
         self.staging_directory = self.output_root / STAGING_DIRECTORY_NAME
         self.reference_report_sha256 = reference_report_sha256
         self.dataset_locker_factory = dataset_locker_factory
+        self.sparse_dataset_locker_factory = sparse_dataset_locker_factory
+        if self.sparse_dataset_locker_factory is None:
+            self.sparse_dataset_locker_factory = (
+                SparseCoinbaseResearchDatasetLock
+                if dataset_locker_factory is CoinbaseResearchDatasetLock
+                else dataset_locker_factory
+            )
         self.validator_factory = validator_factory
+        self.calendar_validator_factory = calendar_validator_factory
+        if self.calendar_validator_factory is None:
+            self.calendar_validator_factory = (
+                CalendarMultiAssetValidator
+                if validator_factory is MultiAssetValidator
+                else validator_factory
+            )
         self.strategy_engine_factory = strategy_engine_factory
 
     def _assert_not_previously_executed(self):
@@ -335,7 +380,12 @@ class TimeframeSensitivityStudyRunner:
         locked = {}
         for timeframe in EXPLORATORY_TIMEFRAMES:
             spec = TIMEFRAME_SPECS[timeframe]
-            dataset = self.dataset_locker_factory(spec.contract).lock(
+            locker_factory = (
+                self.sparse_dataset_locker_factory
+                if timeframe == "1h"
+                else self.dataset_locker_factory
+            )
+            dataset = locker_factory(spec.contract).lock(
                 manifest_paths[timeframe]
             )
             if dataset.contract != spec.contract:
@@ -345,12 +395,44 @@ class TimeframeSensitivityStudyRunner:
             locked[timeframe] = dataset
         return locked
 
-    def _evaluate_profile(self, assets, configuration, costs):
-        validator = self.validator_factory(
+    def _evaluate_profile(self, timeframe, assets, configuration, costs):
+        validator_factory = self.validator_factory
+        validator_kwargs = configuration.validator_kwargs(costs)
+        if timeframe == "1h":
+            spec = TIMEFRAME_SPECS[timeframe]
+            validator_factory = self.calendar_validator_factory
+            validator_kwargs.update(
+                calendar_start=spec.contract.start,
+                calendar_end=spec.contract.end,
+                granularity_seconds=spec.contract.granularity_seconds,
+            )
+        validator = validator_factory(
             self.strategy_engine_factory(),
-            **configuration.validator_kwargs(costs),
+            **validator_kwargs,
         )
         return validator.run(assets)
+
+    @staticmethod
+    def _dataset_gap_evidence(dataset):
+        manifest = dataset.manifest
+        asset_keys = (
+            "expected_rows",
+            "rows",
+            "missing_rows",
+            "missing_timestamps",
+            "max_consecutive_missing_buckets",
+            "recovery_status",
+        )
+        return {
+            "gap_policy": manifest["gap_policy"],
+            "assets": {
+                product_id: {
+                    key: manifest["assets"][product_id][key]
+                    for key in asset_keys
+                }
+                for product_id in sorted(manifest["assets"])
+            },
+        }
 
     @staticmethod
     def _compact_backtest_run(result):
@@ -435,6 +517,7 @@ class TimeframeSensitivityStudyRunner:
         configuration = timeframe_study_configuration(timeframe)
         baseline = self._compact_evaluation(
             self._evaluate_profile(
+                timeframe,
                 dataset.assets,
                 configuration,
                 BASELINE_COSTS,
@@ -442,19 +525,30 @@ class TimeframeSensitivityStudyRunner:
         )
         stress = self._compact_evaluation(
             self._evaluate_profile(
+                timeframe,
                 dataset.assets,
                 configuration,
                 STRESSED_COSTS,
             )
         )
-        return {
+        evidence = {
             "source": "NEW_EXPLORATORY_EVALUATION",
             "dataset_contract": dataset.contract.as_dict(),
             "manifest_sha256": dataset.manifest_sha256,
             "configuration": configuration.as_dict(),
+            "windowing": (
+                CALENDAR_WINDOWING
+                if timeframe == "1h"
+                else "FIXED_ROW_COUNT_CONTINUOUS_GRID"
+            ),
             "baseline_evaluation": baseline,
             "cost_stress_evaluation": stress,
         }
+        if timeframe == "1h":
+            evidence["dataset_gap_evidence"] = self._dataset_gap_evidence(
+                dataset
+            )
+        return evidence
 
     @classmethod
     def _reference_timeframe_evidence(cls, reference, digest):

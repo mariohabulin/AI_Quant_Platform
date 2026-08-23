@@ -529,10 +529,19 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
 - [x] Record the first one-hour acquisition as a safe technical incident after
   Coinbase omitted 19 expected BTC buckets and the builder wrote no 1h files.
   Prepare bounded exact-gap recovery without filling or synthetic candles.
-- [ ] Reproduce the recovery patch with focused/full Windows tests, review it,
-  commit and push it before retrying one-hour acquisition.
-- [ ] Retry and independently lock the exact 66,456-row 1h BTC/ETH development
-  dataset; then commit only the reviewed 1h/1d manifests and SHA sidecars.
+- [x] Reproduce the recovery patch with 23/23 focused and 746/746 full Windows
+  tests, commit exact revision `0b3e5bd` and push it before retry.
+- [x] Record acquisition attempt 2 as safe persistent provider gaps: two exact
+  passes could not recover 19 BTC buckets, independent 1h/5m/Advanced checks
+  found no in-range candle and no dataset or evaluation evidence was written.
+- [x] Prepare sparse-native schema v2 locally with complete gap accounting,
+  atomic two-asset persistence, no synthetic data and calendar-time validation;
+  pass 216/216 focused and 760/760 complete tests.
+- [ ] Reproduce schema v2 on Windows, review, commit and push before acquisition
+  attempt 3.
+- [ ] Acquire and independently lock observed native 1h BTC/ETH data against all
+  66,456 expected buckets; then commit only reviewed 1h/1d manifests and SHA
+  sidecars.
 - [ ] Execute and record the one-shot exploratory comparison, review its fixed-
   order evidence and close the study without mutating candidate v1 or treating
   any inspected timeframe as unseen validation.

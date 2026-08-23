@@ -19,7 +19,7 @@ The study keeps these inputs unchanged across all three evidence views:
 - nominal fast period 20 and slow period 50
 - long-only behavior with no leverage
 - exact `BTC-USD` and `ETH-USD` scope
-- public native Coinbase Exchange candles
+- public provider-observed native Coinbase Exchange candles
 - `[2019-01-01T00:00:00Z, 2026-08-01T00:00:00Z)` range
 - 70/30 chronological OOS split
 - expanding, non-overlapping walk-forward tests
@@ -35,13 +35,14 @@ measured, not an accidental inconsistency.
 
 | Timeframe | Rows per asset | EMA horizons | Train | Test / step | Source |
 | --- | ---: | --- | ---: | ---: | --- |
-| `1h` | 66,456 | 20h / 50h | 17,280 bars / 720 days | 4,320 bars / 180 days | New exploratory evaluation |
+| `1h` | 66,456 expected; observed gaps explicit | 20h / 50h | 720 calendar days | 180 calendar days | New exploratory evaluation |
 | `6h` | 11,076 | 120h / 300h | 2,880 bars / 720 days | 720 bars / 180 days | Recorded candidate-v1 report |
 | `1d` | 2,769 | 480h / 1,200h | 720 bars / 720 days | 180 bars / 180 days | New exploratory evaluation |
 
-Calendar-equivalent 720-day training and 180-day test/step durations prevent
+Calendar-equivalent 720-day training and 180-day test/step boundaries prevent
 one timeframe from receiving longer market-history windows merely because it
-contains fewer bars.
+contains fewer observed bars. For one-hour evidence, the boundary is computed
+from UTC time rather than shifted by missing provider buckets.
 
 ## Candidate-v1 isolation
 
@@ -56,18 +57,28 @@ It independently verifies that report's checksum sidecar, rejected outcome,
 candidate identity, manifest hash, configuration and authorization flags before
 using its baseline and stress evidence as the six-hour reference.
 
-Only `1h` and `1d` receive new exploratory evaluations. Their datasets use new
-contracts and canonical manifests. The shared generic dataset lock rechecks
-manifest bytes and sidecar, source/canonicalization metadata, asset hashes, row
-counts, exact UTC grids and OHLCV validity before either evaluation begins.
+Only `1h` and `1d` receive new exploratory evaluations. The continuous daily
+dataset retains the generic exact-grid lock. The one-hour dataset uses the
+separate gap-aware v2 lock after two acquisition attempts proved 19 persistent
+BTC provider gaps before ETH acquisition began.
 
 After the normal chunked provider pass, an incomplete grid may trigger only
 bounded exact-gap recovery: at most two passes, at most 100 individual missing-
 bucket requests per asset and the existing finite transport retry policy on
 every request. Recovery accepts only complete Coinbase-returned OHLCV rows. It
 never interpolates, forward-fills, resamples or synthesizes a candle. Persistent
-gaps remain fatal, report exact missing UTC timestamp samples and produce no
-dataset artifacts.
+gaps remain fatal in the generic continuous-grid builder. The study-only 1h v2
+boundary may accept persistent provider gaps only after exact recovery is
+exhausted, with at most 50 gaps per asset and at most 24 consecutive gaps. Its
+canonical manifest records every absent UTC timestamp, expected/observed counts,
+recovery status and maximum consecutive gap. It still never interpolates,
+forward-fills, resamples or synthesizes a candle.
+
+The sparse 1h evaluator uses calendar-time OOS and walk-forward boundaries. A
+signal immediately before a missing interval may execute only at the next real
+provider-observed Open. No absent interval can carry a signal, price, volume or
+execution. Acquisition fetches and validates both assets before atomic staging;
+failure creates no final dataset evidence.
 
 ## Output and interpretation
 
@@ -130,7 +141,9 @@ Do not acquire data merely because the patch is applied. First reproduce the
 focused and complete Windows tests, review the diff, commit and push the exact
 implementation with a clean working tree.
 
-After that integration gate, acquire the two new development datasets:
+After that integration gate, acquire the two new development datasets. The
+daily dataset is already locked; the current remaining command is the reviewed
+gap-aware one-hour acquisition:
 
 ```powershell
 python src/timeframe_sensitivity_study.py acquire --timeframe 1h --output data/research/timeframe_sensitivity_v1/1h

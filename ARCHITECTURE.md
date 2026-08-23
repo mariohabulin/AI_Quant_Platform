@@ -696,6 +696,21 @@ datasets receive distinct canonical contracts, hashes and independent locks,
 then run through the same baseline/stress Multi-Asset Validation stack with the
 frozen causal execution, cost, seed and falsification assumptions.
 
+The daily lock remains continuous. Coinbase's native one-hour history contains
+persistent provider gaps even after two exact-bucket recovery passes. The
+study-only schema-v2 one-hour boundary therefore stores only observed native
+candles and binds every missing UTC bucket in the manifest. It permits at most
+50 missing and 24 consecutive missing buckets per asset; interpolation,
+forward-fill, resampling and synthetic OHLCV remain prohibited. Both assets are
+fully fetched and validated before atomic one-shot persistence.
+
+One-hour OOS and walk-forward partitions use expected-grid UTC boundaries, not
+observed row positions. The 70/30 split and expanding 720-day train plus
+non-overlapping 180-day test windows therefore remain calendar-equivalent across
+assets even when their missing timestamps differ. Within each partition,
+next-bar-Open means the next provider-observed candle; an absent bucket can
+never carry an execution.
+
 The study report preserves complete evidence and a fixed-order metric summary,
 but emits no score, ranking, winner or promotion decision. All inspected history
 is development evidence. A later formal candidate requires a new identity and a

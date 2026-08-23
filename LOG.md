@@ -1797,3 +1797,27 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
   and commit/push review before the one-hour acquisition is retried.
   Candidate-v2, optimization, bounded forward PAPER and live authorization
   remain false.
+
+## 2026-08-23 — Persistent 1h Provider Gaps and Schema-v2 Local Preparation
+- Windows reproduced 23/23 focused dataset tests and the complete 746/746 suite,
+  committed exact recovery revision `0b3e5bd` and pushed it before attempt 2.
+- Attempt 2 repeated the complete BTC acquisition and two exact-bucket passes;
+  all 19 gaps persisted with `recovery=exhausted_2_passes`. It wrote no one-hour
+  CSV, manifest, checksum, study result or staging evidence.
+- Independently queried the first gap through Exchange native 1h, Exchange
+  native 5m and Advanced Trade native 1h views. Each returned zero rows inside
+  the exact half-open interval; no real lower-timeframe row existed to derive
+  the hour.
+- Added a study-only sparse-native schema v2 without changing the continuous 6h
+  candidate or 1d dataset locks. It permits at most 50 missing and 24 consecutive
+  missing buckets per asset only after the frozen two-pass/100-request recovery,
+  records every UTC gap and prohibits synthetic, interpolated, forward-filled or
+  resampled candles.
+- Added atomic two-asset acquisition and an independent sparse manifest lock for
+  exact contract, hashes, counts, gap list, recovery status and OHLCV evidence.
+- Added calendar-time 70/30 OOS and 720-day/180-day walk-forward boundaries.
+  Missing rows cannot shift windows; a pre-gap signal executes only at the next
+  provider-observed Open.
+- Local validation passes 216/216 focused research-stack tests and the complete
+  760/760 Python 3.12 suite. Windows reproduction and reviewed commit/push remain
+  mandatory before attempt 3. All promotion and live authorizations stay false.

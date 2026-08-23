@@ -726,9 +726,10 @@ test/step durations at every timeframe.
 Candidate v1 remains closed: the six-hour path accepts and reuses only report
 SHA-256
 `6b79d0932ee334574ffdbef1aca73c8b900ab8fcb8fbafb857bdd327d38d547c`.
-It is never reacquired or reevaluated. New 1h and 1d contracts require 66,456
-and 2,769 continuous rows per asset and pass the same canonical dataset lock
-before exploratory evaluation.
+It is never reacquired or reevaluated. The daily contract requires 2,769
+continuous rows per asset. The revised one-hour schema-v2 contract requires
+complete accounting for 66,456 expected buckets while storing only actual
+provider-observed candles and every explicit missing UTC timestamp.
 
 The one-shot study hashes each complete in-memory evaluation, then writes
 bounded compact evidence through fail-closed staging without duplicating large
@@ -743,13 +744,21 @@ the repository clean before acquisition. The native daily dataset then locked
 2,769 rows per asset under manifest SHA-256
 `77bc9765a828174b1fd5d46b0d06d216db47e3edab5d91cc65f47a350a335691`.
 
-The first one-hour acquisition failed closed because the initial BTC response
-was missing 19 expected grid buckets. It wrote no one-hour CSV, manifest or
-checksum and ran no evaluation. Recovery preparation adds at most two exact-
-bucket passes under a 100-request per-asset ceiling; it accepts only complete
-provider candles, never fills or synthesizes data and reports exact timestamp
-samples if gaps persist. The recovery patch requires focused/full Windows
-reproduction, reviewed commit/push and a clean tree before retrying acquisition.
-Local Python 3.12 validation passes 202/202 focused research-stack tests and the
-complete 746/746 suite. All candidate-v2, optimization, PAPER and live
-authorizations remain false.
+The first one-hour acquisition failed closed on 19 missing BTC buckets. Windows
+then reproduced 23/23 focused and 746/746 complete tests, committed exact
+recovery revision `0b3e5bd` and pushed it before attempt 2. That attempt made
+two exact requests for every gap; all 19 persisted. An independent diagnostic
+found no in-range native 1h candle, no native 5m sub-candle and no Advanced
+Trade 1h candle for the first gap. No dataset or evaluation evidence was
+written in either attempt.
+
+The local schema-v2 amendment permits at most 50 explicit missing buckets and
+24 consecutive gaps per asset after exact recovery. It writes no synthetic,
+interpolated, forward-filled or resampled row, fetches both assets before atomic
+persistence and locks every missing timestamp. Calendar-aware validation keeps
+the 70/30 boundary plus exact 720-day train and 180-day test windows independent
+of observed row counts; next-Open is always the next real candle. Local evidence
+passes 216/216 focused research-stack tests and the complete 760/760 suite.
+Windows reproduction, reviewed commit/push and a clean tree remain mandatory
+before attempt 3. All candidate-v2, optimization, PAPER and live authorizations
+remain false.

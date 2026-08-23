@@ -30,6 +30,8 @@ from timeframe_sensitivity_study import (
     timeframe_study_strategy_engine,
     main,
 )
+from calendar_validation import CALENDAR_WINDOWING
+from sparse_coinbase_research_dataset import SPARSE_NATIVE_GAP_POLICY
 
 
 def market_frame(rows=8, frequency="h"):
@@ -170,9 +172,33 @@ class FakeLocker:
 
     def lock(self, manifest_path):
         type(self).calls.append((self.contract, Path(manifest_path)))
+        manifest = {}
+        if self.contract.timeframe == "1h":
+            manifest = {
+                "gap_policy": SPARSE_NATIVE_GAP_POLICY,
+                "assets": {
+                    "BTC-USD": {
+                        "expected_rows": 66456,
+                        "rows": 66437,
+                        "missing_rows": 19,
+                        "missing_timestamps": ["2019-04-11T13:00:00Z"],
+                        "max_consecutive_missing_buckets": 3,
+                        "recovery_status": "exhausted_2_passes",
+                    },
+                    "ETH-USD": {
+                        "expected_rows": 66456,
+                        "rows": 66455,
+                        "missing_rows": 1,
+                        "missing_timestamps": ["2019-04-11T13:00:00Z"],
+                        "max_consecutive_missing_buckets": 1,
+                        "recovery_status": "exhausted_2_passes",
+                    },
+                },
+            }
         return SimpleNamespace(
             contract=self.contract,
             manifest_sha256=self.contract.timeframe[0] * 64,
+            manifest=manifest,
             assets={
                 "BTC-USD": market_frame(),
                 "ETH-USD": market_frame(),
@@ -204,7 +230,9 @@ def runner(tmp_path, reference_hash):
         output_root=tmp_path / "timeframe_sensitivity_v1",
         reference_report_sha256=reference_hash,
         dataset_locker_factory=FakeLocker,
+        sparse_dataset_locker_factory=FakeLocker,
         validator_factory=FakeValidator,
+        calendar_validator_factory=FakeValidator,
     )
 
 
@@ -220,6 +248,8 @@ def test_declaration_freezes_research_only_scope_without_evaluation():
     assert declaration["candidate_v1_reopened"] is False
     assert declaration["automatic_timeframe_selection"] is False
     assert declaration["formal_candidate_evaluation"] is False
+    assert declaration["one_hour_gap_policy"] == SPARSE_NATIVE_GAP_POLICY
+    assert declaration["one_hour_windowing"] == CALENDAR_WINDOWING
     assert declaration["optimization_authorized"] is False
     assert declaration["bounded_forward_paper_review_eligible"] is False
     assert declaration["bounded_forward_paper_authorized"] is False
@@ -248,6 +278,9 @@ def test_specs_freeze_exact_native_datasets_and_calendar_equivalent_windows():
     assert TIMEFRAME_SPECS["6h"].source == "RECORDED_CANDIDATE_V1_REFERENCE"
     assert TIMEFRAME_SPECS["1h"].source == "NEW_EXPLORATORY_EVALUATION"
     assert TIMEFRAME_SPECS["1d"].source == "NEW_EXPLORATORY_EVALUATION"
+    assert TIMEFRAME_SPECS["1h"].contract.dataset_id.endswith(
+        "timeframe-study-v1-gap-aware-v2"
+    )
 
 
 def test_configuration_preserves_costs_timing_seed_and_equivalent_windows():
@@ -314,6 +347,44 @@ def test_acquisition_allows_only_new_exploratory_timeframes(tmp_path):
         acquire_timeframe_dataset("15m", tmp_path, builder_factory=FakeBuilder)
 
 
+def test_acquisition_dispatches_sparse_builder_only_for_one_hour(
+    monkeypatch,
+    tmp_path,
+):
+    calls = []
+
+    class SparseBuilder:
+        def __init__(self, contract):
+            calls.append(("sparse", contract.timeframe))
+
+        def build(self, output_directory, overwrite=False):
+            return {"builder": "sparse"}
+
+    class ContinuousBuilder:
+        def __init__(self, contract):
+            calls.append(("continuous", contract.timeframe))
+
+        def build(self, output_directory, overwrite=False):
+            return {"builder": "continuous"}
+
+    monkeypatch.setattr(
+        study_module,
+        "SparseCoinbaseResearchDatasetBuilder",
+        SparseBuilder,
+    )
+    monkeypatch.setattr(
+        study_module,
+        "CoinbaseResearchDatasetBuilder",
+        ContinuousBuilder,
+    )
+
+    assert acquire_timeframe_dataset("1h", tmp_path / "1h")["builder"] == "sparse"
+    assert acquire_timeframe_dataset("1d", tmp_path / "1d")["builder"] == (
+        "continuous"
+    )
+    assert calls == [("sparse", "1h"), ("continuous", "1d")]
+
+
 def test_runner_reuses_reference_and_evaluates_only_one_hour_and_one_day(tmp_path):
     reference_path, reference_hash = write_reference(tmp_path)
     recorded = runner(tmp_path, reference_hash).run(
@@ -333,6 +404,12 @@ def test_runner_reuses_reference_and_evaluates_only_one_hour_and_one_day(tmp_pat
         720,
     ]
     assert all(item.kwargs["execution_timing"] == "next_bar_open" for item in FakeValidator.calls)
+    assert ["calendar_start" in item.kwargs for item in FakeValidator.calls] == [
+        True,
+        True,
+        False,
+        False,
+    ]
 
     report_bytes = recorded.report_path.read_bytes()
     payload = json.loads(report_bytes)
@@ -345,6 +422,15 @@ def test_runner_reuses_reference_and_evaluates_only_one_hour_and_one_day(tmp_pat
     assert payload["timeframe_evidence"]["1h"]["source"] == (
         "NEW_EXPLORATORY_EVALUATION"
     )
+    one_hour = payload["timeframe_evidence"]["1h"]
+    assert one_hour["windowing"] == CALENDAR_WINDOWING
+    assert one_hour["dataset_gap_evidence"]["gap_policy"] == (
+        SPARSE_NATIVE_GAP_POLICY
+    )
+    assert one_hour["dataset_gap_evidence"]["assets"]["BTC-USD"][
+        "missing_rows"
+    ] == 19
+    assert "dataset_gap_evidence" not in payload["timeframe_evidence"]["1d"]
     assert payload["reference_report_sha256"] == reference_hash
     assert payload["candidate_v1_reopened"] is False
     assert payload["automatic_timeframe_selection"] is False
