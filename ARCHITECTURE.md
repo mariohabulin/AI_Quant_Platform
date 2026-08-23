@@ -725,6 +725,27 @@ values under every other key still fail before staging. The encoding is an
 evidence representation rule, not a metric cap, score or strategy-policy
 change.
 
+## Strategy Research Inventory Boundary
+
+The post-study inventory treats every existing strategy class as a research
+component rather than a trading candidate. EMA crossover retains its closed
+candidate-v1 status; ADX, ATR breakout, Bollinger, Donchian, MACD, RSI,
+Stochastic and Supertrend remain formally unevaluated. Registration, feature
+generation and signal tests do not imply profitability or promotion readiness.
+
+A deterministic synthetic integration audit may verify default construction,
+feature declarations, immutable input, repeatability, signal domain, diagnostic
+buy/sell activity and prefix causality. It never invokes market performance,
+Backtesting, Multi-Asset Validation or ranking. Synthetic signal counts are
+connectivity evidence only.
+
+Recorded failure-mode extraction accepts only the exact closed Timeframe Study
+report and validates its canonical hash, sidecar, identity, no-ranking policy
+and false authorization flags. It retains observed returns, drawdowns, trade
+counts, persistence and falsification facts without recalculating a strategy or
+selecting a successor. Any later family screening must receive a separate
+pre-registered scope and multiple-comparison boundary before execution.
+
 ---
 
 # Phase 3 Risk Engine v1 — Position Sizing Foundation Contract

@@ -557,9 +557,17 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
 - [x] Close Timeframe Sensitivity Study v1 as `COMPLETED_NO_ROBUST_EDGE`: all
   baseline/stress aggregates and 12 asset/profile views are rejected, with no
   ranking, selected timeframe, candidate-v2 or promotion authorization.
-- [ ] Perform research-only failure-mode analysis and define one structurally
-  new, falsifiable strategy hypothesis without leaderboard-style parameter
-  sweeping or reusing inspected results as unseen validation.
+- [x] Prepare Strategy Research Inventory and Failure-Mode Analysis v1 locally:
+  inventory nine implementations, retain eight as unevaluated components, audit
+  only synthetic causal integration and accept only the exact closed study
+  report for fact extraction; pass 10/10 focused and 773/773 complete tests.
+- [ ] Reproduce the inventory/audit boundary on Windows, review and commit/push
+  before running its non-evaluating CLI against the recorded report.
+- [ ] Pre-register a fixed standalone strategy-family development screening
+  scope with no parameter sweep, automatic ranking, indicator combination or
+  candidate-v2 authorization before producing new performance evidence.
+- [ ] Use development screening only to define one structurally new,
+  falsifiable hypothesis without treating inspected results as unseen evidence.
 - [ ] Before formal candidate-v2 evaluation, freeze a new immutable identity
   and independently lock a genuinely unseen future-validation boundary.
 

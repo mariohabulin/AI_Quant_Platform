@@ -813,3 +813,25 @@ is research-only failure-mode analysis and design of one new falsifiable
 hypothesis, followed by a new immutable identity and separately locked unseen
 boundary. Candidate-v2, optimization, PAPER and live authorizations remain
 false.
+
+### Strategy Research Inventory and Failure-Mode Analysis v1 — LOCAL PREPARATION
+
+The post-study boundary now inventories all nine existing standalone strategy
+implementations. EMA remains the rejected/closed candidate-v1 component; ADX,
+ATR breakout, Bollinger, Donchian, MACD, RSI, Stochastic and Supertrend are
+explicitly unevaluated research components rather than latent candidates.
+
+A deterministic 720-row synthetic audit checks default construction, Strategy
+Engine feature integration, input preservation, repeatability, signal domain,
+buy/sell activity and prefix causality. All nine pass locally, but no Backtest,
+market dataset, performance metric or ranking is involved. A separate loader
+accepts only closed Timeframe Study report SHA-256
+`505bd5b40a38d7e5b8b4538e1d7ac9cb459cd40f46108dc1a33a42c1647b64ab`
+and extracts recorded failure facts without reevaluation.
+
+The next hypothesis must address turnover/cost survival, drawdown control,
+market-regime mechanism and genuinely unseen validation. This inventory does
+not select a strategy family, authorize combinations or permit parameter
+sweeps. Local TDD adds 10 focused tests and passes the complete 773/773 suite.
+Windows reproduction, reviewed commit/push and non-evaluating CLI review remain
+mandatory before a separate screening protocol may be designed.

@@ -1867,3 +1867,24 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
   is now development evidence; candidate-v2 formal validation requires a new
   identity and independently locked future/unseen boundary. Optimization,
   PAPER and live authorization remain false.
+
+## 2026-08-23 — Strategy Research Inventory v1 (Local Preparation)
+- Inventoried exact default implementations for ADX, ATR breakout, Bollinger,
+  Donchian, closed EMA crossover, MACD, RSI, Stochastic and Supertrend; retained
+  the eight non-EMA entries as unevaluated research components.
+- Added a deterministic synthetic-only integration audit for default parameters,
+  declared features, input preservation, repeatability, valid signals, buy/sell
+  activity and prefix causality. It invokes no market dataset or performance
+  engine and generates no ranking.
+- All nine implementations pass the local 720-row diagnostic. Counts remain
+  integration evidence only and cannot support strategy selection.
+- Added strict loading and fact extraction for only canonical Timeframe Study
+  report SHA-256
+  `505bd5b40a38d7e5b8b4538e1d7ac9cb459cd40f46108dc1a33a42c1647b64ab`;
+  authorization/identity/hash or no-ranking drift fails closed.
+- Froze next-hypothesis constraints around cost/turnover survival, bounded
+  drawdown, explicit regime mechanism, baseline/stress retention, unseen future
+  validation and no parameter leaderboard.
+- Added 10 focused tests; local complete validation passes 773/773. Windows
+  reproduction and Git integration remain required before any separately
+  pre-registered strategy-family screening.
