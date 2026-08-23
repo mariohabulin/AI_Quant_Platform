@@ -6,14 +6,13 @@ import hashlib
 import json
 from pathlib import Path
 
-import numpy as np
-import pandas as pd
-
 try:
     from first_strategy_candidate import FirstStrategyCandidatePreregistration
+    from research_evidence import canonical_json_bytes
     from strategy_evaluation_protocol import StrategyEvaluationProtocol
 except ImportError:  # package import when src is not placed directly on sys.path
     from src.first_strategy_candidate import FirstStrategyCandidatePreregistration
+    from src.research_evidence import canonical_json_bytes
     from src.strategy_evaluation_protocol import StrategyEvaluationProtocol
 
 
@@ -32,42 +31,6 @@ ALLOWED_OUTCOMES = frozenset(
         "REJECTED",
     }
 )
-
-
-def _json_default(value):
-    """Normalize expected research scalar types without hiding bad evidence."""
-
-    if value is pd.NaT:
-        raise ValueError("Timestamp evidence must not be missing.")
-    if isinstance(value, (pd.Timestamp, np.datetime64)):
-        if pd.isna(value):
-            raise ValueError("Timestamp evidence must not be missing.")
-        return pd.Timestamp(value).isoformat()
-    if isinstance(value, (pd.Timedelta, np.timedelta64)):
-        if pd.isna(value):
-            raise ValueError("Timedelta evidence must not be missing.")
-        return pd.Timedelta(value).isoformat()
-    if isinstance(value, np.ndarray):
-        return value.tolist()
-    if isinstance(value, np.generic):
-        return value.item()
-    raise TypeError(
-        f"Object of type {value.__class__.__name__} is not JSON serializable"
-    )
-
-
-def _canonical_json_bytes(payload):
-    """Return deterministic UTF-8 JSON bytes and reject non-finite evidence."""
-
-    text = json.dumps(
-        payload,
-        allow_nan=False,
-        default=_json_default,
-        ensure_ascii=True,
-        separators=(",", ":"),
-        sort_keys=True,
-    )
-    return f"{text}\n".encode("utf-8")
 
 
 @dataclass(frozen=True)
@@ -192,7 +155,7 @@ class FirstCandidateEvaluationRunner:
         )
 
         evidence, outcome = self._evaluate(manifest_path)
-        report_bytes = _canonical_json_bytes(evidence)
+        report_bytes = canonical_json_bytes(evidence)
         report_sha256 = hashlib.sha256(report_bytes).hexdigest()
         checksum_bytes = f"{report_sha256}  {REPORT_FILENAME}\n".encode("ascii")
 

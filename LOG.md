@@ -1745,3 +1745,31 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
   6h and 1d BTC/ETH evidence. Any later candidate v2 must receive a new frozen
   identity and a separately locked unseen final-validation boundary; equity
   research remains a separate venue/calendar track.
+
+## 2026-08-23 — Timeframe Sensitivity Study v1 (Local Preparation)
+- Added a research-only declaration for fixed-order `1h`, `6h` and `1d`
+  BTC/ETH comparison using the unchanged long-only EMA 20/50 implementation.
+- Froze equal 720-day train and 180-day non-overlapping test/step durations:
+  17,280/4,320 bars on 1h, 2,880/720 on 6h and 720/180 on 1d. The unchanged
+  nominal periods intentionally represent different calendar EMA horizons.
+- Prohibited candidate-v1 rerun. The six-hour evidence path accepts only the
+  exact recorded report SHA-256
+  `6b79d0932ee334574ffdbef1aca73c8b900ab8fcb8fbafb857bdd327d38d547c`
+  and rechecks its sidecar, identity, configuration, rejected outcome and
+  authorization flags.
+- Added distinct canonical 1h and 1d Coinbase contracts for 66,456 and 2,769
+  continuous rows per asset. Extracted the already proven manifest, hash, grid
+  and OHLCV validation into a reusable dataset lock while preserving the
+  candidate-v1 lock behavior.
+- Added one-shot canonical study evidence with pre-serialization and fail-closed
+  staging. Each complete in-memory evaluation receives a SHA-256 before bounded
+  compact persistence omits duplicated equity/trade arrays while retaining OOS,
+  per-window, drawdown, trade, persistence and falsification metrics.
+- Deliberately generated no score, ranking, winner or promotion outcome. All
+  study history is development evidence; candidate-v1 reopening, candidate-v2
+  authorization, optimization, bounded forward PAPER and live execution remain
+  false.
+- Added TDD for the new boundary; 196/196 focused research-stack tests and the
+  complete 740/740 Python 3.12 suite pass locally. Windows reproduction, exact
+  Git integration and separate 1h/1d dataset-lock evidence remain pending
+  before any study execution.

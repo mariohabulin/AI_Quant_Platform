@@ -15,6 +15,7 @@ from coinbase_research_dataset import (
     FIRST_CANDIDATE_DATASET_CONTRACT,
     CoinbaseResearchDatasetBuilder,
     CoinbaseResearchDatasetContract,
+    CoinbaseResearchDatasetLock,
     dataset_canonicalization_metadata,
     dataset_source_metadata,
 )
@@ -258,3 +259,29 @@ def test_build_overwrite_reproduces_identical_manifest_hash(tmp_path):
 
     assert first["manifest_sha256"] == second["manifest_sha256"]
     assert first["assets"] == second["assets"]
+
+
+def test_generic_dataset_lock_revalidates_canonical_manifest_and_assets(tmp_path):
+    contract = small_contract()
+    result = builder(contract).build(tmp_path)
+
+    locked = CoinbaseResearchDatasetLock(contract).lock(result["manifest_path"])
+
+    assert locked.contract == contract
+    assert locked.manifest_sha256 == result["manifest_sha256"]
+    assert locked.manifest["contract"] == contract.as_dict()
+    assert set(locked.assets) == {"BTC-USD", "ETH-USD"}
+    assert all(len(frame) == 4 for frame in locked.assets.values())
+
+
+def test_generic_dataset_lock_rejects_invalid_contract_and_tampering(tmp_path):
+    with pytest.raises(TypeError, match="CoinbaseResearchDatasetContract"):
+        CoinbaseResearchDatasetLock({})
+
+    contract = small_contract()
+    result = builder(contract).build(tmp_path)
+    asset_path = tmp_path / result["assets"]["BTC-USD"]["file"]
+    asset_path.write_bytes(asset_path.read_bytes() + b"tampered")
+
+    with pytest.raises(ValueError, match="SHA-256 mismatch"):
+        CoinbaseResearchDatasetLock(contract).lock(result["manifest_path"])

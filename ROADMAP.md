@@ -516,10 +516,18 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
   rejected both assets, walk-forward persistence and statistical falsification
   failed, and worst-profile OOS drawdown exceeded the 20% ceiling for BTC and
   ETH. Retain PAPER, optimization and live authorization as false.
-- [ ] Prepare Timeframe Sensitivity Study v1 as research-only analysis across
-  `1h`, `6h` and `1d` BTC/ETH evidence. Do not mutate or rerun candidate v1,
-  treat inspected history as development evidence, and require a new identity
-  plus a separately locked unseen validation boundary before any candidate v2
-  promotion decision.
+- [x] Prepare Timeframe Sensitivity Study v1 as research-only analysis across
+  `1h`, `6h` and `1d` BTC/ETH evidence. Reuse the exact recorded 6h report,
+  require new canonical 1h/1d locks, compare equal 720-day train and 180-day
+  test durations, and generate neither ranking nor winner.
+- [ ] Reproduce the focused and complete suites on Windows, review the exact
+  study/refactor scope, commit and push it before acquiring new data.
+- [ ] Acquire and independently lock the exact 66,456-row 1h and 2,769-row 1d
+  BTC/ETH development datasets; commit only their manifests and SHA sidecars.
+- [ ] Execute and record the one-shot exploratory comparison, review its fixed-
+  order evidence and close the study without mutating candidate v1 or treating
+  any inspected timeframe as unseen validation.
+- [ ] If evidence justifies v2 design, freeze a new identity and separately
+  locked genuinely unseen final-validation boundary before any promotion test.
 
 External notification delivery and any real execution capability remain deferred. The completed twelve-hour, 24-hour and three-day gates are bounded infrastructure-endurance evidence, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization. First candidate v1 is closed as `REJECTED`; the next boundary is research-only timeframe sensitivity, not PAPER or live execution.

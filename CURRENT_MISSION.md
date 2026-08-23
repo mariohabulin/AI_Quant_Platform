@@ -713,3 +713,34 @@ false. The next authorized milestone is a research-only Timeframe Sensitivity
 Study v1 across 1h, 6h and 1d BTC/ETH evidence. It must not mutate or rescue v1;
 any formal candidate v2 requires a new frozen identity and a separately locked
 unseen final-validation boundary.
+
+### Timeframe Sensitivity Study v1 — LOCAL PREPARATION
+
+The next research tool now has an explicit exploratory boundary. It keeps the
+existing long-only EMA 20/50 logic, BTC/ETH scope, historical date range,
+baseline/stress costs, causal next-Open execution, 70/30 OOS split, seed and
+falsification settings while comparing native `1h`, `6h` and `1d` evidence.
+Calendar-equivalent windows use 720 training days and non-overlapping 180-day
+test/step durations at every timeframe.
+
+Candidate v1 remains closed: the six-hour path accepts and reuses only report
+SHA-256
+`6b79d0932ee334574ffdbef1aca73c8b900ab8fcb8fbafb857bdd327d38d547c`.
+It is never reacquired or reevaluated. New 1h and 1d contracts require 66,456
+and 2,769 continuous rows per asset and pass the same canonical dataset lock
+before exploratory evaluation.
+
+The one-shot study hashes each complete in-memory evaluation, then writes
+bounded compact evidence through fail-closed staging without duplicating large
+equity/trade arrays. It reports fixed-order comparable metrics without a score,
+ranking, winner or promotion decision. Candidate-v1 reopening, automatic
+selection, formal candidate evaluation, v2 authorization, optimization,
+bounded forward PAPER and live execution are all explicitly false.
+
+Local TDD covers the shared dataset lock, unchanged candidate-v1 lock and
+serializer behavior, exact committed reference report, calendar-equivalent
+specifications, acquisition boundary, baseline/stress execution, metric
+summary, one-shot persistence, fail-closed retry and CLI behavior. Windows
+reproduction, reviewed commit/push and a clean tree remain required before the
+new datasets may be acquired. Local Python 3.12 evidence passes 196/196 focused
+research-stack tests and the complete 740/740 suite.

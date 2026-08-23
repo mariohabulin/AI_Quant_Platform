@@ -681,6 +681,27 @@ every outcome. The separate three-day infrastructure gate must pass before the
 first candidate evaluation is operationally promoted; this protocol cannot
 override that boundary.
 
+## Exploratory Timeframe Sensitivity Boundary
+
+Timeframe Sensitivity Study v1 is intentionally outside formal candidate
+promotion. It compares the unchanged long-only EMA 20/50 implementation on
+native Coinbase `1h`, `6h` and `1d` BTC/ETH candles over the same historical
+range. Equal 720-day train and 180-day non-overlapping test/step durations keep
+the amount of market time comparable while the same nominal 20/50 bar periods
+expose different calendar horizons.
+
+The rejected six-hour candidate is never rerun. Its exact canonical report and
+checksum are revalidated and reused as reference evidence. One-hour and daily
+datasets receive distinct canonical contracts, hashes and independent locks,
+then run through the same baseline/stress Multi-Asset Validation stack with the
+frozen causal execution, cost, seed and falsification assumptions.
+
+The study report preserves complete evidence and a fixed-order metric summary,
+but emits no score, ranking, winner or promotion decision. All inspected history
+is development evidence. A later formal candidate requires a new identity and a
+separately locked unseen final-validation boundary; no study result can reopen
+candidate v1 or authorize optimization, bounded forward PAPER or live trading.
+
 ---
 
 # Phase 3 Risk Engine v1 — Position Sizing Foundation Contract
