@@ -1930,3 +1930,35 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - Completed 19/19 new runner, 37/37 runner/timeframe regression and 807/807 full
   local tests. Windows reproduction, exact commit/push and absent-evidence
   preflight remain required before the single development-screen execution.
+
+## 2026-08-23 — Strategy Family Screening v1 (Executed and Closed)
+- Windows reproduced 37/37 focused runner/timeframe tests and the complete
+  807/807 repository suite, committed/pushed exact runner revision `e8afe12`
+  and passed clean preflight with matching manifest/study hashes and absent
+  final/staging evidence.
+- Executed the frozen development matrix exactly once: eight standalone default
+  strategies, baseline then stress, for 16 multi-asset evaluations and 32
+  BTC/ETH asset/profile views. No parameter loop, combination, score, ranking or
+  automatic selection executed.
+- Recorded canonical report SHA-256
+  `9cf74deebe6a7efe9928d89b93b8ad4f7504ef70dfcf07ab0c00091a2cb9ec7f`
+  and sidecar under evidence revision `2973636`, pushed to `origin/main`.
+- Closed ADX 14/25, ATR breakout 14/1, Bollinger 20/2, Donchian 20, MACD
+  12/26/9, RSI 14/30/70, Stochastic 14/3/20/80 and Supertrend 10/3 as
+  `SCREEN_OUT` in their exact standalone frozen configurations. Baseline and
+  stress aggregates are `REJECTED` for every strategy.
+- All 32 asset/profile views have negative absolute OOS return and fail
+  statistical falsification. OOS drawdown ranges from 40.32% to 93.71%, so
+  every strategy also fails the frozen 20% drawdown gate. Required window and
+  unseen-trade evidence-volume gates pass.
+- Generated zero `MECHANISM_RETAINS_INTEREST` and zero `INCONCLUSIVE` outcomes.
+  Candidate v2, optimization, bounded-forward-PAPER and live authorizations all
+  remain false.
+- Scoped the conclusion to the tested artifacts: the screen rejects deployable
+  standalone default variants, not their indicator families as potential
+  features, regime filters or components. It does not establish that systematic
+  trading is impossible.
+- Moved the next research boundary to controlled alpha discovery: first
+  attribute signal/cost/turnover/regime failure, then freeze a bounded
+  train/validation calibration and combination procedure that mirrors intended
+  live behavior. Existing inspected history remains development-only.

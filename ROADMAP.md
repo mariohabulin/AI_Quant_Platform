@@ -575,13 +575,28 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
 - [x] Prepare locally a one-shot canonical screening runner that preserves the
   frozen descriptive multiple-comparison policy; pass 19/19 new, 37/37
   runner/timeframe regression and 807/807 complete tests.
-- [ ] Reproduce the screening runner on Windows, review and commit/push the exact
-  revision, then confirm clean preflight with absent final/staging evidence.
-- [ ] Execute the frozen eight-strategy development screen exactly once, verify
-  canonical report/sidecar and record evidence without ranking or promotion.
-- [ ] Use development screening only to define one structurally new,
-  falsifiable hypothesis without treating inspected results as unseen evidence.
+- [x] Reproduce the screening runner on Windows with 37/37 focused and 807/807
+  complete tests, commit/push exact revision `e8afe12`, then pass clean
+  preflight with absent final/staging evidence.
+- [x] Execute the frozen eight-strategy development screen exactly once and
+  record canonical report SHA-256
+  `9cf74deebe6a7efe9928d89b93b8ad4f7504ef70dfcf07ab0c00091a2cb9ec7f`
+  under evidence revision `2973636`; all eight standalone default variants are
+  `SCREEN_OUT`, with no ranking, selection or promotion.
+- [x] Close screening interpretation at the exact-configuration boundary:
+  reject the eight frozen standalone variants as deployable strategies without
+  rejecting their indicator families as possible features or components.
+- [ ] Attribute gross signal versus cost/turnover, exposure, holding-period,
+  drawdown and market-regime failure on inspected development data before
+  designing another candidate.
+- [ ] Pre-register a bounded alpha-discovery procedure covering a small,
+  hypothesis-led set of indicator combinations, regime filters, risk sizing and
+  temporally separated parameter calibration; prohibit a result leaderboard.
+- [ ] Run calibration only inside training/validation boundaries and test the
+  complete adaptive procedure exactly as it would operate live.
+- [ ] Use development results only to define one structurally new, falsifiable
+  hypothesis without treating inspected results as unseen evidence.
 - [ ] Before formal candidate-v2 evaluation, freeze a new immutable identity
   and independently lock a genuinely unseen future-validation boundary.
 
-External notification delivery and any real execution capability remain deferred. The completed twelve-hour, 24-hour and three-day gates are bounded infrastructure-endurance evidence, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization. First candidate v1 is closed as `REJECTED`; the next boundary is default-only development screening, not candidate v2, PAPER or live execution.
+External notification delivery and any real execution capability remain deferred. The completed twelve-hour, 24-hour and three-day gates are bounded infrastructure-endurance evidence, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization. First candidate v1 and all eight standalone default screening variants are closed as rejected configurations; the next boundary is controlled alpha discovery and failure attribution, not candidate v2, PAPER or live execution.

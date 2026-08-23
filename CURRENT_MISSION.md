@@ -878,3 +878,34 @@ runner tests, passes 37/37 runner/timeframe regression tests and the complete
 807/807 suite. Windows reproduction and reviewed commit/push remain mandatory
 before one explicit screening execution. Candidate v2, optimization, PAPER and
 live authorization remain false.
+
+### Strategy Family Screening v1 — CLOSED AS STANDALONE-DEFAULT BASELINE
+
+Windows reproduced 37/37 focused runner/timeframe tests and the complete
+807/807 suite, committed/pushed runner revision `e8afe12`, then passed the clean
+one-shot preflight. The exact eight-strategy development screen completed and
+recorded canonical report SHA-256
+`9cf74deebe6a7efe9928d89b93b8ad4f7504ef70dfcf07ab0c00091a2cb9ec7f`;
+evidence revision `2973636` is pushed and matches `origin/main`.
+
+All eight exact standalone default configurations are `SCREEN_OUT`: baseline
+and stress multi-asset classifications are `REJECTED`, all 32 asset/profile
+views have negative absolute OOS return, every statistical falsification gate
+is false and every strategy exceeds the frozen 20% OOS-drawdown limit. No
+mechanism retained interest and no ranking, selection, candidate-v2, PAPER or
+live authorization was generated.
+
+This result closes only the frozen standalone variants as production-ready
+strategies. It does not reject ADX, ATR, Bollinger, Donchian, MACD, RSI,
+Stochastic or Supertrend as indicators, regime features or components of a
+new combined/adaptive system. `SCREEN_OUT` must therefore be read as
+`SCREEN_OUT_AS_STANDALONE_FROZEN_CONFIGURATION`, not as proof that a strategy
+family has no possible edge or that systematic trading is impossible.
+
+The current mission now moves to controlled alpha discovery. First attribute
+gross signal, cost/turnover, exposure, holding-period and market-regime failure
+on inspected development data. Then pre-register a bounded combination and
+calibration procedure whose complete train/validation/recalibration behavior
+matches intended live use. Any resulting candidate v2 requires a new immutable
+identity and genuinely unseen final validation; the existing history may form
+a hypothesis but may not become confirmatory evidence.
