@@ -1773,3 +1773,27 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
   complete 740/740 Python 3.12 suite pass locally. Windows reproduction, exact
   Git integration and separate 1h/1d dataset-lock evidence remain pending
   before any study execution.
+
+## 2026-08-23 — Timeframe Study Windows Integration and 1h Acquisition Incident
+- Windows/Python 3.14.6 reproduced the complete 740/740 suite, committed exact
+  study revision `c39fd7c`, pushed it to `origin/main` and verified a clean tree
+  before network acquisition.
+- Acquired the native daily BTC/ETH development dataset with 2,769 rows per
+  asset. Its canonical manifest SHA-256 is
+  `77bc9765a828174b1fd5d46b0d06d216db47e3edab5d91cc65f47a350a335691`;
+  no evaluation ran.
+- The first native one-hour attempt failed closed when the primary BTC response
+  lacked 19 expected grid buckets. The builder wrote no one-hour CSV, manifest
+  or checksum; the output directory was empty and no study/staging evidence
+  existed.
+- Recorded the incident as technical provider-data incompleteness. Added TDD for
+  a bounded exact-gap recovery path: at most two passes and 100 exact-bucket
+  requests per asset, with existing request retries, duplicate-conflict checks
+  and full grid/OHLCV validation retained.
+- Recovery never interpolates, forward-fills, resamples or synthesizes candles.
+  Persistent gaps remain fatal with exact missing timestamp diagnostics. The
+  recovery revision passes 202/202 focused research-stack tests and the complete
+  746/746 local Python 3.12 suite. It must still pass focused/full Windows tests
+  and commit/push review before the one-hour acquisition is retried.
+  Candidate-v2, optimization, bounded forward PAPER and live authorization
+  remain false.

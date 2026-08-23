@@ -1186,6 +1186,14 @@ complete UTC grid, finite positive prices, non-negative volume and OHLC
 geometry all pass. Missing, extra, misaligned or conflicting duplicate candles
 fail closed.
 
+After the primary chunk pass, missing grid buckets may be re-requested only by
+their exact UTC intervals. The recovery boundary permits at most two passes and
+100 exact-bucket requests per asset, while retaining the finite per-request
+transport retry budget and duplicate-conflict checks. Only provider-returned
+OHLCV data is accepted: interpolation, forward-fill, resampling and synthetic
+candles are prohibited. Any persistent gap still fails closed with exact
+timestamp samples and before any dataset file is written.
+
 Accepted frames are serialized into canonical UTF-8/LF CSV bytes with UTC
 second-precision timestamps, fixed `Timestamp/Open/High/Low/Close/Volume`
 column order and `.17g` float representation. A canonical sorted JSON manifest

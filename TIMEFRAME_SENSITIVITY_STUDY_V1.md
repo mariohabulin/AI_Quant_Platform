@@ -61,6 +61,14 @@ contracts and canonical manifests. The shared generic dataset lock rechecks
 manifest bytes and sidecar, source/canonicalization metadata, asset hashes, row
 counts, exact UTC grids and OHLCV validity before either evaluation begins.
 
+After the normal chunked provider pass, an incomplete grid may trigger only
+bounded exact-gap recovery: at most two passes, at most 100 individual missing-
+bucket requests per asset and the existing finite transport retry policy on
+every request. Recovery accepts only complete Coinbase-returned OHLCV rows. It
+never interpolates, forward-fills, resamples or synthesizes a candle. Persistent
+gaps remain fatal, report exact missing UTC timestamp samples and produce no
+dataset artifacts.
+
 ## Output and interpretation
 
 The one-shot report contains compact baseline and stress evidence for every
@@ -128,6 +136,10 @@ After that integration gate, acquire the two new development datasets:
 python src/timeframe_sensitivity_study.py acquire --timeframe 1h --output data/research/timeframe_sensitivity_v1/1h
 python src/timeframe_sensitivity_study.py acquire --timeframe 1d --output data/research/timeframe_sensitivity_v1/1d
 ```
+
+If an acquisition stops on a provider-incomplete grid, do not rerun it ad hoc.
+Record the attempt first and integrate any reviewed acquisition correction with
+tests before retry. Dataset incompleteness is not strategy evidence.
 
 The CSV files remain ignored local research artifacts. Their canonical
 manifests and SHA-256 sidecars must be reviewed, committed and pushed as a

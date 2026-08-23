@@ -313,6 +313,8 @@ class CoinbaseResearchDatasetBuilder:
         timeout_seconds=15.0,
         request_pause_seconds=0.25,
         max_attempts=3,
+        missing_candle_recovery_passes=2,
+        max_missing_candle_recovery_requests=100,
         retry_backoff_seconds=1.0,
         sleep_fn=time.sleep,
     ):
@@ -322,6 +324,22 @@ class CoinbaseResearchDatasetBuilder:
             raise TypeError("Maximum attempts must be an integer.")
         if max_attempts <= 0:
             raise ValueError("Maximum attempts must be positive.")
+        if not isinstance(missing_candle_recovery_passes, int) or isinstance(
+            missing_candle_recovery_passes, bool
+        ):
+            raise TypeError("Missing candle recovery passes must be an integer.")
+        if missing_candle_recovery_passes < 0:
+            raise ValueError("Missing candle recovery passes cannot be negative.")
+        if not isinstance(max_missing_candle_recovery_requests, int) or isinstance(
+            max_missing_candle_recovery_requests, bool
+        ):
+            raise TypeError(
+                "Maximum missing candle recovery requests must be an integer."
+            )
+        if max_missing_candle_recovery_requests <= 0:
+            raise ValueError(
+                "Maximum missing candle recovery requests must be positive."
+            )
         for value, name in (
             (timeout_seconds, "Timeout"),
             (request_pause_seconds, "Request pause"),
@@ -336,6 +354,10 @@ class CoinbaseResearchDatasetBuilder:
         self.timeout_seconds = float(timeout_seconds)
         self.request_pause_seconds = float(request_pause_seconds)
         self.max_attempts = max_attempts
+        self.missing_candle_recovery_passes = missing_candle_recovery_passes
+        self.max_missing_candle_recovery_requests = (
+            max_missing_candle_recovery_requests
+        )
         self.retry_backoff_seconds = float(retry_backoff_seconds)
         self.sleep_fn = sleep_fn
 
@@ -401,6 +423,54 @@ class CoinbaseResearchDatasetBuilder:
             raise RuntimeError("Coinbase candle timestamp is not grid-aligned.")
         return timestamp, (open_, high, low, close, volume)
 
+    def _merge_payload(self, bars, payload, product_id, start, end):
+        for raw_row in payload:
+            timestamp, values = self._parse_row(raw_row)
+            if not start <= timestamp < end:
+                continue
+            existing = bars.get(timestamp)
+            if existing is not None and existing != values:
+                raise RuntimeError(
+                    f"Conflicting duplicate candle for {product_id} at {timestamp}."
+                )
+            bars[timestamp] = values
+
+    def _recover_missing_candles(
+        self,
+        product_id,
+        bars,
+        expected,
+        missing,
+        step,
+    ):
+        if self.missing_candle_recovery_passes == 0:
+            return missing, "disabled"
+        maximum_requests = (
+            len(missing) * self.missing_candle_recovery_passes
+        )
+        if maximum_requests > self.max_missing_candle_recovery_requests:
+            return missing, "skipped_request_budget"
+
+        for pass_number in range(1, self.missing_candle_recovery_passes + 1):
+            for timestamp in missing:
+                payload = self._request(product_id, timestamp, timestamp + step)
+                self._merge_payload(
+                    bars,
+                    payload,
+                    product_id,
+                    timestamp,
+                    timestamp + step,
+                )
+                if self.request_pause_seconds:
+                    self.sleep_fn(self.request_pause_seconds)
+            observed = pd.DatetimeIndex(sorted(bars))
+            missing = expected.difference(observed)
+            if not len(missing):
+                return missing, f"recovered_pass_{pass_number}"
+        return missing, (
+            f"exhausted_{self.missing_candle_recovery_passes}_passes"
+        )
+
     def fetch_product(self, product_id):
         product_id = str(product_id).strip().upper()
         if product_id not in self.contract.products:
@@ -414,16 +484,7 @@ class CoinbaseResearchDatasetBuilder:
         while cursor < end:
             chunk_end = min(cursor + chunk_span, end)
             payload = self._request(product_id, cursor, chunk_end)
-            for raw_row in payload:
-                timestamp, values = self._parse_row(raw_row)
-                if not start <= timestamp < end:
-                    continue
-                existing = bars.get(timestamp)
-                if existing is not None and existing != values:
-                    raise RuntimeError(
-                        f"Conflicting duplicate candle for {product_id} at {timestamp}."
-                    )
-                bars[timestamp] = values
+            self._merge_payload(bars, payload, product_id, start, end)
             cursor = chunk_end
             if cursor < end and self.request_pause_seconds:
                 self.sleep_fn(self.request_pause_seconds)
@@ -432,10 +493,26 @@ class CoinbaseResearchDatasetBuilder:
         observed = pd.DatetimeIndex(sorted(bars))
         missing = expected.difference(observed)
         extra = observed.difference(expected)
+        recovery_status = "not_needed"
+        if len(missing) and not len(extra):
+            missing, recovery_status = self._recover_missing_candles(
+                product_id,
+                bars,
+                expected,
+                missing,
+                step,
+            )
+            observed = pd.DatetimeIndex(sorted(bars))
+            extra = observed.difference(expected)
         if len(missing) or len(extra):
+            samples = ",".join(
+                self._request_timestamp(timestamp)
+                for timestamp in missing[:10]
+            )
             raise RuntimeError(
                 f"Incomplete {product_id} candle grid: missing={len(missing)} "
-                f"extra={len(extra)}."
+                f"extra={len(extra)} recovery={recovery_status} "
+                f"missing_samples=[{samples}]."
             )
         frame = pd.DataFrame(
             [bars[timestamp] for timestamp in expected],

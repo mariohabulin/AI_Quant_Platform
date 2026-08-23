@@ -146,6 +146,88 @@ def test_builder_rejects_missing_candle():
         )
 
 
+def test_builder_recovers_only_the_exact_transiently_missing_candle():
+    contract = small_contract(products=("BTC-USD",))
+    rows = candle_rows(contract)
+    missing_row = rows[2]
+    missing_start = pd.Timestamp(missing_row[0], unit="s", tz="UTC").strftime(
+        "%Y-%m-%dT%H:%M:%SZ"
+    )
+    calls = []
+
+    def request(_url, params, timeout):
+        assert timeout > 0.0
+        calls.append(params.copy())
+        if len(calls) == 1:
+            return rows[:2] + rows[3:]
+        assert params["start"] == missing_start
+        return [missing_row]
+
+    frame = builder(contract, request).fetch_product("BTC-USD")
+
+    assert len(frame) == 4
+    assert len(calls) == 2
+    assert calls[1]["end"] == "2024-01-01T18:00:00Z"
+
+
+def test_builder_bounds_missing_candle_recovery_and_reports_exact_samples():
+    contract = small_contract(products=("BTC-USD",))
+    rows = candle_rows(contract)
+    calls = []
+
+    def persistently_incomplete(_url, params, timeout):
+        assert timeout > 0.0
+        calls.append(params.copy())
+        return rows[:-1]
+
+    with pytest.raises(
+        RuntimeError,
+        match=(
+            "missing=1 extra=0 recovery=exhausted_2_passes .*"
+            "2024-01-01T18:00:00Z"
+        ),
+    ):
+        builder(contract, persistently_incomplete).fetch_product("BTC-USD")
+
+    assert len(calls) == 3
+
+
+def test_builder_skips_gap_recovery_when_request_budget_would_be_exceeded():
+    contract = small_contract(products=("BTC-USD",))
+    calls = []
+
+    def empty_response(_url, params, timeout):
+        assert timeout > 0.0
+        calls.append(params.copy())
+        return []
+
+    with pytest.raises(RuntimeError, match="recovery=skipped_request_budget"):
+        builder(
+            contract,
+            empty_response,
+            max_missing_candle_recovery_requests=3,
+        ).fetch_product("BTC-USD")
+
+    assert len(calls) == 1
+
+
+@pytest.mark.parametrize(
+    "overrides, error, message",
+    [
+        ({"missing_candle_recovery_passes": True}, TypeError, "passes"),
+        ({"missing_candle_recovery_passes": -1}, ValueError, "negative"),
+        ({"max_missing_candle_recovery_requests": 0}, ValueError, "positive"),
+    ],
+)
+def test_builder_rejects_invalid_missing_candle_recovery_policy(
+    overrides,
+    error,
+    message,
+):
+    with pytest.raises(error, match=message):
+        builder(small_contract(), **overrides)
+
+
 @pytest.mark.parametrize(
     "mutator, message",
     [

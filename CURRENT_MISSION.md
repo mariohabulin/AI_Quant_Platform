@@ -714,7 +714,7 @@ Study v1 across 1h, 6h and 1d BTC/ETH evidence. It must not mutate or rescue v1;
 any formal candidate v2 requires a new frozen identity and a separately locked
 unseen final-validation boundary.
 
-### Timeframe Sensitivity Study v1 — LOCAL PREPARATION
+### Timeframe Sensitivity Study v1 — WINDOWS INTEGRATION AND 1H ACQUISITION INCIDENT
 
 The next research tool now has an explicit exploratory boundary. It keeps the
 existing long-only EMA 20/50 logic, BTC/ETH scope, historical date range,
@@ -737,10 +737,19 @@ ranking, winner or promotion decision. Candidate-v1 reopening, automatic
 selection, formal candidate evaluation, v2 authorization, optimization,
 bounded forward PAPER and live execution are all explicitly false.
 
-Local TDD covers the shared dataset lock, unchanged candidate-v1 lock and
-serializer behavior, exact committed reference report, calendar-equivalent
-specifications, acquisition boundary, baseline/stress execution, metric
-summary, one-shot persistence, fail-closed retry and CLI behavior. Windows
-reproduction, reviewed commit/push and a clean tree remain required before the
-new datasets may be acquired. Local Python 3.12 evidence passes 196/196 focused
-research-stack tests and the complete 740/740 suite.
+Windows/Python 3.14.6 reproduced the complete 740/740 suite, reviewed and
+committed the implementation as `c39fd7c`, pushed it to `origin/main` and left
+the repository clean before acquisition. The native daily dataset then locked
+2,769 rows per asset under manifest SHA-256
+`77bc9765a828174b1fd5d46b0d06d216db47e3edab5d91cc65f47a350a335691`.
+
+The first one-hour acquisition failed closed because the initial BTC response
+was missing 19 expected grid buckets. It wrote no one-hour CSV, manifest or
+checksum and ran no evaluation. Recovery preparation adds at most two exact-
+bucket passes under a 100-request per-asset ceiling; it accepts only complete
+provider candles, never fills or synthesizes data and reports exact timestamp
+samples if gaps persist. The recovery patch requires focused/full Windows
+reproduction, reviewed commit/push and a clean tree before retrying acquisition.
+Local Python 3.12 validation passes 202/202 focused research-stack tests and the
+complete 746/746 suite. All candidate-v2, optimization, PAPER and live
+authorizations remain false.

@@ -520,10 +520,19 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
   `1h`, `6h` and `1d` BTC/ETH evidence. Reuse the exact recorded 6h report,
   require new canonical 1h/1d locks, compare equal 720-day train and 180-day
   test durations, and generate neither ranking nor winner.
-- [ ] Reproduce the focused and complete suites on Windows, review the exact
-  study/refactor scope, commit and push it before acquiring new data.
-- [ ] Acquire and independently lock the exact 66,456-row 1h and 2,769-row 1d
-  BTC/ETH development datasets; commit only their manifests and SHA sidecars.
+- [x] Reproduce the complete 740/740 suite on Windows, review the exact
+  study/refactor scope, commit revision `c39fd7c` and push it before acquiring
+  new data.
+- [x] Acquire and independently lock the exact 2,769-row 1d BTC/ETH development
+  dataset under manifest SHA-256
+  `77bc9765a828174b1fd5d46b0d06d216db47e3edab5d91cc65f47a350a335691`.
+- [x] Record the first one-hour acquisition as a safe technical incident after
+  Coinbase omitted 19 expected BTC buckets and the builder wrote no 1h files.
+  Prepare bounded exact-gap recovery without filling or synthetic candles.
+- [ ] Reproduce the recovery patch with focused/full Windows tests, review it,
+  commit and push it before retrying one-hour acquisition.
+- [ ] Retry and independently lock the exact 66,456-row 1h BTC/ETH development
+  dataset; then commit only the reviewed 1h/1d manifests and SHA sidecars.
 - [ ] Execute and record the one-shot exploratory comparison, review its fixed-
   order evidence and close the study without mutating candidate v1 or treating
   any inspected timeframe as unseen validation.
