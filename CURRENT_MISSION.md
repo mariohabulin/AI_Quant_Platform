@@ -789,3 +789,27 @@ datasets, costs, calendar windows, seed and no-ranking policy are unchanged.
 Focused/full Windows reproduction plus reviewed commit/push are mandatory
 before one deterministic recovery execution. Candidate-v2, optimization,
 PAPER and live authorizations remain false.
+
+### Timeframe Sensitivity Study v1 — COMPLETED, NO ROBUST EDGE
+
+Windows reproduced schema-v3 recovery with 32/32 focused and 763/763 complete
+tests, committed it as `8042816` and pushed before deterministic execution. The
+canonical study report was then recorded under SHA-256
+`505bd5b40a38d7e5b8b4538e1d7ac9cb459cd40f46108dc1a33a42c1647b64ab`
+and committed/pushed as evidence revision `cb43a74`.
+
+Baseline and stress aggregates are `REJECTED` for 1h, recorded-reference 6h and
+1d. Every asset/profile falsification gate failed. One-hour OOS losses reached
+93.06%-97.90% with zero/near-zero walk-forward persistence. Six-hour BTC was
+positive only at baseline and became negative under stress while drawdown
+remained above 44%. Daily ETH outperformed its declining benchmark and reached
+7/11 baseline positive-excess windows, but lost 17.77%/20.99% absolutely,
+dropped below persistence under stress and failed falsification.
+
+The study is closed as `COMPLETED_NO_ROBUST_EDGE` with no ranking or selected
+timeframe. All history through 2026-08-01 is inspected development evidence and
+cannot serve as candidate-v2 unseen validation. The next authorized milestone
+is research-only failure-mode analysis and design of one new falsifiable
+hypothesis, followed by a new immutable identity and separately locked unseen
+boundary. Candidate-v2, optimization, PAPER and live authorizations remain
+false.

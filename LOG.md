@@ -1843,3 +1843,27 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
   metadata. NaN, negative infinity and all other non-finite fields remain fatal.
   Frozen strategy/data/configuration and every authorization boundary are
   unchanged; Windows tests and commit/push are required before recovery.
+
+## 2026-08-23 — Timeframe Sensitivity Study v1 (Completed and Closed)
+- Reproduced schema-v3 recovery on Windows with 32/32 focused and 763/763 full
+  tests, committed/pushed revision `8042816`, then verified absent final/staging
+  evidence and a clean repository before deterministic recovery.
+- Recorded canonical study report SHA-256
+  `505bd5b40a38d7e5b8b4538e1d7ac9cb459cd40f46108dc1a33a42c1647b64ab`
+  and committed/pushed it as evidence revision `cb43a74`.
+- Closed all 1h, 6h and 1d baseline/stress aggregates as `REJECTED`; every one
+  of 12 asset/profile views failed statistical falsification.
+- One-hour losses/drawdowns reached 93.06%-97.90% despite extensive trade
+  evidence. Six-hour BTC lost its positive absolute return under stress and
+  retained drawdown above 44%; six-hour ETH remained deeply negative.
+- Daily ETH produced relative development evidence (23.95/20.96 percentage-
+  point excess and 7/11 baseline persistent windows), but absolute returns were
+  -17.77%/-20.99%, stress persistence failed and falsification remained false.
+  It is not a selected winner or promotion candidate.
+- Verified schema-v3 encoding counts: two positive-infinite profit factors in
+  daily baseline and two in daily stress, zero in 1h/6h, with all other
+  non-finite evidence still rejected.
+- Closed the study as `COMPLETED_NO_ROBUST_EDGE`. All history through 2026-08-01
+  is now development evidence; candidate-v2 formal validation requires a new
+  identity and independently locked future/unseen boundary. Optimization,
+  PAPER and live authorization remain false.

@@ -547,12 +547,20 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
 - [x] Record study attempt 1 as a pre-staging technical serialization incident:
   a defined positive-infinite daily `profit_factor` was not standard JSON, and
   no final/staging evidence or aggregate comparison was written.
-- [ ] Reproduce schema-v3 positive-infinite profit-factor encoding on Windows,
-  review, commit and push without changing frozen strategy/data/configuration.
-- [ ] Execute and record the one-shot exploratory comparison, review its fixed-
-  order evidence and close the study without mutating candidate v1 or treating
-  any inspected timeframe as unseen validation.
-- [ ] If evidence justifies v2 design, freeze a new identity and separately
-  locked genuinely unseen final-validation boundary before any promotion test.
+- [x] Reproduce schema-v3 positive-infinite profit-factor encoding on Windows
+  with 32/32 focused and 763/763 complete tests; commit/push exact revision
+  `8042816` without changing frozen strategy/data/configuration.
+- [x] Execute and record the deterministic exploratory comparison under report
+  SHA-256
+  `505bd5b40a38d7e5b8b4538e1d7ac9cb459cd40f46108dc1a33a42c1647b64ab`
+  and evidence commit `cb43a74`.
+- [x] Close Timeframe Sensitivity Study v1 as `COMPLETED_NO_ROBUST_EDGE`: all
+  baseline/stress aggregates and 12 asset/profile views are rejected, with no
+  ranking, selected timeframe, candidate-v2 or promotion authorization.
+- [ ] Perform research-only failure-mode analysis and define one structurally
+  new, falsifiable strategy hypothesis without leaderboard-style parameter
+  sweeping or reusing inspected results as unseen validation.
+- [ ] Before formal candidate-v2 evaluation, freeze a new immutable identity
+  and independently lock a genuinely unseen future-validation boundary.
 
 External notification delivery and any real execution capability remain deferred. The completed twelve-hour, 24-hour and three-day gates are bounded infrastructure-endurance evidence, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization. First candidate v1 is closed as `REJECTED`; the next boundary is research-only timeframe sensitivity, not PAPER or live execution.
