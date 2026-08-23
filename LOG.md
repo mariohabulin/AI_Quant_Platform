@@ -1821,3 +1821,25 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - Local validation passes 216/216 focused research-stack tests and the complete
   760/760 Python 3.12 suite. Windows reproduction and reviewed commit/push remain
   mandatory before attempt 3. All promotion and live authorizations stay false.
+
+## 2026-08-23 — Timeframe Datasets Locked and Study Serialization Incident
+- Windows exposed a Pandas index storage-unit difference in the calendar
+  alignment check. Replaced raw `asi8`/nanosecond comparison with unit-neutral
+  calendar flooring and added explicit microsecond-index regression coverage.
+- Reproduced 30/30 focused and 761/761 complete Windows tests, committed/pushed
+  sparse-native schema v2 as `b61853f`, then ran acquisition attempt 3.
+- Atomically locked 1h BTC with 66,437 observed rows/19 explicit gaps and ETH
+  with 66,438 observed rows/18 gaps; each longest gap is five hours. Manifest
+  SHA-256 is
+  `b9ba8126ca0612402919dd7f0f0096db2b2ef2f0a7d0669b6848276e88bc8157`.
+- Rehashed every 1h/1d manifest and CSV, committed only the four manifests and
+  sidecars as `e07b93e`, pushed them and verified clean one-shot preflight.
+- Study attempt 1 failed during pre-staging compaction because one daily window
+  carried the Performance Analyzer's legitimate `profit_factor=inf` state. No
+  final report, checksum, staging evidence, aggregate outcome or comparison was
+  persisted or printed.
+- Added local schema-v3 evidence encoding: only positive infinite
+  `profit_factor` becomes `POSITIVE_INFINITY_NO_LOSING_TRADES`, with exact count
+  metadata. NaN, negative infinity and all other non-finite fields remain fatal.
+  Frozen strategy/data/configuration and every authorization boundary are
+  unchanged; Windows tests and commit/push are required before recovery.

@@ -717,6 +717,14 @@ is development evidence. A later formal candidate requires a new identity and a
 separately locked unseen final-validation boundary; no study result can reopen
 candidate v1 or authorize optimization, bounded forward PAPER or live trading.
 
+Canonical study evidence remains strict JSON. Study schema v3 maps only the
+Performance Analyzer's defined positive-infinite `profit_factor` state (wins
+with no losing P/L) to `POSITIVE_INFINITY_NO_LOSING_TRADES` and records an
+occurrence count per compact evaluation. NaN, negative infinity and non-finite
+values under every other key still fail before staging. The encoding is an
+evidence representation rule, not a metric cap, score or strategy-policy
+change.
+
 ---
 
 # Phase 3 Risk Engine v1 — Position Sizing Foundation Contract

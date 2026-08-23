@@ -21,8 +21,10 @@ from timeframe_sensitivity_study import (
     STAGING_DIRECTORY_NAME,
     STUDY_DIRECTORY_NAME,
     STUDY_ID,
+    STUDY_SCHEMA_VERSION,
     TIMEFRAME_ORDER,
     TIMEFRAME_SPECS,
+    POSITIVE_INFINITY_PROFIT_FACTOR,
     TimeframeSensitivityStudyRunner,
     acquire_timeframe_dataset,
     study_declaration,
@@ -240,6 +242,7 @@ def test_declaration_freezes_research_only_scope_without_evaluation():
     declaration = study_declaration()
 
     assert declaration["status"] == "TIMEFRAME_STUDY_DECLARED"
+    assert declaration["schema_version"] == STUDY_SCHEMA_VERSION == 3
     assert declaration["study_id"] == STUDY_ID
     assert declaration["timeframes"] == list(TIMEFRAME_ORDER)
     assert declaration["exploratory_timeframes"] == list(EXPLORATORY_TIMEFRAMES)
@@ -584,6 +587,78 @@ def test_non_finite_study_evidence_fails_before_staging(tmp_path):
 
     assert not (tmp_path / "non_finite" / STUDY_DIRECTORY_NAME).exists()
     assert not (tmp_path / "non_finite" / STAGING_DIRECTORY_NAME).exists()
+
+
+def test_positive_infinite_profit_factor_is_explicitly_encoded(tmp_path):
+    reference_path, reference_hash = write_reference(tmp_path)
+
+    class InfiniteProfitFactorValidator(FakeValidator):
+        def run(self, assets):
+            result = super().run(assets)
+            result["assets"]["BTC-USD"]["walk_forward"]["windows"][0][
+                "test"
+            ]["performance"] = {
+                "number_of_trades": 1,
+                "profit_factor": float("inf"),
+            }
+            return result
+
+    study_runner = TimeframeSensitivityStudyRunner(
+        output_root=tmp_path / "positive_infinity",
+        reference_report_sha256=reference_hash,
+        dataset_locker_factory=FakeLocker,
+        sparse_dataset_locker_factory=FakeLocker,
+        validator_factory=InfiniteProfitFactorValidator,
+        calendar_validator_factory=InfiniteProfitFactorValidator,
+    )
+
+    recorded = study_runner.run(
+        {"1h": tmp_path / "1h.json", "1d": tmp_path / "1d.json"},
+        reference_path,
+    )
+
+    payload = json.loads(recorded.report_path.read_bytes())
+    baseline = payload["timeframe_evidence"]["1h"]["baseline_evaluation"]
+    encoded = baseline["assets"]["BTC-USD"]["walk_forward"]["windows"][0][
+        "test"
+    ]["performance"]["profit_factor"]
+    assert encoded == POSITIVE_INFINITY_PROFIT_FACTOR
+    assert baseline["raw_evaluation_encoding"] == {
+        "positive_infinite_profit_factor_count": 1,
+        "positive_infinite_profit_factor_value": (
+            POSITIVE_INFINITY_PROFIT_FACTOR
+        ),
+    }
+
+
+def test_negative_infinite_profit_factor_still_fails_before_staging(tmp_path):
+    reference_path, reference_hash = write_reference(tmp_path)
+
+    class NegativeInfiniteProfitFactorValidator(FakeValidator):
+        def run(self, assets):
+            result = super().run(assets)
+            result["assets"]["BTC-USD"]["walk_forward"]["windows"][0][
+                "test"
+            ]["performance"] = {"profit_factor": float("-inf")}
+            return result
+
+    study_runner = TimeframeSensitivityStudyRunner(
+        output_root=tmp_path / "negative_infinity",
+        reference_report_sha256=reference_hash,
+        dataset_locker_factory=FakeLocker,
+        sparse_dataset_locker_factory=FakeLocker,
+        validator_factory=NegativeInfiniteProfitFactorValidator,
+        calendar_validator_factory=NegativeInfiniteProfitFactorValidator,
+    )
+
+    with pytest.raises(ValueError, match="Out of range float values"):
+        study_runner.run(
+            {"1h": tmp_path / "1h.json", "1d": tmp_path / "1d.json"},
+            reference_path,
+        )
+
+    assert not (tmp_path / "negative_infinity" / STUDY_DIRECTORY_NAME).exists()
+    assert not (tmp_path / "negative_infinity" / STAGING_DIRECTORY_NAME).exists()
 
 
 def test_declaration_cli_is_non_activating(capsys):

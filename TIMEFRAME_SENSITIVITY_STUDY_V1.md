@@ -99,6 +99,14 @@ per-window, aggregate and statistical results needed for review while keeping
 the Git artifact bounded. Exact trade-level detail remains deterministically
 reproducible from the locked data, configuration, code revision and seed.
 
+Study evidence schema v3 preserves the Performance Analyzer's defined positive-
+infinite profit factor when a window has wins but no losses. JSON cannot encode
+an unquoted infinity, so only a positive infinite value under the exact
+`profit_factor` key becomes the explicit string
+`POSITIVE_INFINITY_NO_LOSING_TRADES`. Each compact evaluation records the
+sentinel and occurrence count. NaN, negative infinity and non-finite values in
+all other fields remain fatal; no value is capped, set to zero or hidden.
+
 The study creates no score, ranking or winner. A strong-looking timeframe is a
 hypothesis generator only. The `1h` and `1d` series cover the same underlying
 historical market period already inspected through six-hour evidence, so none
@@ -127,7 +135,8 @@ data/research/timeframe_sensitivity_v1/study_v1/timeframe_sensitivity_report.sha
 Existing final evidence refuses any repeat. An interrupted write leaves
 `.study_v1.staging`, which also refuses automatic retry until manually reviewed.
 Canonical serialization occurs before staging creation, rejects missing time
-values and non-finite numbers, and writes no partial result to stdout.
+values and every non-finite value except the explicit schema-v3 positive-
+infinite profit-factor representation, and writes no partial result to stdout.
 
 ## Controlled integration sequence
 

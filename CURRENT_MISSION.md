@@ -762,3 +762,30 @@ passes 216/216 focused research-stack tests and the complete 760/760 suite.
 Windows reproduction, reviewed commit/push and a clean tree remain mandatory
 before attempt 3. All candidate-v2, optimization, PAPER and live authorizations
 remain false.
+
+### Timeframe Sensitivity Study v1 — DATASETS LOCKED AND SERIALIZATION RECOVERY
+
+Windows reproduced schema v2 after a Pandas datetime-unit compatibility repair:
+30/30 focused and 761/761 complete tests passed. The reviewed implementation was
+committed and pushed as `b61853f`. Acquisition attempt 3 then atomically locked
+66,437 observed BTC one-hour rows with 19 explicit gaps and 66,438 ETH rows with
+18 explicit gaps; each asset's longest gap is five hours. The one-hour manifest
+SHA-256 is
+`b9ba8126ca0612402919dd7f0f0096db2b2ef2f0a7d0669b6848276e88bc8157`.
+Both dataset manifests and sidecars were independently rehashed, committed and
+pushed as clean revision `e07b93e` before evaluation.
+
+Study attempt 1 revalidated the frozen inputs and ran the exploratory profiles
+in memory, but failed closed before final or staging persistence when one daily
+walk-forward performance record contained the engine's defined
+`profit_factor=inf` state. JSON cannot represent infinity as a standard number.
+No aggregate classification or comparison was printed or persisted, and the
+error may not be used for tuning.
+
+Local schema-v3 recovery encodes only positive infinite `profit_factor` as
+`POSITIVE_INFINITY_NO_LOSING_TRADES`, with an occurrence count in each compact
+evaluation. All other non-finite evidence remains fatal. Strategy, parameters,
+datasets, costs, calendar windows, seed and no-ranking policy are unchanged.
+Focused/full Windows reproduction plus reviewed commit/push are mandatory
+before one deterministic recovery execution. Candidate-v2, optimization,
+PAPER and live authorizations remain false.

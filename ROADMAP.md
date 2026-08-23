@@ -537,11 +537,18 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
 - [x] Prepare sparse-native schema v2 locally with complete gap accounting,
   atomic two-asset persistence, no synthetic data and calendar-time validation;
   pass 216/216 focused and 760/760 complete tests.
-- [ ] Reproduce schema v2 on Windows, review, commit and push before acquisition
-  attempt 3.
-- [ ] Acquire and independently lock observed native 1h BTC/ETH data against all
-  66,456 expected buckets; then commit only reviewed 1h/1d manifests and SHA
-  sidecars.
+- [x] Reproduce schema v2 on Windows with 30/30 focused and 761/761 complete
+  tests, review the datetime-unit compatibility repair, commit exact revision
+  `b61853f` and push before acquisition attempt 3.
+- [x] Acquire and independently lock observed native 1h BTC/ETH data against all
+  66,456 expected buckets; bind 19 BTC and 18 ETH gaps under manifest SHA-256
+  `b9ba8126ca0612402919dd7f0f0096db2b2ef2f0a7d0669b6848276e88bc8157`,
+  then commit/push only reviewed 1h/1d manifests and sidecars as `e07b93e`.
+- [x] Record study attempt 1 as a pre-staging technical serialization incident:
+  a defined positive-infinite daily `profit_factor` was not standard JSON, and
+  no final/staging evidence or aggregate comparison was written.
+- [ ] Reproduce schema-v3 positive-infinite profit-factor encoding on Windows,
+  review, commit and push without changing frozen strategy/data/configuration.
 - [ ] Execute and record the one-shot exploratory comparison, review its fixed-
   order evidence and close the study without mutating candidate v1 or treating
   any inspected timeframe as unseen validation.

@@ -4,6 +4,8 @@ import argparse
 from dataclasses import dataclass, replace
 import hashlib
 import json
+import math
+from numbers import Real
 from pathlib import Path
 
 try:
@@ -57,7 +59,7 @@ except ImportError:  # package import when src is not placed directly on sys.pat
     )
 
 
-STUDY_SCHEMA_VERSION = 2
+STUDY_SCHEMA_VERSION = 3
 STUDY_ID = "ema-20-50-btc-eth-timeframe-sensitivity-v1"
 TIMEFRAME_ORDER = ("1h", "6h", "1d")
 BASELINE_REFERENCE_TIMEFRAME = "6h"
@@ -66,6 +68,7 @@ STUDY_DIRECTORY_NAME = "study_v1"
 STAGING_DIRECTORY_NAME = ".study_v1.staging"
 REPORT_FILENAME = "timeframe_sensitivity_report.json"
 CHECKSUM_FILENAME = "timeframe_sensitivity_report.sha256"
+POSITIVE_INFINITY_PROFIT_FACTOR = "POSITIVE_INFINITY_NO_LOSING_TRADES"
 DEFAULT_OUTPUT_ROOT = Path("data/research/timeframe_sensitivity_v1")
 FIRST_CANDIDATE_MANIFEST_SHA256 = (
     "6506dd2700b983a134a132890ef4c4ae6e84c0918ba65a5abff6ab2c204c4e7f"
@@ -487,10 +490,54 @@ class TimeframeSensitivityStudyRunner:
         }
 
     @classmethod
+    def _normalize_profit_factor_evidence(cls, value):
+        if isinstance(value, dict):
+            normalized = {}
+            encoded_count = 0
+            for key, item in value.items():
+                if (
+                    key == "profit_factor"
+                    and isinstance(item, Real)
+                    and not isinstance(item, bool)
+                    and math.isinf(float(item))
+                    and item > 0
+                ):
+                    normalized[key] = POSITIVE_INFINITY_PROFIT_FACTOR
+                    encoded_count += 1
+                    continue
+                normalized_item, item_count = (
+                    cls._normalize_profit_factor_evidence(item)
+                )
+                normalized[key] = normalized_item
+                encoded_count += item_count
+            return normalized, encoded_count
+        if isinstance(value, list):
+            normalized = []
+            encoded_count = 0
+            for item in value:
+                normalized_item, item_count = (
+                    cls._normalize_profit_factor_evidence(item)
+                )
+                normalized.append(normalized_item)
+                encoded_count += item_count
+            return normalized, encoded_count
+        if isinstance(value, tuple):
+            normalized, encoded_count = cls._normalize_profit_factor_evidence(
+                list(value)
+            )
+            return tuple(normalized), encoded_count
+        return value, 0
+
+    @classmethod
     def _compact_evaluation(cls, result):
-        raw_bytes = canonical_json_bytes(result)
+        normalized_result, encoded_count = (
+            cls._normalize_profit_factor_evidence(result)
+        )
+        raw_bytes = canonical_json_bytes(normalized_result)
         assets = {}
-        for asset_name, asset_result in sorted(result["assets"].items()):
+        for asset_name, asset_result in sorted(
+            normalized_result["assets"].items()
+        ):
             assets[asset_name] = {
                 "strategy": asset_result["strategy"],
                 "classification": asset_result["classification"],
@@ -503,13 +550,19 @@ class TimeframeSensitivityStudyRunner:
                 "falsification": asset_result["falsification"],
             }
         return {
-            "strategy": result["strategy"],
-            "asset_count": result["asset_count"],
-            "summary": result["summary"],
-            "classification": result["classification"],
+            "strategy": normalized_result["strategy"],
+            "asset_count": normalized_result["asset_count"],
+            "summary": normalized_result["summary"],
+            "classification": normalized_result["classification"],
             "assets": assets,
             "raw_evaluation_sha256": hashlib.sha256(raw_bytes).hexdigest(),
             "raw_evaluation_canonical_bytes": len(raw_bytes),
+            "raw_evaluation_encoding": {
+                "positive_infinite_profit_factor_count": encoded_count,
+                "positive_infinite_profit_factor_value": (
+                    POSITIVE_INFINITY_PROFIT_FACTOR
+                ),
+            },
             "raw_trade_level_evidence_persisted": False,
         }
 
