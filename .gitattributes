@@ -1,3 +1,5 @@
 .gitattributes text eol=lf
 data/research/**/manifest.json text eol=lf
 data/research/**/manifest.sha256 text eol=lf
+data/research/**/evaluation_report.json text eol=lf
+data/research/**/evaluation_report.sha256 text eol=lf
