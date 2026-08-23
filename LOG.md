@@ -1714,3 +1714,34 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - Closed First Strategy Candidate Pre-registration v1 as PASS without acquiring
   historical data, inspecting a result, optimizing a parameter or activating a
   runtime. The exact dataset SHA-256 lock is the next separate gate.
+
+## 2026-08-23 — First Candidate Evaluation v1 (Rejected and Closed)
+- Acquired and independently locked the exact 11,076-row BTC-USD and ETH-USD
+  native six-hour datasets under manifest SHA-256
+  `6506dd2700b983a134a132890ef4c4ae6e84c0918ba65a5abff6ab2c204c4e7f`.
+- Added and integrated the one-shot evaluation runner with fixed evidence paths,
+  fail-closed staging, frozen-manifest enforcement, deterministic canonical JSON
+  and structural prohibition of optimization, bounded forward PAPER and live
+  authorization.
+- Recorded the first execution's Pandas `Timestamp` serialization incident. No
+  report, checksum, staging directory, outcome or performance value was
+  persisted or printed. Added timestamp/scalar normalization and regression
+  coverage without changing candidate identity, data, parameters, costs,
+  thresholds, seed or protocol logic.
+- Recovered the deterministic evaluation once and recorded canonical report
+  SHA-256
+  `6b79d0932ee334574ffdbef1aca73c8b900ab8fcb8fbafb857bdd327d38d547c`
+  in evidence commit `8978c72`.
+- Closed the protocol outcome as `REJECTED`: baseline and stress each rejected
+  both assets; no asset passed statistical falsification or the required 60%
+  positive walk-forward excess rate. BTC/ETH supplied 11 windows and 75/74
+  unseen walk-forward trades, but worst-profile OOS drawdown was 44.36% and
+  57.22% against the frozen 20% maximum.
+- Preserved all safety boundaries as false: bounded forward PAPER review
+  eligibility, bounded forward PAPER authorization, optimization authorization
+  and live execution authorization. Candidate v1 will not be mutated or rerun
+  as unseen evidence.
+- Authorized only a research-stage Timeframe Sensitivity Study v1 across 1h,
+  6h and 1d BTC/ETH evidence. Any later candidate v2 must receive a new frozen
+  identity and a separately locked unseen final-validation boundary; equity
+  research remains a separate venue/calendar track.

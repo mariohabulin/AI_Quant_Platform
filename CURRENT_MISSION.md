@@ -686,3 +686,30 @@ counts are zero. First Strategy Candidate Pre-registration v1 is closed as a
 cross-platform PASS. The next authorized action is acquisition and independent
 SHA-256 locking of the exact frozen dataset. Evaluation, optimization, forward
 PAPER and live-money execution remain unauthorized.
+
+### First Candidate Evaluation v1 — REJECTED AND CLOSED
+
+The exact Coinbase BTC/ETH native six-hour dataset was acquired and locked
+under manifest SHA-256
+`6506dd2700b983a134a132890ef4c4ae6e84c0918ba65a5abff6ab2c204c4e7f`.
+The one-shot runner then evaluated the immutable EMA 20/50 candidate under its
+frozen baseline and cost-stress profiles. An initial post-evaluation
+serialization failure produced no persisted or printed result; timestamp
+normalization was documented, regression-tested and committed before one
+deterministic recovery execution.
+
+The recovered canonical report was recorded in commit `8978c72` with SHA-256
+`6b79d0932ee334574ffdbef1aca73c8b900ab8fcb8fbafb857bdd327d38d547c`.
+Both baseline and stress aggregates are `REJECTED`, with two of two assets
+rejected in each pass. Identity, scope, 11 walk-forward windows per asset and
+75/74 unseen walk-forward trades passed. Statistical falsification and the 60%
+walk-forward persistence threshold failed for both assets under both profiles;
+worst-profile OOS drawdown reached 44.36% for BTC and 57.22% for ETH, exceeding
+the frozen 20% ceiling.
+
+Candidate v1 is permanently closed. Bounded forward PAPER eligibility,
+bounded forward PAPER authorization, optimization and live execution remain
+false. The next authorized milestone is a research-only Timeframe Sensitivity
+Study v1 across 1h, 6h and 1d BTC/ETH evidence. It must not mutate or rescue v1;
+any formal candidate v2 requires a new frozen identity and a separately locked
+unseen final-validation boundary.

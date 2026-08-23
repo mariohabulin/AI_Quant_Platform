@@ -506,11 +506,20 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
   ASCII/LF portability issue, commit/push exact revision `27dacb3`, then
   reproduce both suites plus all seven readiness checks on parked CPX22 without
   activating any systemd unit.
-- [ ] Acquire the exact frozen BTC/ETH dataset and record its canonical manifest
+- [x] Acquire the exact frozen BTC/ETH dataset and record its canonical manifest
   SHA-256 without inspecting strategy performance.
-- [ ] Execute the immutable first-candidate Strategy Evaluation Protocol once,
+- [x] Execute the immutable first-candidate Strategy Evaluation Protocol once,
   classify its baseline/stress evidence, and prohibit post-result parameter
   mutation. Profitability evidence, bounded forward-PAPER promotion and live-
   money authorization remain separate gates.
+- [x] Close candidate v1 as `REJECTED`: both baseline and stress aggregates
+  rejected both assets, walk-forward persistence and statistical falsification
+  failed, and worst-profile OOS drawdown exceeded the 20% ceiling for BTC and
+  ETH. Retain PAPER, optimization and live authorization as false.
+- [ ] Prepare Timeframe Sensitivity Study v1 as research-only analysis across
+  `1h`, `6h` and `1d` BTC/ETH evidence. Do not mutate or rerun candidate v1,
+  treat inspected history as development evidence, and require a new identity
+  plus a separately locked unseen validation boundary before any candidate v2
+  promotion decision.
 
-External notification delivery and any real execution capability remain deferred. The completed twelve-hour, 24-hour and three-day gates are bounded infrastructure-endurance evidence, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization. The clean three-day PASS and completed Strategy Evaluation Protocol cloud integration authorize pre-registration and offline evaluation of the first strategy candidate only.
+External notification delivery and any real execution capability remain deferred. The completed twelve-hour, 24-hour and three-day gates are bounded infrastructure-endurance evidence, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization. First candidate v1 is closed as `REJECTED`; the next boundary is research-only timeframe sensitivity, not PAPER or live execution.
