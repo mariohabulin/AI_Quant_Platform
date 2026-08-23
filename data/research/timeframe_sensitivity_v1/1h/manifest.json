@@ -1,0 +1,122 @@
+{
+  "assets": {
+    "BTC-USD": {
+      "expected_rows": 66456,
+      "file": "btc_usd_1h_20190101_20260801.csv",
+      "first_timestamp": "2019-01-01T00:00:00Z",
+      "last_timestamp": "2026-07-31T23:00:00Z",
+      "max_consecutive_missing_buckets": 5,
+      "missing_rows": 19,
+      "missing_timestamps": [
+        "2019-04-11T13:00:00Z",
+        "2019-06-20T15:00:00Z",
+        "2019-10-31T20:00:00Z",
+        "2020-01-30T17:00:00Z",
+        "2020-09-04T23:00:00Z",
+        "2020-10-20T20:00:00Z",
+        "2023-03-04T18:00:00Z",
+        "2023-03-04T19:00:00Z",
+        "2023-03-04T20:00:00Z",
+        "2025-10-25T16:00:00Z",
+        "2025-10-25T17:00:00Z",
+        "2025-10-25T18:00:00Z",
+        "2025-10-25T19:00:00Z",
+        "2025-10-25T20:00:00Z",
+        "2026-05-08T02:00:00Z",
+        "2026-05-08T03:00:00Z",
+        "2026-05-08T04:00:00Z",
+        "2026-05-08T05:00:00Z",
+        "2026-05-08T06:00:00Z"
+      ],
+      "recovery_status": "exhausted_2_passes",
+      "rows": 66437,
+      "sha256": "22ac81b57e9adfc68ade7c6b552ad82c1bdf44fe2e2ae47d28b9c64af353d012"
+    },
+    "ETH-USD": {
+      "expected_rows": 66456,
+      "file": "eth_usd_1h_20190101_20260801.csv",
+      "first_timestamp": "2019-01-01T00:00:00Z",
+      "last_timestamp": "2026-07-31T23:00:00Z",
+      "max_consecutive_missing_buckets": 5,
+      "missing_rows": 18,
+      "missing_timestamps": [
+        "2019-06-20T14:00:00Z",
+        "2019-06-20T15:00:00Z",
+        "2020-01-30T17:00:00Z",
+        "2020-09-04T23:00:00Z",
+        "2020-10-20T20:00:00Z",
+        "2023-03-04T18:00:00Z",
+        "2023-03-04T19:00:00Z",
+        "2023-03-04T20:00:00Z",
+        "2025-10-25T16:00:00Z",
+        "2025-10-25T17:00:00Z",
+        "2025-10-25T18:00:00Z",
+        "2025-10-25T19:00:00Z",
+        "2025-10-25T20:00:00Z",
+        "2026-05-08T02:00:00Z",
+        "2026-05-08T03:00:00Z",
+        "2026-05-08T04:00:00Z",
+        "2026-05-08T05:00:00Z",
+        "2026-05-08T06:00:00Z"
+      ],
+      "recovery_status": "exhausted_2_passes",
+      "rows": 66438,
+      "sha256": "2852aff5b4817874e45c25c517c9981c65b106901f3de416e5e3fd2456ae8702"
+    }
+  },
+  "canonicalization": {
+    "column_order": [
+      "Timestamp",
+      "Open",
+      "High",
+      "Low",
+      "Close",
+      "Volume"
+    ],
+    "encoding": "utf-8",
+    "float_format": ".17g",
+    "line_ending": "LF",
+    "timestamp": "UTC ISO-8601 second precision"
+  },
+  "contract": {
+    "dataset_id": "coinbase-exchange-btc-eth-observed-native-1h-20190101-20260801-timeframe-study-v1-gap-aware-v2",
+    "end": "2026-08-01T00:00:00Z",
+    "expected_rows_per_product": 66456,
+    "granularity_seconds": 3600,
+    "products": [
+      "BTC-USD",
+      "ETH-USD"
+    ],
+    "range_semantics": "start_inclusive_end_exclusive",
+    "start": "2019-01-01T00:00:00Z",
+    "timeframe": "1h"
+  },
+  "gap_policy": {
+    "calendar_windowing_required": true,
+    "forward_fill_allowed": false,
+    "interpolation_allowed": false,
+    "max_consecutive_missing_buckets": 24,
+    "max_missing_buckets_per_product": 50,
+    "max_missing_candle_recovery_requests": 100,
+    "missing_candle_recovery_passes": 2,
+    "mode": "PROVIDER_OBSERVED_WITH_EXPLICIT_GAPS",
+    "resampling_allowed": false,
+    "synthetic_candles_allowed": false
+  },
+  "schema_version": "2.0",
+  "source": {
+    "candles_documentation": "https://docs.cdp.coinbase.com/api-reference/exchange-api/rest-api/products/get-product-candles",
+    "endpoint": "https://api.exchange.coinbase.com/products/{product_id}/candles",
+    "fees_documentation": "https://help.coinbase.com/exchange/trading-and-funding/exchange-fees",
+    "max_candles_per_request": 300,
+    "provider": "Coinbase Exchange public REST",
+    "response_shape": [
+      "time",
+      "low",
+      "high",
+      "open",
+      "close",
+      "volume"
+    ]
+  }
+}

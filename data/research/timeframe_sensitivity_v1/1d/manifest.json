@@ -1,0 +1,61 @@
+{
+  "assets": {
+    "BTC-USD": {
+      "file": "btc_usd_1d_20190101_20260801.csv",
+      "first_timestamp": "2019-01-01T00:00:00Z",
+      "last_timestamp": "2026-07-31T00:00:00Z",
+      "rows": 2769,
+      "sha256": "2ee47e490f91742c68ba743fe0a4e259684e6df8ae31333fcdf55abc8627db47"
+    },
+    "ETH-USD": {
+      "file": "eth_usd_1d_20190101_20260801.csv",
+      "first_timestamp": "2019-01-01T00:00:00Z",
+      "last_timestamp": "2026-07-31T00:00:00Z",
+      "rows": 2769,
+      "sha256": "cc71bbf5b6da127364884bc5919aeb598d40f1a822cd870d800b8220bd531b35"
+    }
+  },
+  "canonicalization": {
+    "column_order": [
+      "Timestamp",
+      "Open",
+      "High",
+      "Low",
+      "Close",
+      "Volume"
+    ],
+    "encoding": "utf-8",
+    "float_format": ".17g",
+    "line_ending": "LF",
+    "timestamp": "UTC ISO-8601 second precision"
+  },
+  "contract": {
+    "dataset_id": "coinbase-exchange-btc-eth-native-1d-20190101-20260801-timeframe-study-v1",
+    "end": "2026-08-01T00:00:00Z",
+    "expected_rows_per_product": 2769,
+    "granularity_seconds": 86400,
+    "products": [
+      "BTC-USD",
+      "ETH-USD"
+    ],
+    "range_semantics": "start_inclusive_end_exclusive",
+    "start": "2019-01-01T00:00:00Z",
+    "timeframe": "1d"
+  },
+  "schema_version": "1.0",
+  "source": {
+    "candles_documentation": "https://docs.cdp.coinbase.com/api-reference/exchange-api/rest-api/products/get-product-candles",
+    "endpoint": "https://api.exchange.coinbase.com/products/{product_id}/candles",
+    "fees_documentation": "https://help.coinbase.com/exchange/trading-and-funding/exchange-fees",
+    "max_candles_per_request": 300,
+    "provider": "Coinbase Exchange public REST",
+    "response_shape": [
+      "time",
+      "low",
+      "high",
+      "open",
+      "close",
+      "volume"
+    ]
+  }
+}
