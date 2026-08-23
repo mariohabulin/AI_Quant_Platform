@@ -814,7 +814,7 @@ hypothesis, followed by a new immutable identity and separately locked unseen
 boundary. Candidate-v2, optimization, PAPER and live authorizations remain
 false.
 
-### Strategy Research Inventory and Failure-Mode Analysis v1 — LOCAL PREPARATION
+### Strategy Research Inventory and Failure-Mode Analysis v1 — INTEGRATED
 
 The post-study boundary now inventories all nine existing standalone strategy
 implementations. EMA remains the rejected/closed candidate-v1 component; ADX,
@@ -832,6 +832,28 @@ and extracts recorded failure facts without reevaluation.
 The next hypothesis must address turnover/cost survival, drawdown control,
 market-regime mechanism and genuinely unseen validation. This inventory does
 not select a strategy family, authorize combinations or permit parameter
-sweeps. Local TDD adds 10 focused tests and passes the complete 773/773 suite.
-Windows reproduction, reviewed commit/push and non-evaluating CLI review remain
-mandatory before a separate screening protocol may be designed.
+sweeps. Windows reproduced 180/180 focused strategy/inventory tests and the
+complete 773/773 suite, committed/pushed exact revision `53202c0`, then ran the
+non-evaluating audit against the exact recorded report. All nine integrations
+passed; EMA alone remains market-rejected and the other eight remain unknown.
+
+### Strategy Family Screening Protocol v1 — LOCAL PREPARATION
+
+The next bounded artifact pre-registers one descriptive screen for the eight
+unevaluated default implementations on the existing native BTC/ETH six-hour
+development dataset. Six hours is fixed for balanced evidence density, not as a
+winner. The canonical manifest SHA-256 is
+`6506dd2700b983a134a132890ef4c4ae6e84c0918ba65a5abff6ab2c204c4e7f`;
+all history through 2026-08-01 remains inspected development evidence.
+
+Each strategy receives one parameter fingerprint and the unchanged candidate-v1
+windows, seed, causal timing, baseline/stress costs, evidence-volume gates and
+drawdown limit. Multiple-comparison interpretation is descriptive and permits
+only `SCREEN_OUT`, `MECHANISM_RETAINS_INTEREST` or `INCONCLUSIVE`, with no
+ranking, tie-break, winner or formal validation claim.
+
+This patch declares and data-locks the boundary only. It contains no screening
+runner and reports `screening_executed=false`. Local TDD passes 15/15 new,
+233/233 focused research/integration and 788/788 complete tests. Windows
+reproduction remains pending. Candidate v2, optimization, PAPER and live
+authorization remain false.

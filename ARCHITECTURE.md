@@ -746,6 +746,37 @@ counts, persistence and falsification facts without recalculating a strategy or
 selecting a successor. Any later family screening must receive a separate
 pre-registered scope and multiple-comparison boundary before execution.
 
+## Strategy Family Screening Pre-registration Boundary
+
+Strategy Family Screening Protocol v1 freezes one development-only comparison
+before any of its performance results exist. It excludes the closed EMA 20/50
+mechanism and permits exactly one explicit default configuration for ADX, ATR
+breakout, Bollinger, Donchian, MACD, RSI, Stochastic and Supertrend. Each entry
+is bound by a deterministic name/family/mechanism/parameter fingerprint;
+parameter variants and indicator combinations are outside the experiment.
+
+The shared data identity is the already canonical native BTC/ETH six-hour
+manifest SHA-256
+`6506dd2700b983a134a132890ef4c4ae6e84c0918ba65a5abff6ab2c204c4e7f`.
+Six hours is a fixed working resolution because it balances development
+evidence density between recorded one-hour turnover failure and daily low trade
+density. It is not a selected winner. The entire range through 2026-08-01 is
+explicitly inspected development evidence.
+
+All eight paths must reuse the same 2,880/720/720 expanding windows, 70/30 OOS
+split, seed, completed-Close/next-Open timing, terminal-close policy,
+baseline/stress costs, evidence-volume gates and 20% drawdown limit. The
+multiple-comparison policy is descriptive: no score, ranking, tie-break,
+winner or formal validation claim is allowed. Per-strategy outcomes are limited
+to `SCREEN_OUT`, `MECHANISM_RETAINS_INTEREST` and `INCONCLUSIVE`.
+
+Declaration and dataset lock do not import or invoke a screening runner. They
+only validate immutable identity and return
+`screening_executed=False`. A retained mechanism, if any, can support writing a
+new hypothesis but cannot authorize candidate v2, optimization, bounded forward
+PAPER or live execution. Formal candidate-v2 evidence requires a new identity
+and separately locked genuinely unseen future data.
+
 ---
 
 # Phase 3 Risk Engine v1 — Position Sizing Foundation Contract

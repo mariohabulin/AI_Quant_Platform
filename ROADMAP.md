@@ -561,14 +561,22 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
   inventory nine implementations, retain eight as unevaluated components, audit
   only synthetic causal integration and accept only the exact closed study
   report for fact extraction; pass 10/10 focused and 773/773 complete tests.
-- [ ] Reproduce the inventory/audit boundary on Windows, review and commit/push
-  before running its non-evaluating CLI against the recorded report.
-- [ ] Pre-register a fixed standalone strategy-family development screening
+- [x] Reproduce the inventory/audit boundary on Windows with 180/180 focused and
+  773/773 complete tests, commit/push exact revision `53202c0`, then run its
+  non-evaluating CLI against the recorded report.
+- [x] Prepare locally a fixed standalone strategy-family development screening
   scope with no parameter sweep, automatic ranking, indicator combination or
-  candidate-v2 authorization before producing new performance evidence.
+  candidate-v2 authorization before producing new performance evidence; pass
+  15/15 new, 233/233 focused and 788/788 complete tests with no performance
+  runner.
+- [ ] Reproduce Strategy Family Screening Protocol v1 on Windows, review and
+  commit/push the exact declaration/data-lock revision, then validate the frozen
+  six-hour manifest without running performance screening.
+- [ ] Implement and separately review a one-shot canonical screening runner
+  that preserves the frozen descriptive multiple-comparison policy.
 - [ ] Use development screening only to define one structurally new,
   falsifiable hypothesis without treating inspected results as unseen evidence.
 - [ ] Before formal candidate-v2 evaluation, freeze a new immutable identity
   and independently lock a genuinely unseen future-validation boundary.
 
-External notification delivery and any real execution capability remain deferred. The completed twelve-hour, 24-hour and three-day gates are bounded infrastructure-endurance evidence, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization. First candidate v1 is closed as `REJECTED`; the next boundary is research-only timeframe sensitivity, not PAPER or live execution.
+External notification delivery and any real execution capability remain deferred. The completed twelve-hour, 24-hour and three-day gates are bounded infrastructure-endurance evidence, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization. First candidate v1 is closed as `REJECTED`; the next boundary is default-only development screening, not candidate v2, PAPER or live execution.

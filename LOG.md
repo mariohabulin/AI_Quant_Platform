@@ -1868,7 +1868,7 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
   identity and independently locked future/unseen boundary. Optimization,
   PAPER and live authorization remain false.
 
-## 2026-08-23 — Strategy Research Inventory v1 (Local Preparation)
+## 2026-08-23 — Strategy Research Inventory v1 (Integrated)
 - Inventoried exact default implementations for ADX, ATR breakout, Bollinger,
   Donchian, closed EMA crossover, MACD, RSI, Stochastic and Supertrend; retained
   the eight non-EMA entries as unevaluated research components.
@@ -1885,6 +1885,28 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - Froze next-hypothesis constraints around cost/turnover survival, bounded
   drawdown, explicit regime mechanism, baseline/stress retention, unseen future
   validation and no parameter leaderboard.
-- Added 10 focused tests; local complete validation passes 773/773. Windows
-  reproduction and Git integration remain required before any separately
-  pre-registered strategy-family screening.
+- Windows reproduced 180/180 focused strategy/inventory tests and the complete
+  773/773 suite. Committed/pushed exact revision `53202c0`, then loaded the
+  canonical study report through the non-evaluating CLI.
+- Confirmed all nine implementations integration-ready. Only EMA carries a
+  market result (`CLOSED_REJECTED_CANDIDATE_V1`); the other eight remain
+  unevaluated, with no selected strategy or authorization change.
+
+## 2026-08-23 — Strategy Family Screening Protocol v1 (Local Preparation)
+- Froze a development-only scope containing exactly one default configuration
+  for ADX, ATR breakout, Bollinger, Donchian, MACD, RSI, Stochastic and
+  Supertrend; excluded the already rejected EMA candidate-v1 mechanism.
+- Bound the future screen to the exact native BTC/ETH six-hour manifest SHA-256
+  `6506dd2700b983a134a132890ef4c4ae6e84c0918ba65a5abff6ab2c204c4e7f`.
+  Six hours is an evidence-density working resolution, not a performance winner.
+- Reused the exact 2,880/720/720 windows, 70/30 OOS split, seed, causal
+  completed-Close/next-Open timing, baseline/stress costs and frozen evidence
+  gates from candidate v1.
+- Added a descriptive multiple-comparison guard: no score, ranking, tie-break,
+  winner or formal validation claim; allowed per-strategy outcomes are only
+  `SCREEN_OUT`, `MECHANISM_RETAINS_INTEREST` and `INCONCLUSIVE`.
+- Added declaration and exact dataset locking without a performance runner.
+  Both paths retain `screening_executed=false`; 15/15 new, 233/233 focused
+  research/integration and 788/788 complete tests pass locally. Windows
+  integration remains pending before a separately reviewed screening runner
+  can exist.
