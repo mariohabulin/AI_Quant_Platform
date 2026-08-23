@@ -569,11 +569,16 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
   candidate-v2 authorization before producing new performance evidence; pass
   15/15 new, 233/233 focused and 788/788 complete tests with no performance
   runner.
-- [ ] Reproduce Strategy Family Screening Protocol v1 on Windows, review and
-  commit/push the exact declaration/data-lock revision, then validate the frozen
-  six-hour manifest without running performance screening.
-- [ ] Implement and separately review a one-shot canonical screening runner
-  that preserves the frozen descriptive multiple-comparison policy.
+- [x] Reproduce Strategy Family Screening Protocol v1 on Windows with 15/15 new
+  and 788/788 complete tests, commit/push exact revision `c7fc411`, then validate
+  the frozen six-hour manifest/11,076 rows per asset without performance.
+- [x] Prepare locally a one-shot canonical screening runner that preserves the
+  frozen descriptive multiple-comparison policy; pass 19/19 new, 37/37
+  runner/timeframe regression and 807/807 complete tests.
+- [ ] Reproduce the screening runner on Windows, review and commit/push the exact
+  revision, then confirm clean preflight with absent final/staging evidence.
+- [ ] Execute the frozen eight-strategy development screen exactly once, verify
+  canonical report/sidecar and record evidence without ranking or promotion.
 - [ ] Use development screening only to define one structurally new,
   falsifiable hypothesis without treating inspected results as unseen evidence.
 - [ ] Before formal candidate-v2 evaluation, freeze a new immutable identity

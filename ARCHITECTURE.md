@@ -777,6 +777,33 @@ new hypothesis but cannot authorize candidate v2, optimization, bounded forward
 PAPER or live execution. Formal candidate-v2 evidence requires a new identity
 and separately locked genuinely unseen future data.
 
+## Strategy Family Screening One-Shot Evidence Boundary
+
+The separately reviewed runner consumes only the locked screening object. It
+verifies exact manifest, configuration, asset scope, eight-strategy order,
+engine names and declaration fingerprints before constructing any validator.
+It then invokes the unchanged `MultiAssetValidator` exactly twice per strategy:
+baseline followed by stress, yielding a fixed 16-run matrix without a parameter
+or combination loop.
+
+Research evidence compaction is shared with Timeframe Sensitivity Study. Each
+complete raw evaluation is canonicalized and hashed in memory; persisted
+evidence omits duplicated trade histories/equity curves while retaining OOS,
+benchmark, drawdown, walk-forward, unseen-trade and falsification evidence. Only
+defined positive-infinite profit factor is explicitly encoded. All other
+non-finite values fail before persistence.
+
+The per-strategy gate review implements the pre-registered three outcomes and
+fixed-order comparison. It emits no score or ranking and leaves
+`selected_strategy=None`. All evaluations and canonical final serialization
+must finish before a staging directory is created. Report and SHA sidecar are
+written under `.screening_v1.staging` and atomically renamed; existing final or
+staging evidence blocks repetition.
+
+The recorded report is inspected development evidence only. A retained-interest
+mechanism is not a selected candidate and cannot authorize candidate v2,
+optimization, PAPER or live execution.
+
 ---
 
 # Phase 3 Risk Engine v1 — Position Sizing Foundation Contract

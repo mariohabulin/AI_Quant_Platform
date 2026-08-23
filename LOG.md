@@ -1910,3 +1910,23 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
   research/integration and 788/788 complete tests pass locally. Windows
   integration remains pending before a separately reviewed screening runner
   can exist.
+
+## 2026-08-23 — Screening Protocol Integration and Runner Local Preparation
+- Windows reproduced 15/15 protocol and 788/788 complete tests, committed and
+  pushed exact revision `c7fc411`, then printed the non-executing declaration.
+- Revalidated canonical 6h manifest SHA-256
+  `6506dd2700b983a134a132890ef4c4ae6e84c0918ba65a5abff6ab2c204c4e7f`
+  plus 11,076 BTC and 11,076 ETH rows. Screening/performance execution remained
+  false and the repository stayed clean.
+- Added a separate one-shot runner for the exact eight strategies, baseline then
+  stress, using 16 fixed multi-asset calls and no parameter/combination loop.
+- Added fail-closed validation for manifest, configuration, asset scope, engine
+  order/identity, declarations and validator classification evidence.
+- Extracted shared bounded evidence compaction from Timeframe Study. Complete
+  raw evaluations are hashed; persisted evidence omits trade/equity duplication,
+  encodes only positive-infinite profit factor and rejects other non-finite data.
+- Implemented pre-registered `SCREEN_OUT`, `MECHANISM_RETAINS_INTEREST` and
+  `INCONCLUSIVE` gates without score, ranking, tie-break or selected strategy.
+- Completed 19/19 new runner, 37/37 runner/timeframe regression and 807/807 full
+  local tests. Windows reproduction, exact commit/push and absent-evidence
+  preflight remain required before the single development-screen execution.

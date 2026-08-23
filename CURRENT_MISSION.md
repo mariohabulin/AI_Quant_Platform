@@ -837,7 +837,7 @@ complete 773/773 suite, committed/pushed exact revision `53202c0`, then ran the
 non-evaluating audit against the exact recorded report. All nine integrations
 passed; EMA alone remains market-rejected and the other eight remain unknown.
 
-### Strategy Family Screening Protocol v1 — LOCAL PREPARATION
+### Strategy Family Screening Protocol v1 — INTEGRATED AND DATA-LOCKED
 
 The next bounded artifact pre-registers one descriptive screen for the eight
 unevaluated default implementations on the existing native BTC/ETH six-hour
@@ -852,8 +852,29 @@ drawdown limit. Multiple-comparison interpretation is descriptive and permits
 only `SCREEN_OUT`, `MECHANISM_RETAINS_INTEREST` or `INCONCLUSIVE`, with no
 ranking, tie-break, winner or formal validation claim.
 
-This patch declares and data-locks the boundary only. It contains no screening
-runner and reports `screening_executed=false`. Local TDD passes 15/15 new,
-233/233 focused research/integration and 788/788 complete tests. Windows
-reproduction remains pending. Candidate v2, optimization, PAPER and live
-authorization remain false.
+The declaration/data-lock patch contains no screening runner and reports
+`screening_executed=false`. Windows reproduced 15/15 new and 788/788 complete
+tests, committed/pushed exact revision `c7fc411`, then printed the declaration
+and revalidated the canonical manifest plus 11,076 rows for each asset. No
+performance evaluation or file write occurred.
+
+### Strategy Family Screening Runner v1 — LOCAL PREPARATION
+
+The separate one-shot runner now evaluates the frozen eight-strategy order only
+under baseline then stress costs, for 16 exact multi-asset calls. It validates
+manifest/configuration/scope/engine/declaration identity, produces only the
+three pre-registered descriptive outcomes and generates no score, ranking,
+tie-break or automatic selection.
+
+A reusable evidence compactor hashes each complete evaluation while persisting
+bounded OOS, benchmark, drawdown, walk-forward, unseen-trade and falsification
+evidence. It retains the proven positive-infinite profit-factor encoding and
+rejects every other non-finite value before staging. Timeframe Study now uses
+the same helper with unchanged schema/test behavior.
+
+All evidence completes and serializes before atomic staging/final rename.
+Existing final or staging evidence prevents repetition. Local TDD adds 19 new
+runner tests, passes 37/37 runner/timeframe regression tests and the complete
+807/807 suite. Windows reproduction and reviewed commit/push remain mandatory
+before one explicit screening execution. Candidate v2, optimization, PAPER and
+live authorization remain false.

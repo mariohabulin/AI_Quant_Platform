@@ -123,6 +123,10 @@ Both commands report `screening_executed=false` and
 evidence recorder require a later separately reviewed patch and explicit
 command.
 
+The separately prepared runner preserves this declaration unchanged. It is a
+one-shot atomic recorder with no parameter or ranking path and must receive its
+own Windows reproduction plus reviewed commit/push before execution.
+
 Local TDD passes 15/15 new protocol tests, 233/233 focused research/integration
 tests and the complete 788/788 suite. Windows reproduction and exact Git
 integration remain required before the data-lock command may be used.
