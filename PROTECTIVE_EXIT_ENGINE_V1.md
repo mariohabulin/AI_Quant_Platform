@@ -77,6 +77,16 @@ After Open processing:
 The stop-first rule prevents an OHLC bar from selecting the favorable path
 without tick evidence. Protection is active on the entry bar.
 
+### Optional completed-bar break-even ratchet
+
+Discovery Protocol v1 may enable a frozen `1R` trigger. A surviving bar whose
+High reaches entry plus the initial risk distance records the trigger only
+after that bar is complete. The stop moves to the entry execution price for
+the following Open and later bars; the trigger bar is never reprocessed with
+the tighter stop. A final bar cannot activate the ratchet because no following
+Open exists. Gap-through-stop behavior remains unchanged, so this is a price-
+level break-even rule rather than a guarantee of zero net loss.
+
 ## Execution costs and evidence
 
 Every protective sell uses the normal Backtesting Engine sell path. Commission,
@@ -94,6 +104,14 @@ Each trade now records:
 - entry/exit signal and execution timestamps
 - planned stop, target, monetary risk and reward/risk
 - gross P/L, execution cost, commission, total costs and net P/L
+- active stop at exit and break-even enabled/triggered evidence
+- maximum favorable and adverse excursion in initial-risk units
+- net and gross realized R, holding bars and bars to maximum favorable excursion
+
+Surviving bars contribute their complete High/Low because the position was
+active for the full bar. On an exit bar, excursion evidence uses only the
+executable conservative path: the stop/target fill or gap Open. It does not use
+an unreachable favorable extreme after a stop-first exit.
 
 The additional fields are present on legacy trades with inactive/null
 protective evidence, preserving a stable report shape without activating the

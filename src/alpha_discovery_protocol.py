@@ -570,11 +570,11 @@ def alpha_discovery_configuration():
             "commission_slippage_spread_on_every_fill": True,
         },
         "implementation_prerequisites": {
-            "causal_ema_trend_structure": "REQUIRED",
-            "completed_bar_breakeven_transition": "REQUIRED",
-            "trade_path_excursion_metrics": "REQUIRED",
+            "causal_ema_trend_structure": "IMPLEMENTED_REVIEWED",
+            "completed_bar_breakeven_transition": "IMPLEMENTED_REVIEWED",
+            "trade_path_excursion_metrics": "IMPLEMENTED_REVIEWED",
             "nested_calibration_runner": "REQUIRED_SEPARATE_REVIEW",
-            "status": "NOT_YET_IMPLEMENTED",
+            "status": "COMPONENTS_READY_RUNNER_REVIEW_REQUIRED",
         },
         "future_validation": {
             "inspected_development_data_may_form_candidate_evidence": False,

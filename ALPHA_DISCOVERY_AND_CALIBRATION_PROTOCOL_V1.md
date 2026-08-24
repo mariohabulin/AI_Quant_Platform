@@ -134,18 +134,24 @@ only then-available evidence in every outer window. The protocol prohibits a
 global hindsight leaderboard or choosing one configuration after inspecting
 all outer tests.
 
-## Required implementation before a runner
+## Component implementation status
 
 This protocol intentionally does not execute diagnostics or calibration. A
-separate reviewed implementation must first add and test:
+separate reviewed component patch now provides and tests:
 
-- causal EMA trend-structure features
-- completed-bar +1R break-even transitions without retroactive intrabar fills
-- MFE/MAE and holding-path evidence using only post-entry bars
-- the nested calibration runner and exact inner-only selection interface
-- atomic one-shot evidence with raw-evaluation hashes
+- causal EMA trend-structure features from completed Close values
+- completed-bar +1R break-even transitions that become active only at the
+  following Open
+- MFE/MAE, realized-R, holding-bar and time-to-MFE evidence from the executable
+  post-entry path
 
-Until these prerequisites are complete, runner execution remains unauthorized.
+The nested calibration runner, its exact inner-only evaluation interface and
+atomic one-shot evidence with raw-evaluation hashes remain a separate review.
+Break-even means the stop trigger moves to the entry execution price; sell
+costs or a gap through that stop can still produce a negative net result.
+
+Until that runner is implemented, reproduced and committed, execution remains
+unauthorized.
 
 ## Outcome interpretation
 

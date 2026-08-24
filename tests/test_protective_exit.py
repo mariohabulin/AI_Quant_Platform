@@ -73,6 +73,9 @@ def test_policy_freezes_conservative_gap_intrabar_and_entry_bar_semantics():
         "stop_gap_fill": "OPEN",
         "target_gap_fill": "TARGET",
         "entry_bar_protection": True,
+        "breakeven_trigger_r": None,
+        "breakeven_trigger_observation": "COMPLETED_BAR_HIGH",
+        "breakeven_activation_timing": "FOLLOWING_BAR_OPEN",
         "signal_observation": "COMPLETED_BAR_CLOSE",
         "entry_execution": "FOLLOWING_BAR_OPEN",
         "level_resolution": "SIGNAL_BAR_DISTANCE_FROM_EXECUTION_OPEN",
@@ -89,6 +92,9 @@ def test_policy_freezes_conservative_gap_intrabar_and_entry_bar_semantics():
         ({"stop_gap_fill": "STOP"}, "OPEN"),
         ({"target_gap_fill": "OPEN"}, "TARGET"),
         ({"entry_bar_protection": False}, "entry-bar"),
+        ({"breakeven_trigger_r": 2.0}, "only a 1R"),
+        ({"breakeven_trigger_observation": "INTRABAR"}, "completed-bar High"),
+        ({"breakeven_activation_timing": "SAME_BAR"}, "following open"),
     ],
 )
 def test_policy_rejects_optimistic_or_unfrozen_semantics(kwargs, match):

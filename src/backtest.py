@@ -4,8 +4,10 @@ import pandas as pd
 
 try:
     from protective_exit import ProtectiveExitPolicy
+    from trade_path import LongTradePathTracker
 except ImportError:  # package import when src is not placed directly on sys.path
     from src.protective_exit import ProtectiveExitPolicy
+    from src.trade_path import LongTradePathTracker
 
 
 class BacktestingEngine:
@@ -134,6 +136,10 @@ class BacktestingEngine:
         self.entry_index = None
         self.entry_signal_index = None
         self.entry_risk_decision = None
+        self.active_protective_stop_price = None
+        self.protective_break_even_active = False
+        self.protective_break_even_trigger_index = None
+        self.trade_path_tracker = None
         self.trade_history = []
         self.equity_curve = []
 
@@ -166,6 +172,7 @@ class BacktestingEngine:
         position_size=None,
         risk_decision=None,
         signal_index=None,
+        bar_position=None,
     ):
         execution_price = self._calculate_execution_price(price, "buy")
 
@@ -189,6 +196,16 @@ class BacktestingEngine:
         self.entry_market_price = float(price)
         self.entry_index = index
         self.entry_signal_index = signal_index
+        if risk_decision is not None and self.protective_exit_policy is not None:
+            self.active_protective_stop_price = float(risk_decision.stop_price)
+            risk_distance = self.entry_price - self.active_protective_stop_price
+            self.trade_path_tracker = LongTradePathTracker(
+                entry_bar_position=bar_position,
+                entry_index=index,
+                entry_price=self.entry_price,
+                risk_distance=risk_distance,
+                shares=self.shares,
+            )
 
     def _sell(
         self,
@@ -197,6 +214,7 @@ class BacktestingEngine:
         signal_index=None,
         exit_reason="SIGNAL",
         protective_decision=None,
+        bar_position=None,
     ):
         exit_market_price = float(price)
         execution_price = self._calculate_execution_price(
@@ -218,6 +236,14 @@ class BacktestingEngine:
         total_commission = self.entry_commission + exit_commission
         total_costs = execution_cost + total_commission
         profit_loss = gross_profit_loss - total_costs
+
+        path_evidence = {}
+        if self.trade_path_tracker is not None:
+            path_evidence = self.trade_path_tracker.close(
+                bar_position,
+                gross_profit_loss,
+                profit_loss,
+            )
 
         self.capital += net_proceeds
 
@@ -278,6 +304,34 @@ class BacktestingEngine:
                     protective_decision.same_bar_conflict
                     if protective_decision is not None else False
                 ),
+                "active_protective_stop_price_at_exit": (
+                    self.active_protective_stop_price
+                ),
+                "protective_break_even_enabled": (
+                    self.protective_exit_policy is not None
+                    and self.protective_exit_policy.breakeven_trigger_r is not None
+                ),
+                "protective_break_even_triggered": (
+                    self.protective_break_even_active
+                ),
+                "protective_break_even_trigger_index": (
+                    self.protective_break_even_trigger_index
+                ),
+                **{
+                    name: path_evidence.get(name)
+                    for name in (
+                        "maximum_favorable_excursion_r",
+                        "maximum_adverse_excursion_r",
+                        "realized_r",
+                        "gross_realized_r",
+                        "holding_bars",
+                        "bars_to_maximum_favorable_excursion",
+                        "maximum_favorable_excursion_index",
+                        "initial_risk_distance",
+                        "initial_monetary_risk",
+                        "trade_path_observation_policy",
+                    )
+                },
             }
         )
 
@@ -289,6 +343,10 @@ class BacktestingEngine:
         self.entry_index = None
         self.entry_signal_index = None
         self.entry_risk_decision = None
+        self.active_protective_stop_price = None
+        self.protective_break_even_active = False
+        self.protective_break_even_trigger_index = None
+        self.trade_path_tracker = None
 
     def _assess_risk_managed_long(self, signal_row, entry_price, equity):
         if self.protective_exit_policy is not None:
@@ -326,13 +384,15 @@ class BacktestingEngine:
     def _active_protective_levels(self):
         if self.entry_risk_decision is None:
             raise RuntimeError("Open protected position has no Risk Decision.")
-        stop_price = self.entry_risk_decision.stop_price
+        stop_price = self.active_protective_stop_price
+        if stop_price is None:
+            stop_price = self.entry_risk_decision.stop_price
         target_price = self.entry_risk_decision.target_price
         if stop_price is None or target_price is None:
             raise RuntimeError("Open protected position has incomplete levels.")
         return float(stop_price), float(target_price)
 
-    def _process_protective_open(self, row, index):
+    def _process_protective_open(self, row, index, bar_position):
         if self.protective_exit_policy is None or self.position != 1:
             return False
         stop_price, target_price = self._active_protective_levels()
@@ -340,7 +400,13 @@ class BacktestingEngine:
             row["Open"], stop_price, target_price
         )
         if decision.status == "HOLD":
+            self.trade_path_tracker.observe_price(
+                row["Open"], bar_position, index
+            )
             return False
+        self.trade_path_tracker.observe_price(
+            decision.market_price, bar_position, index
+        )
         reason = (
             "PROTECTIVE_STOP"
             if decision.exit_type.startswith("STOP")
@@ -351,10 +417,11 @@ class BacktestingEngine:
             index,
             exit_reason=reason,
             protective_decision=decision,
+            bar_position=bar_position,
         )
         return True
 
-    def _process_protective_intrabar(self, row, index):
+    def _process_protective_intrabar(self, row, index, bar_position):
         if self.protective_exit_policy is None or self.position != 1:
             return False
         stop_price, target_price = self._active_protective_levels()
@@ -362,7 +429,13 @@ class BacktestingEngine:
             row["High"], row["Low"], stop_price, target_price
         )
         if decision.status == "HOLD":
+            self.trade_path_tracker.observe_surviving_bar(
+                row["High"], row["Low"], bar_position, index
+            )
             return False
+        self.trade_path_tracker.observe_price(
+            decision.market_price, bar_position, index
+        )
         reason = (
             "PROTECTIVE_STOP"
             if decision.exit_type.startswith("STOP")
@@ -373,15 +446,34 @@ class BacktestingEngine:
             index,
             exit_reason=reason,
             protective_decision=decision,
+            bar_position=bar_position,
         )
         return True
+
+    def _process_completed_bar_stop_transition(self, row, index):
+        if self.protective_exit_policy is None or self.position != 1:
+            return
+        initial_stop = float(self.entry_risk_decision.stop_price)
+        transition = (
+            self.protective_exit_policy.evaluate_long_completed_bar_transition(
+                high_price=row["High"],
+                entry_price=self.entry_price,
+                risk_distance=self.entry_price - initial_stop,
+                current_stop_price=self.active_protective_stop_price,
+                already_active=self.protective_break_even_active,
+            )
+        )
+        if transition["status"] == "ACTIVATE_BREAK_EVEN":
+            self.active_protective_stop_price = transition["next_stop_price"]
+            self.protective_break_even_active = True
+            self.protective_break_even_trigger_index = index
 
     def _process_signals(self, data):
         if self.execution_timing == self.NEXT_BAR_OPEN:
             self._process_signals_next_bar_open(data)
             return
 
-        for index, row in data.iterrows():
+        for bar_position, (index, row) in enumerate(data.iterrows()):
             price = float(row["Close"])
             signal = int(row["Signal"])
 
@@ -431,7 +523,7 @@ class BacktestingEngine:
             self.protective_exit_policy.validate_market_data(data)
         pending = None
 
-        for index, row in data.iterrows():
+        for bar_position, (index, row) in enumerate(data.iterrows()):
             open_price = float(row["Open"])
             close_price = float(row["Close"])
             protection = None
@@ -440,7 +532,9 @@ class BacktestingEngine:
                     self._calculate_equity(open_price), index
                 )
 
-            protected_at_open = self._process_protective_open(row, index)
+            protected_at_open = self._process_protective_open(
+                row, index, bar_position
+            )
 
             if pending is not None and not protected_at_open:
                 signal, signal_index, signal_row = pending
@@ -450,6 +544,7 @@ class BacktestingEngine:
                             open_price,
                             index,
                             signal_index=signal_index,
+                            bar_position=bar_position,
                         )
                     elif protection.status != "REJECT":
                         decision = self._assess_risk_managed_long(
@@ -464,15 +559,19 @@ class BacktestingEngine:
                                 position_size=decision.position_size,
                                 risk_decision=decision,
                                 signal_index=signal_index,
+                                bar_position=bar_position,
                             )
                 elif signal == -1 and self.position == 1:
                     self._sell(
                         open_price,
                         index,
                         signal_index=signal_index,
+                        bar_position=bar_position,
                     )
 
-            self._process_protective_intrabar(row, index)
+            self._process_protective_intrabar(row, index, bar_position)
+            if bar_position < len(data) - 1:
+                self._process_completed_bar_stop_transition(row, index)
 
             self._record_equity(close_price, index)
             pending = (int(row["Signal"]), index, row.copy())
@@ -486,6 +585,7 @@ class BacktestingEngine:
                 final_price,
                 final_index,
                 exit_reason="TERMINAL_FORCE_CLOSE",
+                bar_position=len(data) - 1,
             )
 
     def run(self, data):

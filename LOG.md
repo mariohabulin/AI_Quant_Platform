@@ -2194,3 +2194,30 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
   calculations and the one-shot calibration runner as separately reviewed
   prerequisites. No diagnostic, calibration, candidate selection, PAPER or
   live execution has run; cloud services remain parked.
+
+## 2026-08-24 — Alpha Discovery Protocol v1 (Windows Integration)
+
+- Windows reproduced 41/41 protocol, 127/127 focused alpha/risk and 985/985
+  complete tests, then committed and pushed revision `4132cf8`.
+- Rechecked the declaration and exact dataset/Alpha v2 evidence lock without
+  executing diagnostics, calibration or parameter selection.
+- Retained Candidate v2, optimization, PAPER and live authorization as false;
+  cloud services remain parked.
+
+## 2026-08-24 — Alpha Discovery prerequisites (Local Preparation)
+
+- Added prefix-causal completed-bar EMA trend structure with exact EMA 50,
+  EMA 200 and four-bar EMA 50 slope support.
+- Extended the optional protective policy with the catalog's exact +1R
+  break-even mode. Trigger observation occurs after a surviving completed bar;
+  the entry-price stop becomes active only at the following Open.
+- Preserved stop-gap realism and static Alpha v2 defaults. A break-even trigger
+  does not guarantee zero net P/L after costs or a worse gap Open.
+- Added compact executable-path evidence for MFE, MAE, net/gross realized R,
+  holding bars, bars to MFE and initial risk. Exit-bar favorable extremes that
+  are unreachable under stop-first ordering are excluded.
+- Completed 125/125 focused prerequisite/protocol/protective/backtest tests and
+  the complete 999/999 repository suite locally.
+- Did not run zero-cost diagnostics, calibration, a parameter selection or an
+  outer test. The nested one-shot runner remains a separate review; all
+  deployment authorizations remain false.

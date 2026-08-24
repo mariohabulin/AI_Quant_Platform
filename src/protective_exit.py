@@ -69,6 +69,9 @@ class ProtectiveExitPolicy:
     stop_gap_fill: str = "OPEN"
     target_gap_fill: str = "TARGET"
     entry_bar_protection: bool = True
+    breakeven_trigger_r: float | None = None
+    breakeven_trigger_observation: str = "COMPLETED_BAR_HIGH"
+    breakeven_activation_timing: str = "FOLLOWING_BAR_OPEN"
 
     def __post_init__(self):
         for value, name in (
@@ -94,6 +97,18 @@ class ProtectiveExitPolicy:
             raise ValueError("Protocol v1 requires conservative TARGET gap fills.")
         if self.entry_bar_protection is not True:
             raise ValueError("Protocol v1 requires entry-bar protection.")
+        if self.breakeven_trigger_r is not None:
+            trigger = self._positive_finite(
+                self.breakeven_trigger_r, "Break-even trigger R"
+            )
+            if not math.isclose(trigger, 1.0, rel_tol=0.0, abs_tol=0.0):
+                raise ValueError("Protocol v1 permits only a 1R break-even trigger.")
+        if self.breakeven_trigger_observation != "COMPLETED_BAR_HIGH":
+            raise ValueError(
+                "Break-even must be observed from the completed-bar High."
+            )
+        if self.breakeven_activation_timing != "FOLLOWING_BAR_OPEN":
+            raise ValueError("Break-even must become active at the following open.")
 
     @staticmethod
     def _positive_finite(value, name):
@@ -222,6 +237,55 @@ class ProtectiveExitPolicy:
                 fill_reference="TARGET_TRIGGER_PRICE",
             )
         return ProtectiveExitDecision(status="HOLD")
+
+    def evaluate_long_completed_bar_transition(
+        self,
+        high_price,
+        entry_price,
+        risk_distance,
+        current_stop_price,
+        already_active=False,
+    ):
+        """Return a stop ratchet effective only after the observed bar ends."""
+
+        high_price = self._positive_finite(high_price, "Completed-bar High")
+        entry_price = self._positive_finite(entry_price, "Entry price")
+        risk_distance = self._positive_finite(
+            risk_distance, "Initial risk distance"
+        )
+        current_stop_price = self._positive_finite(
+            current_stop_price, "Current stop price"
+        )
+        if not isinstance(already_active, bool):
+            raise TypeError("Break-even active state must be boolean.")
+        if self.breakeven_trigger_r is None:
+            return {
+                "status": "DISABLED",
+                "previous_stop_price": current_stop_price,
+                "next_stop_price": current_stop_price,
+                "trigger_price": None,
+            }
+        trigger_price = entry_price + risk_distance * self.breakeven_trigger_r
+        if already_active or current_stop_price >= entry_price:
+            return {
+                "status": "ALREADY_ACTIVE",
+                "previous_stop_price": current_stop_price,
+                "next_stop_price": max(current_stop_price, entry_price),
+                "trigger_price": trigger_price,
+            }
+        if high_price >= trigger_price:
+            return {
+                "status": "ACTIVATE_BREAK_EVEN",
+                "previous_stop_price": current_stop_price,
+                "next_stop_price": entry_price,
+                "trigger_price": trigger_price,
+            }
+        return {
+            "status": "HOLD",
+            "previous_stop_price": current_stop_price,
+            "next_stop_price": current_stop_price,
+            "trigger_price": trigger_price,
+        }
 
     def as_dict(self):
         return {

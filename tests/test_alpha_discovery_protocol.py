@@ -417,8 +417,15 @@ def test_configuration_freezes_diagnostic_nested_and_future_validation_boundarie
         "inspected_development_data_may_form_candidate_evidence"
     ] is False
     assert configuration["implementation_prerequisites"]["status"] == (
-        "NOT_YET_IMPLEMENTED"
+        "COMPONENTS_READY_RUNNER_REVIEW_REQUIRED"
     )
+    assert configuration["implementation_prerequisites"] == {
+        "causal_ema_trend_structure": "IMPLEMENTED_REVIEWED",
+        "completed_bar_breakeven_transition": "IMPLEMENTED_REVIEWED",
+        "trade_path_excursion_metrics": "IMPLEMENTED_REVIEWED",
+        "nested_calibration_runner": "REQUIRED_SEPARATE_REVIEW",
+        "status": "COMPONENTS_READY_RUNNER_REVIEW_REQUIRED",
+    }
 
 
 def test_alpha_report_loader_rechecks_hash_sidecar_canonical_scope_and_failure_basis(

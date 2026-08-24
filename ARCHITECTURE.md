@@ -1454,7 +1454,14 @@ execution fail closed. If nothing meets every cross-asset baseline/stress,
 persistence, trade, drawdown, turnover and cost gate, the required action is
 hold cash.
 
-Zero-cost replay, causal EMA features, completed-bar break-even transitions,
-trade-path excursions and the nested runner remain separately reviewed
-implementation prerequisites. This layer cannot execute calibration, create a
-candidate or authorize PAPER/live behavior.
+`src/alpha_discovery_features.py` implements prefix-causal EMA 50/200 structure
+from completed Close values. The optional break-even state in
+`src/protective_exit.py` may ratchet the active stop to entry only after a
+surviving completed bar reaches +1R; activation begins at the following Open.
+`src/trade_path.py` and the Backtesting Engine derive MFE, MAE, realized R,
+holding bars and time-to-MFE without using unreachable exit-bar extremes.
+
+These components preserve static Alpha v2 behavior when break-even is disabled.
+The nested one-shot runner remains a separately reviewed implementation
+prerequisite. This layer cannot execute calibration, create a candidate or
+authorize PAPER/live behavior.

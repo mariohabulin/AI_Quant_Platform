@@ -641,9 +641,9 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
   exit/trade-path attribution, a residual zero-cost diagnostic and a small,
   hypothesis-led set of indicator combinations, regime filters, risk sizing and
   temporally separated parameter calibration; prohibit a result leaderboard.
-- [ ] Reproduce and integrate Alpha Discovery and Calibration Protocol v1 on
-  Windows, verify its exact Alpha v2 evidence lock and retain every execution
-  and promotion authorization as false.
+- [x] Reproduce and integrate Alpha Discovery and Calibration Protocol v1 on
+  Windows under revision `4132cf8`, verify its exact Alpha v2 evidence lock and
+  retain every execution and promotion authorization as false.
 - [ ] Implement causal EMA trend structure, completed-bar +1R break-even
   transitions and MFE/MAE/holding-path evidence before any calibration runner.
 - [ ] Build a separately reviewed one-shot nested calibration runner only after

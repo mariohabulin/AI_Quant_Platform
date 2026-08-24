@@ -1062,7 +1062,7 @@ and Calibration Protocol covering exit attribution, residual zero-cost signal,
 small train-only calibration and regime-specific strategy roles before any
 genuinely unseen final validation.
 
-### Alpha Discovery and Calibration Protocol v1 — LOCAL PREPARATION
+### Alpha Discovery and Calibration Protocol v1 — INTEGRATED
 
 The next research boundary is now pre-declared without executing diagnostics,
 calibration or performance. It locks the exact closed Alpha v2 report, its three
@@ -1086,8 +1086,26 @@ leaderboard exists.
 
 Local TDD covers the immutable catalog, exact fingerprint, seven-window planner,
 inner-only selection, hold-cash behavior and strict canonical evidence lock.
-Local reproduction passes 41/41 protocol tests, 127/127 focused alpha/risk
-regression tests and the complete 985/985 repository suite.
-EMA trend features, break-even execution, trade-path metrics and a one-shot
-runner remain prerequisites for a later patch. Candidate v2, optimization,
-PAPER and live authorization remain false; cloud services remain parked.
+Windows reproduced 41/41 protocol, 127/127 focused alpha/risk and 985/985 full
+tests, then committed and pushed revision `4132cf8`. Declaration and evidence
+lock remain non-evaluating; Candidate v2, optimization, PAPER and live
+authorization remain false and cloud services remain parked.
+
+### Alpha Discovery prerequisites — LOCAL PREPARATION
+
+The three non-runner prerequisites are now implemented. Completed Close values
+produce prefix-causal EMA trend structure. Optional +1R management observes a
+surviving completed-bar High and activates the entry-price stop only from the
+following Open; it cannot retroactively exit the trigger bar or activate on the
+terminal bar. Static Alpha v2 behavior remains the default.
+
+Protected trades now expose bounded post-entry path evidence: MFE/MAE in initial
+R, net and gross realized R, holding bars, bars to MFE, initial risk and the
+observation policy. Surviving bars may contribute full extrema; stop-first and
+other exit bars contribute only their conservative executable path.
+
+Focused prerequisite/protocol/protective/backtest tests pass 125/125 and the
+complete repository passes 999/999 locally. No diagnostic replay, calibration,
+parameter selection or runner has executed. The next boundary is Windows
+reproduction and integration of these components before constructing the
+separate nested one-shot runner.
