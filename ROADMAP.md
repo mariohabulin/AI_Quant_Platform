@@ -644,10 +644,11 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
 - [x] Reproduce and integrate Alpha Discovery and Calibration Protocol v1 on
   Windows under revision `4132cf8`, verify its exact Alpha v2 evidence lock and
   retain every execution and promotion authorization as false.
-- [ ] Implement causal EMA trend structure, completed-bar +1R break-even
+- [x] Implement causal EMA trend structure, completed-bar +1R break-even
   transitions and MFE/MAE/holding-path evidence before any calibration runner.
 - [ ] Build a separately reviewed one-shot nested calibration runner only after
-  its prerequisite components pass focused and complete regression.
+  its prerequisite components pass focused and complete regression; reproduce
+  and integrate the locally prepared runner on Windows before execution.
 - [ ] Evaluate joint causal intersections rather than adding marginal regime,
   relative-volume and OBV summaries. Require turnover/cost and risk controls
   before a development mechanism may retain interest.

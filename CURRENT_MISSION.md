@@ -1109,3 +1109,30 @@ complete repository passes 999/999 locally. No diagnostic replay, calibration,
 parameter selection or runner has executed. The next boundary is Windows
 reproduction and integration of these components before constructing the
 separate nested one-shot runner.
+
+### Alpha Discovery prerequisites — WINDOWS INTEGRATED
+
+Windows reproduced 126/126 focused prerequisite tests and 1000/1000 complete
+tests, then committed and pushed revision `c705e95`. The exact declaration and
+evidence-lock boundary remain non-evaluating. No zero-cost replay, calibration,
+selection or outer test exists yet.
+
+### Alpha Discovery Runner v1 — LOCAL PREPARATION
+
+The complete eight-member catalog is now executable with causal ADX, ATR,
+market-regime, mandatory high-relative-volume and EMA trend structure. Each
+evaluation retains historical feature warm-up but resets trading state at the
+exact window boundary.
+
+The one-shot runner implements the seven outer windows, complete-catalog
+baseline/stress evaluation on only prior inner windows, deterministic
+selection and mandatory `HOLD_CASH` when no member passes. Every window result
+is bound to exact asset, parameter, profile and positions plus a canonical raw
+partition hash.
+
+The zero-cost diagnostic cannot select parameters, raw trade paths are not
+persisted and there is no global outer hindsight ranking. Atomic final/staging
+evidence cannot overwrite or repeat a completed study. Local focused and full
+regression must pass before a Windows patch is delivered. No market evaluation
+has run; Candidate v2, optimization, PAPER and live authorization remain false
+and cloud services remain parked.

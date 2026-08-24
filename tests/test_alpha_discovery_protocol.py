@@ -417,14 +417,14 @@ def test_configuration_freezes_diagnostic_nested_and_future_validation_boundarie
         "inspected_development_data_may_form_candidate_evidence"
     ] is False
     assert configuration["implementation_prerequisites"]["status"] == (
-        "COMPONENTS_READY_RUNNER_REVIEW_REQUIRED"
+        "DISCOVERY_RUNNER_READY_REQUIRES_EVIDENCE_LOCK"
     )
     assert configuration["implementation_prerequisites"] == {
         "causal_ema_trend_structure": "IMPLEMENTED_REVIEWED",
         "completed_bar_breakeven_transition": "IMPLEMENTED_REVIEWED",
         "trade_path_excursion_metrics": "IMPLEMENTED_REVIEWED",
-        "nested_calibration_runner": "REQUIRED_SEPARATE_REVIEW",
-        "status": "COMPONENTS_READY_RUNNER_REVIEW_REQUIRED",
+        "nested_calibration_runner": "IMPLEMENTED_REVIEWED",
+        "status": "DISCOVERY_RUNNER_READY_REQUIRES_EVIDENCE_LOCK",
     }
 
 
@@ -498,8 +498,9 @@ def test_declaration_is_non_executing_and_non_promotional():
     assert declaration["configuration"]["parameter_set_order"] == list(
         PARAMETER_SET_ORDER
     )
-    assert declaration["implementation_prerequisites_satisfied"] is False
-    assert declaration["separate_runner_review_required"] is True
+    assert declaration["implementation_prerequisites_satisfied"] is True
+    assert declaration["separate_runner_review_required"] is False
+    assert declaration["same_process_evidence_lock_required"] is True
     assert declaration["runner_execution_authorized"] is False
     assert declaration["zero_cost_diagnostic_executed"] is False
     assert declaration["nested_calibration_executed"] is False
@@ -578,7 +579,10 @@ def test_cli_lock_prints_exact_evidence_without_execution(capsys, monkeypatch):
     assert output["alpha_development_report_sha256"] == (
         RECORDED_ALPHA_DEVELOPMENT_REPORT_SHA256
     )
-    assert output["implementation_prerequisites_satisfied"] is False
+    assert output["implementation_prerequisites_satisfied"] is True
+    assert output["separate_runner_review_required"] is False
+    assert output["same_process_evidence_lock_required"] is True
+    assert output["runner_execution_authorized"] is True
     assert output["nested_calibration_executed"] is False
     assert output["candidate_v2_authorized"] is False
     assert output["live_execution_authorized"] is False

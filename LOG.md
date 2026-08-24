@@ -2221,3 +2221,34 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - Did not run zero-cost diagnostics, calibration, a parameter selection or an
   outer test. The nested one-shot runner remains a separate review; all
   deployment authorizations remain false.
+
+## 2026-08-24 — Alpha Discovery prerequisites (Windows Integration)
+
+- Windows reproduced 126/126 focused and 1000/1000 complete tests.
+- Committed and pushed exact prerequisite revision `c705e95`; `HEAD`, `main`
+  and `origin/main` aligned with a clean tree.
+- Rechecked the non-executing declaration and exact dataset/Alpha v2 lock.
+- Executed no diagnostic replay, calibration, parameter selection or outer
+  development test; all deployment authorization remains false.
+
+## 2026-08-24 — Alpha Discovery Runner v1 (Local Preparation)
+
+- Added an executable strategy adapter for all eight immutable configurations,
+  including causal ADX/ATR, market regime, high relative volume and EMA trend
+  gates plus exact static or completed-bar break-even protection.
+- Added bounded zero-cost path attribution for the exact three closed v2
+  variants. It cannot feed parameter selection and persists summaries plus raw
+  hashes rather than trade histories.
+- Added complete-catalog baseline/stress evaluation over ten unique historical
+  inner windows supporting seven chronological outer selection boundaries.
+- Bound every result to asset, parameter, cost profile, phase, exact positions,
+  active protective policy and complete canonical partition hash.
+- Added mandatory `HOLD_CASH` with no outer strategy evaluation when no member
+  clears every frozen cross-asset eligibility gate.
+- Added adaptive outer review without a global hindsight leaderboard, candidate
+  selection or promotion semantics.
+- Added atomic one-shot final/staging evidence with canonical JSON and SHA-256;
+  repeat, stale staging, identity drift and invalid evidence fail closed.
+- No BTC/ETH diagnostic or calibration has run. Windows reproduction,
+  commit/push and absent-evidence preflight remain required before one explicit
+  development run.

@@ -11,3 +11,5 @@ data/research/**/failure_attribution_report.json text eol=lf
 data/research/**/failure_attribution_report.sha256 text eol=lf
 data/research/**/alpha_development_report.json text eol=lf
 data/research/**/alpha_development_report.sha256 text eol=lf
+data/research/**/alpha_discovery_report.json text eol=lf
+data/research/**/alpha_discovery_report.sha256 text eol=lf

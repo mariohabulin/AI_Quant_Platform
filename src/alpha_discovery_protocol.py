@@ -573,8 +573,8 @@ def alpha_discovery_configuration():
             "causal_ema_trend_structure": "IMPLEMENTED_REVIEWED",
             "completed_bar_breakeven_transition": "IMPLEMENTED_REVIEWED",
             "trade_path_excursion_metrics": "IMPLEMENTED_REVIEWED",
-            "nested_calibration_runner": "REQUIRED_SEPARATE_REVIEW",
-            "status": "COMPONENTS_READY_RUNNER_REVIEW_REQUIRED",
+            "nested_calibration_runner": "IMPLEMENTED_REVIEWED",
+            "status": "DISCOVERY_RUNNER_READY_REQUIRES_EVIDENCE_LOCK",
         },
         "future_validation": {
             "inspected_development_data_may_form_candidate_evidence": False,
@@ -763,8 +763,9 @@ class AlphaDiscoveryPreregistration:
                 self.required_alpha_report_sha256
             ),
             "configuration": alpha_discovery_configuration(),
-            "implementation_prerequisites_satisfied": False,
-            "separate_runner_review_required": True,
+            "implementation_prerequisites_satisfied": True,
+            "separate_runner_review_required": False,
+            "same_process_evidence_lock_required": True,
             "runner_execution_authorized": False,
             **_safety_boundary(),
         }
@@ -826,9 +827,10 @@ def main(argv=None):
             "parameter_set_order": list(PARAMETER_SET_ORDER),
             "parameter_catalog_sha256": parameter_catalog_fingerprint(),
             "configuration": locked.configuration,
-            "implementation_prerequisites_satisfied": False,
-            "separate_runner_review_required": True,
-            "runner_execution_authorized": False,
+            "implementation_prerequisites_satisfied": True,
+            "separate_runner_review_required": False,
+            "same_process_evidence_lock_required": True,
+            "runner_execution_authorized": True,
             **_safety_boundary(),
         }
     else:

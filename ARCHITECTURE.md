@@ -1462,6 +1462,30 @@ surviving completed bar reaches +1R; activation begins at the following Open.
 holding bars and time-to-MFE without using unreachable exit-bar extremes.
 
 These components preserve static Alpha v2 behavior when break-even is disabled.
-The nested one-shot runner remains a separately reviewed implementation
-prerequisite. This layer cannot execute calibration, create a candidate or
-authorize PAPER/live behavior.
+
+## Alpha Discovery Runner v1 Boundary
+
+`src/alpha_discovery_strategy.py` maps every immutable catalog member to its
+exact ADX hysteresis, ATR risk distance, completed-bar volume/regime/EMA gates
+and optional next-Open break-even policy. Signal position state is reset at an
+evaluation boundary while historical bars remain available only for causal
+feature warm-up.
+
+`src/alpha_discovery_runner.py` locks the exact development manifest and closed
+Alpha v2 report in the execution process. It first performs non-selecting
+zero-cost path attribution, then evaluates all eight members on prior inner
+validation windows under baseline and stress. The selection API has no outer
+result input. An ineligible catalog produces `HOLD_CASH`, not a least-bad
+trade.
+
+Window summaries are identity-bound to asset, parameter, cost profile, phase
+and exact positional boundary and retain a complete canonical raw-partition
+hash. Reused inner evidence is historical evidence available at the applicable
+selection cutoff. Outer results never modify later catalog definitions or
+produce a global hindsight leaderboard.
+
+The one-shot canonical report is promoted from a staging directory only after
+all diagnostics, inner selections and outer evaluations complete. Existing
+final or staging evidence blocks another run. The report can retain only
+development interest; Candidate v2, optimization, PAPER, cloud and live
+authorization remain false.

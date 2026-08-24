@@ -33,7 +33,7 @@ candidate evidence.
 
 ## Phase 1 — diagnostic replay
 
-Before calibrating anything, a future separately reviewed runner must replay
+Before calibrating anything, the separately reviewed runner must replay
 the exact three closed v2 variants at zero modeled cost and derive bounded
 trade-path evidence:
 
@@ -136,22 +136,24 @@ all outer tests.
 
 ## Component implementation status
 
-This protocol intentionally does not execute diagnostics or calibration. A
-separate reviewed component patch now provides and tests:
+The protocol declaration intentionally does not execute diagnostics or
+calibration. Reviewed components now provide and test:
 
 - causal EMA trend-structure features from completed Close values
 - completed-bar +1R break-even transitions that become active only at the
   following Open
 - MFE/MAE, realized-R, holding-bar and time-to-MFE evidence from the executable
   post-entry path
+- the complete eight-member strategy catalog wired to causal features and
+  exact protective rules
+- the inner-only nested runner, deterministic `HOLD_CASH` fallback and atomic
+  canonical evidence writer
 
-The nested calibration runner, its exact inner-only evaluation interface and
-atomic one-shot evidence with raw-evaluation hashes remain a separate review.
 Break-even means the stop trigger moves to the entry execution price; sell
 costs or a gap through that stop can still produce a negative net result.
 
-Until that runner is implemented, reproduced and committed, execution remains
-unauthorized.
+The runner remains unauthorized before a same-process evidence lock. Its
+implementation does not itself execute diagnostics or calibration.
 
 ## Outcome interpretation
 
@@ -188,3 +190,7 @@ python src/alpha_discovery_protocol.py `
 
 Both commands retain every Candidate v2, optimization, PAPER and live flag as
 false.
+
+After separate Windows reproduction, commit/push and an absent-evidence
+preflight, the one-shot development command is documented in
+`ALPHA_DISCOVERY_RUNNER_V1.md`.
