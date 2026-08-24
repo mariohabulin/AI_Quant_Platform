@@ -586,22 +586,34 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
 - [x] Close screening interpretation at the exact-configuration boundary:
   reject the eight frozen standalone variants as deployable strategies without
   rejecting their indicator families as possible features or components.
-- [ ] Attribute gross signal versus cost/turnover, exposure, holding-period,
+- [x] Attribute gross signal versus cost/turnover, exposure, holding-period,
   drawdown and market-regime failure on inspected development data before
   designing another candidate.
 - [x] Integrate and evidence-lock Failure Attribution and Volume Research
   Protocol v1: freeze zero/baseline/stress diagnostic views, causal signal-bar
   regime attribution and per-asset relative-volume/OBV semantics without
   replaying performance.
-- [ ] Add a separately reviewed one-shot attribution runner; report cost,
+- [x] Add a separately reviewed one-shot attribution runner; report cost,
   turnover, exposure, holding, drawdown, market-regime, volume-regime and
   persistence evidence without ranking the rejected configurations.
-- [ ] Reproduce Failure Attribution Runner v1 on Windows, commit/push the exact
+- [x] Reproduce Failure Attribution Runner v1 on Windows, commit/push the exact
   implementation, pass an absent-evidence preflight and execute the frozen
   24-replay diagnostic matrix exactly once.
+- [x] Record and close canonical Failure Attribution report SHA-256
+  `e4193bff907a2121701e7ddc1d740894641c7bf427c9501fd4ecd4392a1f81f4`:
+  retain nine positive zero-cost views, universal real-cost rejection,
+  excessive turnover/drawdown and ADX high-volume cross-asset evidence without
+  generating a winner or candidate.
 - [ ] Pre-register a bounded alpha-discovery procedure covering a small,
   hypothesis-led set of indicator combinations, regime filters, risk sizing and
   temporally separated parameter calibration; prohibit a result leaderboard.
+- [ ] Freeze a venue/execution sensitivity boundary using account-relevant
+  maker/taker fees, spread, slippage and maker-fill semantics. A cheaper venue
+  scenario may explain cost sensitivity but may not substitute for drawdown and
+  persistence gates.
+- [ ] Evaluate joint causal intersections rather than adding marginal regime,
+  relative-volume and OBV summaries. Require turnover/cost and risk controls
+  before a development mechanism may retain interest.
 - [ ] Run calibration only inside training/validation boundaries and test the
   complete adaptive procedure exactly as it would operate live.
 - [ ] Use development results only to define one structurally new, falsifiable

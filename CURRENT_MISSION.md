@@ -947,3 +947,36 @@ Local 59/59 focused and 866/866 complete tests pass. Windows reproduction,
 reviewed commit/push and an absent-evidence preflight remain required before
 the single explicit run. Candidate v2, optimization, PAPER and live
 authorization remain false; cloud services remain parked.
+
+### Strategy Failure Attribution v1 — EXECUTED AND CLOSED
+
+Windows reproduced 59/59 focused and 866/866 complete tests, committed/pushed
+runner revision `334ceba`, then passed clean preflight against the exact frozen
+manifest and screening evidence. The 24-replay matrix completed exactly once
+and recorded canonical report SHA-256
+`e4193bff907a2121701e7ddc1d740894641c7bf427c9501fd4ecd4392a1f81f4`;
+evidence revision `f189689` is pushed and matches `origin/main`.
+
+Nine of sixteen strategy/asset views have positive zero-cost OOS return, but
+all baseline/stress views remain negative. Baseline cumulative modeled cost is
+1,488.68 to 5,274.93 on 5,000 initial capital, with 42.53x to 150.71x
+round-trip turnover. Every view still exceeds the 20% drawdown limit and fails
+walk-forward persistence plus statistical falsification. The closed diagnosis
+is therefore contextual raw signal combined with excessive unfiltered
+turnover/cost, drawdown and temporal instability, not universal absence of
+indicator information.
+
+The strongest coherent development lead is ADX conditioned on `HIGH`
+per-asset relative volume: 25 BTC trades retain 1,850.49 baseline P/L and 21
+ETH trades retain 763.89. ADX in `BULLISH_NORMAL` market regime also retains
+positive baseline P/L for both assets. Rising OBV is positive after costs only
+for ETH and is not a cross-asset standalone gate. Regime, relative volume and
+OBV are marginal summaries; their joint conjunction has not yet been tested.
+
+The current mission moves to Alpha Development Protocol v2. It must pre-freeze
+a small hypothesis-led joint-condition scope with causal direction/regime,
+mandatory volume, risk sizing, exits, turnover/cost budget, bounded temporal
+calibration and reviewed venue/execution scenarios. Existing BTC/ETH history
+is inspected development evidence only. No strategy is selected, and candidate
+v2, optimization, PAPER and live authorization remain false. Cloud services
+remain parked.

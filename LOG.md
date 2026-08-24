@@ -2007,3 +2007,35 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
   false; cloud infrastructure is unchanged and parked.
 - Local TDD passes 59/59 focused volume/protocol/metrics/runner tests and the
   complete 866/866 repository suite. Windows integration remains pending.
+
+## 2026-08-24 — Strategy Failure Attribution v1 (Executed and Closed)
+
+- Windows reproduced 59/59 focused volume/protocol/metrics/runner tests and the
+  complete 866/866 suite, committed/pushed runner revision `334ceba` and passed
+  a clean preflight with matching manifest/screening evidence plus absent final
+  and staging output.
+- Executed the exact eight-strategy by zero/baseline/stress matrix once: 24
+  multi-asset replays and 48 BTC/ETH asset/profile views. Recorded canonical
+  report SHA-256
+  `e4193bff907a2121701e7ddc1d740894641c7bf427c9501fd4ecd4392a1f81f4`
+  under pushed evidence revision `f189689`.
+- Confirmed nine of sixteen positive zero-cost OOS views but zero positive
+  baseline/stress views. Baseline cumulative modeled costs span 1,488.68 to
+  5,274.93 and round-trip turnover spans 42.53x to 150.71x initial capital.
+- Retained universal baseline/stress drawdown-limit, walk-forward-persistence
+  and statistical-falsification failures. The result attributes failure to a
+  combination of unfiltered turnover/cost destruction, drawdown and temporal
+  instability rather than declaring every raw mechanism information-free.
+- Identified the strongest cross-asset development slice: ADX with `HIGH`
+  per-asset relative volume retains baseline P/L of 1,850.49 over 25 BTC trades
+  and 763.89 over 21 ETH trades. ADX in `BULLISH_NORMAL` market regime is also
+  positive after baseline costs for both assets.
+- Kept OBV descriptive: falling-OBV ADX views lose for both assets; rising OBV
+  remains positive after costs only for ETH and cannot be promoted as a
+  standalone cross-asset gate.
+- Prohibited adding marginal regime/volume profits or treating their untested
+  intersection as validated. Moved next work to a bounded Alpha Development
+  Protocol v2 with joint causal conditions, mandatory volume, risk/turnover
+  controls, temporal calibration and reviewed venue/execution profiles.
+- Generated no ranking, automatic strategy selection, candidate v2,
+  optimization, PAPER or live authorization. Cloud services remain parked.
