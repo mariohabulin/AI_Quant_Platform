@@ -2039,3 +2039,28 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
   controls, temporal calibration and reviewed venue/execution profiles.
 - Generated no ranking, automatic strategy selection, candidate v2,
   optimization, PAPER or live authorization. Cloud services remain parked.
+
+## 2026-08-24 — Alpha Development Protocol v2 (Local Preparation)
+
+- Converted the closed failure diagnosis into three fixed causal ablations:
+  ADX plus high relative volume; that mechanism plus `BULLISH_NORMAL`; and an
+  optional rising-OBV interaction. No grid, rank or hindsight winner exists.
+- Added a reusable joint strategy component with ADX 14/25 entries, ADX 20 exit
+  hysteresis, four-bar cooldown, mandatory lagged relative-volume confirmation,
+  signal-bar two-ATR risk distance and intended 3:1 reward/risk.
+- Froze 0.50% risk per position, 50% maximum position size, no leverage or
+  shorting, 20% drawdown, daily/weekly new-risk limits and annual turnover/cost
+  budgets before any performance evidence.
+- Recorded Coinbase baseline/stress and a dated Kraken Pro $10k-volume taker
+  sensitivity. The maker scenario is present but blocked pending causal
+  placement, non-fill and partial-fill evidence plus current account-tier
+  revalidation.
+- Exposed a critical execution prerequisite: current Stop/Target annotations do
+  not actively exit positions. A separately reviewed protective-fill engine
+  must implement conservative intrabar/gap semantics before a v2 runner.
+- Added strict canonical loading for Failure Attribution report SHA-256
+  `e4193bff907a2121701e7ddc1d740894641c7bf427c9501fd4ecd4392a1f81f4`
+  and its exact ADX regime/volume/OBV hypothesis basis.
+- Declaration and evidence-lock paths perform no performance evaluation,
+  calibration, optimization or promotion. Candidate v2, PAPER and live remain
+  false; cloud services remain parked.

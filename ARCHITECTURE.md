@@ -1373,3 +1373,36 @@ no score, ranking or strategy-level winner. All 24 evaluations and derived
 metrics complete before staging; canonical JSON and its SHA-256 sidecar are
 atomically promoted together. Existing final or staging evidence blocks a
 repeat. The runner changes no Strategy, Risk, cloud or execution behavior.
+
+## Alpha Development Protocol v2 Boundary
+
+`alpha_development_protocol.py` binds only the exact closed six-hour dataset
+and Failure Attribution v1 report. It freezes a three-step causal ablation
+chain around ADX direction, mandatory high per-asset relative volume, the exact
+`BULLISH_NORMAL` market regime and optional rising OBV. The variants are direct
+joint intersections, not sums of marginal conditioned profits and not a
+parameter leaderboard.
+
+`alpha_development_strategy.py` generates the joint conditions from completed
+bars. All variants use ADX 14 entry threshold 25, exit hysteresis at 20, a
+four-bar cooldown, ATR 14 risk distance and 3:1 intended reward/risk. Volume is
+an entry confirmation rather than an immediate exit trigger. The feature path
+is prefix-causal and preserves the input frame.
+
+The protocol does not misrepresent current Backtesting Engine behavior. Risk
+Engine levels can size and annotate a position, but the current engine does not
+execute Stop/Target as active intrabar protective orders. A separate protective
+fill component, including gap and same-bar stop/target semantics, must be
+reviewed and reproduced before any Alpha v2 performance runner exists.
+
+`venue_execution_research.py` retains Coinbase baseline/stress, a dated Kraken
+Pro taker sensitivity and a blocked maker scenario. Static Kraken tiers are
+sensitivity assumptions, not proof of account eligibility. Maker evidence is
+blocked until a causal placement, non-fill and partial-fill model exists.
+Venue savings cannot override drawdown, persistence or falsification.
+
+The boundary freezes 0.50% risk per trade, 50% maximum position size, no
+leverage/shorting, 20% drawdown, daily/weekly new-risk limits and annual
+turnover/cost budgets. Declaration and evidence locking execute no joint
+performance, calibration or optimization. Candidate v2, PAPER and live remain
+false.

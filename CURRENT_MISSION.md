@@ -980,3 +980,25 @@ calibration and reviewed venue/execution scenarios. Existing BTC/ETH history
 is inspected development evidence only. No strategy is selected, and candidate
 v2, optimization, PAPER and live authorization remain false. Cloud services
 remain parked.
+
+### Alpha Development Protocol v2 — LOCAL PREPARATION
+
+The next hypothesis is now limited to three ordered, non-ranked ADX ablations:
+high relative volume; high relative volume plus `BULLISH_NORMAL`; and that same
+joint condition plus rising OBV. All features use completed bars, entries occur
+at the following open, volume is mandatory, and OBV remains an optional
+interaction rather than an assumed cross-asset gate.
+
+The patch freezes 0.50% risk per position, 50% maximum position size, two-ATR
+risk distance, 3:1 reward/risk, four-bar cooldown and explicit annual
+turnover/cost budgets. Coinbase baseline/stress and a dated Kraken taker
+sensitivity are declared; maker economics remain blocked pending a causal
+fill/non-fill model and actual account tier verification.
+
+The current Backtesting Engine does not yet execute recorded Stop/Target levels
+as active protective exits. That gap is now explicit and blocks a performance
+runner until conservative intrabar, gap and cost semantics are implemented and
+tested. The present patch contains only the strategy component, declaration and
+strict evidence lock. It runs no joint performance, calibration or candidate
+selection. Candidate v2, optimization, PAPER and live authorization remain
+false; cloud services remain parked.

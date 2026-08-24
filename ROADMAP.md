@@ -604,13 +604,23 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
   retain nine positive zero-cost views, universal real-cost rejection,
   excessive turnover/drawdown and ADX high-volume cross-asset evidence without
   generating a winner or candidate.
+- [x] Pre-register Alpha Development Protocol v2 around an exact three-variant
+  ADX/market-regime/relative-volume ablation chain; freeze causal signal rules,
+  risk/turnover boundaries and strict attribution-evidence locking without a
+  performance runner or parameter leaderboard.
+- [x] Freeze a venue/execution sensitivity boundary using dated Coinbase and
+  Kraken taker assumptions, while blocking maker evidence until causal
+  placement/non-fill/partial-fill semantics and actual account eligibility are
+  independently verified.
+- [ ] Implement and validate active protective stop/target execution in the
+  backtester. Include next-open sizing from lagged ATR, gap-through-stop and
+  conservative same-bar stop/target ordering before Alpha v2 performance.
+- [ ] Reproduce and integrate Alpha Development Protocol v2 on Windows, then
+  evidence-lock the exact development manifest and attribution report without
+  executing joint performance.
 - [ ] Pre-register a bounded alpha-discovery procedure covering a small,
   hypothesis-led set of indicator combinations, regime filters, risk sizing and
   temporally separated parameter calibration; prohibit a result leaderboard.
-- [ ] Freeze a venue/execution sensitivity boundary using account-relevant
-  maker/taker fees, spread, slippage and maker-fill semantics. A cheaper venue
-  scenario may explain cost sensitivity but may not substitute for drawdown and
-  persistence gates.
 - [ ] Evaluate joint causal intersections rather than adding marginal regime,
   relative-volume and OBV summaries. Require turnover/cost and risk controls
   before a development mechanism may retain interest.
