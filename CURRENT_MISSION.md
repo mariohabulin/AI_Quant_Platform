@@ -909,3 +909,25 @@ calibration procedure whose complete train/validation/recalibration behavior
 matches intended live use. Any resulting candidate v2 requires a new immutable
 identity and genuinely unseen final validation; the existing history may form
 a hypothesis but may not become confirmatory evidence.
+
+### Failure Attribution and Volume Research Protocol v1 — LOCAL PREPARATION
+
+The next research boundary now includes volume as a mandatory causal feature,
+not as an assumed standalone edge. A frozen 20-bar prior-median baseline
+produces per-asset relative volume, relative dollar volume, OBV and explicit
+LOW/NORMAL/HIGH participation regimes. Raw BTC and ETH volume is never compared,
+warm-up evidence remains unknown and trade context is taken from the completed
+signal bar rather than the following execution bar.
+
+The protocol binds only the exact closed six-hour manifest and exact canonical
+screening report. A future separate runner may replay each default strategy
+under zero, baseline and stress costs solely to attribute gross signal,
+cost/turnover, exposure, holding, drawdown, market regime, volume regime and
+window persistence. Zero cost is explanatory, not deployable.
+
+The current patch contains declaration, evidence locking and the reusable
+volume layer only. It performs no performance replay, combination, ranking,
+parameter sweep or strategy selection. Windows reproduction, reviewed
+commit/push and a clean evidence lock are required after local 36/36 focused
+and 843/843 complete tests before a separately reviewed attribution runner may
+exist. Candidate v2, optimization, PAPER and live authorization remain false.

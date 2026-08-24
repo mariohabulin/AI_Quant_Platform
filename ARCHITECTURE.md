@@ -1318,3 +1318,37 @@ optimization, forward PAPER or any execution adapter. Until all bytes are
 locked, status remains `DATASET_LOCK_PENDING`; after validation it becomes
 `DATASET_LOCKED` with `evaluation_executed=False`. Even a later
 `PAPER_CANDIDATE` result cannot authorize live trading.
+
+## Strategy Failure Attribution and Volume Research Boundary v1
+
+Controlled alpha discovery begins from the exact closed Strategy Family
+Screening evidence rather than silently altering one rejected configuration.
+`strategy_failure_attribution.py` accepts only the native BTC/ETH six-hour
+manifest SHA-256
+`6506dd2700b983a134a132890ef4c4ae6e84c0918ba65a5abff6ab2c204c4e7f`
+and canonical screening report SHA-256
+`9cf74deebe6a7efe9928d89b93b8ad4f7504ef70dfcf07ab0c00091a2cb9ec7f`.
+It revalidates both evidence chains and all eight `SCREEN_OUT` outcomes before
+binding any future diagnostic run. Declaration and lock paths execute no
+backtest and write no evidence.
+
+The diagnostic profiles are frozen as zero-cost, candidate-v1 baseline costs
+and candidate-v1 stress costs. Their purpose is to separate absence of gross
+signal from cost/turnover destruction while retaining the real-cost profiles as
+the deployability boundary. Attribution also covers exposure, holding period,
+drawdown concentration, benchmark excess, walk-forward persistence and market
+regime. It creates no score, ranking, winner or parameter change.
+
+`volume_research.py` supplies a causal per-asset participation layer. Relative
+volume and relative dollar volume compare each completed bar with a lagged
+20-bar trailing median; BTC and ETH raw volume are never compared. OBV and
+LOW/NORMAL/HIGH volume regimes are retained as descriptive features. Trade
+attribution uses `entry_signal_index`, ensuring that the following execution
+bar cannot leak into the signal context. Volume is mandatory for the next alpha
+hypothesis but is neither assumed to be standalone edge nor treated as a
+substitute for live spread, order-book depth and market-impact evidence.
+
+The protocol explicitly preserves inspected-development status. A separate
+runner is required before diagnostics execute, and any combination/calibration
+protocol remains a later boundary. Candidate v2, optimization, PAPER and live
+execution remain false.

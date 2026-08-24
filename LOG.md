@@ -1962,3 +1962,27 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
   attribute signal/cost/turnover/regime failure, then freeze a bounded
   train/validation calibration and combination procedure that mirrors intended
   live behavior. Existing inspected history remains development-only.
+
+## 2026-08-24 — Failure Attribution and Volume Protocol v1 (Local Preparation)
+
+- Added a causal, scale-independent volume research layer with a frozen lagged
+  trailing-median baseline, per-asset relative volume, relative dollar volume,
+  OBV and LOW/NORMAL/HIGH volume regimes.
+- Required signal-bar attribution through `entry_signal_index`; the following
+  execution bar cannot supply market or volume context to the decision that
+  preceded it.
+- Froze volume as mandatory evidence for the next alpha hypothesis while
+  explicitly rejecting raw BTC-versus-ETH volume comparison and any claim that
+  candle volume substitutes for live spread, depth or market impact.
+- Added a strict loader for only screening report SHA-256
+  `9cf74deebe6a7efe9928d89b93b8ad4f7504ef70dfcf07ab0c00091a2cb9ec7f`
+  and its canonical sidecar, including exact dataset, strategy scope, eight
+  closed outcomes and authorization state.
+- Froze zero-cost, baseline and stress diagnostic profiles plus gross/cost,
+  turnover, exposure, holding, drawdown, benchmark, walk-forward, market-regime
+  and volume-regime axes. Zero cost is diagnostic only.
+- Added declaration and evidence-lock paths without a performance runner or
+  evidence write. Ranking, result-driven tuning, combinations, candidate v2,
+  optimization, PAPER and live execution remain prohibited.
+- Local TDD passes 36/36 new volume/attribution tests and the complete 843/843
+  repository suite. Windows reproduction and integration remain pending.
