@@ -72,6 +72,10 @@ class OutOfSampleValidator:
         slippage_rate=0.0,
         spread_rate=0.0,
         execution_timing=BacktestingEngine.SAME_BAR_CLOSE,
+        risk_engine=None,
+        risk_stop_column="Stop",
+        risk_target_column="Target",
+        protective_exit_policy=None,
     ):
         self.strategy_engine = strategy_engine
         self.splitter = ChronologicalDataSplitter(in_sample_fraction)
@@ -79,6 +83,10 @@ class OutOfSampleValidator:
         self.commission_rate = commission_rate
         self.slippage_rate = slippage_rate
         self.spread_rate = spread_rate
+        self.risk_engine = risk_engine
+        self.risk_stop_column = risk_stop_column
+        self.risk_target_column = risk_target_column
+        self.protective_exit_policy = protective_exit_policy
         # Reuse existing engines as validation authorities for configuration.
         validated_backtester = BacktestingEngine(
             strategy_engine,
@@ -87,6 +95,10 @@ class OutOfSampleValidator:
             slippage_rate=slippage_rate,
             spread_rate=spread_rate,
             execution_timing=execution_timing,
+            risk_engine=risk_engine,
+            risk_stop_column=risk_stop_column,
+            risk_target_column=risk_target_column,
+            protective_exit_policy=protective_exit_policy,
         )
         self.execution_timing = validated_backtester.execution_timing
 
@@ -98,6 +110,10 @@ class OutOfSampleValidator:
             slippage_rate=self.slippage_rate,
             spread_rate=self.spread_rate,
             execution_timing=self.execution_timing,
+            risk_engine=self.risk_engine,
+            risk_stop_column=self.risk_stop_column,
+            risk_target_column=self.risk_target_column,
+            protective_exit_policy=self.protective_exit_policy,
         )
         backtester.run(data)
 
@@ -127,6 +143,11 @@ class OutOfSampleValidator:
         return {
             "initial_capital": backtester.initial_capital,
             "execution_timing": backtester.execution_timing,
+            "protective_exit_policy": (
+                backtester.protective_exit_policy.as_dict()
+                if backtester.protective_exit_policy is not None
+                else None
+            ),
             "final_capital": backtester.capital,
             "trade_history": list(backtester.trade_history),
             "equity_curve": list(backtester.equity_curve),

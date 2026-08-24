@@ -83,6 +83,10 @@ class StrategyValidationPipeline:
         random_seed=42,
         min_positive_walk_forward_excess_rate=0.60,
         execution_timing=BacktestingEngine.SAME_BAR_CLOSE,
+        risk_engine=None,
+        risk_stop_column="Stop",
+        risk_target_column="Target",
+        protective_exit_policy=None,
     ):
         self.strategy_engine = strategy_engine
         self.oos_validator = OutOfSampleValidator(
@@ -93,6 +97,10 @@ class StrategyValidationPipeline:
             slippage_rate=slippage_rate,
             spread_rate=spread_rate,
             execution_timing=execution_timing,
+            risk_engine=risk_engine,
+            risk_stop_column=risk_stop_column,
+            risk_target_column=risk_target_column,
+            protective_exit_policy=protective_exit_policy,
         )
         self.walk_forward_validator = WalkForwardValidator(
             strategy_engine,
@@ -105,6 +113,10 @@ class StrategyValidationPipeline:
             slippage_rate=slippage_rate,
             spread_rate=spread_rate,
             execution_timing=execution_timing,
+            risk_engine=risk_engine,
+            risk_stop_column=risk_stop_column,
+            risk_target_column=risk_target_column,
+            protective_exit_policy=protective_exit_policy,
         )
         self.falsification_engine = StatisticalFalsificationEngine(
             simulations=simulations,

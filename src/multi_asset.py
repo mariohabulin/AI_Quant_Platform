@@ -80,6 +80,10 @@ class MultiAssetValidator:
         min_validated_asset_rate=0.60,
         max_rejected_asset_rate=0.20,
         execution_timing=BacktestingEngine.SAME_BAR_CLOSE,
+        risk_engine=None,
+        risk_stop_column="Stop",
+        risk_target_column="Target",
+        protective_exit_policy=None,
     ):
         self.strategy_engine = strategy_engine
         self.pipeline_kwargs = dict(
@@ -91,6 +95,10 @@ class MultiAssetValidator:
             random_seed=random_seed,
             min_positive_walk_forward_excess_rate=min_positive_walk_forward_excess_rate,
             execution_timing=execution_timing,
+            risk_engine=risk_engine,
+            risk_stop_column=risk_stop_column,
+            risk_target_column=risk_target_column,
+            protective_exit_policy=protective_exit_policy,
         )
         self.policy = MultiAssetValidationPolicy(
             min_assets=min_assets,

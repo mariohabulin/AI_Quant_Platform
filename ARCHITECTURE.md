@@ -1389,11 +1389,18 @@ four-bar cooldown, ATR 14 risk distance and 3:1 intended reward/risk. Volume is
 an entry confirmation rather than an immediate exit trigger. The feature path
 is prefix-causal and preserves the input frame.
 
-The protocol does not misrepresent current Backtesting Engine behavior. Risk
-Engine levels can size and annotate a position, but the current engine does not
-execute Stop/Target as active intrabar protective orders. A separate protective
-fill component, including gap and same-bar stop/target semantics, must be
-reviewed and reproduced before any Alpha v2 performance runner exists.
+`protective_exit.py` removes the prior Backtesting Engine gap between sizing
+from risk levels and actively executing them. It resolves levels at the next
+Open from lagged signal-bar risk distance, checks stop gaps before pending
+signals, uses conservative target-gap pricing and chooses stop first when an
+OHLC bar touches both levels. Every fill uses normal sell friction and produces
+explicit reason/trigger/fill evidence. Legacy behavior remains unchanged when
+the optional policy is absent.
+
+Protective policy and Risk Engine propagate through OOS, walk-forward,
+validation-pipeline and multi-asset layers. Implementation does not create the
+Alpha v2 runner: binding variants, cost profiles and development gates remains
+a separate reviewed patch.
 
 `venue_execution_research.py` retains Coinbase baseline/stress, a dated Kraken
 Pro taker sensitivity and a blocked maker scenario. Static Kraken tiers are

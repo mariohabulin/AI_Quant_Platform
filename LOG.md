@@ -2064,3 +2064,36 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - Declaration and evidence-lock paths perform no performance evaluation,
   calibration, optimization or promotion. Candidate v2, PAPER and live remain
   false; cloud services remain parked.
+
+## 2026-08-24 — Alpha Development Protocol v2 (Windows Integration)
+
+- Windows reproduced 24/24 focused and 890/890 complete tests.
+- Committed and pushed the exact implementation as revision `45a3e00`, with
+  `HEAD`, `main` and `origin/main` aligned.
+- Re-ran the declaration and exact manifest/attribution evidence lock. Both
+  paths executed no joint performance and retained Candidate v2, optimization,
+  PAPER and live authorization as false.
+- Advanced only the previously declared prerequisite: active protective exits
+  still required a separate reviewed implementation before a performance
+  runner could be built.
+
+## 2026-08-24 — Protective Exit Engine v1 (Local Preparation)
+
+- Added an optional active long stop/target policy to the Backtesting Engine
+  without changing legacy default execution.
+- Resolved levels around the following execution Open from the completed
+  signal bar's two-ATR distance and exact 3:1 reward/risk declaration.
+- Implemented first-available-Open stop-gap fills, conservative target-gap
+  fills, entry-bar protection and stop-first treatment when one OHLC candle
+  touches both levels.
+- Routed protective exits through normal commission, slippage and spread
+  calculations; trade evidence distinguishes signal, stop, target and terminal
+  exits with trigger, fill-reference and ambiguity fields.
+- Failed closed on incompatible execution timing, missing Risk Engine, changed
+  reward/risk, missing/non-finite risk evidence and invalid OHLC geometry.
+- Propagated the same Risk Engine and protective policy through OOS,
+  walk-forward, validation-pipeline and multi-asset layers. Compact evidence
+  retains the exact protective policy.
+- Alpha Development declaration now records the protective engine as
+  implemented and reviewed while keeping the separate performance runner,
+  Candidate v2, optimization, PAPER and live execution unauthorized.

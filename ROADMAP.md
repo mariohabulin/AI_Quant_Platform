@@ -612,12 +612,19 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
   Kraken taker assumptions, while blocking maker evidence until causal
   placement/non-fill/partial-fill semantics and actual account eligibility are
   independently verified.
-- [ ] Implement and validate active protective stop/target execution in the
+- [x] Implement and locally validate active protective stop/target execution in the
   backtester. Include next-open sizing from lagged ATR, gap-through-stop and
   conservative same-bar stop/target ordering before Alpha v2 performance.
-- [ ] Reproduce and integrate Alpha Development Protocol v2 on Windows, then
-  evidence-lock the exact development manifest and attribution report without
-  executing joint performance.
+- [ ] Reproduce Protective Exit Engine v1 on Windows, review all focused/full
+  tests, commit/push the exact implementation and re-lock Alpha Development v2
+  without executing performance.
+- [ ] Build a separately reviewed one-shot Alpha v2 development runner that
+  binds exact strategy, risk, protective-exit and permitted taker scenarios;
+  retain no automatic ranking or promotion.
+- [x] Reproduce and integrate Alpha Development Protocol v2 on Windows under
+  revision `45a3e00`, pass 24/24 focused and 890/890 complete tests, then lock
+  the exact development manifest and attribution report without executing
+  joint performance.
 - [ ] Pre-register a bounded alpha-discovery procedure covering a small,
   hypothesis-led set of indicator combinations, regime filters, risk sizing and
   temporally separated parameter calibration; prohibit a result leaderboard.

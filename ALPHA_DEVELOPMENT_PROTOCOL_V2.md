@@ -77,14 +77,14 @@ The intended live-equivalent risk contract is frozen before performance:
 A breach of either turnover/cost budget screens out the mechanism even if its
 gross return is positive. Both assets must survive baseline costs.
 
-## Required protective-exit implementation
+## Implemented protective-exit prerequisite
 
-The current Backtesting Engine can use Risk Engine levels for position sizing
-and can record planned Stop/Target values, but it does not execute those levels
-as active intrabar protective exits. Therefore no Alpha v2 performance runner
-is authorized yet.
+Protective Exit Engine v1 now converts signal-bar ATR distance into active,
+costed stop and target exits. The earlier Backtesting Engine limitation—using
+Risk Engine levels for sizing and reporting without executing them—has been
+removed. No Alpha v2 performance runner is authorized by that implementation.
 
-The separately reviewed protective-exit component must implement and test:
+The implemented and tested component freezes:
 
 - position sizing at the following bar open from the lagged signal-bar ATR
 - stop at execution open minus two signal-bar ATR
@@ -153,6 +153,6 @@ python src/alpha_development_protocol.py `
 ```
 
 Expected statuses are `ALPHA_DEVELOPMENT_EVIDENCE_LOCK_PENDING` and
-`ALPHA_DEVELOPMENT_EVIDENCE_LOCKED`. Both explicitly report that joint
-performance, protective-exit implementation, calibration, Candidate v2,
-optimization, PAPER and live execution remain false.
+`ALPHA_DEVELOPMENT_EVIDENCE_LOCKED`. Both report protective-exit implementation
+as true while joint performance, calibration, Candidate v2, optimization,
+PAPER and live execution remain false.

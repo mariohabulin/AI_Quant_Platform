@@ -22,6 +22,7 @@ def compact_backtest_run(result):
         "comparison",
         "benchmark",
         "execution_timing",
+        "protective_exit_policy",
     ):
         if key in result:
             retained[key] = result[key]

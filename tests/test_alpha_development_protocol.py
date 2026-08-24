@@ -18,6 +18,8 @@ from alpha_development_protocol import (
     VARIANT_ORDER,
     AlphaDevelopmentPreregistration,
     alpha_development_configuration,
+    alpha_development_protective_exit_policy,
+    alpha_development_risk_engine,
     alpha_development_strategy_engines,
     load_recorded_attribution_report,
     main,
@@ -148,14 +150,27 @@ def test_configuration_freezes_three_ablation_variants_risk_turnover_and_no_cali
     assert configuration["temporal_development"]["calibration_in_this_protocol"] is False
 
 
-def test_protective_exit_boundary_exposes_real_backtester_gap_and_blocks_runner():
+def test_protective_exit_boundary_records_resolved_gap_and_still_blocks_runner():
     boundary = protective_exit_boundary()
     assert "DOES_NOT_EXECUTE_INTRABAR_PROTECTIVE_EXITS" in boundary[
-        "current_backtester_limitation"
+        "resolved_backtester_limitation"
     ]
     assert boundary["stop_and_target_same_bar"] == "CONSERVATIVE_STOP_FIRST"
-    assert boundary["implementation_verified"] is False
+    assert boundary["implementation_verified"] is True
     assert boundary["performance_runner_authorized"] is False
+
+
+def test_protocol_constructs_exact_risk_engine_and_active_exit_policy():
+    risk = alpha_development_risk_engine()
+    policy = alpha_development_protective_exit_policy()
+    assert risk.risk_per_trade == pytest.approx(0.005)
+    assert risk.max_position_fraction == pytest.approx(0.50)
+    assert risk.max_drawdown_fraction == pytest.approx(0.20)
+    assert risk.daily_loss_limit == pytest.approx(0.02)
+    assert risk.weekly_loss_limit == pytest.approx(0.05)
+    assert risk.min_reward_risk == pytest.approx(3.0)
+    assert policy.reward_risk_ratio == pytest.approx(risk.min_reward_risk)
+    assert policy.stop_and_target_same_bar == "STOP_FIRST"
 
 
 def test_declaration_is_non_evaluating_non_promotional_and_requires_separate_reviews():
@@ -166,12 +181,13 @@ def test_declaration_is_non_evaluating_non_promotional_and_requires_separate_rev
     assert declaration["dataset_role"] == "INSPECTED_DEVELOPMENT_ONLY"
     assert declaration["variant_order"] == list(VARIANT_ORDER)
     assert declaration["joint_performance_evaluation_executed"] is False
-    assert declaration["protective_exit_engine_implemented"] is False
+    assert declaration["protective_exit_engine_implemented"] is True
     assert declaration["automatic_strategy_selection"] is False
     assert declaration["candidate_v2_authorized"] is False
     assert declaration["bounded_forward_paper_authorized"] is False
     assert declaration["live_execution_authorized"] is False
-    assert declaration["separate_protective_exit_review_required"] is True
+    assert declaration["separate_protective_exit_review_required"] is False
+    assert declaration["protective_exit_review_completed"] is True
     assert declaration["separate_performance_runner_review_required"] is True
 
 

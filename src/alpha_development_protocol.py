@@ -18,6 +18,8 @@ try:
         CoinbaseResearchDatasetLock,
     )
     from research_evidence import canonical_json_bytes
+    from protective_exit import ProtectiveExitPolicy
+    from risk_engine import RiskEngine
     from strategy_engine import StrategyEngine
     from strategy_failure_attribution import (
         ATTRIBUTION_ID,
@@ -38,6 +40,8 @@ except ImportError:  # package import when src is not placed directly on sys.pat
         CoinbaseResearchDatasetLock,
     )
     from src.research_evidence import canonical_json_bytes
+    from src.protective_exit import ProtectiveExitPolicy
+    from src.risk_engine import RiskEngine
     from src.strategy_engine import StrategyEngine
     from src.strategy_failure_attribution import (
         ATTRIBUTION_ID,
@@ -212,13 +216,41 @@ def alpha_development_strategy_engines():
     return engines
 
 
+def alpha_development_risk_engine():
+    """Construct the exact resettable v2 risk authority for one backtest."""
+
+    return RiskEngine(
+        risk_per_trade=0.005,
+        max_position_fraction=0.50,
+        max_drawdown_fraction=0.20,
+        daily_loss_limit=0.02,
+        weekly_loss_limit=0.05,
+        min_reward_risk=3.0,
+    )
+
+
+def alpha_development_protective_exit_policy():
+    """Construct the exact active v2 stop/target execution policy."""
+
+    return ProtectiveExitPolicy(
+        risk_distance_column="ALPHA_V2_ATR_RISK_DISTANCE",
+        reward_risk_ratio=3.0,
+        reward_risk_ratio_column="ALPHA_V2_REWARD_RISK_RATIO",
+        stop_and_target_same_bar="STOP_FIRST",
+        stop_gap_fill="OPEN",
+        target_gap_fill="TARGET",
+        entry_bar_protection=True,
+    )
+
+
 def protective_exit_boundary():
     return {
-        "status": "REQUIRED_BEFORE_PERFORMANCE_RUNNER",
-        "current_backtester_limitation": (
+        "status": "IMPLEMENTED_REQUIRES_SEPARATE_PERFORMANCE_RUNNER_REVIEW",
+        "resolved_backtester_limitation": (
             "RISK_ENGINE_SIZES_AND_RECORDS_LEVELS_BUT_DOES_NOT_EXECUTE_"
             "INTRABAR_PROTECTIVE_EXITS"
         ),
+        "implementation": "ACTIVE_LONG_STOP_AND_TARGET_EXECUTION_V1",
         "entry_execution": "FOLLOWING_BAR_OPEN",
         "risk_distance_source": "2_X_SIGNAL_BAR_ATR_14",
         "stop_price": "EXECUTION_OPEN_MINUS_SIGNAL_BAR_RISK_DISTANCE",
@@ -227,13 +259,14 @@ def protective_exit_boundary():
         "stop_and_target_same_bar": "CONSERVATIVE_STOP_FIRST",
         "protective_exit_costs_applied": True,
         "partial_fill_model": "NOT_REQUIRED_FOR_TAKER_ONLY_V2_RUNNER",
-        "implementation_verified": False,
+        "implementation_verified": True,
         "performance_runner_authorized": False,
     }
 
 
 def alpha_development_configuration():
     variants = [variant.as_dict() for variant in ALPHA_DEVELOPMENT_VARIANTS]
+    risk = alpha_development_risk_engine()
     return {
         "variant_order": list(VARIANT_ORDER),
         "variants": variants,
@@ -246,12 +279,12 @@ def alpha_development_configuration():
             "joint_intersections_must_be_evaluated_directly": True,
         },
         "risk": {
-            "risk_per_trade_fraction": 0.005,
-            "maximum_position_fraction": 0.50,
-            "maximum_portfolio_drawdown_fraction": 0.20,
-            "maximum_daily_new_risk_fraction": 0.02,
-            "maximum_weekly_new_risk_fraction": 0.05,
-            "minimum_reward_risk_ratio": 3.0,
+            "risk_per_trade_fraction": risk.risk_per_trade,
+            "maximum_position_fraction": risk.max_position_fraction,
+            "maximum_portfolio_drawdown_fraction": risk.max_drawdown_fraction,
+            "maximum_daily_new_risk_fraction": risk.daily_loss_limit,
+            "maximum_weekly_new_risk_fraction": risk.weekly_loss_limit,
+            "minimum_reward_risk_ratio": risk.min_reward_risk,
             "leverage": "NONE",
             "shorting": False,
         },
@@ -297,7 +330,7 @@ def alpha_development_interpretation_policy():
 def _safety_boundary():
     return {
         "joint_performance_evaluation_executed": False,
-        "protective_exit_engine_implemented": False,
+        "protective_exit_engine_implemented": True,
         "parameter_calibration_executed": False,
         "automatic_ranking_generated": False,
         "automatic_strategy_selection": False,
@@ -363,7 +396,8 @@ class AlphaDevelopmentPreregistration:
             "configuration": alpha_development_configuration(),
             "interpretation_policy": alpha_development_interpretation_policy(),
             "joint_evaluation_authorized_before_evidence_lock": False,
-            "separate_protective_exit_review_required": True,
+            "separate_protective_exit_review_required": False,
+            "protective_exit_review_completed": True,
             "separate_performance_runner_review_required": True,
             **_safety_boundary(),
         }
@@ -424,7 +458,8 @@ def main(argv=None):
             "variant_order": list(locked.strategy_engines),
             "configuration": locked.configuration,
             "interpretation_policy": alpha_development_interpretation_policy(),
-            "separate_protective_exit_review_required": True,
+            "separate_protective_exit_review_required": False,
+            "protective_exit_review_completed": True,
             "separate_performance_runner_review_required": True,
             **_safety_boundary(),
         }

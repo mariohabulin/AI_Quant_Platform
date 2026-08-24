@@ -91,6 +91,10 @@ class WalkForwardValidator:
         slippage_rate=0.0,
         spread_rate=0.0,
         execution_timing=BacktestingEngine.SAME_BAR_CLOSE,
+        risk_engine=None,
+        risk_stop_column="Stop",
+        risk_target_column="Target",
+        protective_exit_policy=None,
     ):
         self.strategy_engine = strategy_engine
         self.splitter = WalkForwardSplitter(train_size, test_size, step_size, expanding)
@@ -106,6 +110,10 @@ class WalkForwardValidator:
             slippage_rate=slippage_rate,
             spread_rate=spread_rate,
             execution_timing=execution_timing,
+            risk_engine=risk_engine,
+            risk_stop_column=risk_stop_column,
+            risk_target_column=risk_target_column,
+            protective_exit_policy=protective_exit_policy,
         )
         self.execution_timing = self._partition_validator.execution_timing
 

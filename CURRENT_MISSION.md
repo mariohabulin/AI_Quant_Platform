@@ -981,7 +981,7 @@ is inspected development evidence only. No strategy is selected, and candidate
 v2, optimization, PAPER and live authorization remain false. Cloud services
 remain parked.
 
-### Alpha Development Protocol v2 — LOCAL PREPARATION
+### Alpha Development Protocol v2 — INTEGRATED; PROTECTIVE EXIT LOCAL PREPARATION
 
 The next hypothesis is now limited to three ordered, non-ranked ADX ablations:
 high relative volume; high relative volume plus `BULLISH_NORMAL`; and that same
@@ -995,10 +995,20 @@ turnover/cost budgets. Coinbase baseline/stress and a dated Kraken taker
 sensitivity are declared; maker economics remain blocked pending a causal
 fill/non-fill model and actual account tier verification.
 
-The current Backtesting Engine does not yet execute recorded Stop/Target levels
-as active protective exits. That gap is now explicit and blocks a performance
-runner until conservative intrabar, gap and cost semantics are implemented and
-tested. The present patch contains only the strategy component, declaration and
-strict evidence lock. It runs no joint performance, calibration or candidate
-selection. Candidate v2, optimization, PAPER and live authorization remain
-false; cloud services remain parked.
+Windows reproduced 24/24 focused and 890/890 complete tests, committed/pushed
+revision `45a3e00`, and locked the exact manifest plus Failure Attribution
+evidence without running joint performance. The declaration and lock both
+retain Candidate v2, optimization, PAPER and live authorization as false.
+
+Protective Exit Engine v1 now executes signal-bar ATR-based stops and 3R targets
+through the normal costed sell path. Stop gaps fill at the first available Open,
+target gaps receive no favorable Open improvement, ambiguous stop/target bars
+choose stop first and entry bars are protected. The optional policy propagates
+through OOS, walk-forward, validation-pipeline and multi-asset research while
+legacy defaults remain unchanged.
+
+The next patch may construct a separate Alpha v2 performance runner only after
+Windows reproduction and reviewed integration of this engine. No joint
+performance, calibration or candidate selection has run. Candidate v2,
+optimization, PAPER and live authorization remain false; cloud services remain
+parked.
