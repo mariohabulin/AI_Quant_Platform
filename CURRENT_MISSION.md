@@ -1007,8 +1007,28 @@ choose stop first and entry bars are protected. The optional policy propagates
 through OOS, walk-forward, validation-pipeline and multi-asset research while
 legacy defaults remain unchanged.
 
-The next patch may construct a separate Alpha v2 performance runner only after
-Windows reproduction and reviewed integration of this engine. No joint
+Windows reproduction and reviewed integration of this engine cleared the
+prerequisite for constructing a separate Alpha v2 development runner. No joint
 performance, calibration or candidate selection has run. Candidate v2,
 optimization, PAPER and live authorization remain false; cloud services remain
 parked.
+
+### Alpha Development Runner v2 — LOCAL PREPARATION
+
+The separate runner now binds the three fixed joint variants to the exact Risk
+Engine, active Protective Exit Policy and three reviewed taker scenarios. It
+will execute exactly nine multi-asset evaluations after Windows integration;
+the Kraken profile is sensitivity only and the maker scenario is structurally
+blocked.
+
+The report derives annualized executed-notional turnover, modeled-cost burden,
+drawdown and protective/signal exit counts from raw OOS trades before bounded
+compaction. Coinbase baseline and stress control all outcome gates. The fixed
+ablation order is not a leaderboard and no parameter calibration, winner or
+automatic selection can be emitted.
+
+This local preparation has not executed development performance. The next
+boundary follows local 203/203 focused and 944/944 complete PASS: Windows
+reproduction, commit/push, exact evidence preflight and only then one explicit
+run. Candidate v2, optimization, PAPER and live authorization remain false;
+cloud services remain parked.

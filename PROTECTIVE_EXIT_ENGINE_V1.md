@@ -131,9 +131,10 @@ engine.
 
 ## Authorization state
 
-Implementation and local tests do not authorize Alpha v2 performance. A
-separate reviewed runner must bind the exact three variants, Risk Engine,
-Protective Exit Policy, turnover/cost budgets and permitted taker scenarios.
+Implementation and local tests do not by themselves authorize Alpha v2
+performance. The separate Alpha Development Runner v2 binds the exact three
+variants, Risk Engine, Protective Exit Policy, turnover/cost budgets and
+permitted taker scenarios behind its own one-shot evidence lock.
 
 Candidate v2, optimization, bounded forward PAPER and live execution remain
 false. Cloud services remain parked.

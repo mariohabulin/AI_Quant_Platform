@@ -18,6 +18,7 @@ from alpha_development_protocol import (
     VARIANT_ORDER,
     AlphaDevelopmentPreregistration,
     alpha_development_configuration,
+    alpha_development_evaluation_configuration,
     alpha_development_protective_exit_policy,
     alpha_development_risk_engine,
     alpha_development_strategy_engines,
@@ -148,16 +149,33 @@ def test_configuration_freezes_three_ablation_variants_risk_turnover_and_no_cali
         "annual_total_executed_notional_multiple_maximum"
     ] == pytest.approx(24.0)
     assert configuration["temporal_development"]["calibration_in_this_protocol"] is False
+    assert configuration["evaluation"] == (
+        alpha_development_evaluation_configuration().as_dict()
+    )
 
 
-def test_protective_exit_boundary_records_resolved_gap_and_still_blocks_runner():
+def test_development_evaluation_configuration_freezes_deterministic_gates():
+    configuration = alpha_development_evaluation_configuration()
+    assert configuration.train_size == 2880
+    assert configuration.test_size == 720
+    assert configuration.step_size == 720
+    assert configuration.initial_capital == pytest.approx(5000.0)
+    assert configuration.simulations == 5000
+    assert configuration.random_seed == 20260822
+    assert configuration.min_walk_forward_windows == 5
+    assert configuration.min_unseen_trades_per_asset == 20
+    assert configuration.max_oos_drawdown_percent == pytest.approx(20.0)
+    assert configuration.execution_timing == "next_bar_open"
+
+
+def test_protective_exit_boundary_records_resolved_gap_and_runner_prerequisite():
     boundary = protective_exit_boundary()
     assert "DOES_NOT_EXECUTE_INTRABAR_PROTECTIVE_EXITS" in boundary[
         "resolved_backtester_limitation"
     ]
     assert boundary["stop_and_target_same_bar"] == "CONSERVATIVE_STOP_FIRST"
     assert boundary["implementation_verified"] is True
-    assert boundary["performance_runner_authorized"] is False
+    assert boundary["performance_runner_prerequisite_satisfied"] is True
 
 
 def test_protocol_constructs_exact_risk_engine_and_active_exit_policy():
@@ -188,7 +206,9 @@ def test_declaration_is_non_evaluating_non_promotional_and_requires_separate_rev
     assert declaration["live_execution_authorized"] is False
     assert declaration["separate_protective_exit_review_required"] is False
     assert declaration["protective_exit_review_completed"] is True
-    assert declaration["separate_performance_runner_review_required"] is True
+    assert declaration["separate_performance_runner_review_required"] is False
+    assert declaration["performance_runner_review_completed"] is True
+    assert declaration["runner_execution_authorized_before_evidence_lock"] is False
 
 
 def test_attribution_loader_rechecks_canonical_bytes_sidecar_scope_and_basis(tmp_path):
@@ -281,6 +301,8 @@ def test_cli_declaration_and_locked_output_do_not_execute_performance(capsys, mo
     assert output["status"] == "ALPHA_DEVELOPMENT_EVIDENCE_LOCKED"
     assert output["asset_rows"] == {"BTC-USD": 1, "ETH-USD": 1}
     assert output["joint_performance_evaluation_executed"] is False
+    assert output["performance_runner_review_completed"] is True
+    assert output["runner_execution_requires_same_process_evidence_lock"] is True
     assert output["candidate_v2_authorized"] is False
 
 

@@ -1398,9 +1398,22 @@ explicit reason/trigger/fill evidence. Legacy behavior remains unchanged when
 the optional policy is absent.
 
 Protective policy and Risk Engine propagate through OOS, walk-forward,
-validation-pipeline and multi-asset layers. Implementation does not create the
-Alpha v2 runner: binding variants, cost profiles and development gates remains
-a separate reviewed patch.
+validation-pipeline and multi-asset layers.
+
+`alpha_development_runner.py` is the separate one-shot research boundary. It
+locks the exact manifest and attribution report before executing the three
+pre-declared joint variants under the three allowed taker scenarios. A fresh
+Risk Engine and exact Protective Exit Policy are injected into every
+multi-asset validator. Coinbase baseline/stress drive gate decisions; Kraken
+remains venue sensitivity and the deferred maker scenario is unreachable.
+
+Raw OOS trades are consumed only long enough to derive annualized executed
+notional, modeled-cost fractions and protective/signal exit counts. The bounded
+canonical report retains compact validation evidence and raw-evaluation hashes,
+not trade histories. Atomic final/staging directories prevent overwrite and
+repeat. Comparison preserves declaration order and exposes no ranking, winner
+or automatic selection. Candidate v2, PAPER and live authorization are
+hard-false report invariants.
 
 `venue_execution_research.py` retains Coinbase baseline/stress, a dated Kraken
 Pro taker sensitivity and a blocked maker scenario. Static Kraken tiers are

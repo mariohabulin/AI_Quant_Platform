@@ -18,8 +18,10 @@ try:
         CoinbaseResearchDatasetLock,
     )
     from research_evidence import canonical_json_bytes
+    from first_strategy_candidate import BASELINE_COSTS, STRESSED_COSTS
     from protective_exit import ProtectiveExitPolicy
     from risk_engine import RiskEngine
+    from strategy_evaluation_protocol import StrategyEvaluationConfig
     from strategy_engine import StrategyEngine
     from strategy_failure_attribution import (
         ATTRIBUTION_ID,
@@ -40,8 +42,10 @@ except ImportError:  # package import when src is not placed directly on sys.pat
         CoinbaseResearchDatasetLock,
     )
     from src.research_evidence import canonical_json_bytes
+    from src.first_strategy_candidate import BASELINE_COSTS, STRESSED_COSTS
     from src.protective_exit import ProtectiveExitPolicy
     from src.risk_engine import RiskEngine
+    from src.strategy_evaluation_protocol import StrategyEvaluationConfig
     from src.strategy_engine import StrategyEngine
     from src.strategy_failure_attribution import (
         ATTRIBUTION_ID,
@@ -243,9 +247,36 @@ def alpha_development_protective_exit_policy():
     )
 
 
+def alpha_development_evaluation_configuration():
+    """Freeze deterministic development-validation settings before execution."""
+
+    return StrategyEvaluationConfig(
+        train_size=2880,
+        test_size=720,
+        step_size=720,
+        expanding=True,
+        in_sample_fraction=0.70,
+        initial_capital=5000.0,
+        simulations=5000,
+        confidence_level=0.95,
+        random_seed=20260822,
+        min_positive_walk_forward_excess_rate=0.60,
+        min_assets=2,
+        min_validated_asset_rate=1.0,
+        max_rejected_asset_rate=0.0,
+        min_walk_forward_windows=5,
+        min_unseen_trades_per_asset=20,
+        max_oos_drawdown_percent=20.0,
+        baseline_costs=BASELINE_COSTS,
+        stressed_costs=STRESSED_COSTS,
+        execution_timing="next_bar_open",
+        terminal_position_policy="force_close_at_final_close",
+    )
+
+
 def protective_exit_boundary():
     return {
-        "status": "IMPLEMENTED_REQUIRES_SEPARATE_PERFORMANCE_RUNNER_REVIEW",
+        "status": "IMPLEMENTED_AND_BOUND_TO_REVIEWED_DEVELOPMENT_RUNNER",
         "resolved_backtester_limitation": (
             "RISK_ENGINE_SIZES_AND_RECORDS_LEVELS_BUT_DOES_NOT_EXECUTE_"
             "INTRABAR_PROTECTIVE_EXITS"
@@ -260,13 +291,14 @@ def protective_exit_boundary():
         "protective_exit_costs_applied": True,
         "partial_fill_model": "NOT_REQUIRED_FOR_TAKER_ONLY_V2_RUNNER",
         "implementation_verified": True,
-        "performance_runner_authorized": False,
+        "performance_runner_prerequisite_satisfied": True,
     }
 
 
 def alpha_development_configuration():
     variants = [variant.as_dict() for variant in ALPHA_DEVELOPMENT_VARIANTS]
     risk = alpha_development_risk_engine()
+    evaluation = alpha_development_evaluation_configuration()
     return {
         "variant_order": list(VARIANT_ORDER),
         "variants": variants,
@@ -288,6 +320,7 @@ def alpha_development_configuration():
             "leverage": "NONE",
             "shorting": False,
         },
+        "evaluation": evaluation.as_dict(),
         "turnover_cost_budget": {
             "annual_total_executed_notional_multiple_maximum": 24.0,
             "annual_baseline_cost_fraction_of_initial_capital_maximum": 0.20,
@@ -398,7 +431,9 @@ class AlphaDevelopmentPreregistration:
             "joint_evaluation_authorized_before_evidence_lock": False,
             "separate_protective_exit_review_required": False,
             "protective_exit_review_completed": True,
-            "separate_performance_runner_review_required": True,
+            "separate_performance_runner_review_required": False,
+            "performance_runner_review_completed": True,
+            "runner_execution_authorized_before_evidence_lock": False,
             **_safety_boundary(),
         }
 
@@ -460,7 +495,9 @@ def main(argv=None):
             "interpretation_policy": alpha_development_interpretation_policy(),
             "separate_protective_exit_review_required": False,
             "protective_exit_review_completed": True,
-            "separate_performance_runner_review_required": True,
+            "separate_performance_runner_review_required": False,
+            "performance_runner_review_completed": True,
+            "runner_execution_requires_same_process_evidence_lock": True,
             **_safety_boundary(),
         }
     else:

@@ -2097,3 +2097,38 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - Alpha Development declaration now records the protective engine as
   implemented and reviewed while keeping the separate performance runner,
   Candidate v2, optimization, PAPER and live execution unauthorized.
+
+## 2026-08-24 — Protective Exit Engine v1 (Windows Integration)
+
+- Windows reproduced 166/166 focused and 921/921 complete tests.
+- Rechecked the non-evaluating declaration and exact evidence lock: the
+  protective engine is active while joint performance and every Candidate v2,
+  PAPER and live authorization flag remain false.
+- Committed/pushed the exact implementation as revision `0f7c13b`; `HEAD`,
+  `main` and `origin/main` are aligned and the working tree is clean.
+
+## 2026-08-24 — Alpha Development Runner v2 (Local Preparation)
+
+- Added a one-shot runner for the exact three Alpha v2 causal ablations under
+  Coinbase baseline, Coinbase stress and Kraken taker sensitivity: nine
+  multi-asset evaluations with no parameter sweep.
+- Injected the frozen 0.50% Risk Engine and active Protective Exit Policy into
+  every evaluation; exact protective-policy evidence is mandatory in every
+  OOS and walk-forward partition.
+- Added deterministic 2,880/720/720 windows, 5,000 falsification simulations,
+  seed `20260822`, minimum five windows and 20 development trades per asset.
+- Derived annualized executed-notional turnover, annualized modeled-cost
+  fraction and protective/signal exit counts from raw OOS trades before compact
+  evidence persistence.
+- Made baseline/stress classification, positive cross-asset baseline return,
+  drawdown, evidence volume, 24x annual turnover and 20% annual baseline-cost
+  limits explicit gates. Kraken is sensitivity only and maker execution is
+  structurally excluded.
+- Added atomic one-shot final/staging behavior, canonical JSON plus SHA-256 and
+  fail-closed validation for evidence identity, strategy drift, non-finite
+  trades and lost protective execution.
+- Completed 203/203 focused runner/risk/protective/validation tests and the
+  complete 944/944 repository suite locally.
+- No development performance has run. Ranking, calibration, automatic
+  selection, Candidate v2, optimization, PAPER and live execution remain false;
+  cloud services remain parked.

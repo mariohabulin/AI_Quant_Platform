@@ -69,10 +69,9 @@ class ADXRegimeVolumeStrategy:
     """Long-only causal development strategy with entry-only volume filters.
 
     The strategy records an ATR risk distance derived on the completed signal
-    bar. A separately reviewed execution component must translate that distance
-    into position size and active stop/target orders at the following bar open.
-    This class deliberately does not pretend that advisory Stop/Target columns
-    are protective fills.
+    bar. Protective Exit Engine v1 translates that distance into position size
+    and active stop/target exits at the following bar open when a reviewed
+    runner supplies the frozen Risk Engine and Protective Exit Policy.
     """
 
     def __init__(

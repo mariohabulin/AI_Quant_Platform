@@ -82,7 +82,7 @@ gross return is positive. Both assets must survive baseline costs.
 Protective Exit Engine v1 now converts signal-bar ATR distance into active,
 costed stop and target exits. The earlier Backtesting Engine limitation—using
 Risk Engine levels for sizing and reporting without executing them—has been
-removed. No Alpha v2 performance runner is authorized by that implementation.
+removed. That component alone does not authorize Alpha v2 performance.
 
 The implemented and tested component freezes:
 
@@ -100,7 +100,7 @@ protective fill occurred.
 
 ## Venue and execution scenarios
 
-The future runner may use only these frozen taker scenarios:
+The separate runner may use only these frozen taker scenarios:
 
 | Scenario | Commission | Slippage | Full spread | Role |
 | --- | ---: | ---: | ---: | --- |
@@ -135,6 +135,24 @@ Retaining development interest is neither validation nor Candidate v2. Any
 bounded calibration is a later, separately pre-registered procedure. Formal
 candidate evaluation requires a new immutable identity and a genuinely unseen
 future-validation boundary.
+
+## Separate one-shot development runner
+
+`alpha_development_runner.py` binds this protocol without changing its
+hypothesis. It executes exactly three fixed variants under Coinbase baseline,
+Coinbase stress and Kraken taker sensitivity: nine multi-asset evaluations.
+Baseline and stress control outcomes; Kraken remains sensitivity only.
+
+Every evaluation receives the exact Risk Engine and active Protective Exit
+Policy. Raw OOS trades derive annualized executed-notional turnover, modeled
+cost fraction and exit-reason counts before compact canonical evidence is
+written. The 24x annual turnover and 20% annual baseline-cost budgets are hard
+screen-out gates alongside the 20% drawdown limit.
+
+The runner is one-shot and atomic. It emits no score, ranking, calibration,
+selected variant or candidate. Execution remains prohibited until its patch is
+reproduced on Windows, committed and pushed and an absent-evidence preflight is
+reviewed.
 
 ## Controlled commands after integration
 

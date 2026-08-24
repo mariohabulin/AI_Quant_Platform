@@ -615,12 +615,15 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
 - [x] Implement and locally validate active protective stop/target execution in the
   backtester. Include next-open sizing from lagged ATR, gap-through-stop and
   conservative same-bar stop/target ordering before Alpha v2 performance.
-- [ ] Reproduce Protective Exit Engine v1 on Windows, review all focused/full
-  tests, commit/push the exact implementation and re-lock Alpha Development v2
-  without executing performance.
-- [ ] Build a separately reviewed one-shot Alpha v2 development runner that
-  binds exact strategy, risk, protective-exit and permitted taker scenarios;
-  retain no automatic ranking or promotion.
+- [x] Reproduce Protective Exit Engine v1 on Windows with 166/166 focused and
+  921/921 complete tests, commit/push revision `0f7c13b` and re-lock Alpha
+  Development v2 without executing performance.
+- [x] Build and locally validate a separately reviewed one-shot Alpha v2
+  development runner that binds exact strategy, risk, protective-exit and
+  permitted taker scenarios; retain no automatic ranking or promotion.
+- [ ] Reproduce Alpha Development Runner v2 on Windows, commit/push the exact
+  implementation and pass an absent-evidence preflight before one explicit
+  nine-evaluation development run.
 - [x] Reproduce and integrate Alpha Development Protocol v2 on Windows under
   revision `45a3e00`, pass 24/24 focused and 890/890 complete tests, then lock
   the exact development manifest and attribution report without executing
