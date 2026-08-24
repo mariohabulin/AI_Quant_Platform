@@ -637,10 +637,17 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
   revision `45a3e00`, pass 24/24 focused and 890/890 complete tests, then lock
   the exact development manifest and attribution report without executing
   joint performance.
-- [ ] Pre-register a bounded Alpha Discovery and Calibration Protocol covering
+- [x] Pre-register a bounded Alpha Discovery and Calibration Protocol covering
   exit/trade-path attribution, a residual zero-cost diagnostic and a small,
   hypothesis-led set of indicator combinations, regime filters, risk sizing and
   temporally separated parameter calibration; prohibit a result leaderboard.
+- [ ] Reproduce and integrate Alpha Discovery and Calibration Protocol v1 on
+  Windows, verify its exact Alpha v2 evidence lock and retain every execution
+  and promotion authorization as false.
+- [ ] Implement causal EMA trend structure, completed-bar +1R break-even
+  transitions and MFE/MAE/holding-path evidence before any calibration runner.
+- [ ] Build a separately reviewed one-shot nested calibration runner only after
+  its prerequisite components pass focused and complete regression.
 - [ ] Evaluate joint causal intersections rather than adding marginal regime,
   relative-volume and OBV summaries. Require turnover/cost and risk controls
   before a development mechanism may retain interest.

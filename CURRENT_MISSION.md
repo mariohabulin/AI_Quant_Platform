@@ -1061,3 +1061,33 @@ parked. The next mission is a separately pre-registered bounded Alpha Discovery
 and Calibration Protocol covering exit attribution, residual zero-cost signal,
 small train-only calibration and regime-specific strategy roles before any
 genuinely unseen final validation.
+
+### Alpha Discovery and Calibration Protocol v1 — LOCAL PREPARATION
+
+The next research boundary is now pre-declared without executing diagnostics,
+calibration or performance. It locks the exact closed Alpha v2 report, its three
+`SCREEN_OUT` outcomes and the inspected six-hour BTC/ETH dataset.
+
+Phase one requires zero-cost replay of the exact v2 variants plus causal
+trade-path MFE, MAE, realized-R, holding-time and exit-reason attribution. That
+diagnostic may explain residual gross signal but cannot select parameters.
+
+Phase two freezes an eight-member catalog: two ADX hysteresis bands, two ATR
+risk distances and static-versus-completed-bar +1R break-even management. Every
+member retains mandatory high relative volume, `BULLISH_NORMAL`, causal EMA
+trend structure, the 3R target and the existing hard risk boundary.
+
+Selection is nested and chronological. Only four prior inner-validation windows
+may choose one shared BTC/ETH configuration for each outer test. Hard
+baseline/stress, persistence, trades, drawdown, turnover, cost and protective
+gates apply; when nothing qualifies the required action is hold cash. Outer
+test evidence is structurally unavailable to selection and no global hindsight
+leaderboard exists.
+
+Local TDD covers the immutable catalog, exact fingerprint, seven-window planner,
+inner-only selection, hold-cash behavior and strict canonical evidence lock.
+Local reproduction passes 41/41 protocol tests, 127/127 focused alpha/risk
+regression tests and the complete 985/985 repository suite.
+EMA trend features, break-even execution, trade-path metrics and a one-shot
+runner remain prerequisites for a later patch. Candidate v2, optimization,
+PAPER and live authorization remain false; cloud services remain parked.

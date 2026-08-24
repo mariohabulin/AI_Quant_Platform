@@ -2165,3 +2165,32 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
   or live authorization. Moved the next boundary to bounded Alpha Discovery
   and Calibration with train-only adaptation and genuinely unseen final
   validation; cloud services remain parked.
+
+## 2026-08-24 — Alpha Discovery and Calibration Protocol v1 (Local Preparation)
+
+- Added strict canonical loading for closed Alpha Development v2 report SHA-256
+  `19627f7002fc3159729ea61d22ead0fa25deca455612764121ea96fd3eaf71a0`,
+  including exact three-`SCREEN_OUT` and passed/failed-gate basis validation.
+- Froze a diagnostic phase for zero-cost replay and trade-path MFE, MAE,
+  realized-R, holding bars, time-to-MFE and exit reason. Diagnostic evidence
+  cannot select parameters or rescue v2.
+- Froze exactly eight configurations: two ADX entry/exit bands, two ATR risk
+  distances and static-versus-+1R-break-even protection. Mandatory high relative
+  volume, `BULLISH_NORMAL`, causal EMA trend structure and 3R remain common.
+- Added a deterministic nested planner with 5,760/720/720 outer boundaries and
+  four recent 2,880/720/720 inner validation windows. The exact 11,076-row
+  development set yields seven non-overlapping outer tests and 276 unused tail
+  rows.
+- Added a complete-catalog inner selection policy requiring both assets to pass
+  baseline/stress median return, 60% persistence, trade-volume, drawdown,
+  annual-turnover, annual-cost and exact protective-policy gates.
+- Made `HOLD_CASH` mandatory when no configuration qualifies. Eligible ties use
+  worst-asset stress return, worst-asset baseline return, lower turnover and
+  immutable catalog order; outer-test input and a global hindsight leaderboard
+  are absent.
+- Completed 41/41 protocol tests, 127/127 focused alpha/risk regressions and the
+  complete 985/985 repository suite locally.
+- Kept EMA trend features, completed-bar break-even execution, trade-path
+  calculations and the one-shot calibration runner as separately reviewed
+  prerequisites. No diagnostic, calibration, candidate selection, PAPER or
+  live execution has run; cloud services remain parked.

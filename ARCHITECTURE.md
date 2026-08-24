@@ -1426,3 +1426,35 @@ leverage/shorting, 20% drawdown, daily/weekly new-risk limits and annual
 turnover/cost budgets. Declaration and evidence locking execute no joint
 performance, calibration or optimization. Candidate v2, PAPER and live remain
 false.
+
+## Alpha Discovery and Calibration Protocol v1
+
+`src/alpha_discovery_protocol.py` is the non-executing boundary between closed
+Alpha Development v2 evidence and any future adaptive research runner. It
+strictly reloads the canonical Alpha v2 report, its sidecar and exact
+`SCREEN_OUT` gate basis before permitting an evidence lock.
+
+The module owns four deterministic components:
+
+- an eight-member immutable parameter catalog;
+- a nested expanding chronological window planner;
+- an inner-evidence eligibility and deterministic selection policy; and
+- a declaration/evidence-lock boundary that executes no market evaluation.
+
+The catalog keeps volume mandatory and fixes causal `BULLISH_NORMAL` plus EMA
+trend structure. It varies only two ADX hysteresis bands, two ATR risk distances
+and static-versus-completed-bar break-even management while preserving the 3R
+target. OBV is diagnostic only.
+
+The planner exposes only inner validation windows ending at or before each
+outer-test boundary. The selector accepts the complete ordered catalog and
+exact BTC/ETH inner metrics; its API contains no outer-test input. Missing or
+extra configurations, asset drift, non-finite metrics or lost protective
+execution fail closed. If nothing meets every cross-asset baseline/stress,
+persistence, trade, drawdown, turnover and cost gate, the required action is
+hold cash.
+
+Zero-cost replay, causal EMA features, completed-bar break-even transitions,
+trade-path excursions and the nested runner remain separately reviewed
+implementation prerequisites. This layer cannot execute calibration, create a
+candidate or authorize PAPER/live behavior.
