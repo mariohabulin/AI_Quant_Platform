@@ -2132,3 +2132,36 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - No development performance has run. Ranking, calibration, automatic
   selection, Candidate v2, optimization, PAPER and live execution remain false;
   cloud services remain parked.
+
+## 2026-08-24 — Alpha Development Runner v2 (Windows Evidence and Closure)
+
+- Windows reproduced 203/203 focused and 944/944 complete tests, committed and
+  pushed runner revision `5a9018b`, then passed the clean absent-final and
+  absent-staging evidence preflight.
+- Executed exactly three fixed variants under Coinbase baseline, Coinbase
+  stress and Kraken taker sensitivity: nine multi-asset evaluations with the
+  frozen Risk Engine and active Protective Exit Policy.
+- Verified and recorded canonical Alpha Development report SHA-256
+  `19627f7002fc3159729ea61d22ead0fa25deca455612764121ea96fd3eaf71a0`
+  under pushed evidence revision `b2a5e60`; no staging output remains.
+- Closed all three variants as `SCREEN_OUT`. Baseline and stress multi-asset
+  validation, positive cross-asset baseline return, 60% walk-forward
+  persistence and statistical falsification do not pass. No mechanism retains
+  development interest.
+- Retained the successful engineering evidence: all variants pass minimum
+  window/trade, 20% drawdown, 24x annual turnover, 20% annual baseline-cost and
+  exact protective-policy gates.
+- Baseline annual turnover is 2.59x to 5.59x initial capital, annual cost is
+  1.81% to 3.91%, and drawdown is 5.19% to 13.60%. The old unbounded
+  cost/drawdown failure is no longer controlling.
+- Regime filtering reduces trades, cost, drawdown and loss; rising OBV adds a
+  small ETH improvement but no BTC change. Kraken sensitivity reduces loss but
+  leaves every absolute return negative.
+- Observed only two to five 3R target exits per baseline asset/variant versus
+  ten to eighteen protective stops plus frequent signal exits. Reserved this
+  as evidence for a separately frozen exit/trade-path study rather than
+  changing the completed run.
+- Generated no calibration, ranking, winner, Candidate v2, optimization, PAPER
+  or live authorization. Moved the next boundary to bounded Alpha Discovery
+  and Calibration with train-only adaptation and genuinely unseen final
+  validation; cloud services remain parked.

@@ -1032,3 +1032,32 @@ boundary follows local 203/203 focused and 944/944 complete PASS: Windows
 reproduction, commit/push, exact evidence preflight and only then one explicit
 run. Candidate v2, optimization, PAPER and live authorization remain false;
 cloud services remain parked.
+
+### Alpha Development v2 — CLOSED SCREEN_OUT
+
+Windows reproduced the reviewed runner with 203/203 focused and 944/944 full
+tests, committed/pushed implementation revision `5a9018b`, passed the exact
+absent-evidence preflight and executed the frozen nine-evaluation matrix once.
+Canonical report SHA-256
+`19627f7002fc3159729ea61d22ead0fa25deca455612764121ea96fd3eaf71a0`
+was verified and recorded under evidence revision `b2a5e60`.
+
+All three frozen variants are `SCREEN_OUT`. Baseline and stress multi-asset
+validation fail, every baseline asset return remains negative, walk-forward
+positive-excess persistence is 36.36% and statistical falsification fails.
+No mechanism retains development interest and Kraken taker sensitivity cannot
+rescue the signal.
+
+The study nevertheless resolves the former controlling risk/cost failure.
+Every variant passes evidence-volume, drawdown, annual-turnover,
+annual-baseline-cost and protective-policy gates. Baseline annual turnover is
+2.59x to 5.59x and annual modeled cost is 1.81% to 3.91%; baseline drawdown is
+5.19% to 13.60%. Regime filtering materially reduces trades, cost, drawdown and
+loss magnitude, while rising OBV adds only a small ETH improvement.
+
+Alpha Development v2 is immutable and may not be tuned or rerun. Candidate v2,
+optimization, PAPER and live authorization remain false; cloud services remain
+parked. The next mission is a separately pre-registered bounded Alpha Discovery
+and Calibration Protocol covering exit attribution, residual zero-cost signal,
+small train-only calibration and regime-specific strategy roles before any
+genuinely unseen final validation.

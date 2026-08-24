@@ -621,14 +621,24 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
 - [x] Build and locally validate a separately reviewed one-shot Alpha v2
   development runner that binds exact strategy, risk, protective-exit and
   permitted taker scenarios; retain no automatic ranking or promotion.
-- [ ] Reproduce Alpha Development Runner v2 on Windows, commit/push the exact
-  implementation and pass an absent-evidence preflight before one explicit
-  nine-evaluation development run.
+- [x] Reproduce Alpha Development Runner v2 on Windows with 203/203 focused and
+  944/944 complete tests, commit/push revision `5a9018b` and pass an
+  absent-evidence preflight before one explicit nine-evaluation development
+  run.
+- [x] Record and close canonical Alpha Development v2 report SHA-256
+  `19627f7002fc3159729ea61d22ead0fa25deca455612764121ea96fd3eaf71a0`
+  under evidence revision `b2a5e60`: all three variants are `SCREEN_OUT`, no
+  mechanism retains development interest and no promotion is authorized.
+- [x] Confirm that active risk/protective execution plus regime/volume filters
+  bound baseline drawdown, turnover and cost while negative absolute return,
+  36.36% walk-forward persistence and failed falsification remain the
+  controlling signal-quality failures.
 - [x] Reproduce and integrate Alpha Development Protocol v2 on Windows under
   revision `45a3e00`, pass 24/24 focused and 890/890 complete tests, then lock
   the exact development manifest and attribution report without executing
   joint performance.
-- [ ] Pre-register a bounded alpha-discovery procedure covering a small,
+- [ ] Pre-register a bounded Alpha Discovery and Calibration Protocol covering
+  exit/trade-path attribution, a residual zero-cost diagnostic and a small,
   hypothesis-led set of indicator combinations, regime filters, risk sizing and
   temporally separated parameter calibration; prohibit a result leaderboard.
 - [ ] Evaluate joint causal intersections rather than adding marginal regime,
@@ -641,4 +651,4 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
 - [ ] Before formal candidate-v2 evaluation, freeze a new immutable identity
   and independently lock a genuinely unseen future-validation boundary.
 
-External notification delivery and any real execution capability remain deferred. The completed twelve-hour, 24-hour and three-day gates are bounded infrastructure-endurance evidence, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization. First candidate v1 and all eight standalone default screening variants are closed as rejected configurations; the next boundary is controlled alpha discovery and failure attribution, not candidate v2, PAPER or live execution.
+External notification delivery and any real execution capability remain deferred. The completed twelve-hour, 24-hour and three-day gates are bounded infrastructure-endurance evidence, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization. First candidate v1, all eight standalone default screening variants and all three Alpha Development v2 variants are closed as rejected exact configurations; the next boundary is controlled alpha discovery and train-only calibration, not candidate v2, PAPER or live execution.
