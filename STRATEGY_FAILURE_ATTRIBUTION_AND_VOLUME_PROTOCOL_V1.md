@@ -125,6 +125,10 @@ The lock command must print `failure_attribution_executed=false` and
 execution requires a separate reviewed runner, clean preflight and explicit
 command.
 
+The separate runner implementation is defined in
+`STRATEGY_FAILURE_ATTRIBUTION_RUNNER_V1.md`. It preserves the protocol's exact
+three-profile matrix and produces no ranking, winner or automatic hypothesis.
+
 ## Exit criteria
 
 This protocol can advance only after the separate runner records enough detail

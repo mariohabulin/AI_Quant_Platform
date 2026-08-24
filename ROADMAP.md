@@ -589,13 +589,16 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
 - [ ] Attribute gross signal versus cost/turnover, exposure, holding-period,
   drawdown and market-regime failure on inspected development data before
   designing another candidate.
-- [ ] Integrate and evidence-lock Failure Attribution and Volume Research
+- [x] Integrate and evidence-lock Failure Attribution and Volume Research
   Protocol v1: freeze zero/baseline/stress diagnostic views, causal signal-bar
   regime attribution and per-asset relative-volume/OBV semantics without
   replaying performance.
 - [ ] Add a separately reviewed one-shot attribution runner; report cost,
   turnover, exposure, holding, drawdown, market-regime, volume-regime and
   persistence evidence without ranking the rejected configurations.
+- [ ] Reproduce Failure Attribution Runner v1 on Windows, commit/push the exact
+  implementation, pass an absent-evidence preflight and execute the frozen
+  24-replay diagnostic matrix exactly once.
 - [ ] Pre-register a bounded alpha-discovery procedure covering a small,
   hypothesis-led set of indicator combinations, regime filters, risk sizing and
   temporally separated parameter calibration; prohibit a result leaderboard.

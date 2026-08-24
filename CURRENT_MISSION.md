@@ -931,3 +931,19 @@ parameter sweep or strategy selection. Windows reproduction, reviewed
 commit/push and a clean evidence lock are required after local 36/36 focused
 and 843/843 complete tests before a separately reviewed attribution runner may
 exist. Candidate v2, optimization, PAPER and live authorization remain false.
+
+### Failure Attribution Runner v1 — LOCAL PREPARATION
+
+The separate runner now implements the exact eight-strategy by three-profile
+diagnostic matrix, producing 24 multi-asset replays and 48 asset/profile views.
+It derives raw-signal, cost/turnover, exposure/holding, drawdown concentration,
+walk-forward, market-regime and mandatory volume/OBV evidence before compacting
+and hashing each complete evaluation.
+
+Cost arithmetic and signal-bar provenance fail closed. Final/staging evidence
+prevents repetition, and every evaluation must finish before atomic staging.
+The canonical report has no rank, winner, automatic selection or new hypothesis.
+Local 59/59 focused and 866/866 complete tests pass. Windows reproduction,
+reviewed commit/push and an absent-evidence preflight remain required before
+the single explicit run. Candidate v2, optimization, PAPER and live
+authorization remain false; cloud services remain parked.

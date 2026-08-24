@@ -1986,3 +1986,24 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
   optimization, PAPER and live execution remain prohibited.
 - Local TDD passes 36/36 new volume/attribution tests and the complete 843/843
   repository suite. Windows reproduction and integration remain pending.
+
+## 2026-08-24 — Failure Attribution Runner v1 (Local Preparation)
+
+- Added a one-shot 8-strategy by 3-profile runner for exactly 24 multi-asset
+  diagnostic replays and 48 BTC/ETH asset/profile views.
+- Reused the causal next-Open multi-asset validation stack under zero, baseline
+  and stress costs; zero cost remains explanatory rather than deployable.
+- Added fail-closed raw OOS attribution for gross/net P/L, commission,
+  spread/slippage, turnover, exposure, holding periods and drawdown
+  peak/trough/recovery plus yearly concentration.
+- Extended the causal volume layer with relative dollar-volume and OBV-direction
+  trade context while retaining per-asset normalization and signal-bar timing.
+- Added descriptive cross-profile changes and failure flags without a score,
+  ranking, tie-break, selected strategy or automatically generated hypothesis.
+- Hashes every complete normalized raw evaluation, persists bounded compact
+  evidence and requires all computation to finish before atomic staging/rename.
+  Existing final or staging evidence prevents repetition.
+- Candidate v2, optimization, bounded forward PAPER and live execution remain
+  false; cloud infrastructure is unchanged and parked.
+- Local TDD passes 59/59 focused volume/protocol/metrics/runner tests and the
+  complete 866/866 repository suite. Windows integration remains pending.

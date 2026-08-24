@@ -135,6 +135,22 @@ def test_volume_features_preserve_input_and_compute_obv():
     )
 
 
+def test_volume_features_add_causal_obv_direction_after_warmup():
+    data = market_frame(
+        [10, 20, 30, 40, 50],
+        closes=[100, 102, 101, 103, 104],
+    )
+    result = generate_volume_research_features(
+        data,
+        VolumeResearchConfig(lookback=2),
+    )
+
+    assert pd.isna(result.iloc[1]["ON_BALANCE_VOLUME_CHANGE_2"])
+    assert result.iloc[2]["ON_BALANCE_VOLUME_CHANGE_2"] == pytest.approx(-10.0)
+    assert result.iloc[2]["ON_BALANCE_VOLUME_DIRECTION_2"] == "FALLING"
+    assert result.iloc[3]["ON_BALANCE_VOLUME_DIRECTION_2"] == "RISING"
+
+
 @pytest.mark.parametrize("problem", ["reverse", "duplicate", "negative", "nan"])
 def test_volume_features_reject_invalid_market_evidence(problem):
     data = market_frame([10, 20, 30, 40])
@@ -204,6 +220,11 @@ def test_volume_conditioning_separates_gross_cost_and_net_results():
     assert high["total_costs"] == pytest.approx(13.0)
     assert high["net_profit_loss"] == pytest.approx(22.0)
     assert high["win_rate"] == pytest.approx(0.5)
+    assert result["entry_context"]["mean_relative_volume"] == pytest.approx(3.75)
+    assert result["entry_context"]["median_relative_volume"] == pytest.approx(3.75)
+    assert result["entry_context"]["mean_relative_dollar_volume"] > 0.0
+    assert result["entry_context"]["median_relative_dollar_volume"] > 0.0
+    assert result["obv_directions"]["RISING"]["trade_count"] == 2
 
 
 def test_volume_conditioning_reports_warmup_as_unattributed():

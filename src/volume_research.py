@@ -105,6 +105,14 @@ def generate_volume_research_features(data, configuration=None):
     signed_volume.loc[change > 0.0] = volume.loc[change > 0.0]
     signed_volume.loc[change < 0.0] = -volume.loc[change < 0.0]
     on_balance_volume = signed_volume.cumsum()
+    obv_change = on_balance_volume - on_balance_volume.shift(
+        configuration.lookback
+    )
+    obv_direction = pd.Series("UNKNOWN", index=result.index, dtype=object)
+    obv_ready = obv_change.notna()
+    obv_direction.loc[obv_ready & (obv_change > 0.0)] = "RISING"
+    obv_direction.loc[obv_ready & (obv_change < 0.0)] = "FALLING"
+    obv_direction.loc[obv_ready & (obv_change == 0.0)] = "FLAT"
 
     regime = pd.Series("UNKNOWN", index=result.index, dtype=object)
     ready = relative_volume.notna()
@@ -127,6 +135,8 @@ def generate_volume_research_features(data, configuration=None):
     result[f"DOLLAR_VOLUME_BASELINE_{suffix}"] = dollar_volume_baseline
     result[f"RELATIVE_DOLLAR_VOLUME_{suffix}"] = relative_dollar_volume
     result["ON_BALANCE_VOLUME"] = on_balance_volume
+    result[f"ON_BALANCE_VOLUME_CHANGE_{suffix}"] = obv_change
+    result[f"ON_BALANCE_VOLUME_DIRECTION_{suffix}"] = obv_direction
     result[f"VOLUME_REGIME_{suffix}"] = regime
     return result
 
@@ -186,7 +196,19 @@ class VolumeConditionedAnalyzer:
 
         features = generate_volume_research_features(data, self.configuration)
         regime_column = f"VOLUME_REGIME_{self.configuration.lookback}"
+        relative_volume_column = (
+            f"RELATIVE_VOLUME_{self.configuration.lookback}"
+        )
+        relative_dollar_volume_column = (
+            f"RELATIVE_DOLLAR_VOLUME_{self.configuration.lookback}"
+        )
+        obv_direction_column = (
+            f"ON_BALANCE_VOLUME_DIRECTION_{self.configuration.lookback}"
+        )
         grouped = {}
+        obv_grouped = {}
+        relative_volume_values = []
+        relative_dollar_volume_values = []
         unattributed = 0
         for trade in trades:
             if not isinstance(trade, dict):
@@ -200,14 +222,50 @@ class VolumeConditionedAnalyzer:
                 unattributed += 1
                 continue
             grouped.setdefault(label, []).append(trade)
+            obv_label = features.at[signal_index, obv_direction_column]
+            if obv_label != "UNKNOWN":
+                obv_grouped.setdefault(obv_label, []).append(trade)
+            relative_volume_values.append(
+                float(features.at[signal_index, relative_volume_column])
+            )
+            relative_dollar_volume_values.append(
+                float(features.at[signal_index, relative_dollar_volume_column])
+            )
 
         summaries = {
             label: self._summarize(grouped[label]) for label in sorted(grouped)
+        }
+        obv_summaries = {
+            label: self._summarize(obv_grouped[label])
+            for label in sorted(obv_grouped)
         }
         return {
             "configuration": self.configuration.as_dict(),
             "signal_bar_attribution": True,
             "volume_regimes": summaries,
+            "obv_directions": obv_summaries,
+            "entry_context": {
+                "mean_relative_volume": (
+                    float(np.mean(relative_volume_values))
+                    if relative_volume_values
+                    else None
+                ),
+                "median_relative_volume": (
+                    float(np.median(relative_volume_values))
+                    if relative_volume_values
+                    else None
+                ),
+                "mean_relative_dollar_volume": (
+                    float(np.mean(relative_dollar_volume_values))
+                    if relative_dollar_volume_values
+                    else None
+                ),
+                "median_relative_dollar_volume": (
+                    float(np.median(relative_dollar_volume_values))
+                    if relative_dollar_volume_values
+                    else None
+                ),
+            },
             "attributed_trade_count": sum(
                 item["trade_count"] for item in summaries.values()
             ),

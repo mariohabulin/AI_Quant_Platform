@@ -7,3 +7,5 @@ data/research/**/timeframe_sensitivity_report.json text eol=lf
 data/research/**/timeframe_sensitivity_report.sha256 text eol=lf
 data/research/**/strategy_family_screening_report.json text eol=lf
 data/research/**/strategy_family_screening_report.sha256 text eol=lf
+data/research/**/failure_attribution_report.json text eol=lf
+data/research/**/failure_attribution_report.sha256 text eol=lf

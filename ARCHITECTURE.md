@@ -1352,3 +1352,24 @@ The protocol explicitly preserves inspected-development status. A separate
 runner is required before diagnostics execute, and any combination/calibration
 protocol remains a later boundary. Candidate v2, optimization, PAPER and live
 execution remain false.
+
+## Strategy Failure Attribution Runner Boundary v1
+
+`strategy_failure_attribution_runner.py` is a one-shot, atomic evidence writer
+for the exact 8-strategy by 3-profile matrix. Each profile uses the unchanged
+multi-asset validation stack and causal next-Open execution. The complete raw
+evaluation is normalized and hashed before bounded compaction; raw trade and
+equity arrays are not duplicated in the recorded report.
+
+`failure_attribution_metrics.py` consumes raw OOS evidence before compaction.
+It verifies commission/execution/total-cost/net identities, derives turnover,
+exposure and holding periods, and retains peak/trough/recovery plus yearly
+drawdown concentration. Market and volume attribution both use
+`entry_signal_index`. Relative volume, relative dollar volume and OBV direction
+therefore describe only information available after the completed signal bar.
+
+The report contains descriptive cross-profile changes and diagnostic flags but
+no score, ranking or strategy-level winner. All 24 evaluations and derived
+metrics complete before staging; canonical JSON and its SHA-256 sidecar are
+atomically promoted together. Existing final or staging evidence blocks a
+repeat. The runner changes no Strategy, Risk, cloud or execution behavior.
