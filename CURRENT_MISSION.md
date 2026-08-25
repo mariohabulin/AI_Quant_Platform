@@ -1160,3 +1160,27 @@ The next mission is a new pre-registered trend-pullback and volume
 re-expansion mechanism with a small causal ablation set. Candidate v2,
 optimization, PAPER and live execution remain false; cloud services remain
 parked.
+
+### Trend Pullback and Volume Re-expansion Protocol v1 — LOCAL PREPARATION
+
+The structurally new hypothesis is now pre-registered without a strategy or
+performance runner. It replaces developed-impulse entry timing with a causal
+sequence: bullish EMA structure, prior ADX strength, a pullback toward EMA 50
+on contracting/normal relative volume, then completed-bar price recovery and
+volume re-expansion followed by next-Open execution.
+
+The catalog has exactly four members and varies only 0.5-versus-1.0 ATR
+pullback distance and 1.2-versus-1.5 recovery relative volume. It preserves
+ADX 25/20/15 hysteresis, lagged 20-bar volume, static 2 ATR risk, 3R target,
+0.50% equity risk, no leverage and the existing nested chronological gates.
+Its canonical fingerprint is
+`952046ddb7a9f9a85a8976f3ccafe43a017a745c887e592a44c39c2146ba8e00`.
+
+The evidence loader revalidates the exact canonical Alpha Discovery report,
+its `SCREEN_OUT`, seven `HOLD_CASH` decisions and all 56 inner gate records.
+It accepts the recorded report SHA-256
+`2fc8f4d1a5d690c072408bc2d299516904feb58b2e2f40345983641bf26ed678`.
+
+The setup state machine, executable strategy and nested runner remain separate
+review prerequisites. No performance, calibration or selection has run;
+Candidate v2, optimization, PAPER, cloud and live authorization remain false.

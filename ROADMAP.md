@@ -658,9 +658,13 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
   `2fc8f4d1a5d690c072408bc2d299516904feb58b2e2f40345983641bf26ed678`:
   select no configuration, hold cash in seven of seven outer windows and retain
   no promotion authorization.
-- [ ] Pre-register one structurally new trend-pullback plus causal volume
+- [x] Pre-register one structurally new trend-pullback plus causal volume
   contraction/re-expansion hypothesis without treating inspected results as
   unseen evidence or broadening the closed parameter grid.
+- [ ] Implement and separately review the causal pullback state machine and
+  executable four-member strategy without running market performance.
+- [ ] Build a one-shot nested development runner only after the state machine,
+  strategy identity, risk execution and exact evidence lock pass regression.
 - [ ] Before formal candidate-v2 evaluation, freeze a new immutable identity
   and independently lock a genuinely unseen future-validation boundary.
 

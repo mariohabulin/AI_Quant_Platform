@@ -1489,3 +1489,27 @@ all diagnostics, inner selections and outer evaluations complete. Existing
 final or staging evidence blocks another run. The report can retain only
 development interest; Candidate v2, optimization, PAPER, cloud and live
 authorization remain false.
+
+## Trend Pullback and Volume Re-expansion Protocol v1
+
+`src/trend_pullback_volume_protocol.py` is a non-executing boundary for the
+mechanism that follows closed Alpha Discovery v1. It reloads the exact
+canonical Discovery report and sidecar, then recomputes its identity,
+authorization state, seven hold-cash selections, complete catalog membership
+and all 56 inner gate records before an evidence lock can succeed.
+
+The new mechanism is a causal state sequence rather than an ADX threshold
+tweak. Completed bars must establish bullish EMA structure and prior ADX
+strength, pull back near EMA 50 on contracting/normal relative volume, then
+recover price structure with renewed volume and positive directional movement.
+Entry is deferred to the following Open.
+
+The immutable four-member catalog varies only pullback distance and trigger
+relative volume. ADX hysteresis, EMA periods, lagged volume baseline, static
+2 ATR stop, 3R target, position-risk limits and nested chronological gates are
+shared. Its literal catalog hash makes accidental semantic drift observable.
+
+The module contains no executable market strategy or performance runner. Those
+components require separate review, and the declaration/evidence-lock APIs keep
+performance, calibration, selection, optimization, Candidate v2, PAPER, cloud
+and live authorization false.

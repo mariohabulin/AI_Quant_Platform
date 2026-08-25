@@ -2277,3 +2277,22 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - Closed the exact high-volume ADX impulse-entry family as `SCREEN_OUT` and
   moved the next boundary to a new trend-pullback plus volume re-expansion
   hypothesis. Candidate v2, PAPER and live authorization remain false.
+
+## 2026-08-25 — Trend Pullback and Volume Re-expansion Protocol v1 (Local Preparation)
+
+- Pre-registered a new entry-timing mechanism rather than modifying the closed
+  Alpha Discovery impulse catalog.
+- Bound the protocol to the exact development manifest and canonical Alpha
+  Discovery report, including seven `HOLD_CASH` decisions and the exact 56
+  inner-decision gate counts.
+- Froze completed-bar bullish EMA structure, prior ADX strength, an EMA-50
+  pullback on relative volume no greater than 1.0 and a price-plus-volume
+  recovery trigger executed at the following Open.
+- Limited the catalog to four members: two ATR pullback distances and two
+  recovery-volume thresholds. Preserved static 2 ATR risk, 3R target, 0.50%
+  equity risk and all chronological selection, cost, turnover and drawdown
+  boundaries.
+- Added strict catalog, causality, evidence-integrity and authorization tests.
+- Executed no performance, calibration or selection. The state machine,
+  strategy and nested runner remain separately reviewed prerequisites;
+  Candidate v2, PAPER, cloud and live authorization remain false.
