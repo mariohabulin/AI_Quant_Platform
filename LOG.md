@@ -2341,3 +2341,29 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - Executed no market development run. Windows reproduction, commit/push and
   clean absent-evidence preflight remain required; Candidate v2, optimization,
   PAPER, cloud and live authorization remain false.
+
+## 2026-08-25 — Trend Pullback Volume v1 (Windows Evidence and Closure)
+
+- Windows reproduced 59/59 focused and 1073/1073 complete tests, committed and
+  pushed runner revision `f8f9c42`, then passed the exact clean preflight.
+- Executed the complete four-member nested procedure once and verified
+  canonical report SHA-256
+  `7598ea3616a60753d5be5b4d7af8c146f1bea881cb2d43ed71ea16cebdd685e3`
+  with no remaining staging evidence.
+- Recorded the immutable report and sidecar under pushed evidence revision
+  `8b1560c`.
+- Selected zero configurations and emitted `HOLD_CASH` for all seven outer
+  windows; no least-bad member, outer strategy evaluation or hindsight
+  leaderboard was generated.
+- Confirmed 28/28 passes for active protective execution, drawdown, turnover
+  and baseline-cost budgets.
+- Confirmed 28/28 failures for minimum trades, positive two-asset baseline
+  median return and baseline/stress persistence; nonnegative two-asset stress
+  median return passed only 2/28 decisions.
+- Observed only 1–11 trades per asset across four recent inner windows and at
+  most 50% positive-window persistence. Maximum window drawdown was about
+  2.04%, so operational risk and costs were not controlling failures.
+- Closed the exact four-member catalog as `SCREEN_OUT`. Retained shallow
+  pullback, late ETH strength and BTC weakness only as diagnostic evidence for
+  bounded trade-path attribution, not as a candidate or winner.
+- Kept Candidate v2, optimization, PAPER, cloud and live authorization false.

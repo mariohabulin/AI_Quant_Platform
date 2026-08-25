@@ -1228,3 +1228,32 @@ are promoted atomically from staging and cannot be overwritten or repeated.
 No development performance has run. Windows reproduction, commit/push and an
 absent-evidence preflight remain mandatory before an explicit one-shot run.
 Candidate v2, optimization, PAPER, cloud and live authorization remain false.
+
+### Trend Pullback Volume Development v1 — CLOSED SCREEN_OUT
+
+Windows reproduced 59/59 focused and 1073/1073 complete tests, committed and
+pushed runner revision `f8f9c42`, passed the exact clean absent-evidence
+preflight and executed the frozen one-shot procedure. Canonical report SHA-256
+`7598ea3616a60753d5be5b4d7af8c146f1bea881cb2d43ed71ea16cebdd685e3`
+was verified and recorded under evidence revision `8b1560c`.
+
+Zero configurations were selected and all seven outer decisions are
+`HOLD_CASH`; therefore no selected strategy was evaluated in an outer window.
+Across 28 parameter/boundary decisions, active protection, drawdown, turnover
+and baseline-cost gates pass universally. Minimum trades, positive two-asset
+baseline median return and baseline/stress persistence fail universally;
+nonnegative two-asset stressed median return passes only two decisions.
+
+Four recent inner windows contain only 1–11 completed trades per asset versus
+the frozen minimum of 12. Positive-window rates never exceed 50% versus the
+60% gate. Deeper 1 ATR pullbacks create more trades but generally worse
+returns; shallow 0.5 ATR pullbacks lose less, and late ETH evidence turns
+positive while BTC remains flat or negative. Maximum observed window drawdown
+remains approximately 2.04%, so signal scarcity and persistence—not cost,
+turnover or uncontrolled risk—are the controlling failures.
+
+The exact four-member catalog is closed without rejecting the broader
+trend-pullback family. The next boundary is a bounded trade-path attribution
+of these exact signals and exits, including MFE, MAE, realized R, exit reason,
+holding time and BTC/ETH asymmetry. No gate will be lowered and no Candidate
+v2, optimization, PAPER, cloud or live authorization exists.

@@ -665,10 +665,17 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
   executable four-member strategy without running market performance.
 - [x] Build a one-shot nested development runner only after the state machine,
   strategy identity, risk execution and exact evidence lock pass regression.
-- [ ] Reproduce and integrate Trend Pullback Volume Runner v1 on Windows, pass
+- [x] Reproduce and integrate Trend Pullback Volume Runner v1 on Windows, pass
   full regression and a clean absent-evidence preflight, then execute the
   frozen nested development procedure exactly once.
+- [x] Record and close Trend Pullback Volume v1 report SHA-256
+  `7598ea3616a60753d5be5b4d7af8c146f1bea881cb2d43ed71ea16cebdd685e3`:
+  select no member, hold cash in seven of seven outer windows and identify
+  signal scarcity plus failed persistence as the controlling failures.
+- [ ] Attribute exact pullback trade paths and exits on inspected development
+  data. Measure MFE, MAE, realized R, exit reason, holding time, target/stop
+  reach and BTC/ETH asymmetry without lowering gates or sweeping parameters.
 - [ ] Before formal candidate-v2 evaluation, freeze a new immutable identity
   and independently lock a genuinely unseen future-validation boundary.
 
-External notification delivery and any real execution capability remain deferred. The completed twelve-hour, 24-hour and three-day gates are bounded infrastructure-endurance evidence, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization. First candidate v1, all eight standalone default screening variants and all three Alpha Development v2 variants are closed as rejected exact configurations; the next boundary is controlled alpha discovery and train-only calibration, not candidate v2, PAPER or live execution.
+External notification delivery and any real execution capability remain deferred. The completed twelve-hour, 24-hour and three-day gates are bounded infrastructure-endurance evidence, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization. First candidate v1, all eight standalone default screening variants, all three Alpha Development v2 variants and the exact four Trend Pullback Volume v1 variants are closed rejected configurations. The next boundary is bounded trade-path attribution on inspected development data, not Candidate v2, PAPER or live execution.
