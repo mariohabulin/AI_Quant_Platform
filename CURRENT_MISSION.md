@@ -1184,3 +1184,22 @@ It accepts the recorded report SHA-256
 The setup state machine, executable strategy and nested runner remain separate
 review prerequisites. No performance, calibration or selection has run;
 Candidate v2, optimization, PAPER, cloud and live authorization remain false.
+
+### Trend Pullback Volume Strategy v1 — LOCAL PREPARATION
+
+The causal state machine and complete four-member executable strategy are now
+implemented without market evaluation. Prior ADX strength uses the preceding
+eight completed bars. A low/normal-volume EMA-50 pullback arms the setup; only
+a later price recovery with ADX/directional confirmation and frozen relative-
+volume expansion may trigger a following-Open entry.
+
+Setup state cannot cross an evaluation boundary, form during an open signal
+position or survive cooldown. It expires after eight subsequent bars and is
+invalidated by lost EMA trend structure. Completed-bar signal exits preserve
+EMA-50, ADX-15 and directional failure semantics; active static 2 ATR / 3R
+protection remains delegated to the reviewed Protective Exit Engine.
+
+Market-regime and OBV gates are intentionally absent rather than silently
+inherited from the closed impulse family. The nested runner remains the only
+unimplemented prerequisite. No performance, selection or evidence has been
+created; all deployment authorizations remain false.

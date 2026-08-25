@@ -1513,3 +1513,16 @@ The module contains no executable market strategy or performance runner. Those
 components require separate review, and the declaration/evidence-lock APIs keep
 performance, calibration, selection, optimization, Candidate v2, PAPER, cloud
 and live authorization false.
+
+`src/trend_pullback_state.py` now implements the causal ordered setup. It uses
+only completed-bar prefix data, resets at the requested evaluation boundary and
+cannot trigger on its pullback bar. Setup expiry, trend invalidation and
+position/cooldown suppression prevent stale entry context from crossing an
+operational boundary.
+
+`src/trend_pullback_volume_strategy.py` composes the reviewed ADX/ATR, lagged
+relative-volume and EMA components with that state machine. It emits the exact
+four-member catalog in declaration order and exposes static protective risk
+inputs without executing a backtest. Market-regime and OBV entry gates are
+explicitly absent. The nested runner remains the only unimplemented execution
+boundary, so all performance and promotion flags remain false.

@@ -258,8 +258,17 @@ def test_configuration_freezes_causal_volume_and_nonexecuting_boundary():
         "no_eligible_configuration_action"
     ] == "HOLD_CASH"
     assert configuration["implementation_prerequisites"]["status"] == (
-        "PROTOCOL_ONLY_NOT_EXECUTABLE"
+        "COMPONENTS_READY_RUNNER_REVIEW_REQUIRED"
     )
+    assert configuration["implementation_prerequisites"][
+        "causal_setup_state_machine"
+    ] == "IMPLEMENTED_REVIEWED"
+    assert configuration["implementation_prerequisites"][
+        "pullback_volume_strategy"
+    ] == "IMPLEMENTED_REVIEWED"
+    assert configuration["implementation_prerequisites"][
+        "nested_runner"
+    ] == "REQUIRED_SEPARATE_REVIEW"
 
 
 def test_discovery_loader_rechecks_hash_sidecar_canonical_and_exact_basis(tmp_path):

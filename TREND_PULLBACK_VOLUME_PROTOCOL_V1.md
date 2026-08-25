@@ -87,8 +87,9 @@ turnover and 10% annual baseline-cost limits remain intact. No eligible member
 must produce `HOLD_CASH`; outer evidence must be unavailable to selection and a
 global hindsight leaderboard remains prohibited.
 
-The state machine, executable strategy and nested runner each require a
-separate review. Until all exist, runner execution is unauthorized.
+The causal state machine and executable four-member strategy have now passed a
+separate component review. The nested runner still requires its own
+implementation and review. Until it exists, runner execution is unauthorized.
 
 ## Authorization boundary
 

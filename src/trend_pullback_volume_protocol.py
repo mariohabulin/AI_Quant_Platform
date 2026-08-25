@@ -305,10 +305,10 @@ def trend_pullback_configuration():
             "global_hindsight_leaderboard": "PROHIBITED",
         },
         "implementation_prerequisites": {
-            "causal_setup_state_machine": "REQUIRED_SEPARATE_REVIEW",
-            "pullback_volume_strategy": "REQUIRED_SEPARATE_REVIEW",
+            "causal_setup_state_machine": "IMPLEMENTED_REVIEWED",
+            "pullback_volume_strategy": "IMPLEMENTED_REVIEWED",
             "nested_runner": "REQUIRED_SEPARATE_REVIEW",
-            "status": "PROTOCOL_ONLY_NOT_EXECUTABLE",
+            "status": "COMPONENTS_READY_RUNNER_REVIEW_REQUIRED",
         },
         "future_validation": {
             "development_data_role": "INSPECTED_DEVELOPMENT_ONLY",

@@ -2296,3 +2296,20 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - Executed no performance, calibration or selection. The state machine,
   strategy and nested runner remain separately reviewed prerequisites;
   Candidate v2, PAPER, cloud and live authorization remain false.
+
+## 2026-08-25 — Trend Pullback Volume Strategy v1 (Local Preparation)
+
+- Implemented an explicit completed-bar setup state instead of reducing the
+  hypothesis to one marginal boolean entry filter.
+- Required prior eight-bar ADX strength, a causal EMA-50 pullback on relative
+  volume no greater than 1.0 and a later price/direction/ADX recovery on the
+  catalog's 1.2 or 1.5 relative-volume threshold.
+- Prohibited same-bar pullback/trigger, pre-window state carry and setup
+  formation while a signal position or cooldown is active.
+- Preserved following-Open execution, static 2 ATR / 3R protective inputs and
+  EMA-50/ADX-15/directional completed-bar exits across all four catalog members.
+- Added exact-order engine construction and fail-closed volume, EMA and state-
+  identity validation. Market-regime and OBV entry gates are absent by design.
+- Executed no performance, calibration or parameter selection. The nested
+  runner remains a separate review boundary; Candidate v2, PAPER, cloud and
+  live authorization remain false.
