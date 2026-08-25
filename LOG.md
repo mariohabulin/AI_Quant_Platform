@@ -2367,3 +2367,23 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
   pullback, late ETH strength and BTC weakness only as diagnostic evidence for
   bounded trade-path attribution, not as a candidate or winner.
 - Kept Candidate v2, optimization, PAPER, cloud and live authorization false.
+
+## 2026-08-25 — Selective Swing Trading Research Mandate v1 (Local Preparation)
+
+- Reconciled the original selective-swing objective with the completed six-hour
+  research closures instead of continuing incremental indicator variation.
+- Declared listed equities as the primary long-term market and cryptoassets as
+  an active independent secondary market.
+- Set completed daily bars, continuous observation, cash by default and no
+  trading-frequency target as the active operating style.
+- Defined a faithful point-in-time CAN SLIM / O'Neil replication path that
+  requires fundamentals, corporate actions, historical universe membership,
+  delistings, industries, institutional sponsorship and market direction before
+  performance research.
+- Defined a separate BTC/ETH/XRP daily capitulation-volume reversal path based
+  on rare decline, exceptional volume, later confirmation and several-day swing
+  holding, beginning with blinded sequential chart replay.
+- Preserved all prior reports and closures. Deferred the planned exact six-hour
+  pullback trade-path attribution without deleting or reinterpreting it.
+- Added no strategy, data, runner, optimization, selection or performance
+  evidence. Candidate v2, PAPER, cloud and live authorization remain false.

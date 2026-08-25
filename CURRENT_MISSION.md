@@ -1257,3 +1257,26 @@ trend-pullback family. The next boundary is a bounded trade-path attribution
 of these exact signals and exits, including MFE, MAE, realized R, exit reason,
 holding time and BTC/ETH asymmetry. No gate will be lowered and no Candidate
 v2, optimization, PAPER, cloud or live authorization exists.
+
+### Selective Swing Trading Research Mandate v1 — LOCAL PREPARATION
+
+The active next mission is now a documentation-only research reset. Listed
+equities become the primary long-term market, beginning with a faithful point-
+in-time CAN SLIM replication path. Crypto remains an active secondary sleeve,
+beginning with a separate BTC/ETH/XRP one-day capitulation-volume reversal
+hypothesis reconstructed through blinded sequential chart replay.
+
+The operating style is selective swing trading: continuous observation, cash
+by default, completed daily decisions and no trading-frequency target. The two
+sleeves share validated infrastructure but must retain separate hypotheses,
+data contracts, protocols, evidence and closures.
+
+The exact Trend Pullback Volume v1 catalog and every prior rejection remain
+closed historical evidence. Its planned six-hour trade-path attribution is
+deferred rather than erased, but it is no longer the active research boundary.
+
+This milestone adds no market data, strategy, runner, parameter selection or
+performance evidence. The next implementation boundary after Windows
+integration is the BTC/ETH/XRP daily data and blinded-replay protocol; the
+equity point-in-time data audit follows before any CAN SLIM implementation.
+Candidate v2, optimization, PAPER, cloud and live authorization remain false.

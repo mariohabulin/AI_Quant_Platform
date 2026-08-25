@@ -191,3 +191,29 @@ The target operating model is hierarchical rather than brute-force analysis of e
 The objective is not maximum trading activity. The objective is continuous awareness of the available market universe and selective allocation of attention and risk to the best validated opportunities.
 
 This capability is intentionally staged after one-symbol live-paper transport/runtime stability is proven. Scaling an unstable single-symbol runtime would multiply operational defects rather than create useful market intelligence.
+
+## Selective Swing Trading Direction v1
+
+The active alpha-research direction is stocks-first selective swing trading,
+with crypto retained as an independent secondary opportunity set. The system
+observes continuously but is expected to hold cash most of the time. Daily
+completed bars are the primary decision resolution; trading frequency is never
+an objective by itself.
+
+Two distinct research sleeves anchor this direction:
+
+- faithful, point-in-time replication of documented equity methods beginning
+  with the complete CAN SLIM / O'Neil growth-stock framework;
+- a separate BTC/ETH/XRP daily capitulation-volume reversal hypothesis derived
+  from rare decline, exceptional volume, stabilization and confirmation.
+
+The sleeves share deterministic data, execution, risk and evidence
+infrastructure, but they do not share alpha claims. Each must be defined,
+tested and closed independently before future AI ranking, regime allocation or
+portfolio combination is permitted.
+
+The controlling mandate is
+`SELECTIVE_SWING_TRADING_RESEARCH_MANDATE_V1.md`. It preserves every prior
+result while replacing incremental six-hour indicator variation as the active
+research path. No strategy, PAPER or live authorization follows from the
+direction alone.

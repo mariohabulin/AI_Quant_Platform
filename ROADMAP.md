@@ -672,10 +672,29 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
   `7598ea3616a60753d5be5b4d7af8c146f1bea881cb2d43ed71ea16cebdd685e3`:
   select no member, hold cash in seven of seven outer windows and identify
   signal scarcity plus failed persistence as the controlling failures.
-- [ ] Attribute exact pullback trade paths and exits on inspected development
-  data. Measure MFE, MAE, realized R, exit reason, holding time, target/stop
-  reach and BTC/ETH asymmetry without lowering gates or sweeping parameters.
+- [ ] DEFERRED: retain exact pullback trade-path and exit attribution as
+  inspected six-hour diagnostic work. Do not treat it as the active next
+  boundary or transfer its observations into the new daily research sleeves
+  without explicit pre-registration.
 - [ ] Before formal candidate-v2 evaluation, freeze a new immutable identity
   and independently lock a genuinely unseen future-validation boundary.
 
-External notification delivery and any real execution capability remain deferred. The completed twelve-hour, 24-hour and three-day gates are bounded infrastructure-endurance evidence, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization. First candidate v1, all eight standalone default screening variants, all three Alpha Development v2 variants and the exact four Trend Pullback Volume v1 variants are closed rejected configurations. The next boundary is bounded trade-path attribution on inspected development data, not Candidate v2, PAPER or live execution.
+## Selective Swing Trading Research Reset v1 — NEXT
+
+- [ ] Reproduce and integrate the documentation-only Selective Swing Trading
+  Research Mandate v1 on Windows from a clean synchronized repository.
+- [ ] Audit and lock causal daily BTC, ETH and XRP research data without
+  executing a strategy or performance test.
+- [ ] Build a blinded sequential chart-replay evidence boundary that records
+  entry, skip and exit decisions before future bars are revealed.
+- [ ] Pre-register a small Crypto Capitulation-Volume Reversal v1 catalog only
+  after replay methodology and data causality are reviewed.
+- [ ] Audit point-in-time equity fundamentals, corporate actions, historical
+  universe membership, delistings, industry groups and executable costs before
+  implementing CAN SLIM.
+- [ ] Pre-register a faithful CAN SLIM replication or explicitly named partial
+  derivative; never claim replication when required components are absent.
+- [ ] Evaluate crypto and equity sleeves independently before AI ranking,
+  strategy combination or portfolio allocation is studied.
+
+External notification delivery and any real execution capability remain deferred. The completed twelve-hour, 24-hour and three-day gates are bounded infrastructure-endurance evidence, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization. First candidate v1, all eight standalone default screening variants, all three Alpha Development v2 variants and the exact four Trend Pullback Volume v1 variants are closed rejected configurations. The next boundary is the documentation-only Selective Swing Trading Research Mandate v1, followed by daily crypto data/replay preparation and an equity point-in-time data audit—not Candidate v2, PAPER or live execution.

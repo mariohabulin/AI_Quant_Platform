@@ -1547,3 +1547,40 @@ persisted. A canonical report and SHA-256 sidecar move atomically from staging
 to final only after all seven outer decisions finish. Existing final or staging
 evidence blocks another run. Development interest is descriptive only and can
 never authorize Candidate v2, optimization, PAPER, cloud or live execution.
+
+## Selective Swing Trading Research Boundary v1
+
+`SELECTIVE_SWING_TRADING_RESEARCH_MANDATE_V1.md` defines a documentation-only
+research reset after Trend Pullback Volume v1 closure. It introduces no signal,
+dataset mutation, performance runner or deployment authorization.
+
+The target research architecture has two independent alpha sleeves:
+
+```text
+Point-in-Time Equity Data -> CAN SLIM Replication Research ----\
+                                                               \
+Daily Crypto Data -> Blinded Replay -> Capitulation Research ----> Future Eligible-Signal Boundary
+                                                               /
+Common Risk / Cost / Portfolio / Evidence Infrastructure ------/
+```
+
+Equity research requires a dedicated point-in-time fundamentals and historical-
+universe boundary. Earnings, revenue, corporate actions, industry membership,
+institutional sponsorship and publication availability must be reconstructible
+at the historical decision timestamp. Current constituent lists, revised
+fundamentals and survivor-only price histories are invalid inputs.
+
+Crypto research begins with a blinded daily chart-replay boundary. It reveals
+bars sequentially, records entry/skip/exit reasoning before advancing and
+preserves every decision as reconstruction evidence. Replay annotations cannot
+authorize a strategy or serve as unseen performance.
+
+The two sleeves may reuse validated OHLCV, feature, backtest, protective-exit,
+risk and canonical-evidence components. They may not reuse market-specific
+feature meaning or transfer tuned thresholds. A future portfolio layer accepts
+only independently eligible signals and treats cash as a first-class outcome.
+
+The previously planned exact six-hour pullback trade-path attribution remains
+available as deferred inspected-data diagnostics. It is no longer the active
+next mission and cannot influence the new daily crypto or equity protocol
+without explicit pre-registration.
