@@ -1492,7 +1492,8 @@ authorization remain false.
 
 ## Trend Pullback and Volume Re-expansion Protocol v1
 
-`src/trend_pullback_volume_protocol.py` is a non-executing boundary for the
+`src/trend_pullback_volume_protocol.py` is a declaration and evidence-lock
+boundary for the
 mechanism that follows closed Alpha Discovery v1. It reloads the exact
 canonical Discovery report and sidecar, then recomputes its identity,
 authorization state, seven hold-cash selections, complete catalog membership
@@ -1509,10 +1510,9 @@ relative volume. ADX hysteresis, EMA periods, lagged volume baseline, static
 2 ATR stop, 3R target, position-risk limits and nested chronological gates are
 shared. Its literal catalog hash makes accidental semantic drift observable.
 
-The module contains no executable market strategy or performance runner. Those
-components require separate review, and the declaration/evidence-lock APIs keep
-performance, calibration, selection, optimization, Candidate v2, PAPER, cloud
-and live authorization false.
+The protocol declaration contains no market evaluation. Its same-process lock
+may authorize only the separately reviewed one-shot runner, while Candidate
+v2, optimization, PAPER, cloud and live authorization remain false.
 
 `src/trend_pullback_state.py` now implements the causal ordered setup. It uses
 only completed-bar prefix data, resets at the requested evaluation boundary and
@@ -1524,5 +1524,26 @@ operational boundary.
 relative-volume and EMA components with that state machine. It emits the exact
 four-member catalog in declaration order and exposes static protective risk
 inputs without executing a backtest. Market-regime and OBV entry gates are
-explicitly absent. The nested runner remains the only unimplemented execution
-boundary, so all performance and promotion flags remain false.
+explicitly absent.
+
+## Trend Pullback Volume Runner v1 Boundary
+
+`src/trend_pullback_volume_runner.py` locks the exact six-hour manifest and
+closed Alpha Discovery report inside the execution process. It evaluates the
+four-member catalog on ten unique historical inner validation windows under
+baseline and stress, giving 80 complete two-asset inner evaluations. Reused
+inner evidence is available only at the applicable chronological selection
+cutoff.
+
+The selector accepts only the complete frozen catalog in declaration order and
+exact BTC/ETH metrics. It has no outer-test input. If no member passes every
+return, persistence, trade-count, drawdown, turnover, cost and protective-exit
+gate, the outer action is `HOLD_CASH` and no outer strategy evaluation occurs.
+Otherwise, only the inner-selected member is evaluated on that outer window.
+
+Every compact result binds parameter, asset, profile, phase and exact window
+positions to a canonical raw-partition hash; raw trade histories are not
+persisted. A canonical report and SHA-256 sidecar move atomically from staging
+to final only after all seven outer decisions finish. Existing final or staging
+evidence blocks another run. Development interest is descriptive only and can
+never authorize Candidate v2, optimization, PAPER, cloud or live execution.

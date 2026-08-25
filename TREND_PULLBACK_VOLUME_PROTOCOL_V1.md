@@ -75,10 +75,10 @@ There is no break-even variant, broad parameter sweep, indicator leaderboard,
 shorting or leverage. Risk remains 0.50% of equity per trade with at most 50%
 position exposure.
 
-## Future development boundary
+## Reviewed development boundary
 
-A later, separately reviewed implementation may reuse the prior chronological
-shape: 5,760/720/720 outer train/test/step and 2,880/720/720 inner
+The separately reviewed one-shot runner reuses the prior chronological shape:
+5,760/720/720 outer train/test/step and 2,880/720/720 inner
 train/validation/step, with at most four recent inner windows. Selection must
 use the complete shared BTC/ETH catalog under Coinbase baseline and stress.
 
@@ -87,13 +87,17 @@ turnover and 10% annual baseline-cost limits remain intact. No eligible member
 must produce `HOLD_CASH`; outer evidence must be unavailable to selection and a
 global hindsight leaderboard remains prohibited.
 
-The causal state machine and executable four-member strategy have now passed a
-separate component review. The nested runner still requires its own
-implementation and review. Until it exists, runner execution is unauthorized.
+The causal state machine, executable four-member strategy and nested runner
+have passed separate component review. A declaration remains non-executing.
+Only an exact dataset/report lock performed inside the runner process may
+authorize its single development execution. Existing final or staging evidence
+blocks repetition.
 
 ## Authorization boundary
 
-Protocol declaration and evidence locking execute no performance, calibration,
-selection or optimization. Candidate v2, bounded PAPER review, PAPER, cloud and
-live authorization remain false. A future development result may only form a
-hypothesis for a separately frozen candidate tested on genuinely unseen data.
+Protocol declaration and evidence locking alone execute no performance,
+calibration, selection or optimization. The lock only opens the reviewed
+runner boundary in that same process. Candidate v2, bounded PAPER review,
+PAPER, cloud and live authorization remain false. A development result may
+only form a hypothesis for a separately frozen candidate tested on genuinely
+unseen data.

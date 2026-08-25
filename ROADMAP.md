@@ -663,8 +663,11 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
   unseen evidence or broadening the closed parameter grid.
 - [x] Implement and separately review the causal pullback state machine and
   executable four-member strategy without running market performance.
-- [ ] Build a one-shot nested development runner only after the state machine,
+- [x] Build a one-shot nested development runner only after the state machine,
   strategy identity, risk execution and exact evidence lock pass regression.
+- [ ] Reproduce and integrate Trend Pullback Volume Runner v1 on Windows, pass
+  full regression and a clean absent-evidence preflight, then execute the
+  frozen nested development procedure exactly once.
 - [ ] Before formal candidate-v2 evaluation, freeze a new immutable identity
   and independently lock a genuinely unseen future-validation boundary.
 

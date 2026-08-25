@@ -4,8 +4,8 @@
 
 This component makes the four-member pre-registered catalog executable without
 running market performance. It implements only signal construction and exposes
-the existing static 2 ATR / 3R protective inputs for a future separately
-reviewed runner.
+the existing static 2 ATR / 3R protective inputs to the separately reviewed
+one-shot runner.
 
 Candidate v2, parameter selection, PAPER and live execution remain
 unauthorized.
@@ -38,9 +38,9 @@ state. Prior bars remain available only for causal feature warm-up.
 
 The completed recovery bar emits `Signal = 1`; normal execution timing remains
 the following Open. A completed bar emits `Signal = -1` when Close falls below
-EMA 50, ADX falls below 15 or `+DI <= -DI`. The Protective Exit Engine will
-remain responsible for active stop/target execution when a future runner
-injects the exact policy and Risk Engine.
+EMA 50, ADX falls below 15 or `+DI <= -DI`. The Protective Exit Engine remains
+responsible for active stop/target execution when the runner injects the exact
+policy and Risk Engine.
 
 Market-regime and OBV entry gates are intentionally absent. They were not
 silently carried from the closed impulse strategy. OBV remains diagnostic only.
@@ -52,5 +52,5 @@ order. Supplied volume, EMA or setup-state components must match the catalog or
 construction fails closed.
 
 No performance evaluation, nested calibration, ranking or selection exists in
-these modules. The future runner remains a separate implementation and review
-boundary, and no final or staging evidence is created here.
+these strategy modules. The runner is a separate reviewed implementation and
+no final or staging evidence is created merely by importing or declaring it.

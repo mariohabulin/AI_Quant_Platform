@@ -286,6 +286,8 @@ def trend_pullback_configuration():
             "shorting": False,
         },
         "future_runner_boundary": {
+            "initial_capital": 5000.0,
+            "granularity_seconds": 21600,
             "outer_train_size": 5760,
             "outer_test_size": 720,
             "outer_step_size": 720,
@@ -293,6 +295,7 @@ def trend_pullback_configuration():
             "inner_validation_size": 720,
             "inner_step_size": 720,
             "max_recent_inner_windows": 4,
+            "minimum_outer_windows": 5,
             "minimum_positive_inner_window_rate": 0.60,
             "minimum_inner_trades_per_asset": 12,
             "maximum_drawdown_percent": 20.0,
@@ -307,8 +310,8 @@ def trend_pullback_configuration():
         "implementation_prerequisites": {
             "causal_setup_state_machine": "IMPLEMENTED_REVIEWED",
             "pullback_volume_strategy": "IMPLEMENTED_REVIEWED",
-            "nested_runner": "REQUIRED_SEPARATE_REVIEW",
-            "status": "COMPONENTS_READY_RUNNER_REVIEW_REQUIRED",
+            "nested_runner": "IMPLEMENTED_REVIEWED",
+            "status": "RUNNER_REVIEWED_EXECUTION_REQUIRES_SAME_PROCESS_LOCK",
         },
         "future_validation": {
             "development_data_role": "INSPECTED_DEVELOPMENT_ONLY",
@@ -502,7 +505,8 @@ class TrendPullbackVolumePreregistration:
                 self.required_discovery_report_sha256
             ),
             "configuration": trend_pullback_configuration(),
-            "implementation_prerequisites_satisfied": False,
+            "implementation_prerequisites_satisfied": True,
+            "same_process_evidence_lock_required": True,
             "runner_execution_authorized": False,
             **_safety_boundary(),
         }
@@ -566,8 +570,9 @@ def main(argv=None):
                 TREND_PULLBACK_PARAMETER_CATALOG_SHA256
             ),
             "configuration": locked.configuration,
-            "implementation_prerequisites_satisfied": False,
-            "runner_execution_authorized": False,
+            "implementation_prerequisites_satisfied": True,
+            "same_process_evidence_lock_required": True,
+            "runner_execution_authorized": True,
             **_safety_boundary(),
         }
     else:

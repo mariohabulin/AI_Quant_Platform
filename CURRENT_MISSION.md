@@ -1203,3 +1203,28 @@ Market-regime and OBV gates are intentionally absent rather than silently
 inherited from the closed impulse family. The nested runner remains the only
 unimplemented prerequisite. No performance, selection or evidence has been
 created; all deployment authorizations remain false.
+
+### Trend Pullback Volume Strategy v1 — WINDOWS INTEGRATED
+
+Windows reproduced 28/28 focused strategy tests and 1062/1062 complete tests,
+then committed and pushed revision `feaf08b`. The declaration confirms that
+the causal state machine and exact four-member strategy are implemented and
+reviewed while performance, selection, Candidate v2, PAPER and live execution
+remain false.
+
+### Trend Pullback Volume Runner v1 — LOCAL PREPARATION
+
+The separately reviewed one-shot runner now binds the exact dataset manifest,
+closed Alpha Discovery evidence and immutable four-member catalog in the same
+process before evaluation. Ten unique inner validation windows produce 80
+complete catalog/profile evaluations. Selection sees only prior inner BTC/ETH
+evidence; ineligible boundaries hold cash without executing an outer strategy.
+
+Only an inner-selected member may be evaluated in each of seven outer windows.
+Every compact result is bound to exact identity, profile, phase and positions
+plus a canonical raw-partition hash. Final canonical JSON and SHA-256 evidence
+are promoted atomically from staging and cannot be overwritten or repeated.
+
+No development performance has run. Windows reproduction, commit/push and an
+absent-evidence preflight remain mandatory before an explicit one-shot run.
+Candidate v2, optimization, PAPER, cloud and live authorization remain false.

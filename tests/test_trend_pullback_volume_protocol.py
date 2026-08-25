@@ -258,7 +258,7 @@ def test_configuration_freezes_causal_volume_and_nonexecuting_boundary():
         "no_eligible_configuration_action"
     ] == "HOLD_CASH"
     assert configuration["implementation_prerequisites"]["status"] == (
-        "COMPONENTS_READY_RUNNER_REVIEW_REQUIRED"
+        "RUNNER_REVIEWED_EXECUTION_REQUIRES_SAME_PROCESS_LOCK"
     )
     assert configuration["implementation_prerequisites"][
         "causal_setup_state_machine"
@@ -268,7 +268,7 @@ def test_configuration_freezes_causal_volume_and_nonexecuting_boundary():
     ] == "IMPLEMENTED_REVIEWED"
     assert configuration["implementation_prerequisites"][
         "nested_runner"
-    ] == "REQUIRED_SEPARATE_REVIEW"
+    ] == "IMPLEMENTED_REVIEWED"
 
 
 def test_discovery_loader_rechecks_hash_sidecar_canonical_and_exact_basis(tmp_path):
@@ -350,7 +350,8 @@ def test_declaration_is_nonexecuting_nonpromotional_and_volume_explicit():
     assert declaration["configuration"]["causal_setup_state"][
         "trigger_volume_role"
     ] == "REEXPANSION"
-    assert declaration["implementation_prerequisites_satisfied"] is False
+    assert declaration["implementation_prerequisites_satisfied"] is True
+    assert declaration["same_process_evidence_lock_required"] is True
     assert declaration["runner_execution_authorized"] is False
     assert declaration["performance_evaluation_executed"] is False
     assert declaration["parameter_calibration_executed"] is False
@@ -397,7 +398,7 @@ def test_evidence_lock_rejects_manifest_report_or_scope_drift():
         ).lock("manifest.json", "discovery.json")
 
 
-def test_cli_declaration_and_lock_remain_nonexecuting(capsys, monkeypatch):
+def test_cli_declaration_is_nonexecuting_and_lock_authorizes_runner(capsys, monkeypatch):
     assert main([]) == 0
     declaration = json.loads(capsys.readouterr().out)
     assert declaration["status"] == "TREND_PULLBACK_VOLUME_EVIDENCE_LOCK_PENDING"
@@ -419,7 +420,10 @@ def test_cli_declaration_and_lock_remain_nonexecuting(capsys, monkeypatch):
     assert locked["status"] == "TREND_PULLBACK_VOLUME_EVIDENCE_LOCKED"
     assert locked["asset_rows"] == {"BTC-USD": 2, "ETH-USD": 2}
     assert locked["parameter_set_order"] == list(TREND_PULLBACK_PARAMETER_ORDER)
-    assert locked["runner_execution_authorized"] is False
+    assert locked["implementation_prerequisites_satisfied"] is True
+    assert locked["same_process_evidence_lock_required"] is True
+    assert locked["runner_execution_authorized"] is True
+    assert locked["performance_evaluation_executed"] is False
     assert locked["candidate_v2_authorized"] is False
     assert locked["live_execution_authorized"] is False
 

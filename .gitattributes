@@ -13,3 +13,5 @@ data/research/**/alpha_development_report.json text eol=lf
 data/research/**/alpha_development_report.sha256 text eol=lf
 data/research/**/alpha_discovery_report.json text eol=lf
 data/research/**/alpha_discovery_report.sha256 text eol=lf
+data/research/**/trend_pullback_volume_report.json text eol=lf
+data/research/**/trend_pullback_volume_report.sha256 text eol=lf

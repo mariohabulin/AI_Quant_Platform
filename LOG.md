@@ -2313,3 +2313,31 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - Executed no performance, calibration or parameter selection. The nested
   runner remains a separate review boundary; Candidate v2, PAPER, cloud and
   live authorization remain false.
+
+## 2026-08-25 — Trend Pullback Volume Strategy v1 (Windows Integration)
+
+- Windows reproduced 28/28 focused and 1062/1062 complete tests.
+- Committed and pushed exact strategy revision `feaf08b` with a clean tree and
+  aligned `HEAD`, `main` and `origin/main`.
+- Confirmed state-machine and strategy status `IMPLEMENTED_REVIEWED` while the
+  runner remained the only missing prerequisite.
+- Executed no market performance, calibration, selection or evidence write.
+
+## 2026-08-25 — Trend Pullback Volume Runner v1 (Local Preparation)
+
+- Added exact Risk Engine and static 2 ATR / 3R Protective Exit construction
+  for every immutable catalog member.
+- Added complete-order selection from prior inner evidence only, with strict
+  cross-asset return, persistence, trade, drawdown, turnover, cost and active
+  protection gates.
+- Added ten-window inner reuse yielding 80 catalog/profile multi-asset
+  evaluations and seven chronological outer decisions.
+- Required `HOLD_CASH` with no outer strategy evaluation whenever inner
+  evidence selects no eligible member.
+- Bound every compact result to exact window, phase, asset, parameter and cost
+  profile plus a canonical raw-partition hash; persisted no raw trade history.
+- Added atomic canonical JSON/SHA-256 staging promotion and repeat/stale-stage
+  refusal.
+- Executed no market development run. Windows reproduction, commit/push and
+  clean absent-evidence preflight remain required; Candidate v2, optimization,
+  PAPER, cloud and live authorization remain false.
