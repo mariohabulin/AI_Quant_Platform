@@ -2252,3 +2252,28 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - No BTC/ETH diagnostic or calibration has run. Windows reproduction,
   commit/push and absent-evidence preflight remain required before one explicit
   development run.
+
+## 2026-08-25 — Alpha Discovery v1 (Windows Evidence and Closure)
+
+- Windows reproduced 55/55 focused runner/protocol/strategy tests and
+  1014/1014 complete tests, then committed and pushed runner revision
+  `d9f74f0`.
+- Passed exact HEAD/origin, clean-tree, manifest/report-hash, prerequisite,
+  authorization and absent-final/staging preflight checks.
+- Executed zero-cost path diagnostics and the frozen nested adaptive procedure
+  once; verified canonical report SHA-256
+  `2fc8f4d1a5d690c072408bc2d299516904feb58b2e2f40345983641bf26ed678`
+  with no remaining staging evidence.
+- Recorded immutable report and sidecar under pushed revision `58fb939`.
+- Selected zero configurations and emitted `HOLD_CASH` for all seven outer
+  windows; no least-bad configuration or hindsight leaderboard was generated.
+- Confirmed universal pass of protective, trade-count, drawdown, turnover and
+  cost-budget gates across 56 parameter/boundary decisions.
+- Confirmed universal failure of stressed two-asset median return and
+  baseline/stress persistence; baseline two-asset median return passed only
+  five decisions and BTC stressed median remained negative in all 56.
+- Interpreted 2 ATR and stricter ADX only as descriptive design priors. Mixed
+  +1R break-even results do not support further tuning of the closed catalog.
+- Closed the exact high-volume ADX impulse-entry family as `SCREEN_OUT` and
+  moved the next boundary to a new trend-pullback plus volume re-expansion
+  hypothesis. Candidate v2, PAPER and live authorization remain false.

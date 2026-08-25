@@ -1136,3 +1136,27 @@ evidence cannot overwrite or repeat a completed study. Local focused and full
 regression must pass before a Windows patch is delivered. No market evaluation
 has run; Candidate v2, optimization, PAPER and live authorization remain false
 and cloud services remain parked.
+
+### Alpha Discovery and Calibration v1 — CLOSED SCREEN_OUT
+
+Windows reproduced 55/55 focused and 1014/1014 complete tests, committed and
+pushed runner revision `d9f74f0`, passed a clean absent-evidence preflight and
+executed the one-shot adaptive procedure. Canonical report SHA-256
+`2fc8f4d1a5d690c072408bc2d299516904feb58b2e2f40345983641bf26ed678`
+was verified and recorded under evidence revision `58fb939`.
+
+All seven outer decisions are `HOLD_CASH`; zero catalog members were selected.
+Across 56 parameter/boundary decisions, protective execution, minimum trades,
+drawdown, turnover and cost budgets pass universally. Stress median return and
+baseline/stress persistence fail universally; baseline two-asset median return
+passes only five times. BTC stress median is negative at every boundary.
+
+The zero-cost diagnostic retains only weak, statistically unsupported gross
+tendencies. Wider 2 ATR risk and stricter ADX reduce operational burden, while
++1R break-even behavior is mixed; none is a candidate or winner. The exact
+impulse-entry catalog is closed and immutable.
+
+The next mission is a new pre-registered trend-pullback and volume
+re-expansion mechanism with a small causal ablation set. Candidate v2,
+optimization, PAPER and live execution remain false; cloud services remain
+parked.

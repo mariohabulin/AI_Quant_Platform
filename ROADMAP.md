@@ -646,16 +646,21 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
   retain every execution and promotion authorization as false.
 - [x] Implement causal EMA trend structure, completed-bar +1R break-even
   transitions and MFE/MAE/holding-path evidence before any calibration runner.
-- [ ] Build a separately reviewed one-shot nested calibration runner only after
-  its prerequisite components pass focused and complete regression; reproduce
-  and integrate the locally prepared runner on Windows before execution.
-- [ ] Evaluate joint causal intersections rather than adding marginal regime,
+- [x] Build, reproduce and integrate a separately reviewed one-shot nested
+  calibration runner after its prerequisite components passed focused and
+  complete regression.
+- [x] Evaluate joint causal intersections rather than adding marginal regime,
   relative-volume and OBV summaries. Require turnover/cost and risk controls
   before a development mechanism may retain interest.
-- [ ] Run calibration only inside training/validation boundaries and test the
+- [x] Run calibration only inside training/validation boundaries and test the
   complete adaptive procedure exactly as it would operate live.
-- [ ] Use development results only to define one structurally new, falsifiable
-  hypothesis without treating inspected results as unseen evidence.
+- [x] Record and close Alpha Discovery v1 report SHA-256
+  `2fc8f4d1a5d690c072408bc2d299516904feb58b2e2f40345983641bf26ed678`:
+  select no configuration, hold cash in seven of seven outer windows and retain
+  no promotion authorization.
+- [ ] Pre-register one structurally new trend-pullback plus causal volume
+  contraction/re-expansion hypothesis without treating inspected results as
+  unseen evidence or broadening the closed parameter grid.
 - [ ] Before formal candidate-v2 evaluation, freeze a new immutable identity
   and independently lock a genuinely unseen future-validation boundary.
 
