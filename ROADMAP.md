@@ -683,9 +683,16 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
 
 - [x] Reproduce and integrate the documentation-only Selective Swing Trading
   Research Mandate v1 on Windows from a clean synchronized repository.
-- [ ] Reproduce and integrate the BTC/ETH/XRP Daily Data and Blinded Replay
+- [x] Reproduce and integrate the BTC/ETH/XRP Daily Data and Blinded Replay
   Protocol v1: exact existing BTC/ETH reference, explicit XRP provider-audit
   requirement, no synthetic gaps and no performance fields.
+- [ ] Reproduce and integrate Selective Swing Portfolio Construction Protocol
+  v1: cash-first risk-limited `1/n`, three initial equity positions, winner-only
+  pyramiding boundary, three isolated evidence books, first-class no-trade
+  gates, offline-only AI improvement and separate rare intraday contingency.
+- [ ] Freeze executable numeric position-risk, total-open-risk, portfolio
+  loss-stop and gap/fill policies only after strategy/data evidence; current
+  documented ranges are provisional research starting points.
 - [ ] Audit and lock causal daily BTC, ETH and XRP research data without
   executing a strategy or performance test.
 - [x] Build a blinded sequential chart-replay component that records
@@ -700,4 +707,4 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
 - [ ] Evaluate crypto and equity sleeves independently before AI ranking,
   strategy combination or portfolio allocation is studied.
 
-External notification delivery and any real execution capability remain deferred. The completed twelve-hour, 24-hour and three-day gates are bounded infrastructure-endurance evidence, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization. First candidate v1, all eight standalone default screening variants, all three Alpha Development v2 variants and the exact four Trend Pullback Volume v1 variants are closed rejected configurations. The active boundary is the BTC/ETH/XRP daily-data and blinded-replay protocol, followed by a provider/availability audit and an equity point-in-time data audit—not Candidate v2, PAPER or live execution.
+External notification delivery and any real execution capability remain deferred. The completed twelve-hour, 24-hour and three-day gates are bounded infrastructure-endurance evidence, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization. First candidate v1, all eight standalone default screening variants, all three Alpha Development v2 variants and the exact four Trend Pullback Volume v1 variants are closed rejected configurations. The active boundary is the documentation-only Selective Swing Portfolio Construction Protocol v1, followed immediately by the BTC/ETH/XRP provider/availability audit and later the equity point-in-time data audit—not Candidate v2, PAPER or live execution.

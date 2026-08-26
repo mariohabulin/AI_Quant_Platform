@@ -217,3 +217,28 @@ The controlling mandate is
 result while replacing incremental six-hour indicator variation as the active
 research path. No strategy, PAPER or live authorization follows from the
 direction alone.
+
+## Selective Capital Deployment
+
+The long-term agent is selective rather than continuously invested. Every
+market sleeve must first establish an independently eligible causal signal.
+Capital is then bounded by an equal `1/n` envelope across eligible signals, but
+actual position size remains risk based and may leave substantial cash.
+
+Listed-equity operation begins with at most three positions. Losers are removed
+under frozen rules; their capital is not automatically chased into prior
+winners. Future pyramiding may add smaller tranches only to profitable positions
+on fresh causal evidence and never averages down.
+
+General day trading and scalping are outside the mission. A rare explosive
+listed-equity breakout from a causal sideways base may be studied later as one
+separate, smaller-risk, same-session contingency with its own intraday data,
+execution, stop and unseen-validation contract. It cannot weaken or borrow the
+identity of faithful CAN SLIM research.
+
+One future portfolio risk engine governs every sleeve. It may size an eligible
+signal below its `1/n` envelope or reject it entirely; `NO_TRADE_HOLD_CASH` is a
+successful safety outcome. The intended `3R` opportunity is screened before
+entry but does not force a full exit at exactly `3R`. PAPER and live policies
+remain frozen during operation: learning, threshold changes and new models are
+developed offline, versioned and promoted only after independent validation.

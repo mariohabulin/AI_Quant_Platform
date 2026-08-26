@@ -1301,3 +1301,37 @@ acquires no data, executes no real chart replay or performance, defines no
 strategy and authorizes no Candidate v2, optimization, PAPER, cloud or live
 operation. After Windows reproduction and integration, the next boundary is
 the BTC/ETH/XRP provider and historical-availability audit.
+
+### Selective Swing Portfolio Construction Protocol v1 — LOCAL PREPARATION
+
+The user's shared crypto/equity capital philosophy is now formalized before
+market results can influence it. Only independently eligible signals enter the
+raw `1/n` capital envelope; stop-based risk, position, portfolio, cash, sector
+and correlation limits may always reduce actual exposure. Cash is the required
+outcome when no signal is eligible or risk capacity is unavailable.
+
+Listed-equity research begins with no more than three simultaneous positions.
+Five remains a future research ceiling. Exiting a loser does not automatically
+move capital to prior winners. A survivor requires a fresh causal add-on signal
+before winner-only, smaller-tranche pyramiding may later be considered;
+averaging down remains prohibited.
+
+The rare 20–30% or larger explosive move from a sideways stock base is retained
+as `Exceptional Sideways Breakout Contingency v1`, not general day trading. It
+is unimplemented and requires a separate point-in-time intraday data, halt,
+liquidity, spread/slippage, confirmation, no-chase, stop, smaller-risk and same-
+session-exit protocol before performance research.
+
+Professional review now strengthens the same declaration with three isolated
+evidence books, a shared future risk-engine boundary, a first-class
+`NO_TRADE_HOLD_CASH` outcome, provisional rather than authorized risk ranges,
+`3R` as an entry screen rather than a forced take-profit, executable gap/fill
+requirements and offline-only versioned AI learning. The daily crypto setup is
+recorded as decline, relative-volume event, stabilization, confirmation,
+structural invalidation and predefined-exit reconstruction. XRP decoupling
+remains a diagnostic hypothesis, not an automatic rotation rule.
+
+No allocation, candidate ranking, pyramiding, intraday strategy or performance
+has executed. After Windows integration, active work returns to the BTC/ETH/XRP
+provider and historical-availability audit. Candidate v2, optimization, PAPER,
+cloud and live authorization remain false.

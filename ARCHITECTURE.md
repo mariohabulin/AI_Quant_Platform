@@ -1606,3 +1606,36 @@ parameter selection. Its annotations are inspected hypothesis-reconstruction
 evidence and cannot become unseen validation evidence. Dataset acquisition,
 real replay, strategy definition and performance remain later separately
 reviewed boundaries.
+
+## Selective Swing Portfolio Construction Boundary v1
+
+`src/selective_swing_portfolio_protocol.py` declares a shared portfolio layer
+without creating an executable allocator. Every market sleeve must first
+produce an independently eligible causal signal. Only then does the raw capital
+envelope become `1/n` across eligible members; final notional remains the lower
+of that envelope and stop-based, position, portfolio, cash, sector and
+correlation limits. Zero eligible signals means cash.
+
+The equity sleeve begins with no more than three concurrent positions. A future
+five-position ceiling requires separate review. Exiting a member releases cash
+but does not authorize automatic transfer to prior winners. Winner-only
+pyramiding requires a fresh add-on structure, a smaller tranche and complete
+risk recomputation; averaging down is prohibited.
+
+The same boundary records `Exceptional Sideways Breakout Contingency v1` as a
+separate unimplemented event-driven equity hypothesis. An observed 20–30% or
+larger move from a causal sideways base is descriptive, not an entry threshold.
+General day trading and scalping remain unauthorized. Any future contingency
+requires point-in-time intraday data, halt/liquidity/cost review, confirmation,
+no-chase and predefined-stop rules, smaller risk, one-position capacity and
+same-session flattening under a separately reviewed protocol.
+
+The portfolio boundary also separates three evidence books: daily crypto
+swing, point-in-time CAN SLIM swing and the exceptional intraday contingency.
+A shared future risk engine sits above them and may return
+`NO_TRADE_HOLD_CASH` when signal, regime, stop, cost, data, reward-room,
+correlation or portfolio-risk gates fail. Approximate 0.25%–0.50% swing risk and
+1.00%–1.50% total open-risk ranges are research starting points only. The
+intended `3R` opportunity is an entry-quality screen, not a guaranteed return or
+forced full exit. PAPER/live policies remain frozen and may improve only through
+offline versioned evaluation and explicit promotion.

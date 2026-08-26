@@ -2407,3 +2407,37 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
   in reconstruction summaries.
 - Executed no data acquisition, real chart replay, strategy or performance.
   Candidate v2, optimization, PAPER, cloud and live authorization remain false.
+
+## 2026-08-26 — Selective Swing Portfolio Construction Protocol v1 (Local Preparation)
+
+- Formalized `1/n` as an equal capital envelope across independently eligible
+  signals rather than a risk budget or requirement to deploy all cash.
+- Required actual notional to remain below stop-based, position, portfolio,
+  liquidity, cash, sector and correlation limits.
+- Set the initial listed-equity capacity to three concurrent positions and kept
+  five as a future separately reviewed research ceiling.
+- Prohibited automatic redistribution from an exited member to historical
+  winners; survivors require a fresh causal add-on structure.
+- Declared winner-only, smaller-tranche pyramiding requirements and prohibited
+  averaging down or treating vertical extension alone as a new signal.
+- Recorded the rare approximately 20–30% or larger upside move from a causal
+  sideways equity base as `Exceptional Sideways Breakout Contingency v1`.
+- Kept that event separate from CAN SLIM and prohibited general day trading,
+  scalping, initial vertical chasing and live use.
+- Required future point-in-time intraday data, halt, liquidity, spread/slippage,
+  confirmation, stop, smaller-risk, one-position and same-session-exit review.
+- Added three isolated evidence books and prohibited cross-book alpha claims or
+  authorization transfer before independent evidence exists.
+- Added a shared future risk-engine contract and first-class
+  `NO_TRADE_HOLD_CASH` state for failed signal, regime, stop, data, cost,
+  reward-room, correlation, portfolio-risk or safety gates.
+- Recorded 0.25%–0.50% per-swing and 1.00%–1.50% total-open-risk ranges only as
+  provisional EUR 5,000 research starting points, not executable limits.
+- Defined `3R` as an opportunity-quality screen rather than a guaranteed return
+  or mandatory full take-profit, with all exit behavior deferred to separately
+  frozen strategy protocols.
+- Required realistic gaps, partial/rejected fills, venue outages and intraday
+  halt/event evidence, and prohibited live self-learning in favor of offline,
+  versioned and explicitly promoted changes.
+- Executed no allocation, ranking, pyramiding, market performance or strategy.
+  Candidate v2, PAPER, cloud and live authorization remain false.
