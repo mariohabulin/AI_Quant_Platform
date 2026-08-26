@@ -1584,3 +1584,25 @@ The previously planned exact six-hour pullback trade-path attribution remains
 available as deferred inspected-data diagnostics. It is no longer the active
 next mission and cannot influence the new daily crypto or equity protocol
 without explicit pre-registration.
+
+## BTC/ETH/XRP Daily Data and Blinded Replay Boundary v1
+
+`src/daily_crypto_replay_protocol.py` binds the normalized Selective Swing
+Trading mandate hash to the exact recorded BTC/ETH one-day Coinbase manifest.
+It intentionally leaves the XRP provider unset until venue history, candle and
+volume semantics, availability intervals, liquidity and costs are audited.
+Consequently the current state is provider-audit-required: no complete three-
+asset dataset or real replay is authorized.
+
+`src/blinded_daily_replay.py` provides the causal replay primitive independently
+of market performance. Each continuous provider-availability segment is
+validated as exact UTC-midnight daily OHLCV without synthetic gap filling. A
+session reveals only a rolling 30-bar copy and requires an immutable reasoned
+decision before the next bar appears. Flat and long actions are explicitly
+state constrained, and each decision binds the SHA-256 of its visible frame.
+
+The replay component emits no P&L, return, drawdown, benchmark, ranking or
+parameter selection. Its annotations are inspected hypothesis-reconstruction
+evidence and cannot become unseen validation evidence. Dataset acquisition,
+real replay, strategy definition and performance remain later separately
+reviewed boundaries.

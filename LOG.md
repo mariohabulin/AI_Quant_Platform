@@ -2387,3 +2387,23 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
   pullback trade-path attribution without deleting or reinterpreting it.
 - Added no strategy, data, runner, optimization, selection or performance
   evidence. Candidate v2, PAPER, cloud and live authorization remain false.
+
+## 2026-08-26 — BTC/ETH/XRP Daily Data and Blinded Replay Protocol v1 (Local Preparation)
+
+- Bound the new protocol to normalized Selective Swing Trading mandate SHA-256
+  `7c4e6405f8b09c138748644bb51abcc69d06c5c45cfcd7c2df450dfd1efe0c98`.
+- Revalidated the existing BTC/ETH one-day Coinbase manifest contract and
+  canonical SHA-256
+  `77bc9765a828174b1fd5d46b0d06d216db47e3edab5d91cc65f47a350a335691`.
+- Left the XRP provider explicitly unset pending historical listing,
+  availability, candle/volume, liquidity and cost audit.
+- Implemented an exact UTC-midnight daily OHLCV boundary that records gaps and
+  splits availability segments without creating synthetic candles.
+- Implemented a causal rolling 30-bar replay that requires one immutable,
+  reasoned state-valid decision before revealing another completed bar.
+- Bound every replay decision to the canonical visible-frame SHA-256 and
+  returned defensive frame copies so annotations cannot mutate source state.
+- Prohibited P&L, return, benchmark, drawdown, ranking and parameter selection
+  in reconstruction summaries.
+- Executed no data acquisition, real chart replay, strategy or performance.
+  Candidate v2, optimization, PAPER, cloud and live authorization remain false.

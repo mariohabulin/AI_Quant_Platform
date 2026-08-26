@@ -1280,3 +1280,24 @@ performance evidence. The next implementation boundary after Windows
 integration is the BTC/ETH/XRP daily data and blinded-replay protocol; the
 equity point-in-time data audit follows before any CAN SLIM implementation.
 Candidate v2, optimization, PAPER, cloud and live authorization remain false.
+
+### BTC/ETH/XRP Daily Data and Blinded Replay Protocol v1 — LOCAL PREPARATION
+
+The first implementation milestone under the Selective Swing Trading mandate
+now binds its normalized hash to the exact recorded BTC/ETH one-day manifest
+and introduces a provider-neutral replay boundary. The replay shows only a
+rolling 30-bar completed-daily prefix, requires a reasoned `ENTER`, `SKIP`,
+`HOLD` or `EXIT` decision before advancing, and binds every decision to the
+visible-frame SHA-256.
+
+Missing candles are never synthesized. Provider-unavailable intervals split
+replay segments, and raw volume remains venue-specific with only causal per-
+asset relative normalization permitted. XRP is deliberately not assigned to a
+provider until historical listing, availability, candle/volume semantics,
+liquidity and cost evidence are audited.
+
+This package contains protocol and synthetic component regression only. It
+acquires no data, executes no real chart replay or performance, defines no
+strategy and authorizes no Candidate v2, optimization, PAPER, cloud or live
+operation. After Windows reproduction and integration, the next boundary is
+the BTC/ETH/XRP provider and historical-availability audit.
