@@ -242,3 +242,16 @@ successful safety outcome. The intended `3R` opportunity is screened before
 entry but does not force a full exit at exactly `3R`. PAPER and live policies
 remain frozen during operation: learning, threshold changes and new models are
 developed offline, versioned and promoted only after independent validation.
+
+## Venue-Bound Crypto Evidence
+
+Selective crypto research treats price and volume as observations from an
+identified venue, not as universal market facts. The primary BTC/ETH/XRP daily
+dataset therefore uses one reviewed USD spot venue whenever possible, retains
+provider identity and exact source hashes, and records missing intervals rather
+than manufacturing continuity.
+
+Cross-venue data may provide independent robustness evidence, but raw volumes
+are never merged and one venue cannot silently fill another venue's suspension.
+This preserves the meaning of capitulation volume before the system attempts to
+discover or claim an edge.

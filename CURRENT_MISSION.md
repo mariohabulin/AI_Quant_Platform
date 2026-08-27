@@ -1335,3 +1335,29 @@ No allocation, candidate ranking, pyramiding, intraday strategy or performance
 has executed. After Windows integration, active work returns to the BTC/ETH/XRP
 provider and historical-availability audit. Candidate v2, optimization, PAPER,
 cloud and live authorization remain false.
+
+### BTC/ETH/XRP Provider and Historical Availability Audit v1 — LOCAL PREPARATION
+
+Official provider evidence has now been reviewed for the exact 2019-01-01
+inclusive through 2026-08-01 exclusive daily reconstruction boundary.
+Coinbase's existing BTC/ETH manifest remains immutable cross-venue reference
+evidence, but Coinbase is rejected as the common three-asset provider because
+its XRP trading was suspended from 2021-01-19 until relisting on 2023-07-13.
+
+Kraken Spot official OHLCVT archives are selected as the primary common source
+for `BTC/USD`, `ETH/USD` and `XRP/USD`. Kraken announced XRP/USD in May 2017,
+before the research start. The future acquisition must combine the official
+complete archive and all required quarterly updates, then use the 720-entry
+REST OHLC endpoint only for recent same-venue overlap/bridge validation while
+removing its final uncommitted candle.
+
+No missing day may be synthesized, forward-filled or inserted as zero volume.
+Every gap becomes an explicit `NO_TRADE_UNAVAILABLE` boundary and splits replay
+segments. Archive hashes, members, first/last observed buckets, exact gaps and
+archive/REST equality remain the next byte-level acquisition gate.
+
+The documentary provider/availability audit is complete, but no data has been
+downloaded or locked and no real replay, strategy or performance has executed.
+The active next mission is a fail-closed Kraken daily acquisition and immutable
+three-asset manifest. Candidate v2, optimization, PAPER, cloud and live
+authorization remain false.

@@ -2441,3 +2441,31 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
   versioned and explicitly promoted changes.
 - Executed no allocation, ranking, pyramiding, market performance or strategy.
   Candidate v2, PAPER, cloud and live authorization remain false.
+
+## 2026-08-27 — BTC/ETH/XRP Provider and Historical Availability Audit v1 (Local Preparation)
+
+- Reviewed only Coinbase- and Kraken-owned documentation for XRP listing and
+  suspension history, native daily candles, volume, archive/REST retention and
+  current fee context.
+- Retained the existing Coinbase BTC/ETH daily manifest as immutable independent
+  cross-venue reference evidence.
+- Rejected Coinbase only as the common three-asset primary source because XRP
+  trading was suspended from `2021-01-19T18:00:00Z` until relisting on
+  `2023-07-13`.
+- Selected Kraken Spot official OHLCVT archives as the primary common USD venue
+  for `BTC/USD`, `ETH/USD` and `XRP/USD`; confirmed that Kraken announced
+  `XRP/USD` on `2017-05-18`, before the research start.
+- Required the complete archive plus all necessary quarterly updates, exact
+  source hashes/member inventory and a same-venue REST overlap bridge.
+- Limited Kraken REST OHLC to its documented 720 recent entries, required
+  removal of the final uncommitted candle and prohibited REST-only historical
+  reconstruction.
+- Required exact equality for duplicate completed archive/REST buckets and a
+  fail-closed no-dataset outcome for any overlap or identity mismatch.
+- Preserved every missing daily timestamp as `NO_TRADE_UNAVAILABLE`; prohibited
+  synthetic, forward-filled and inserted zero-volume candles.
+- Kept raw volume venue/asset bound and recorded current 0.40% maker / 0.80%
+  taker Tier 1 fees only as dated context, not a frozen strategy cost profile.
+- Executed no network acquisition, byte-level historical inventory, dataset
+  lock, real replay, strategy or performance. Candidate v2, PAPER, cloud and
+  live authorization remain false.

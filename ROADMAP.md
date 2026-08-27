@@ -686,15 +686,19 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
 - [x] Reproduce and integrate the BTC/ETH/XRP Daily Data and Blinded Replay
   Protocol v1: exact existing BTC/ETH reference, explicit XRP provider-audit
   requirement, no synthetic gaps and no performance fields.
-- [ ] Reproduce and integrate Selective Swing Portfolio Construction Protocol
+- [x] Reproduce and integrate Selective Swing Portfolio Construction Protocol
   v1: cash-first risk-limited `1/n`, three initial equity positions, winner-only
   pyramiding boundary, three isolated evidence books, first-class no-trade
   gates, offline-only AI improvement and separate rare intraday contingency.
 - [ ] Freeze executable numeric position-risk, total-open-risk, portfolio
   loss-stop and gap/fill policies only after strategy/data evidence; current
   documented ranges are provisional research starting points.
-- [ ] Audit and lock causal daily BTC, ETH and XRP research data without
-  executing a strategy or performance test.
+- [x] Audit official provider/history evidence, reject Coinbase as the common
+  three-asset source because of its 2021–2023 XRP suspension, and select
+  Kraken's official spot OHLCVT archive path for BTC/USD, ETH/USD and XRP/USD.
+- [ ] Acquire, byte-inventory and lock the causal Kraken daily BTC, ETH and XRP
+  dataset with archive hashes, quarterly updates, exact same-venue REST
+  overlap, explicit gaps and no strategy or performance execution.
 - [x] Build a blinded sequential chart-replay component that records
   entry, skip and exit decisions before future bars are revealed.
 - [ ] Pre-register a small Crypto Capitulation-Volume Reversal v1 catalog only
@@ -707,4 +711,4 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
 - [ ] Evaluate crypto and equity sleeves independently before AI ranking,
   strategy combination or portfolio allocation is studied.
 
-External notification delivery and any real execution capability remain deferred. The completed twelve-hour, 24-hour and three-day gates are bounded infrastructure-endurance evidence, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization. First candidate v1, all eight standalone default screening variants, all three Alpha Development v2 variants and the exact four Trend Pullback Volume v1 variants are closed rejected configurations. The active boundary is the documentation-only Selective Swing Portfolio Construction Protocol v1, followed immediately by the BTC/ETH/XRP provider/availability audit and later the equity point-in-time data audit—not Candidate v2, PAPER or live execution.
+External notification delivery and any real execution capability remain deferred. The completed twelve-hour, 24-hour and three-day gates are bounded infrastructure-endurance evidence, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization. First candidate v1, all eight standalone default screening variants, all three Alpha Development v2 variants and the exact four Trend Pullback Volume v1 variants are closed rejected configurations. The active boundary is the non-performance Kraken BTC/ETH/XRP daily acquisition and immutable data lock, followed by real blinded-replay review and later the equity point-in-time data audit—not Candidate v2, PAPER or live execution.

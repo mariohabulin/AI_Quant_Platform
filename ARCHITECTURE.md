@@ -1639,3 +1639,29 @@ correlation or portfolio-risk gates fail. Approximate 0.25%–0.50% swing risk a
 intended `3R` opportunity is an entry-quality screen, not a guaranteed return or
 forced full exit. PAPER/live policies remain frozen and may improve only through
 offline versioned evaluation and explicit promotion.
+
+## BTC/ETH/XRP Provider and Historical Availability Boundary v1
+
+`src/btc_eth_xrp_provider_audit.py` binds the frozen daily replay protocol to a
+reviewed provider decision without performing network acquisition. Coinbase's
+existing BTC/ETH daily manifest remains independent recorded evidence, but
+Coinbase is rejected as the common three-asset source because XRP trading was
+suspended from January 2021 until July 2023.
+
+The primary daily research path is one Kraken Spot venue for `BTC/USD`,
+`ETH/USD` and `XRP/USD`. The provider's official complete OHLCVT archive and
+required quarterly updates form the historical baseline. Kraken REST OHLC is a
+recent same-venue bridge and overlap verifier only: its 720-entry retention
+cannot reconstruct full history, and its final uncommitted bar is discarded.
+
+The future builder must inventory archive members and hashes, preserve legacy
+pair identity, require exact equality for duplicate completed archive/REST
+buckets and publish nothing on a mismatch. Missing daily intervals are explicit
+`NO_TRADE_UNAVAILABLE` boundaries; they are never forward-filled, synthesized
+or converted into zero-volume observations. Replay segments split at gaps.
+
+Kraken volume remains venue and base-asset bound. Relative volume is computed
+causally within each asset; raw cross-asset and cross-venue volume comparison is
+prohibited. Current fee observations document acquisition context only and do
+not freeze a future execution profile. Exact archive coverage, liquidity,
+spread, slippage and performance remain later gates.
