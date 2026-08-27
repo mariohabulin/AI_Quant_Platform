@@ -1386,3 +1386,37 @@ This local preparation performs no download or REST request and locks no real
 dataset. After Windows integration, the active next action is the bounded
 official Kraken acquisition. Real replay, strategy, performance, Candidate v2,
 optimization, PAPER, cloud and live authorization remain false.
+
+### Kraken Daily Dataset Lock v1 — ACQUISITION FAILED CLOSED
+
+The bounded Windows acquisition inspected the official complete archive and
+performed a 482-row archive/REST overlap audit for BTC-USD, ETH-USD and
+XRP-USD. All 1,446 OHLC comparisons matched exactly, confirming pair and daily
+UTC-bucket alignment. Full OHLCVT equality nevertheless failed: exact rows were
+156 for BTC, 119 for ETH and 94 for XRP; volume mismatches were 326, 363 and
+388, while each asset had 299 trade-count mismatches.
+
+The mismatch was systematic across the overlap rather than confined to one
+source boundary. No tolerance, field removal or precedence was introduced.
+REST stitching failed its frozen gate, staging was not promoted and no v1
+dataset, replay, strategy or performance evidence was published.
+
+### Kraken Daily Archive-Only Dataset Lock v2 — LOCAL PREPARATION
+
+The replacement contract retains Kraken Spot and the exact three native daily
+pairs but narrows the unpublished dataset to official archive bytes through
+2026-03-31 inclusive (`2026-04-01` exclusive). It freezes the reviewed complete
+archive and official Q1 2026 update by filename, role, byte size and SHA-256.
+The Q1 members independently showed 90 rows per asset, exact January 1 through
+March 31 coverage, zero timestamp gaps, zero duplicates and zero schema
+failures.
+
+V2 removes every REST request, overlap field and raw-response artifact from the
+historical lock. Existing byte inventory, strict OHLCVT validation,
+no-precedence archive merge, explicit missing-day segments, staging-first
+publication and independent hash verification remain intact. The upstream
+provider audit and exact v2 protocol are both hash bound.
+
+The next boundary is Windows integration, focused/full regression and one
+fresh two-archive lock attempt. Real replay, strategy, performance,
+optimization, Candidate v2, PAPER, cloud and live authorization remain false.

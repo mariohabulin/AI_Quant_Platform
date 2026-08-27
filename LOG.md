@@ -2497,3 +2497,26 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - Executed no archive download, REST request, real dataset lock, replay,
   strategy or performance. Candidate v2, optimization, PAPER, cloud and live
   authorization remain false.
+
+## 2026-08-27 — Kraken Daily Lock v1 Acquisition Failure and v2 Archive-Only Preparation
+
+- Executed the v1 three-asset overlap audit across 482 completed daily buckets
+  per asset; all 1,446 OHLC comparisons matched exactly.
+- Recorded only 156 BTC, 119 ETH and 94 XRP full-row matches; volume differed
+  in 326, 363 and 388 rows, and trade count differed in 299 rows for every
+  asset.
+- Preserved the exact no-tolerance contract: did not drop volume/trades, grant
+  REST precedence or publish a v1 dataset.
+- Verified official `Kraken_OHLCVT_Q1_2026.zip` byte size `545431093` and
+  SHA-256 `95b2fec056bbacdfb5426e859a756d269bb19ba31eac7ea9e814759dfccd77b1`.
+- Verified exact Q1 native daily BTC/ETH/XRP members: 90 rows each from
+  2026-01-01 through 2026-03-31, with zero timestamp gaps, duplicates or
+  seven-column failures.
+- Prepared v2 identity
+  `kraken-spot-btc-eth-xrp-native-1d-20190101-20260401-archive-only-v2` using
+  only the exact frozen complete and Q1 archive bytes.
+- Removed network/REST acquisition from the v2 historical lock while retaining
+  full archive inventory, strict OHLCVT validation, no-precedence merge,
+  explicit gaps, atomic publication and independent hash re-lock.
+- Executed no real v2 dataset lock, replay, strategy or performance. Candidate
+  v2, optimization, PAPER, cloud and live authorization remain false.

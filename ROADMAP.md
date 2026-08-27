@@ -700,9 +700,13 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
   builder: full ZIP-member inventory, native 1440-minute pair extraction,
   exact duplicate/REST overlap, explicit gaps, atomic publication and
   independent hash re-lock without downloading market data.
-- [ ] Acquire, byte-inventory and lock the causal Kraken daily BTC, ETH and XRP
-  dataset with archive hashes, quarterly updates, exact same-venue REST
-  overlap, explicit gaps and no strategy or performance execution.
+- [x] Execute and close the v1 archive/REST acquisition path without
+  publication: OHLC matched across 482 overlapping rows per asset, but volume
+  and trade-count equality failed, so REST stitching remained blocked.
+- [ ] Acquire, byte-inventory and lock the v2 archive-only Kraken daily BTC,
+  ETH and XRP dataset from the exact frozen complete and Q1 2026 ZIP bytes
+  through 2026-03-31, with explicit gaps and no network, strategy or
+  performance execution.
 - [x] Build a blinded sequential chart-replay component that records
   entry, skip and exit decisions before future bars are revealed.
 - [ ] Pre-register a small Crypto Capitulation-Volume Reversal v1 catalog only
@@ -715,4 +719,4 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
 - [ ] Evaluate crypto and equity sleeves independently before AI ranking,
   strategy combination or portfolio allocation is studied.
 
-External notification delivery and any real execution capability remain deferred. The completed twelve-hour, 24-hour and three-day gates are bounded infrastructure-endurance evidence, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization. First candidate v1, all eight standalone default screening variants, all three Alpha Development v2 variants and the exact four Trend Pullback Volume v1 variants are closed rejected configurations. The active boundary is the non-performance Kraken BTC/ETH/XRP daily acquisition and immutable data lock, followed by real blinded-replay review and later the equity point-in-time data audit—not Candidate v2, PAPER or live execution.
+External notification delivery and any real execution capability remain deferred. The completed twelve-hour, 24-hour and three-day gates are bounded infrastructure-endurance evidence, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization. First candidate v1, all eight standalone default screening variants, all three Alpha Development v2 variants and the exact four Trend Pullback Volume v1 variants are closed rejected configurations. The active boundary is the non-performance Kraken BTC/ETH/XRP archive-only v2 daily acquisition and immutable data lock, followed by real blinded-replay review and later the equity point-in-time data audit—not Candidate v2, PAPER or live execution.

@@ -1690,3 +1690,29 @@ written to a unique staging directory and atomically renamed only after all
 checks pass. `KrakenDailyDatasetLock` independently revalidates every published
 hash. This boundary can lock data provenance but cannot run replay, strategy,
 performance, PAPER, cloud or live execution.
+
+## Kraken Native Daily Archive-Only Dataset Lock Boundary v2
+
+The v1 acquisition path is preserved as a fail-closed source-equivalence
+result. Across 482 completed overlapping buckets for each asset, archive and
+REST OHLC matched exactly, while volume and trade-count equality failed
+extensively. V1 therefore produced no dataset and REST has no precedence,
+tolerance or permission to enter the v2 historical lock.
+
+`src/kraken_daily_dataset.py` now binds the upstream provider-audit hash and
+the exact v2 lock-protocol hash to dataset identity
+`kraken-spot-btc-eth-xrp-native-1d-20190101-20260401-archive-only-v2`.
+The production path accepts exactly the reviewed complete archive and Q1 2026
+quarterly update, in fixed order, with frozen filename, role, byte size and
+SHA-256 evidence. The final included bucket is 2026-03-31; the contract end is
+2026-04-01 exclusive.
+
+The existing archive inventory, Decimal OHLCVT parser, no-precedence duplicate
+merge, gap segmentation, canonical writer, staging promotion and independent
+hash lock remain controlling. The v2 build performs no network request and
+writes no REST evidence. Its manifest must state
+`OFFICIAL_OHLCVT_ARCHIVES_ONLY` and `network_requests_executed: false`.
+Production source identity is independently rechecked during lock loading.
+
+V2 changes data provenance only. Real replay, strategy, performance,
+optimization, Candidate v2, PAPER, cloud and live authorization remain false.

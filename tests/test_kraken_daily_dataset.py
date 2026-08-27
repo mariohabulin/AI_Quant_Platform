@@ -3,9 +3,9 @@ import hashlib
 import io
 import json
 import os
-from pathlib import Path
 import sys
 import zipfile
+from pathlib import Path
 
 import pytest
 
@@ -13,9 +13,12 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "s
 
 from kraken_daily_dataset import (
     ARCHIVE_COMPLETE_FILENAME,
+    ARCHIVE_Q1_2026_FILENAME,
     ASSET_ORDER,
     CANONICAL_COLUMN_ORDER,
     DATASET_ID,
+    FROZEN_ARCHIVE_SPECS,
+    LOCK_PROTOCOL_NORMALIZED_SHA256,
     PROVIDER_AUDIT_NORMALIZED_SHA256,
     RESEARCH_END_EXCLUSIVE,
     RESEARCH_START_INCLUSIVE,
@@ -24,15 +27,15 @@ from kraken_daily_dataset import (
     KrakenDailyDatasetContract,
     KrakenDailyDatasetLock,
     build_review_declaration,
+    load_lock_protocol,
     load_provider_audit,
     main,
     normalized_text_sha256,
 )
 
-
 ROOT = Path(__file__).resolve().parents[1]
 PROVIDER_AUDIT = ROOT / "BTC_ETH_XRP_PROVIDER_AND_HISTORICAL_AVAILABILITY_AUDIT_V1.md"
-LOCK_PROTOCOL = ROOT / "KRAKEN_BTC_ETH_XRP_DAILY_DATASET_LOCK_PROTOCOL_V1.md"
+LOCK_PROTOCOL = ROOT / "KRAKEN_BTC_ETH_XRP_DAILY_DATASET_LOCK_PROTOCOL_V2.md"
 
 
 PAIR_STEMS = {
@@ -73,26 +76,6 @@ def write_archive(path, rows_by_asset, extra_members=None):
     return path
 
 
-def rest_bytes(asset, committed_rows, current_row=None, errors=None):
-    key = {
-        "BTC-USD": "BTC/USD",
-        "ETH-USD": "ETH/USD",
-        "XRP-USD": "XRP/USD",
-    }[asset]
-
-    def rest_row(archive_row):
-        timestamp, open_, high, low, close, volume, trades = archive_row
-        return [timestamp, open_, high, low, close, close, volume, trades]
-
-    rows = [rest_row(value) for value in committed_rows]
-    rows.append(rest_row(current_row or row("2024-01-06", "999")))
-    payload = {
-        "error": errors or [],
-        "result": {key: rows, "last": rows[-1][0]},
-    }
-    return (json.dumps(payload, separators=(",", ":")) + "\n").encode("utf-8")
-
-
 def small_contract():
     return KrakenDailyDatasetContract(
         dataset_id="kraken-test-daily-v1",
@@ -117,19 +100,14 @@ def fixture_inputs(tmp_path, archive_rows):
     )
 
 
-def builder(tmp_path, archive_rows, rest_rows=None, **overrides):
+def builder(tmp_path, archive_rows, **overrides):
     inputs = fixture_inputs(tmp_path, archive_rows)
-    rest_rows = archive_rows if rest_rows is None else rest_rows
-
-    def request(asset, _since):
-        return rest_bytes(asset, rest_rows[asset])
 
     values = {
         "contract": small_contract(),
         "archive_inputs": inputs,
-        "rest_request_fn": request,
         "provider_audit_path": PROVIDER_AUDIT,
-        "retrieved_at": "2026-08-27T12:05:00Z",
+        "lock_protocol_path": LOCK_PROTOCOL,
     }
     values.update(overrides)
     return KrakenDailyDatasetBuilder(**values)
@@ -155,15 +133,19 @@ def test_production_contract_is_exact_and_non_performance():
     assert contract.start == RESEARCH_START_INCLUSIVE
     assert contract.end == RESEARCH_END_EXCLUSIVE
     assert contract.interval_minutes == 1440
-    assert contract.expected_daily_buckets == 2769
+    assert contract.expected_daily_buckets == 2647
+    assert contract.end == "2026-04-01T00:00:00Z"
+    assert "archive-only-v2" in contract.dataset_id
     assert contract.as_dict()["range_semantics"] == "START_INCLUSIVE_END_EXCLUSIVE"
 
 
 def test_review_declaration_authorizes_only_bounded_data_acquisition():
     declaration = build_review_declaration(PROVIDER_AUDIT)
 
-    assert declaration["status"] == "KRAKEN_DAILY_DATASET_BUILDER_REVIEWED_ACQUISITION_REQUIRED"
+    assert declaration["status"] == "KRAKEN_DAILY_ARCHIVE_ONLY_BUILDER_REVIEWED_LOCK_REQUIRED"
+    assert declaration["source_mode"] == "OFFICIAL_OHLCVT_ARCHIVES_ONLY"
     assert declaration["provider_audit_sha256_match"] is True
+    assert declaration["lock_protocol_sha256_match"] is True
     assert declaration["bounded_data_acquisition_review_eligible"] is True
     assert declaration["data_acquisition_executed"] is False
     assert declaration["byte_level_historical_bucket_inventory_completed"] is False
@@ -184,14 +166,20 @@ def test_review_cli_is_non_networked_and_reports_json(capsys):
 
 def test_protocol_and_project_documents_preserve_the_non_performance_boundary():
     protocol = LOCK_PROTOCOL.read_text(encoding="utf-8")
-    assert "BUILDER_REVIEWED_ACQUISITION_NOT_EXECUTED" in protocol
+    roadmap = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
+    assert "ARCHIVE_ONLY_BUILDER_REVIEWED_LOCK_NOT_EXECUTED" in protocol
     assert PROVIDER_AUDIT_NORMALIZED_SHA256 in protocol
-    assert "Q2 2026" in protocol
-    assert "did not contain" in protocol
+    assert LOCK_PROTOCOL_NORMALIZED_SHA256 == normalized_text_sha256(LOCK_PROTOCOL)
+    assert "REST_STITCHING_PROHIBITED" in protocol
+    assert "2026-04-01T00:00:00Z" in protocol
+    assert "2,647" in protocol
+    assert FROZEN_ARCHIVE_SPECS[ARCHIVE_COMPLETE_FILENAME]["sha256"] in protocol
+    assert FROZEN_ARCHIVE_SPECS[ARCHIVE_Q1_2026_FILENAME]["sha256"] in protocol
     assert "NO_TRADE_UNAVAILABLE" in protocol
     assert "real chart replay authorized: `false`" in protocol
     assert "performance evaluation executed: `false`" in protocol
     assert "live execution authorized: `false`" in protocol
+    assert "[ ] Acquire, byte-inventory and lock the v2 archive-only" in roadmap
 
     for name in ("VISION.md", "ROADMAP.md", "ARCHITECTURE.md", "CURRENT_MISSION.md", "LOG.md"):
         text = (ROOT / name).read_text(encoding="utf-8")
@@ -212,6 +200,16 @@ def test_provider_audit_is_hash_bound_and_tampering_fails(tmp_path):
     )
     with pytest.raises(RuntimeError, match="SHA256 mismatch"):
         load_provider_audit(changed)
+
+    _, protocol_digest = load_lock_protocol(LOCK_PROTOCOL)
+    assert protocol_digest == LOCK_PROTOCOL_NORMALIZED_SHA256
+    changed_protocol = tmp_path / "protocol.md"
+    changed_protocol.write_text(
+        LOCK_PROTOCOL.read_text(encoding="utf-8") + "\nchanged\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(RuntimeError, match="SHA256 mismatch"):
+        load_lock_protocol(changed_protocol)
 
 
 def test_contract_rejects_scope_or_alignment_changes():
@@ -248,9 +246,8 @@ def test_builder_requires_exactly_one_complete_archive(tmp_path):
         KrakenDailyDatasetBuilder(
             contract=small_contract(),
             archive_inputs=(ArchiveInput(source.path, "QUARTERLY_UPDATE", source.source_url, source.retrieved_at),),
-            rest_request_fn=lambda *_: b"{}",
             provider_audit_path=PROVIDER_AUDIT,
-            retrieved_at="2026-08-27T12:00:00Z",
+            lock_protocol_path=LOCK_PROTOCOL,
         )
 
 
@@ -330,9 +327,8 @@ def test_identical_archive_updates_merge_but_conflicts_fail(tmp_path):
     merged = KrakenDailyDatasetBuilder(
         contract=small_contract(),
         archive_inputs=(*frozen.archive_inputs, update),
-        rest_request_fn=frozen.rest_request_fn,
         provider_audit_path=PROVIDER_AUDIT,
-        retrieved_at="2026-08-27T12:05:00Z",
+        lock_protocol_path=LOCK_PROTOCOL,
     ).load_archive_rows()
     assert all(len(asset_rows) == 4 for asset_rows in merged["rows"].values())
     assert all(value == 2 for value in merged["equal_duplicates"].values())
@@ -345,86 +341,65 @@ def test_identical_archive_updates_merge_but_conflicts_fail(tmp_path):
         KrakenDailyDatasetBuilder(
             contract=small_contract(),
             archive_inputs=(*frozen.archive_inputs, update),
-            rest_request_fn=frozen.rest_request_fn,
             provider_audit_path=PROVIDER_AUDIT,
-            retrieved_at="2026-08-27T12:05:00Z",
+            lock_protocol_path=LOCK_PROTOCOL,
         ).load_archive_rows()
 
 
-def test_rest_current_bar_is_removed_and_raw_response_is_hashed(tmp_path):
+def test_production_contract_rejects_nonfrozen_archive_bytes(tmp_path):
     rows = base_rows()
-    frozen = builder(tmp_path, rows)
-
-    result = frozen.load_rest_rows("BTC-USD")
-
-    assert len(result["rows"]) == 4
-    assert unix("2024-01-06") not in result["rows"]
-    assert result["sha256"] == hashlib.sha256(result["raw_bytes"]).hexdigest()
-    assert result["uncommitted_last_bar_removed"] is True
-
-
-@pytest.mark.parametrize(
-    "payload,message",
-    [
-        (json.dumps({"error": ["EGeneral:Failure"], "result": {}}).encode(), "provider error"),
-        (b"not-json", "valid JSON"),
-        (json.dumps({"error": [], "result": {"last": 1}}).encode(), "one pair key"),
-    ],
-)
-def test_rest_parser_fails_closed_on_invalid_provider_response(tmp_path, payload, message):
-    rows = base_rows()
-    frozen = builder(tmp_path, rows, rest_request_fn=lambda *_: payload)
-    with pytest.raises(RuntimeError, match=message):
-        frozen.load_rest_rows("BTC-USD")
-
-
-def test_rest_pair_identity_cannot_be_swapped_between_assets(tmp_path):
-    rows = base_rows()
-    wrong = json.loads(rest_bytes("ETH-USD", rows["ETH-USD"]).decode("utf-8"))
-    frozen = builder(
-        tmp_path,
+    complete = write_archive(
+        tmp_path / ARCHIVE_COMPLETE_FILENAME,
         rows,
-        rest_request_fn=lambda *_: json.dumps(wrong).encode("utf-8"),
+    )
+    update = write_archive(
+        tmp_path / ARCHIVE_Q1_2026_FILENAME,
+        rows,
+    )
+    frozen = KrakenDailyDatasetBuilder(
+        archive_inputs=(
+            ArchiveInput(
+                complete,
+                "COMPLETE",
+                "https://drive.google.com/official-complete",
+                "2026-08-27T12:00:00Z",
+            ),
+            ArchiveInput(
+                update,
+                "QUARTERLY_UPDATE",
+                "https://drive.google.com/official-quarter",
+                "2026-08-27T12:01:00Z",
+            ),
+        ),
+        provider_audit_path=PROVIDER_AUDIT,
+        lock_protocol_path=LOCK_PROTOCOL,
     )
 
-    with pytest.raises(RuntimeError, match="pair identity mismatch.*BTC-USD"):
-        frozen.load_rest_rows("BTC-USD")
-
-
-def test_exact_archive_rest_overlap_is_required_for_every_asset(tmp_path):
-    rows = base_rows()
-    no_overlap = {
-        asset: [row("2024-01-05", "104")]
-        for asset in ASSET_ORDER
-    }
-    frozen = builder(tmp_path, rows, rest_rows=no_overlap)
-
-    with pytest.raises(RuntimeError, match="overlap.*BTC-USD"):
-        frozen.build(tmp_path / "out")
-
-
-def test_archive_rest_overlap_mismatch_writes_no_final_dataset(tmp_path):
-    rows = base_rows()
-    rest_rows = base_rows()
-    rest_rows["ETH-USD"][2] = row("2024-01-03", "999")
-    frozen = builder(tmp_path, rows, rest_rows=rest_rows)
-    output = tmp_path / "out"
-
-    with pytest.raises(RuntimeError, match="REST overlap mismatch.*ETH-USD"):
-        frozen.build(output)
-
-    assert not (output / small_contract().dataset_id).exists()
+    with pytest.raises(RuntimeError, match="Frozen archive byte evidence mismatch"):
+        frozen.inventory_archives()
 
 
 def test_build_locks_observed_rows_gaps_segments_hashes_and_safety_state(tmp_path):
     rows = base_rows()
     for asset in ASSET_ORDER:
         rows[asset].pop(1)
-    rest_rows = {
-        asset: [rows[asset][-1], row("2024-01-05", "104")]
-        for asset in ASSET_ORDER
-    }
-    frozen = builder(tmp_path, rows, rest_rows=rest_rows)
+    initial = builder(tmp_path, rows)
+    update_path = write_archive(
+        tmp_path / ARCHIVE_Q1_2026_FILENAME,
+        {asset: [row("2024-01-05", "104")] for asset in ASSET_ORDER},
+    )
+    update = ArchiveInput(
+        update_path,
+        "QUARTERLY_UPDATE",
+        "https://drive.google.com/official-quarter",
+        "2026-08-27T12:01:00Z",
+    )
+    frozen = KrakenDailyDatasetBuilder(
+        contract=small_contract(),
+        archive_inputs=(*initial.archive_inputs, update),
+        provider_audit_path=PROVIDER_AUDIT,
+        lock_protocol_path=LOCK_PROTOCOL,
+    )
 
     result = frozen.build(tmp_path / "out")
     final = result["dataset_path"]
@@ -439,12 +414,16 @@ def test_build_locks_observed_rows_gaps_segments_hashes_and_safety_state(tmp_pat
         f"{result['manifest_sha256']}  manifest.json\n"
     )
     assert manifest["provider_audit_sha256"] == PROVIDER_AUDIT_NORMALIZED_SHA256
+    assert manifest["lock_protocol_sha256"] == LOCK_PROTOCOL_NORMALIZED_SHA256
+    assert manifest["source_mode"] == "OFFICIAL_OHLCVT_ARCHIVES_ONLY"
+    assert manifest["network_requests_executed"] is False
     assert manifest["byte_level_historical_bucket_inventory_completed"] is True
     assert manifest["all_asset_dataset_locked"] is True
     assert manifest["real_chart_replay_authorized"] is False
     assert manifest["performance_evaluation_executed"] is False
     assert manifest["live_execution_authorized"] is False
-    assert manifest["archive_inventory"]["member_count"] == 5
+    assert manifest["archive_inventory"]["archive_count"] == 2
+    assert manifest["archive_inventory"]["member_count"] == 9
     assert (final / manifest["archive_inventory"]["file"]).exists()
 
     for asset in ASSET_ORDER:
@@ -454,8 +433,10 @@ def test_build_locks_observed_rows_gaps_segments_hashes_and_safety_state(tmp_pat
         assert evidence["missing_timestamps"] == ["2024-01-02T00:00:00Z"]
         assert evidence["missing_interval_trading_state"] == "NO_TRADE_UNAVAILABLE"
         assert len(evidence["continuous_segments"]) == 2
-        assert evidence["rest_overlap"]["exact_match"] is True
-        assert evidence["rest_overlap"]["row_count"] == 1
+        assert evidence["source_mode"] == "OFFICIAL_OHLCVT_ARCHIVES_ONLY"
+        assert len(evidence["archive_contributions"]) == 2
+        assert "rest_overlap" not in evidence
+        assert "rest_source" not in evidence
         canonical = final / evidence["file"]
         assert hashlib.sha256(canonical.read_bytes()).hexdigest() == evidence["sha256"]
         assert canonical.read_text(encoding="utf-8").splitlines()[0].split(",") == list(CANONICAL_COLUMN_ORDER)
@@ -464,11 +445,7 @@ def test_build_locks_observed_rows_gaps_segments_hashes_and_safety_state(tmp_pat
 
 def test_build_refuses_overwrite_and_lock_revalidates_every_hash(tmp_path):
     rows = base_rows()
-    rest_rows = {
-        asset: [rows[asset][-1], row("2024-01-05", "104")]
-        for asset in ASSET_ORDER
-    }
-    frozen = builder(tmp_path, rows, rest_rows=rest_rows)
+    frozen = builder(tmp_path, rows)
     result = frozen.build(tmp_path / "out")
 
     with pytest.raises(FileExistsError, match="Refusing to overwrite"):
@@ -477,6 +454,26 @@ def test_build_refuses_overwrite_and_lock_revalidates_every_hash(tmp_path):
     lock = KrakenDailyDatasetLock(small_contract()).lock(result["dataset_path"])
     assert lock.manifest_sha256 == result["manifest_sha256"]
     assert tuple(lock.assets) == ASSET_ORDER
+
+    manifest_path = result["dataset_path"] / "manifest.json"
+    sidecar_path = result["dataset_path"] / "manifest.sha256"
+    original_manifest = manifest_path.read_bytes()
+    original_sidecar = sidecar_path.read_bytes()
+    changed_manifest = json.loads(original_manifest)
+    changed_manifest["network_requests_executed"] = True
+    changed_bytes = (
+        json.dumps(changed_manifest, indent=2, sort_keys=True) + "\n"
+    ).encode("utf-8")
+    changed_digest = hashlib.sha256(changed_bytes).hexdigest()
+    manifest_path.write_bytes(changed_bytes)
+    sidecar_path.write_text(
+        f"{changed_digest}  manifest.json\n",
+        encoding="ascii",
+    )
+    with pytest.raises(ValueError, match="cannot contain network execution"):
+        KrakenDailyDatasetLock(small_contract()).lock(result["dataset_path"])
+    manifest_path.write_bytes(original_manifest)
+    sidecar_path.write_bytes(original_sidecar)
 
     target = result["dataset_path"] / lock.manifest["assets"]["XRP-USD"]["file"]
     target.write_bytes(target.read_bytes() + b"tampered")

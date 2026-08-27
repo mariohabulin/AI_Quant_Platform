@@ -2,30 +2,29 @@
 
 import argparse
 import csv
-from dataclasses import dataclass
-from datetime import datetime, timedelta, timezone
-from decimal import Decimal, InvalidOperation
 import hashlib
 import io
 import json
-from pathlib import Path
 import re
 import shutil
-import time
-from urllib.parse import urlencode
-from urllib.request import Request, urlopen
 import uuid
 import zipfile
+from dataclasses import dataclass
+from datetime import datetime, timedelta, timezone
+from decimal import Decimal, InvalidOperation
+from pathlib import Path
 
-
-DATASET_SCHEMA_VERSION = 1
-DATASET_ID = "kraken-spot-btc-eth-xrp-native-1d-20190101-20260801-v1"
+DATASET_SCHEMA_VERSION = 2
+DATASET_ID = (
+    "kraken-spot-btc-eth-xrp-native-1d-20190101-20260401-archive-only-v2"
+)
 ASSET_ORDER = ("BTC-USD", "ETH-USD", "XRP-USD")
 RESEARCH_START_INCLUSIVE = "2019-01-01T00:00:00Z"
-RESEARCH_END_EXCLUSIVE = "2026-08-01T00:00:00Z"
+RESEARCH_END_EXCLUSIVE = "2026-04-01T00:00:00Z"
 INTERVAL_MINUTES = 1440
 CANONICAL_COLUMN_ORDER = ("Date", "Open", "High", "Low", "Close", "Volume")
 ARCHIVE_COMPLETE_FILENAME = "Kraken_OHLCVT.zip"
+ARCHIVE_Q1_2026_FILENAME = "Kraken_OHLCVT_Q1_2026.zip"
 OFFICIAL_COMPLETE_ARCHIVE_URL = (
     "https://drive.google.com/file/d/1ptNqWYidLkhb2VAKuLCxmp2OXEfGO-AP/"
     "view?usp=sharing"
@@ -34,34 +33,45 @@ OFFICIAL_QUARTERLY_ARCHIVE_FOLDER_URL = (
     "https://drive.google.com/drive/folders/"
     "15RSlNuW_h0kVM8or8McOGOMfHeBFvFGI?usp=sharing"
 )
-KRAKEN_REST_OHLC_URL = "https://api.kraken.com/0/public/OHLC"
 PROVIDER_AUDIT_NORMALIZED_SHA256 = (
     "fc71ff88e11b5984ebf5168fdbe09446554f720fc3ec0241eef0839ca90b3fca"
+)
+LOCK_PROTOCOL_NORMALIZED_SHA256 = (
+    "814cd561e1869023832315050683665c142f3b216ae354d45019a28edcc6a05a"
 )
 DEFAULT_PROVIDER_AUDIT_PATH = Path(
     "BTC_ETH_XRP_PROVIDER_AND_HISTORICAL_AVAILABILITY_AUDIT_V1.md"
 )
+DEFAULT_LOCK_PROTOCOL_PATH = Path(
+    "KRAKEN_BTC_ETH_XRP_DAILY_DATASET_LOCK_PROTOCOL_V2.md"
+)
+FROZEN_ARCHIVE_SPECS = {
+    ARCHIVE_COMPLETE_FILENAME: {
+        "role": "COMPLETE",
+        "bytes": 7_885_068_519,
+        "sha256": "e6ab4a3d2fe3be99167607fa28f230a84a038ad3ea3348ef81dc4bffcabb758d",
+    },
+    ARCHIVE_Q1_2026_FILENAME: {
+        "role": "QUARTERLY_UPDATE",
+        "bytes": 545_431_093,
+        "sha256": "95b2fec056bbacdfb5426e859a756d269bb19ba31eac7ea9e814759dfccd77b1",
+    },
+}
 PAIR_METADATA = {
     "BTC-USD": {
         "provider_display_pair": "BTC/USD",
         "provider_legacy_pair": "XBT/USD",
         "archive_pair_stem": "XBTUSD",
-        "rest_pair": "XBTUSD",
-        "rest_response_key": "BTC/USD",
     },
     "ETH-USD": {
         "provider_display_pair": "ETH/USD",
         "provider_legacy_pair": "ETH/USD",
         "archive_pair_stem": "ETHUSD",
-        "rest_pair": "ETHUSD",
-        "rest_response_key": "ETH/USD",
     },
     "XRP-USD": {
         "provider_display_pair": "XRP/USD",
         "provider_legacy_pair": "XRP/USD",
         "archive_pair_stem": "XRPUSD",
-        "rest_pair": "XRPUSD",
-        "rest_response_key": "XRP/USD",
     },
 }
 
@@ -88,7 +98,7 @@ def _normalized_text_bytes(path):
     try:
         text = Path(path).read_text(encoding="utf-8")
     except (OSError, UnicodeError) as exc:
-        raise RuntimeError(f"Unable to read provider audit: {path}") from exc
+        raise RuntimeError(f"Unable to read contract document: {path}") from exc
     return text.replace("\r\n", "\n").replace("\r", "\n").encode("utf-8")
 
 
@@ -113,6 +123,27 @@ def load_provider_audit(path, expected_sha256=PROVIDER_AUDIT_NORMALIZED_SHA256):
     )
     if any(value not in text for value in required):
         raise RuntimeError("Provider audit required contract text is missing.")
+    return text, digest
+
+
+def load_lock_protocol(path, expected_sha256=LOCK_PROTOCOL_NORMALIZED_SHA256):
+    raw = _normalized_text_bytes(path)
+    digest = hashlib.sha256(raw).hexdigest()
+    if digest != expected_sha256:
+        raise RuntimeError(
+            f"Lock protocol SHA256 mismatch: {digest} != {expected_sha256}."
+        )
+    text = raw.decode("utf-8")
+    required = (
+        "Kraken BTC/ETH/XRP Daily Dataset Lock Protocol v2",
+        "ARCHIVE_ONLY_BUILDER_REVIEWED_LOCK_NOT_EXECUTED",
+        DATASET_ID,
+        "REST_STITCHING_PROHIBITED",
+        FROZEN_ARCHIVE_SPECS[ARCHIVE_COMPLETE_FILENAME]["sha256"],
+        FROZEN_ARCHIVE_SPECS[ARCHIVE_Q1_2026_FILENAME]["sha256"],
+    )
+    if any(value not in text for value in required):
+        raise RuntimeError("Lock protocol required contract text is missing.")
     return text, digest
 
 
@@ -243,11 +274,9 @@ def _canonical_decimal(value):
     return rendered
 
 
-def _validate_candle(values, *, source, rest=False):
-    expected = 8 if rest else 7
-    if not isinstance(values, (list, tuple)) or len(values) != expected:
-        label = "eight" if rest else "seven"
-        raise RuntimeError(f"{source} candle must contain exactly {label} columns.")
+def _validate_candle(values, *, source):
+    if not isinstance(values, (list, tuple)) or len(values) != 7:
+        raise RuntimeError(f"{source} candle must contain exactly seven columns.")
     try:
         timestamp = int(values[0])
     except (TypeError, ValueError) as exc:
@@ -258,11 +287,9 @@ def _validate_candle(values, *, source, rest=False):
     high = _decimal(values[2], "High")
     low = _decimal(values[3], "Low")
     close = _decimal(values[4], "Close")
-    volume_index = 6 if rest else 5
-    trades_index = 7 if rest else 6
-    volume = _decimal(values[volume_index], "Volume")
+    volume = _decimal(values[5], "Volume")
     try:
-        trades = int(values[trades_index])
+        trades = int(values[6])
     except (TypeError, ValueError) as exc:
         raise RuntimeError(f"{source} candle trade count is invalid.") from exc
     if min(open_, high, low, close) <= 0:
@@ -322,15 +349,23 @@ def _segments(observed_timestamps):
     return result
 
 
-def build_review_declaration(provider_audit_path=DEFAULT_PROVIDER_AUDIT_PATH):
+def build_review_declaration(
+    provider_audit_path=DEFAULT_PROVIDER_AUDIT_PATH,
+    lock_protocol_path=DEFAULT_LOCK_PROTOCOL_PATH,
+):
     _, audit_digest = load_provider_audit(provider_audit_path)
+    _, protocol_digest = load_lock_protocol(lock_protocol_path)
     return {
         "schema_version": DATASET_SCHEMA_VERSION,
         "dataset_id": DATASET_ID,
-        "status": "KRAKEN_DAILY_DATASET_BUILDER_REVIEWED_ACQUISITION_REQUIRED",
+        "status": "KRAKEN_DAILY_ARCHIVE_ONLY_BUILDER_REVIEWED_LOCK_REQUIRED",
         "provider": "Kraken Spot",
+        "source_mode": "OFFICIAL_OHLCVT_ARCHIVES_ONLY",
         "provider_audit_sha256_match": (
             audit_digest == PROVIDER_AUDIT_NORMALIZED_SHA256
+        ),
+        "lock_protocol_sha256_match": (
+            protocol_digest == LOCK_PROTOCOL_NORMALIZED_SHA256
         ),
         "bounded_data_acquisition_review_eligible": True,
         "data_acquisition_executed": False,
@@ -349,17 +384,36 @@ def build_review_declaration(provider_audit_path=DEFAULT_PROVIDER_AUDIT_PATH):
     }
 
 
+def _validate_frozen_archive_evidence(contract, archive_evidence):
+    if contract != KrakenDailyDatasetContract():
+        return
+    expected_names = tuple(FROZEN_ARCHIVE_SPECS)
+    observed_names = tuple(item["filename"] for item in archive_evidence)
+    if observed_names != expected_names:
+        raise RuntimeError(
+            "Production archive order/identity mismatch: "
+            f"{observed_names} != {expected_names}."
+        )
+    for evidence in archive_evidence:
+        expected = FROZEN_ARCHIVE_SPECS[evidence["filename"]]
+        for field in ("role", "bytes", "sha256"):
+            if evidence[field] != expected[field]:
+                raise RuntimeError(
+                    f"Frozen archive byte evidence mismatch for "
+                    f"{evidence['filename']} field {field}."
+                )
+
+
 class KrakenDailyDatasetBuilder:
-    """Inventory official archives, verify REST overlap and publish one lock."""
+    """Inventory exact official archives and publish one immutable lock."""
 
     def __init__(
         self,
         *,
         contract=None,
         archive_inputs,
-        rest_request_fn,
         provider_audit_path=DEFAULT_PROVIDER_AUDIT_PATH,
-        retrieved_at,
+        lock_protocol_path=DEFAULT_LOCK_PROTOCOL_PATH,
     ):
         self.contract = contract or KrakenDailyDatasetContract()
         if not isinstance(self.contract, KrakenDailyDatasetContract):
@@ -371,13 +425,10 @@ class KrakenDailyDatasetBuilder:
             raise TypeError("Archive inputs must contain ArchiveInput values.")
         if sum(value.role == "COMPLETE" for value in self.archive_inputs) != 1:
             raise ValueError("Acquisition requires exactly one COMPLETE archive.")
-        if not callable(rest_request_fn):
-            raise TypeError("REST request function must be callable.")
-        self.rest_request_fn = rest_request_fn
         self.provider_audit_path = Path(provider_audit_path)
         _, self.provider_audit_sha256 = load_provider_audit(self.provider_audit_path)
-        _parse_utc(retrieved_at, "REST retrieval time")
-        self.retrieved_at = retrieved_at
+        self.lock_protocol_path = Path(lock_protocol_path)
+        _, self.lock_protocol_sha256 = load_lock_protocol(self.lock_protocol_path)
         self._inventory_cache = None
 
     def inventory_archives(self):
@@ -447,6 +498,7 @@ class KrakenDailyDatasetBuilder:
                     "members": members,
                 }
             )
+        _validate_frozen_archive_evidence(self.contract, archive_evidence)
         inventory = {
             "schema_version": 1,
             "inventory_scope": "EVERY_ARCHIVE_MEMBER_BEFORE_SELECTION",
@@ -459,29 +511,31 @@ class KrakenDailyDatasetBuilder:
     def _read_archive_member(self, source, member_name, asset):
         rows = {}
         try:
-            with zipfile.ZipFile(source.path) as archive:
-                with archive.open(member_name) as raw:
-                    wrapper = io.TextIOWrapper(raw, encoding="utf-8", newline="")
-                    for row_number, values in enumerate(csv.reader(wrapper), start=1):
-                        if not values:
-                            continue
-                        candle = _validate_candle(
-                            values,
-                            source=f"{source.path.name}:{member_name}:{row_number}",
-                        )
-                        if candle.timestamp in rows:
-                            if rows[candle.timestamp].comparable != candle.comparable:
-                                raise RuntimeError(
-                                    f"Conflicting duplicate inside {source.path.name} "
-                                    f"for {asset} at {_iso_from_unix(candle.timestamp)}."
-                                )
-                            continue
-                        if (
-                            self.contract.start_unix
-                            <= candle.timestamp
-                            < self.contract.end_unix
-                        ):
-                            rows[candle.timestamp] = candle
+            with (
+                zipfile.ZipFile(source.path) as archive,
+                archive.open(member_name) as raw,
+                io.TextIOWrapper(raw, encoding="utf-8", newline="") as wrapper,
+            ):
+                for row_number, values in enumerate(csv.reader(wrapper), start=1):
+                    if not values:
+                        continue
+                    candle = _validate_candle(
+                        values,
+                        source=f"{source.path.name}:{member_name}:{row_number}",
+                    )
+                    if candle.timestamp in rows:
+                        if rows[candle.timestamp].comparable != candle.comparable:
+                            raise RuntimeError(
+                                f"Conflicting duplicate inside {source.path.name} "
+                                f"for {asset} at {_iso_from_unix(candle.timestamp)}."
+                            )
+                        continue
+                    if (
+                        self.contract.start_unix
+                        <= candle.timestamp
+                        < self.contract.end_unix
+                    ):
+                        rows[candle.timestamp] = candle
         except (OSError, UnicodeError, csv.Error, zipfile.BadZipFile) as exc:
             raise RuntimeError(
                 f"Unable to read {asset} native daily archive member."
@@ -529,73 +583,6 @@ class KrakenDailyDatasetBuilder:
             "contributions": contributions,
         }
 
-    def load_rest_rows(self, asset):
-        if asset not in ASSET_ORDER:
-            raise ValueError("Asset is outside the frozen contract.")
-        since = max(
-            self.contract.start_unix,
-            self.contract.end_unix - (720 * 86400),
-        )
-        try:
-            raw = self.rest_request_fn(asset, since)
-        except Exception as exc:
-            raise RuntimeError(f"Kraken REST request failed for {asset}.") from exc
-        if isinstance(raw, str):
-            raw = raw.encode("utf-8")
-        if not isinstance(raw, bytes):
-            raise RuntimeError("Kraken REST response must be raw bytes.")
-        try:
-            payload = json.loads(raw.decode("utf-8"))
-        except (UnicodeError, json.JSONDecodeError) as exc:
-            raise RuntimeError("Kraken REST response is not valid JSON.") from exc
-        if not isinstance(payload, dict) or not isinstance(payload.get("error"), list):
-            raise RuntimeError("Kraken REST response envelope is invalid.")
-        if payload["error"]:
-            raise RuntimeError(f"Kraken REST provider error for {asset}: {payload['error']}")
-        result = payload.get("result")
-        if not isinstance(result, dict):
-            raise RuntimeError("Kraken REST result is invalid.")
-        pair_keys = [key for key in result if key != "last"]
-        if len(pair_keys) != 1:
-            raise RuntimeError("Kraken REST result must contain exactly one pair key.")
-        expected_key = PAIR_METADATA[asset]["rest_response_key"]
-        if pair_keys[0] != expected_key:
-            raise RuntimeError(
-                f"Kraken REST pair identity mismatch for {asset}: "
-                f"{pair_keys[0]} != {expected_key}."
-            )
-        values = result[pair_keys[0]]
-        if not isinstance(values, list) or not values:
-            raise RuntimeError("Kraken REST result contains no current-bar boundary.")
-        committed = values[:-1]
-        rows = {}
-        for index, value in enumerate(committed, start=1):
-            candle = _validate_candle(
-                value,
-                source=f"Kraken REST {asset} row {index}",
-                rest=True,
-            )
-            if (
-                self.contract.start_unix
-                <= candle.timestamp
-                < self.contract.end_unix
-            ):
-                previous = rows.get(candle.timestamp)
-                if previous is not None and previous.comparable != candle.comparable:
-                    raise RuntimeError(
-                        f"Conflicting duplicate in Kraken REST for {asset} at "
-                        f"{_iso_from_unix(candle.timestamp)}."
-                    )
-                rows[candle.timestamp] = candle
-        return {
-            "rows": rows,
-            "raw_bytes": raw,
-            "sha256": hashlib.sha256(raw).hexdigest(),
-            "response_pair_key": pair_keys[0],
-            "request_since": since,
-            "uncommitted_last_bar_removed": True,
-        }
-
     @staticmethod
     def _canonical_csv_bytes(rows):
         output = io.StringIO(newline="")
@@ -631,31 +618,11 @@ class KrakenDailyDatasetBuilder:
 
         inventory, _ = self.inventory_archives()
         archive_result = self.load_archive_rows()
-        rest_results = {
-            asset: self.load_rest_rows(asset) for asset in ASSET_ORDER
-        }
         merged_assets = {}
         asset_evidence = {}
         for asset in ASSET_ORDER:
             archive_rows = archive_result["rows"][asset]
-            rest_rows = rest_results[asset]["rows"]
-            overlap = sorted(set(archive_rows).intersection(rest_rows))
-            if not overlap:
-                raise RuntimeError(
-                    f"No exact archive/REST overlap exists for {asset}; data lock blocked."
-                )
-            for timestamp in overlap:
-                if (
-                    archive_rows[timestamp].comparable
-                    != rest_rows[timestamp].comparable
-                ):
-                    raise RuntimeError(
-                        f"REST overlap mismatch for {asset} at "
-                        f"{_iso_from_unix(timestamp)}; data lock blocked."
-                    )
             merged = dict(archive_rows)
-            for timestamp, candle in rest_rows.items():
-                merged.setdefault(timestamp, candle)
             expected = list(
                 range(
                     self.contract.start_unix,
@@ -685,12 +652,7 @@ class KrakenDailyDatasetBuilder:
                     "equal_duplicates"
                 ][asset],
                 "archive_contributions": archive_result["contributions"][asset],
-                "rest_overlap": {
-                    "start": _iso_from_unix(overlap[0]),
-                    "end": _iso_from_unix(overlap[-1]),
-                    "row_count": len(overlap),
-                    "exact_match": True,
-                },
+                "source_mode": "OFFICIAL_OHLCVT_ARCHIVES_ONLY",
             }
 
         staging = output_root / f".{self.contract.dataset_id}.staging-{uuid.uuid4().hex}"
@@ -709,33 +671,16 @@ class KrakenDailyDatasetBuilder:
                 asset_evidence[asset]["bytes"] = len(payload)
                 asset_evidence[asset]["sha256"] = hashlib.sha256(payload).hexdigest()
 
-                rest_filename = (
-                    "source_evidence/kraken_rest_"
-                    f"{asset.lower().replace('-', '_')}_1d.json"
-                )
-                _write_new(staging / rest_filename, rest_results[asset]["raw_bytes"])
-                asset_evidence[asset]["rest_source"] = {
-                    "url": KRAKEN_REST_OHLC_URL,
-                    "pair_parameter": PAIR_METADATA[asset]["rest_pair"],
-                    "asset_version": 1,
-                    "interval_minutes": INTERVAL_MINUTES,
-                    "since": rest_results[asset]["request_since"],
-                    "retrieved_at": self.retrieved_at,
-                    "raw_response_file": rest_filename,
-                    "raw_response_bytes": len(rest_results[asset]["raw_bytes"]),
-                    "raw_response_sha256": rest_results[asset]["sha256"],
-                    "response_pair_key": rest_results[asset]["response_pair_key"],
-                    "uncommitted_last_bar_removed": True,
-                }
-
             manifest = {
                 "schema_version": DATASET_SCHEMA_VERSION,
                 "dataset_id": self.contract.dataset_id,
                 "status": "LOCKED_NON_PERFORMANCE_DATASET",
                 "contract": self.contract.as_dict(),
                 "provider_audit_sha256": self.provider_audit_sha256,
+                "lock_protocol_sha256": self.lock_protocol_sha256,
                 "provider": "Kraken Spot",
                 "provider_identity": "ONE_USD_SPOT_VENUE",
+                "source_mode": "OFFICIAL_OHLCVT_ARCHIVES_ONLY",
                 "asset_order": list(ASSET_ORDER),
                 "canonical_columns": list(CANONICAL_COLUMN_ORDER),
                 "canonicalization": {
@@ -763,7 +708,7 @@ class KrakenDailyDatasetBuilder:
                 },
                 "assets": asset_evidence,
                 "data_acquisition_executed": True,
-                "network_requests_executed": True,
+                "network_requests_executed": False,
                 "byte_level_historical_bucket_inventory_completed": True,
                 "all_asset_dataset_locked": True,
                 "real_chart_replay_authorized": False,
@@ -835,10 +780,24 @@ class KrakenDailyDatasetLock:
             raise ValueError("Manifest SHA-256 sidecar mismatch.")
         if manifest_bytes != _json_bytes(manifest):
             raise ValueError("Manifest bytes are not canonical.")
+        if manifest.get("schema_version") != DATASET_SCHEMA_VERSION:
+            raise ValueError("Locked dataset schema-version mismatch.")
+        if manifest.get("dataset_id") != self.contract.dataset_id:
+            raise ValueError("Locked dataset identity mismatch.")
         if manifest.get("contract") != self.contract.as_dict():
             raise ValueError("Locked dataset contract mismatch.")
         if manifest.get("provider_audit_sha256") != PROVIDER_AUDIT_NORMALIZED_SHA256:
             raise ValueError("Locked provider audit hash mismatch.")
+        if manifest.get("lock_protocol_sha256") != LOCK_PROTOCOL_NORMALIZED_SHA256:
+            raise ValueError("Locked archive-only protocol hash mismatch.")
+        if manifest.get("source_mode") != "OFFICIAL_OHLCVT_ARCHIVES_ONLY":
+            raise ValueError("Locked source mode mismatch.")
+        if manifest.get("network_requests_executed") is not False:
+            raise ValueError("Archive-only lock cannot contain network execution.")
+        _validate_frozen_archive_evidence(
+            self.contract,
+            manifest.get("source_archives", []),
+        )
         inventory = manifest.get("archive_inventory", {})
         self._verify_sha(dataset_path / inventory["file"], inventory["sha256"])
         assets = {}
@@ -854,46 +813,8 @@ class KrakenDailyDatasetLock:
                 raise ValueError(f"Canonical column mismatch for {asset}.")
             if len(rows) - 1 != evidence["observed_rows"]:
                 raise ValueError(f"Observed row-count mismatch for {asset}.")
-            rest = evidence["rest_source"]
-            self._verify_sha(
-                dataset_path / rest["raw_response_file"],
-                rest["raw_response_sha256"],
-            )
             assets[asset] = rows[1:]
         return LockedKrakenDailyDataset(self.contract, manifest, digest, assets)
-
-
-def _network_requester(max_attempts=3, timeout_seconds=30.0, sleep_fn=time.sleep):
-    if isinstance(max_attempts, bool) or not isinstance(max_attempts, int):
-        raise TypeError("Max attempts must be an integer.")
-    if max_attempts < 1:
-        raise ValueError("Max attempts must be positive.")
-
-    def request(asset, since):
-        params = urlencode(
-            {
-                "pair": PAIR_METADATA[asset]["rest_pair"],
-                "interval": INTERVAL_MINUTES,
-                "since": since,
-                "assetVersion": 1,
-            }
-        )
-        url = f"{KRAKEN_REST_OHLC_URL}?{params}"
-        error = None
-        for attempt in range(1, max_attempts + 1):
-            try:
-                req = Request(url, headers={"User-Agent": "AI-Quant-Platform/1"})
-                with urlopen(req, timeout=timeout_seconds) as response:
-                    return response.read()
-            except OSError as exc:
-                error = exc
-                if attempt < max_attempts:
-                    sleep_fn(float(attempt))
-        raise RuntimeError(
-            f"Kraken REST request failed after {max_attempts} attempts."
-        ) from error
-
-    return request
 
 
 def _archive_input_from_path(path, retrieved_at):
@@ -920,12 +841,16 @@ def _archive_input_from_path(path, retrieved_at):
 def _parser():
     parser = argparse.ArgumentParser(
         description=(
-            "Review or execute the bounded Kraken BTC/ETH/XRP daily data lock."
+            "Review or execute the archive-only Kraken BTC/ETH/XRP daily lock."
         )
     )
     parser.add_argument(
         "--provider-audit",
         default=str(DEFAULT_PROVIDER_AUDIT_PATH),
+    )
+    parser.add_argument(
+        "--lock-protocol",
+        default=str(DEFAULT_LOCK_PROTOCOL_PATH),
     )
     parser.add_argument("--archive", action="append", default=[])
     parser.add_argument("--output-root")
@@ -939,7 +864,10 @@ def main(argv=None):
     if not args.archive and args.output_root is None and args.retrieved_at is None:
         print(
             json.dumps(
-                build_review_declaration(args.provider_audit),
+                build_review_declaration(
+                    args.provider_audit,
+                    args.lock_protocol,
+                ),
                 indent=2,
                 sort_keys=True,
             )
@@ -955,9 +883,8 @@ def main(argv=None):
     )
     result = KrakenDailyDatasetBuilder(
         archive_inputs=archive_inputs,
-        rest_request_fn=_network_requester(),
         provider_audit_path=args.provider_audit,
-        retrieved_at=retrieved_at,
+        lock_protocol_path=args.lock_protocol,
     ).build(args.output_root)
     print(f"dataset_status={result['status']}")
     print(f"dataset_path={result['dataset_path']}")
