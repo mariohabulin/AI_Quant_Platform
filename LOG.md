@@ -2520,3 +2520,24 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
   explicit gaps, atomic publication and independent hash re-lock.
 - Executed no real v2 dataset lock, replay, strategy or performance. Candidate
   v2, optimization, PAPER, cloud and live authorization remain false.
+
+## 2026-08-27 — Kraken Daily Archive-Only Dataset Lock v2 Completed
+
+- Reproduced 19/19 focused and 1,173/1,173 complete Windows tests before the
+  production attempt and integrated commit `9892ee5` on `main`.
+- Executed one fresh build from the exact frozen complete and Q1 2026 Kraken
+  ZIP bytes without a network request or REST artifact.
+- Inventoried 34,325 archive members and independently matched inventory
+  SHA-256
+  `cbfc0963b5966a5f94f97ff90a1bd52761167e9846515aad2abe7a85f27882b2`.
+- Published archive-only manifest SHA-256
+  `8c91b42f2bc0c16a0ef0c6b4373572ac53fbf7f5937d4ebbbe75a0d39483df1c`.
+- Locked 2,646 BTC rows with one explicit unavailable bucket on 2024-03-31,
+  all 2,647 ETH rows, and 2,645 XRP rows with explicit unavailable buckets on
+  2022-05-11 and 2022-05-12. No missing row was manufactured.
+- Independently revalidated the canonical manifest, sidecar, both contract
+  hashes, exact source evidence, archive inventory and all three CSV hashes;
+  result `INDEPENDENT_RELOCK_PASS`.
+- Retained only compact lock evidence in Git. Source ZIPs and dataset bytes
+  remain external. Real replay, strategy, performance, Candidate v2, PAPER,
+  cloud and live authorization remain false.

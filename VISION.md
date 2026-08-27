@@ -260,8 +260,10 @@ The Kraken acquisition boundary is byte-first and fail-closed. Official ZIP
 archives are hashed and fully inventoried before three native daily members are
 selected. The first archive/REST bridge proposal failed closed because recent
 REST volume and trade counts were not identical to the official archive even
-though OHLC matched. The active v2 dataset therefore uses only two exact frozen
+though OHLC matched. The locked v2 dataset therefore uses only two exact frozen
 official archives through 2026-03-31; REST cannot enter, repair or extend those
 historical bytes. Every unavailable day is preserved as a no-trade boundary,
 and no dataset becomes visible until all three assets, source evidence, gaps
-and canonical hashes pass one atomic lock.
+and canonical hashes pass one atomic lock. That lock and its independent
+revalidation are complete; real blinded-replay review remains a separate later
+authorization boundary.

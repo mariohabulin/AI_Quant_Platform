@@ -1714,5 +1714,17 @@ writes no REST evidence. Its manifest must state
 `OFFICIAL_OHLCVT_ARCHIVES_ONLY` and `network_requests_executed: false`.
 Production source identity is independently rechecked during lock loading.
 
+The completed Windows production attempt published manifest SHA-256
+`8c91b42f2bc0c16a0ef0c6b4373572ac53fbf7f5937d4ebbbe75a0d39483df1c`.
+The archive inventory contains 34,325 members and independently reproduced
+SHA-256
+`cbfc0963b5966a5f94f97ff90a1bd52761167e9846515aad2abe7a85f27882b2`.
+Canonical output retains 2,646 BTC rows with one explicit unavailable day,
+2,647 ETH rows without a gap, and 2,645 XRP rows with two explicit unavailable
+days. `KrakenDailyDatasetLock` independently revalidated the manifest,
+contract documents, source evidence, inventory and all three canonical hashes.
+The large source and dataset bytes remain external; Git retains only compact
+lock evidence.
+
 V2 changes data provenance only. Real replay, strategy, performance,
 optimization, Candidate v2, PAPER, cloud and live authorization remain false.

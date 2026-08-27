@@ -1401,22 +1401,25 @@ source boundary. No tolerance, field removal or precedence was introduced.
 REST stitching failed its frozen gate, staging was not promoted and no v1
 dataset, replay, strategy or performance evidence was published.
 
-### Kraken Daily Archive-Only Dataset Lock v2 — LOCAL PREPARATION
+### Kraken Daily Archive-Only Dataset Lock v2 — LOCKED AND INDEPENDENTLY REVALIDATED
 
-The replacement contract retains Kraken Spot and the exact three native daily
-pairs but narrows the unpublished dataset to official archive bytes through
-2026-03-31 inclusive (`2026-04-01` exclusive). It freezes the reviewed complete
-archive and official Q1 2026 update by filename, role, byte size and SHA-256.
-The Q1 members independently showed 90 rows per asset, exact January 1 through
-March 31 coverage, zero timestamp gaps, zero duplicates and zero schema
-failures.
+The exact frozen complete archive and Q1 2026 update produced archive-only
+dataset
+`kraken-spot-btc-eth-xrp-native-1d-20190101-20260401-archive-only-v2`.
+The atomic Windows build published manifest SHA-256
+`8c91b42f2bc0c16a0ef0c6b4373572ac53fbf7f5937d4ebbbe75a0d39483df1c`
+without a network request or REST artifact. Full member inventory completed for
+both source ZIPs and its independently reproduced SHA-256 is
+`cbfc0963b5966a5f94f97ff90a1bd52761167e9846515aad2abe7a85f27882b2`.
 
-V2 removes every REST request, overlap field and raw-response artifact from the
-historical lock. Existing byte inventory, strict OHLCVT validation,
-no-precedence archive merge, explicit missing-day segments, staging-first
-publication and independent hash verification remain intact. The upstream
-provider audit and exact v2 protocol are both hash bound.
+BTC contains 2,646 observed rows and preserves the unavailable
+`2024-03-31T00:00:00Z` bucket. ETH contains all 2,647 expected rows. XRP
+contains 2,645 observed rows and preserves unavailable buckets on
+`2022-05-11T00:00:00Z` and `2022-05-12T00:00:00Z`. Each canonical file hash
+matched its manifest, and `KrakenDailyDatasetLock` independently returned
+`INDEPENDENT_RELOCK_PASS` for the same manifest and row counts.
 
-The next boundary is Windows integration, focused/full regression and one
-fresh two-archive lock attempt. Real replay, strategy, performance,
-optimization, Candidate v2, PAPER, cloud and live authorization remain false.
+Only compact evidence is retained in Git; source ZIPs and the published
+dataset remain external. The next boundary is separate real blinded-replay
+review. Strategy, performance, optimization, Candidate v2, PAPER, cloud and
+live authorization remain false.

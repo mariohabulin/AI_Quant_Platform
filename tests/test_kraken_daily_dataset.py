@@ -36,6 +36,7 @@ from kraken_daily_dataset import (
 ROOT = Path(__file__).resolve().parents[1]
 PROVIDER_AUDIT = ROOT / "BTC_ETH_XRP_PROVIDER_AND_HISTORICAL_AVAILABILITY_AUDIT_V1.md"
 LOCK_PROTOCOL = ROOT / "KRAKEN_BTC_ETH_XRP_DAILY_DATASET_LOCK_PROTOCOL_V2.md"
+LOCK_EVIDENCE = ROOT / "KRAKEN_BTC_ETH_XRP_DAILY_DATASET_LOCK_EVIDENCE_V2.md"
 
 
 PAIR_STEMS = {
@@ -179,12 +180,31 @@ def test_protocol_and_project_documents_preserve_the_non_performance_boundary():
     assert "real chart replay authorized: `false`" in protocol
     assert "performance evaluation executed: `false`" in protocol
     assert "live execution authorized: `false`" in protocol
-    assert "[ ] Acquire, byte-inventory and lock the v2 archive-only" in roadmap
+    assert "[x] Acquire, byte-inventory and lock the v2 archive-only" in roadmap
 
     for name in ("VISION.md", "ROADMAP.md", "ARCHITECTURE.md", "CURRENT_MISSION.md", "LOG.md"):
         text = (ROOT / name).read_text(encoding="utf-8")
         assert "Kraken" in text
         assert "daily" in text.lower()
+
+
+def test_real_archive_only_lock_evidence_is_hash_bound_and_non_performance():
+    evidence = LOCK_EVIDENCE.read_text(encoding="utf-8")
+
+    assert normalized_text_sha256(LOCK_EVIDENCE) == (
+        "cd83822005525381024f0cd90130f34246ec609a90436c714b79633daed82184"
+    )
+    assert "LOCKED_NON_PERFORMANCE_DATASET_INDEPENDENTLY_REVALIDATED" in evidence
+    assert DATASET_ID in evidence
+    assert "8c91b42f2bc0c16a0ef0c6b4373572ac53fbf7f5937d4ebbbe75a0d39483df1c" in evidence
+    assert "cbfc0963b5966a5f94f97ff90a1bd52761167e9846515aad2abe7a85f27882b2" in evidence
+    assert "2024-03-31T00:00:00Z" in evidence
+    assert "2022-05-11T00:00:00Z" in evidence
+    assert "2022-05-12T00:00:00Z" in evidence
+    assert "network requests executed: `false`" in evidence
+    assert "INDEPENDENT_RELOCK_PASS" in evidence
+    assert "performance evaluation" in evidence
+    assert "remain unauthorized and unexecuted" in evidence
 
 
 def test_provider_audit_is_hash_bound_and_tampering_fails(tmp_path):

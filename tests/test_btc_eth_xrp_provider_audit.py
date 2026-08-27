@@ -186,7 +186,7 @@ def test_audit_document_cites_only_reviewed_provider_owned_domains():
     assert "cryptocompare" not in text.lower()
 
 
-def test_project_documents_point_to_kraken_acquisition_as_next_boundary():
+def test_project_documents_record_kraken_acquisition_progression():
     vision = (ROOT / "VISION.md").read_text(encoding="utf-8")
     roadmap = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
     architecture = (ROOT / "ARCHITECTURE.md").read_text(encoding="utf-8")
@@ -195,7 +195,7 @@ def test_project_documents_point_to_kraken_acquisition_as_next_boundary():
 
     assert "Venue-Bound Crypto Evidence" in vision
     assert "[x] Audit official provider/history evidence" in roadmap
-    assert "[ ] Acquire, byte-inventory and lock" in roadmap
+    assert "[x] Acquire, byte-inventory and lock" in roadmap
     assert "Provider and Historical Availability Boundary v1" in architecture
     assert "fail-closed Kraken daily acquisition" in mission
     assert "Provider and Historical Availability Audit v1" in log
