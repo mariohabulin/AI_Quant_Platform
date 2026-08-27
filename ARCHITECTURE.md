@@ -1665,3 +1665,28 @@ causally within each asset; raw cross-asset and cross-venue volume comparison is
 prohibited. Current fee observations document acquisition context only and do
 not freeze a future execution profile. Exact archive coverage, liquidity,
 spread, slippage and performance remain later gates.
+
+## Kraken Native Daily Dataset Lock Boundary v1
+
+`src/kraken_daily_dataset.py` binds the provider-audit hash to one exact
+Kraken Spot dataset contract for BTC-USD, ETH-USD and XRP-USD over the
+2019-01-01 inclusive through 2026-08-01 exclusive UTC daily window. It accepts
+one official complete archive plus only reviewed quarterly updates, hashes each
+ZIP and inventories every member before selecting exactly one 1440-minute file
+for `XBTUSD`, `ETHUSD` and `XRPUSD`.
+
+Archive rows retain Decimal OHLCV precision and trade counts during validation.
+Equal duplicates across official inputs are audited; conflicting duplicates
+have no precedence and block the lock. Kraken REST supplies only a recent
+completed-bar bridge. Its uncommitted final row is removed, its raw response is
+hashed, and every asset requires at least one exactly equal archive/REST bucket
+before REST-only additions can enter the canonical window.
+
+The publisher calculates the full expected UTC grid without manufacturing it.
+Missing timestamps are listed and split into continuous availability segments;
+canonical CSV output contains observed provider rows only. Archive inventory,
+raw REST evidence, three canonical assets, the manifest and its sidecar are
+written to a unique staging directory and atomically renamed only after all
+checks pass. `KrakenDailyDatasetLock` independently revalidates every published
+hash. This boundary can lock data provenance but cannot run replay, strategy,
+performance, PAPER, cloud or live execution.

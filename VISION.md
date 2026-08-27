@@ -255,3 +255,10 @@ Cross-venue data may provide independent robustness evidence, but raw volumes
 are never merged and one venue cannot silently fill another venue's suspension.
 This preserves the meaning of capitulation volume before the system attempts to
 discover or claim an edge.
+
+The Kraken acquisition boundary is byte-first and fail-closed. Official ZIP
+archives are hashed and fully inventoried before three native daily members are
+selected. Recent REST data can bridge only after exact same-venue completed-bar
+overlap; it cannot substitute for historical archives. Every unavailable day is
+preserved as a no-trade boundary, and no dataset becomes visible until all three
+assets, source evidence, gaps and canonical hashes pass one atomic lock.

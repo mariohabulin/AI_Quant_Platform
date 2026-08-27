@@ -2469,3 +2469,31 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - Executed no network acquisition, byte-level historical inventory, dataset
   lock, real replay, strategy or performance. Candidate v2, PAPER, cloud and
   live authorization remain false.
+
+## 2026-08-27 — Kraken BTC/ETH/XRP Daily Dataset Lock Protocol v1 (Local Preparation)
+
+- Bound the new builder to provider-audit normalized SHA-256
+  `fc71ff88e11b5984ebf5168fdbe09446554f720fc3ec0241eef0839ca90b3fca`.
+- Froze one Kraken Spot native-daily dataset identity for BTC-USD, ETH-USD and
+  XRP-USD across the exact 2,769-bucket 2019-01-01/2026-08-01 UTC window.
+- Required one official complete archive and accepted only explicitly reviewed
+  quarterly-update filenames and HTTPS source provenance.
+- Added full ZIP-member inventory, source byte hashes, encryption/duplicate
+  rejection and exact selection of the three 1440-minute archive members.
+- Added strict UTC, schema, finite-value, price-geometry, base-volume and
+  trade-count validation without synthesizing an expected daily row.
+- Merged official inputs only when duplicate completed rows are exactly equal;
+  any conflict has no precedence and blocks the lock.
+- Added a bounded Kraken REST bridge that removes the final uncommitted candle,
+  retains raw response bytes/hashes and requires exact archive overlap for all
+  three assets before appending recent completed rows.
+- Added complete gap lists, continuous availability segments and the explicit
+  `NO_TRADE_UNAVAILABLE` state without forward-fill or zero-volume insertion.
+- Added staging-first atomic publication of three canonical assets, archive
+  inventory, raw REST evidence, manifest and SHA sidecar plus independent lock
+  revalidation.
+- Reviewed the public quarterly directory through `Q1 2026`; observed no
+  `Q2 2026` file and prohibited fabricated URLs or unofficial substitutes.
+- Executed no archive download, REST request, real dataset lock, replay,
+  strategy or performance. Candidate v2, optimization, PAPER, cloud and live
+  authorization remain false.

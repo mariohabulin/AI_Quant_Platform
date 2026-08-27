@@ -696,6 +696,10 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
 - [x] Audit official provider/history evidence, reject Coinbase as the common
   three-asset source because of its 2021–2023 XRP suspension, and select
   Kraken's official spot OHLCVT archive path for BTC/USD, ETH/USD and XRP/USD.
+- [x] Implement and locally validate a non-performance Kraken daily lock
+  builder: full ZIP-member inventory, native 1440-minute pair extraction,
+  exact duplicate/REST overlap, explicit gaps, atomic publication and
+  independent hash re-lock without downloading market data.
 - [ ] Acquire, byte-inventory and lock the causal Kraken daily BTC, ETH and XRP
   dataset with archive hashes, quarterly updates, exact same-venue REST
   overlap, explicit gaps and no strategy or performance execution.

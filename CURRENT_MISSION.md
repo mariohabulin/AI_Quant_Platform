@@ -1361,3 +1361,28 @@ downloaded or locked and no real replay, strategy or performance has executed.
 The active next mission is a fail-closed Kraken daily acquisition and immutable
 three-asset manifest. Candidate v2, optimization, PAPER, cloud and live
 authorization remain false.
+
+### Kraken BTC/ETH/XRP Daily Dataset Lock Protocol v1 — LOCAL PREPARATION
+
+The fail-closed acquisition implementation is now prepared against the exact
+provider-audit hash. It accepts one official complete Kraken OHLCVT ZIP and only
+reviewed quarterly updates, hashes every source byte, inventories every archive
+member and selects exactly the native 1440-minute `XBTUSD`, `ETHUSD` and
+`XRPUSD` members.
+
+Archive duplicates have no silent precedence. Equal rows are recorded;
+conflicts block publication. The bounded REST bridge removes its final
+uncommitted candle, preserves raw-response hashes and must match at least one
+completed archive bucket exactly for each asset. Missing UTC days remain
+explicit `NO_TRADE_UNAVAILABLE` gaps and split continuous replay segments.
+
+All evidence is written to staging first. Only a completely valid three-asset
+manifest, archive inventory, raw REST evidence and canonical files are promoted
+atomically, and an independent lock revalidates every hash. The currently
+published quarterly directory was reviewed through `Q1 2026`; no nonexistent
+`Q2 2026` URL or unofficial substitute is assumed.
+
+This local preparation performs no download or REST request and locks no real
+dataset. After Windows integration, the active next action is the bounded
+official Kraken acquisition. Real replay, strategy, performance, Candidate v2,
+optimization, PAPER, cloud and live authorization remain false.
