@@ -1760,6 +1760,16 @@ sequence, the full chain and all non-performance flags. Episodes start flat
 and never carry positions; a terminal long remains explicitly unresolved
 rather than receiving a synthetic exit.
 
-This boundary prepares methodology and preflight only. It creates no real
-participant view, strategy, P&L, ranking, Candidate v2, PAPER, cloud or live
-authorization.
+The one Windows preflight independently re-locked the exact external v2
+manifest and reproduced availability segments of `1916, 730` BTC rows, `2647`
+ETH rows and `1226, 1419` XRP rows. Their price-independent candidate counts
+were 2,470, 2,559 and 2,469. The selected one-per-asset schedule is bound by
+SHA-256
+`3e805044356777f0bdfa2901db267d714c1e14d11415dd4686acaaaed92f1042`.
+Preflight output exposed no selected timestamp, persisted no schedule, built no
+participant view and executed no network request or chart replay.
+
+This boundary now records methodology and sealed-preflight evidence only. It
+creates no strategy, P&L, ranking, Candidate v2, PAPER, cloud or live
+authorization. One supervised real reconstruction requires a separate review
+and explicit authorization.

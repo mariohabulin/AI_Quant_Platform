@@ -1424,7 +1424,7 @@ dataset remain external. The next boundary is separate real blinded-replay
 review. Strategy, performance, optimization, Candidate v2, PAPER, cloud and
 live authorization remain false.
 
-### Kraken BTC/ETH/XRP Bounded Blinded Replay Review v1 — LOCAL PREPARATION
+### Kraken BTC/ETH/XRP Bounded Blinded Replay Review v1 — SEALED PREFLIGHT PASS
 
 The causal replay primitive was re-audited against the locked Kraken dataset
 boundary. Its public view already exposes only the trailing completed 30-bar
@@ -1449,7 +1449,19 @@ revalidates every file and the complete chain. Every episode starts flat; a
 terminal long state remains `OPEN_POSITION_UNRESOLVED_AT_EPISODE_END` without a
 synthetic exit, position carry or performance result.
 
-This preparation executes no real-data preflight, participant view, decision,
-replay, strategy or performance. The next boundary is Windows integration,
-focused/full regression and one sealed external-dataset preflight. Real replay,
-Candidate v2, optimization, PAPER, cloud and live authorization remain false.
+Windows reproduced 82/82 focused and 1,201/1,201 complete tests before commit
+`8ed84c9` was pushed. One external-dataset preflight then independently
+re-locked the exact manifest and returned
+`KRAKEN_BLINDED_REPLAY_PREFLIGHT_PASS` without a network request. It reproduced
+BTC segment rows `1916, 730` with 2,470 candidates, ETH segment rows `2647`
+with 2,559 candidates and XRP segment rows `1226, 1419` with 2,469 candidates.
+The one-per-asset selection is bound by sealed schedule SHA-256
+`3e805044356777f0bdfa2901db267d714c1e14d11415dd4686acaaaed92f1042`.
+No selected timestamp was exposed and the schedule was not persisted.
+
+Compact preflight evidence is retained in
+`KRAKEN_BTC_ETH_XRP_BLINDED_REPLAY_PREFLIGHT_EVIDENCE_V1.md`. The preflight
+created no participant view, decision, replay, strategy or performance. The
+next boundary is a separate review of whether one supervised, durably chained
+three-episode reconstruction may be authorized. Real replay, Candidate v2,
+optimization, PAPER, cloud and live authorization remain false.

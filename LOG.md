@@ -2568,3 +2568,22 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - Executed synthetic regression only. No real-data preflight, chart replay,
   strategy, performance, optimization, Candidate v2, PAPER, cloud or live
   operation was authorized or executed.
+
+## 2026-08-28 — Kraken Bounded Blinded Replay Sealed Preflight Completed
+
+- Reproduced 82/82 focused and 1,201/1,201 complete Windows tests, then pushed
+  implementation commit `8ed84c9` before accessing the external dataset lock.
+- Independently re-locked archive-only manifest SHA-256
+  `8c91b42f2bc0c16a0ef0c6b4373572ac53fbf7f5937d4ebbbe75a0d39483df1c`
+  without a network request.
+- Reproduced BTC continuous segments `1916, 730` with 2,470 valid 89-row
+  candidates, ETH segment `2647` with 2,559 candidates and XRP segments
+  `1226, 1419` with 2,469 candidates.
+- Selected exactly one episode per asset using availability and frozen identity
+  only; OHLCV did not enter selection.
+- Recorded sealed three-episode schedule SHA-256
+  `3e805044356777f0bdfa2901db267d714c1e14d11415dd4686acaaaed92f1042`
+  without exposing selected timestamps or persisting the schedule.
+- Retained compact evidence only. No participant view, decision, chart replay,
+  strategy, performance or optimization executed. Real replay, Candidate v2,
+  PAPER, cloud and live authorization remain false pending separate review.

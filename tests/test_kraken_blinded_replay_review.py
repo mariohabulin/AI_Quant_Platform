@@ -36,6 +36,12 @@ LOCK_EVIDENCE = ROOT / "KRAKEN_BTC_ETH_XRP_DAILY_DATASET_LOCK_EVIDENCE_V2.md"
 REVIEW_PROTOCOL = ROOT / "KRAKEN_BTC_ETH_XRP_BLINDED_REPLAY_REVIEW_PROTOCOL_V1.md"
 REPLAY_COMPONENT = ROOT / "src" / "blinded_daily_replay.py"
 EVIDENCE_COMPONENT = ROOT / "src" / "blinded_replay_evidence.py"
+PREFLIGHT_EVIDENCE = (
+    ROOT / "KRAKEN_BTC_ETH_XRP_BLINDED_REPLAY_PREFLIGHT_EVIDENCE_V1.md"
+)
+PREFLIGHT_EVIDENCE_NORMALIZED_SHA256 = (
+    "ca5958b01370c222efd28c5149bb7a04e7627e0b71eef720db73116c7ccdfdf3"
+)
 
 
 def canonical_rows(asset):
@@ -149,23 +155,35 @@ def test_review_declaration_is_bounded_and_executes_nothing():
     assert declaration["live_execution_authorized"] is False
 
 
-def test_project_documents_point_to_sealed_preflight_as_next_boundary():
+def test_project_documents_record_sealed_preflight_and_next_review_boundary():
     roadmap = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
     mission = (ROOT / "CURRENT_MISSION.md").read_text(encoding="utf-8")
     architecture = (ROOT / "ARCHITECTURE.md").read_text(encoding="utf-8")
     vision = (ROOT / "VISION.md").read_text(encoding="utf-8")
     log = (ROOT / "LOG.md").read_text(encoding="utf-8")
+    evidence = PREFLIGHT_EVIDENCE.read_text(encoding="utf-8")
 
-    assert "[ ] Execute one sealed preflight" in roadmap
-    assert "Bounded Blinded Replay Review v1" in mission
+    assert "[x] Execute one sealed preflight" in roadmap
+    assert "whether one supervised" in roadmap
+    assert "SEALED PREFLIGHT PASS" in mission
     assert "Kraken Bounded Blinded Replay Review Boundary v1" in architecture
-    assert "selected reproducibly" in vision
-    assert "Kraken Bounded Blinded Replay Review v1" in log
+    assert "selected timestamps" in vision
+    assert "Sealed Preflight Completed" in log
     for text in (roadmap, mission, architecture, log):
         assert "Candidate v2" in text
         assert "live" in text.lower()
     assert "fabricated" in vision
     assert "performance result" in vision
+    assert normalized_text_sha256(PREFLIGHT_EVIDENCE) == (
+        PREFLIGHT_EVIDENCE_NORMALIZED_SHA256
+    )
+    assert "KRAKEN_BLINDED_REPLAY_PREFLIGHT_PASS" in evidence
+    assert "3e805044356777f0bdfa2901db267d714c1e14d11415dd4686acaaaed92f1042" in (
+        evidence
+    )
+    assert "selected timestamps exposed: `false`" in evidence
+    assert "real replay authorized: `false`" in evidence
+    assert "T00:00:00Z" not in evidence
 
 
 def test_preflight_reproduces_segments_and_seals_price_independent_schedule():

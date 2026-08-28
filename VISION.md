@@ -274,3 +274,9 @@ not from attractive historical price or volume events. Future endpoints remain
 sealed, each decision must be durably chained before the next bar appears, and
 an open episode-end position stays unresolved rather than becoming a fabricated
 exit or performance result.
+
+The sealed preflight has independently reproduced the exact locked dataset,
+availability segments and price-independent candidate counts without exposing
+or persisting the selected timestamps. Passing that data-and-selection gate
+does not authorize the participant replay or turn reconstruction into a
+strategy or performance claim.
