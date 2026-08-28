@@ -267,3 +267,10 @@ and no dataset becomes visible until all three assets, source evidence, gaps
 and canonical hashes pass one atomic lock. That lock and its independent
 revalidation are complete; real blinded-replay review remains a separate later
 authorization boundary.
+
+That replay boundary is bounded before any chart is shown. One episode per
+asset is selected reproducibly from manifest identity and availability alone,
+not from attractive historical price or volume events. Future endpoints remain
+sealed, each decision must be durably chained before the next bar appears, and
+an open episode-end position stays unresolved rather than becoming a fabricated
+exit or performance result.

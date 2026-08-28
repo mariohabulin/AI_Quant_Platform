@@ -1,5 +1,6 @@
 import os
 import sys
+from decimal import Decimal
 
 import pandas as pd
 import pytest
@@ -10,6 +11,7 @@ from blinded_daily_replay import (
     BlindedDailyReplaySession,
     find_missing_daily_timestamps,
     split_continuous_daily_segments,
+    visible_frame_sha256,
 )
 
 
@@ -124,6 +126,51 @@ def test_visible_frame_hash_is_bound_to_each_decision():
     assert first.visible_bars_sha256 != second.visible_bars_sha256
     assert session.decisions[0] == first
     assert session.decisions[1] == second
+
+
+def test_visible_frame_hash_preserves_exact_decimal_evidence():
+    first = market_frame(rows=1).astype(object)
+    second = first.copy(deep=True)
+    first.iloc[0, first.columns.get_loc("Volume")] = Decimal(
+        "1000.123456789012345678"
+    )
+    second.iloc[0, second.columns.get_loc("Volume")] = Decimal(
+        "1000.123456789012345679"
+    )
+
+    assert visible_frame_sha256(first) != visible_frame_sha256(second)
+
+
+def test_decision_sink_must_persist_before_advance_is_unlocked():
+    persisted = []
+    session = BlindedDailyReplaySession(
+        "BTC-USD", market_frame(), decision_sink=persisted.append
+    )
+
+    decision = session.record_decision("SKIP", "No setup.")
+
+    assert persisted == [decision]
+    assert session.advance().sequence == 1
+
+
+def test_failed_decision_sink_keeps_current_bar_fail_closed():
+    def fail(_decision):
+        raise OSError("durable evidence unavailable")
+
+    session = BlindedDailyReplaySession(
+        "BTC-USD", market_frame(), decision_sink=fail
+    )
+
+    with pytest.raises(OSError, match="durable evidence"):
+        session.record_decision("SKIP", "No setup.")
+    assert session.decisions == ()
+    with pytest.raises(RuntimeError, match="record a decision"):
+        session.advance()
+
+
+def test_decision_sink_must_be_callable():
+    with pytest.raises(TypeError, match="decision_sink"):
+        BlindedDailyReplaySession("BTC-USD", market_frame(), decision_sink=True)
 
 
 def test_completion_requires_final_decision_and_summary_has_no_performance():

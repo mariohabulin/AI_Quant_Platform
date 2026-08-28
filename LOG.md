@@ -2541,3 +2541,30 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - Retained only compact lock evidence in Git. Source ZIPs and dataset bytes
   remain external. Real replay, strategy, performance, Candidate v2, PAPER,
   cloud and live authorization remain false.
+
+## 2026-08-28 — Kraken Bounded Blinded Replay Review v1 (Local Preparation)
+
+- Re-audited the existing blinded daily primitive: rolling public views,
+  defensive copies, decision-before-advance ordering, state-valid actions and
+  non-performance summaries remained causal.
+- Kept real replay blocked after identifying stale Coinbase/provider-audit
+  binding, memory-only decisions, undefined terminal-position handling and no
+  bounded price-independent episode selection.
+- Bound the prepared review to exact Kraken v2 manifest SHA-256
+  `8c91b42f2bc0c16a0ef0c6b4373572ac53fbf7f5937d4ebbbe75a0d39483df1c`
+  and the locked BTC/ETH/XRP gaps and continuous segments.
+- Froze one deterministic 89-row episode per asset with 30 visible context bars
+  and 60 decisions. Selection uses only protocol, manifest, asset and
+  availability positions; review output reveals only the sealed schedule hash.
+- Replaced float-coerced visible-frame hashing with exact-decimal canonical
+  hashing.
+- Added a decision sink that must durably succeed before replay state changes
+  or the next bar can be revealed.
+- Added exclusive canonical per-decision files, sidecars, a prior-decision hash
+  chain, atomic episode completion and independent evidence re-lock.
+- Froze independent flat episode starts and explicit
+  `OPEN_POSITION_UNRESOLVED_AT_EPISODE_END` handling without synthetic exit,
+  cross-episode carry or performance.
+- Executed synthetic regression only. No real-data preflight, chart replay,
+  strategy, performance, optimization, Candidate v2, PAPER, cloud or live
+  operation was authorized or executed.

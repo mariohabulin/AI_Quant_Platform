@@ -1728,3 +1728,38 @@ lock evidence.
 
 V2 changes data provenance only. Real replay, strategy, performance,
 optimization, Candidate v2, PAPER, cloud and live authorization remain false.
+
+## Kraken Bounded Blinded Replay Review Boundary v1
+
+`src/kraken_blinded_replay_review.py` supersedes the historical Coinbase/XRP-
+audit-required declaration only for the exact independently locked Kraken v2
+dataset. It re-locks manifest SHA-256
+`8c91b42f2bc0c16a0ef0c6b4373572ac53fbf7f5937d4ebbbe75a0d39483df1c`,
+reproduces the BTC/ETH/XRP gaps and continuous segments, and computes a sealed
+three-episode schedule without consulting OHLCV values. Review and preflight
+output expose counts and hashes only, never selected starts, endpoints or
+remaining bars.
+
+The first bounded catalog has one episode per asset. A candidate is 89
+continuous rows: the first public view contains 30 bars and the episode then
+records exactly 60 decisions including that context-ending bar. The selected
+candidate index is a deterministic SHA-256 of protocol ID, manifest hash and
+asset modulo the asset's chronologically enumerated continuous candidates.
+Changing price or volume cannot change selection.
+
+`BlindedDailyReplaySession` accepts an optional decision sink. It calls that
+sink before changing position state or unlocking `advance()`, so durable-write
+failure leaves the current bar closed. Visible-frame hashes now preserve exact
+decimal evidence instead of coercing it through binary float serialization.
+
+`src/blinded_replay_evidence.py` writes every decision exclusively under a
+staging directory with a canonical JSON file, SHA-256 sidecar and prior-record
+hash. Episode completion atomically promotes a compact manifest. A separate
+`BlindedReplayEvidenceLock` revalidates canonical bytes, identity, order,
+sequence, the full chain and all non-performance flags. Episodes start flat
+and never carry positions; a terminal long remains explicitly unresolved
+rather than receiving a synthetic exit.
+
+This boundary prepares methodology and preflight only. It creates no real
+participant view, strategy, P&L, ranking, Candidate v2, PAPER, cloud or live
+authorization.

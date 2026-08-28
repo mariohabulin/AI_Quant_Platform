@@ -709,8 +709,16 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
   performance execution.
 - [x] Build a blinded sequential chart-replay component that records
   entry, skip and exit decisions before future bars are revealed.
+- [x] Review and prepare the Kraken-bound replay methodology: exact-decimal
+  visible hashes, price-independent bounded episode selection, durable chained
+  decisions, explicit unresolved terminal positions and independent evidence
+  re-lock without executing a real chart replay.
+- [ ] Execute one sealed preflight against the exact external Kraken v2 lock,
+  review only counts/hashes/safety flags and record compact evidence without
+  exposing selected episode timestamps.
 - [ ] Pre-register a small Crypto Capitulation-Volume Reversal v1 catalog only
-  after replay methodology and data causality are reviewed.
+  after sealed preflight evidence and supervised replay reconstruction are
+  separately closed.
 - [ ] Audit point-in-time equity fundamentals, corporate actions, historical
   universe membership, delistings, industry groups and executable costs before
   implementing CAN SLIM.
@@ -719,4 +727,4 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
 - [ ] Evaluate crypto and equity sleeves independently before AI ranking,
   strategy combination or portfolio allocation is studied.
 
-External notification delivery and any real execution capability remain deferred. The completed twelve-hour, 24-hour and three-day gates are bounded infrastructure-endurance evidence, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization. First candidate v1, all eight standalone default screening variants, all three Alpha Development v2 variants and the exact four Trend Pullback Volume v1 variants are closed rejected configurations. The non-performance Kraken BTC/ETH/XRP archive-only v2 daily dataset is locked and independently revalidated. The active boundary is real blinded-replay review followed later by the equity point-in-time data audit—not Candidate v2, PAPER or live execution.
+External notification delivery and any real execution capability remain deferred. The completed twelve-hour, 24-hour and three-day gates are bounded infrastructure-endurance evidence, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization. First candidate v1, all eight standalone default screening variants, all three Alpha Development v2 variants and the exact four Trend Pullback Volume v1 variants are closed rejected configurations. The non-performance Kraken BTC/ETH/XRP archive-only v2 daily dataset is locked and independently revalidated. The active boundary is the sealed Kraken blinded-replay preflight, followed by separate supervised replay review and later the equity point-in-time data audit—not strategy performance, Candidate v2, PAPER or live execution.

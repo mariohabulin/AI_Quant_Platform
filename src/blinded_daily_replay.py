@@ -1,7 +1,8 @@
 """Causal, performance-free daily chart replay primitives."""
 
-from dataclasses import dataclass
 import hashlib
+from dataclasses import dataclass
+from decimal import Decimal, InvalidOperation
 
 import numpy as np
 import pandas as pd
@@ -33,7 +34,7 @@ def _validated_daily_frame(data, *, require_continuous):
             f"{REQUIRED_OHLCV_COLUMNS}."
         )
     if not isinstance(data.index, pd.DatetimeIndex):
-        raise ValueError("Replay data must use a DatetimeIndex.")
+        raise TypeError("Replay data must use a DatetimeIndex.")
     if data.index.tz is None:
         raise ValueError("Replay data index must be timezone-aware.")
     if not data.index.is_monotonic_increasing:
@@ -105,14 +106,31 @@ def split_continuous_daily_segments(data):
     return tuple(frame.iloc[start:end].copy(deep=True) for start, end in zip(starts, ends))
 
 
-def _visible_frame_sha256(frame):
+def _canonical_replay_decimal(value):
+    try:
+        number = Decimal(str(value))
+    except (InvalidOperation, ValueError) as exc:
+        raise ValueError("Replay evidence value must be an exact decimal.") from exc
+    if not number.is_finite():
+        raise ValueError("Replay evidence value must be finite.")
+    if number == 0:
+        return "0"
+    text = format(number, "f")
+    if "." in text:
+        text = text.rstrip("0").rstrip(".")
+    return text
+
+
+def visible_frame_sha256(frame):
+    """Hash exactly the bars visible to one decision without float coercion."""
+
     rows = []
     for timestamp, row in frame.iterrows():
         rows.append(
             {
                 "Timestamp": timestamp.isoformat(),
                 **{
-                    column: format(float(row[column]), ".17g")
+                    column: _canonical_replay_decimal(row[column])
                     for column in REQUIRED_OHLCV_COLUMNS
                 },
             }
@@ -156,13 +174,15 @@ class BlindedReplayDecision:
 class BlindedDailyReplaySession:
     """Reveal one completed daily bar only after a precommitted decision."""
 
-    def __init__(self, asset, data, context_bars=30):
+    def __init__(self, asset, data, context_bars=30, decision_sink=None):
         if not isinstance(asset, str) or not asset.strip():
             raise ValueError("Replay asset must be a nonempty string.")
         if not isinstance(context_bars, int) or isinstance(context_bars, bool):
             raise TypeError("context_bars must be an integer.")
         if context_bars < 2:
             raise ValueError("context_bars must be at least 2.")
+        if decision_sink is not None and not callable(decision_sink):
+            raise TypeError("decision_sink must be callable.")
         frame = _validated_daily_frame(data, require_continuous=True)
         if len(frame) <= context_bars:
             raise ValueError("Replay data must contain more rows than context_bars.")
@@ -170,6 +190,7 @@ class BlindedDailyReplaySession:
         self._asset = asset.strip()
         self._data = frame
         self._context_bars = context_bars
+        self._decision_sink = decision_sink
         self._cursor = context_bars - 1
         self._position = POSITION_FLAT
         self._decisions = []
@@ -233,8 +254,10 @@ class BlindedDailyReplaySession:
             reason=normalized_reason,
             position_before=before,
             position_after=after,
-            visible_bars_sha256=_visible_frame_sha256(visible),
+            visible_bars_sha256=visible_frame_sha256(visible),
         )
+        if self._decision_sink is not None:
+            self._decision_sink(decision)
         self._decisions.append(decision)
         self._position = after
         self._decision_recorded = True

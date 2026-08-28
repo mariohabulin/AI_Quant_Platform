@@ -1423,3 +1423,33 @@ Only compact evidence is retained in Git; source ZIPs and the published
 dataset remain external. The next boundary is separate real blinded-replay
 review. Strategy, performance, optimization, Candidate v2, PAPER, cloud and
 live authorization remain false.
+
+### Kraken BTC/ETH/XRP Bounded Blinded Replay Review v1 — LOCAL PREPARATION
+
+The causal replay primitive was re-audited against the locked Kraken dataset
+boundary. Its public view already exposes only the trailing completed 30-bar
+copy, requires one reasoned state-valid decision before advancing and emits no
+performance. Real replay nevertheless remained blocked because the older
+declaration was Coinbase-bound, decisions existed only in memory, open
+positions had no explicit episode-end policy and no bounded price-independent
+episode selection was frozen.
+
+The prepared review binds manifest SHA-256
+`8c91b42f2bc0c16a0ef0c6b4373572ac53fbf7f5937d4ebbbe75a0d39483df1c`
+and all three Kraken availability structures. It selects one 89-row episode per
+asset solely from protocol/manifest/asset hashes and continuous segment
+positions. Each episode supplies 30 context bars and 60 decisions; CLI review
+and preflight output retain only a sealed schedule hash and never reveal chosen
+timestamps or future endpoints.
+
+Every decision must now be written as canonical exclusive evidence with a
+prior-decision hash before `advance()` unlocks. Episode completion atomically
+promotes a final manifest and sidecar, while a separate evidence lock
+revalidates every file and the complete chain. Every episode starts flat; a
+terminal long state remains `OPEN_POSITION_UNRESOLVED_AT_EPISODE_END` without a
+synthetic exit, position carry or performance result.
+
+This preparation executes no real-data preflight, participant view, decision,
+replay, strategy or performance. The next boundary is Windows integration,
+focused/full regression and one sealed external-dataset preflight. Real replay,
+Candidate v2, optimization, PAPER, cloud and live authorization remain false.
