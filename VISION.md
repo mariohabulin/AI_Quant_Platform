@@ -280,3 +280,10 @@ availability segments and price-independent candidate counts without exposing
 or persisting the selected timestamps. Passing that data-and-selection gate
 does not authorize the participant replay or turn reconstruction into a
 strategy or performance claim.
+
+Supervised reconstruction advances only one asset episode at a time and only
+after a fresh explicit decision. Every completed episode is independently
+locked before the next asset can be considered; an interruption preserves
+evidence and stops progression. This makes careful observation reversible at
+asset boundaries while keeping hindsight, automatic retry and performance
+interpretation outside the replay itself.

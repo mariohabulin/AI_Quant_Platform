@@ -1465,3 +1465,28 @@ created no participant view, decision, replay, strategy or performance. The
 next boundary is a separate review of whether one supervised, durably chained
 three-episode reconstruction may be authorized. Real replay, Candidate v2,
 optimization, PAPER, cloud and live authorization remain false.
+
+### Kraken BTC/ETH/XRP Supervised Blinded Replay v1 — SUPERVISED REPLAY PREPARATION
+
+The sealed preflight evidence is now an exact-hash prerequisite for a new
+one-episode-at-a-time runner. Review mode opens no dataset and reports every
+binding and authorization flag. Execution requires the exact external lock, a
+fresh external evidence root and one explicit operator phrase that is consumed
+by only the next asset episode.
+
+The runner enforces BTC, ETH and XRP order without accepting an asset choice.
+It independently re-locks completed episode evidence before another asset can
+begin. Each invocation can show only one 89-row episode through an in-memory
+30-bar candlestick/volume window, accepts exactly 60 state-valid reasoned
+decisions and durably writes each decision before the next bar appears. The
+chart is not persisted and contains no future endpoint, indicator, signal or
+performance field.
+
+An interrupted episode leaves exclusive staging evidence and blocks automatic
+retry or resume. A completed episode is immediately re-locked; the third
+completion atomically creates a three-episode catalog. Terminal longs remain
+unresolved and never carry into the next asset. This preparation uses synthetic
+tests only and does not authorize or execute a participant view. Windows
+integration and nonexecuting review declaration are next. Real replay,
+strategy, performance, optimization, Candidate v2, PAPER, cloud and live
+authorization remain false.

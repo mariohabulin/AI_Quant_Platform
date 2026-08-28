@@ -1773,3 +1773,32 @@ This boundary now records methodology and sealed-preflight evidence only. It
 creates no strategy, P&L, ranking, Candidate v2, PAPER, cloud or live
 authorization. One supervised real reconstruction requires a separate review
 and explicit authorization.
+
+## Kraken Supervised Blinded Replay Execution Boundary v1
+
+`src/kraken_blinded_replay_runner.py` adds an execution boundary without
+changing either frozen causal replay component. Its default review mode exact-
+hash binds the dataset evidence, replay-review protocol, sealed-preflight
+evidence, supervised execution protocol and both replay/evidence components;
+it opens no dataset and creates no participant view.
+
+Execution requires an exact one-episode operator phrase. The external evidence
+root is a state machine: empty permits BTC, valid BTC permits ETH, and valid BTC
+plus ETH permits XRP. The runner never accepts an asset argument. Existing
+episodes are independently locked before progression; skipped assets,
+unexpected files, tampering, incomplete staging or a completed catalog block
+execution.
+
+After reproducing the exact sealed schedule, the runner builds only the next
+89-row frame and displays its rolling 30-bar OHLCV context in one in-memory
+candlestick/volume chart. Each action and reason passes through
+`BlindedDailyReplaySession` and `DurableBlindedReplayJournal`, preserving the
+write-before-advance guarantee. Only one 60-decision episode can complete per
+invocation, and no chart image or source OHLCV is written to evidence.
+
+The third episode produces an atomic catalog linking all three independently
+locked evidence hashes, decision counts and terminal resolutions. The catalog
+lock revalidates exact identity, order and non-performance safety flags. This
+boundary prepares supervised reconstruction only; real replay remains
+unauthorized until a later explicit operator decision, and strategy,
+performance, Candidate v2, PAPER, cloud and live remain separate boundaries.

@@ -2587,3 +2587,25 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - Retained compact evidence only. No participant view, decision, chart replay,
   strategy, performance or optimization executed. Real replay, Candidate v2,
   PAPER, cloud and live authorization remain false pending separate review.
+
+## 2026-08-28 — Kraken Supervised Blinded Replay v1 (Local Preparation)
+
+- Exact-hash bound the new supervised boundary to the completed sealed-
+  preflight evidence and schedule SHA-256
+  `3e805044356777f0bdfa2901db267d714c1e14d11415dd4686acaaaed92f1042`.
+- Added nonexecuting review mode with no dataset access, participant view or
+  replay authorization.
+- Required an exact one-episode operator phrase and removed asset choice;
+  evidence state enforces BTC, ETH and XRP order.
+- Added one 60-decision episode per invocation with an in-memory rolling 30-bar
+  candlestick/volume chart and no persisted chart or source OHLCV.
+- Reused the frozen write-before-advance journal, exact-decimal frame hash,
+  flat episode start, unresolved terminal-long and independent episode lock.
+- Made interruption fail closed through preserved staging evidence that blocks
+  automatic overwrite, retry and resume pending incident review.
+- Added an atomic three-episode catalog and independent catalog lock covering
+  identities, order, evidence hashes, decision counts, terminal resolutions
+  and every non-performance safety flag.
+- Executed synthetic tests only. No real dataset was opened and no participant
+  view, decision, chart replay, strategy, performance or optimization ran.
+  Real replay, Candidate v2, PAPER, cloud and live authorization remain false.

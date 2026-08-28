@@ -164,7 +164,8 @@ def test_project_documents_record_sealed_preflight_and_next_review_boundary():
     evidence = PREFLIGHT_EVIDENCE.read_text(encoding="utf-8")
 
     assert "[x] Execute one sealed preflight" in roadmap
-    assert "whether one supervised" in roadmap
+    assert "one-episode-at-a-time" in roadmap
+    assert "explicitly decide" in roadmap
     assert "SEALED PREFLIGHT PASS" in mission
     assert "Kraken Bounded Blinded Replay Review Boundary v1" in architecture
     assert "selected timestamps" in vision
