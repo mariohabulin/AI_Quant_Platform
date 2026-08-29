@@ -1902,3 +1902,32 @@ This layer has no P&L field and opens no external market data. After Windows
 integration, a separately hash-bound partition layer must freeze development
 and truly untouched evaluation identities before any complete-data runner is
 permitted. Optimization, Candidate v2, PAPER, cloud and live remain blocked.
+
+## AI-Driven v2 Partition Boundary
+
+`src/kraken_ai_driven_v2_partition.py` freezes protocol
+`kraken-btc-eth-xrp-ai-driven-v2-partition-v1` against the exact archive-only
+dataset manifest. It is a metadata and timestamp-index validator, not a data
+loader or strategy runner. Its constructor exposes only the reference plan, so
+different dates cannot silently retain the same identity.
+
+The half-open path is `DEVELOPMENT` from `2019-01-01T00:00:00Z` to
+`2024-04-01T00:00:00Z`, `CALIBRATION` through
+`2025-04-01T00:00:00Z`, then sealed `EVALUATION` through
+`2026-04-01T00:00:00Z`. Calendar counts are `1917/365/365`; observed counts
+are BTC `1916/365/365`, ETH `1917/365/365` and XRP `1915/365/365` after the
+exact provider gaps are preserved.
+
+The inspected BTC episode bound by SHA-256
+`56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`
+lies in calibration and is explicitly not unseen. Evaluation begins at
+`2025-04-01T00:00:00Z` and remains genuinely untouched. No rolling feature
+history, event anchor, state, position, risk, cash mutation or pending intent
+may cross a partition boundary or provider gap.
+
+The hash-bound review verifies the risk/execution protocol and component plus
+the partition protocol and component. It reports no dataset access, no real
+partition materialization and no performance. A later development runner must
+be separately reviewed and must read only development timestamps. Calibration
+and one-time evaluation require later protocols; optimization, Candidate v2,
+PAPER, cloud and live execution remain unauthorized.

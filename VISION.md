@@ -345,3 +345,24 @@ Before the locked history is opened for this full path, the project must freeze
 development and genuinely untouched evaluation identities. The adapter is not
 profitability evidence and cannot authorize optimization, Candidate v2,
 PAPER, cloud or live execution.
+
+## Calendar-Frozen AI-Driven v2 Evidence
+
+Protocol `kraken-btc-eth-xrp-ai-driven-v2-partition-v1` now protects that
+evidence boundary without opening the dataset. Development spans
+`2019-01-01T00:00:00Z` through `2024-04-01T00:00:00Z` exclusive; calibration
+then spans one year; the final year beginning `2025-04-01T00:00:00Z` is the
+sealed one-time evaluation. The boundaries are calendar-only and were fixed
+before any full-path V2 performance was read.
+
+The prior BTC supervised evidence SHA-256
+`56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`
+falls wholly inside calibration. That window is permanently inspected and can
+never support an unseen claim. Evaluation remains genuinely untouched until a
+later one-time protocol is explicitly authorized after development,
+calibration, parameters, costs and reporting are closed.
+
+Every partition and provider gap starts with empty warmup, flat signal state
+and no synthetic position. Nothing crosses those boundaries to manufacture
+continuity. This partition milestone is governance, not performance:
+optimization, Candidate v2, PAPER, cloud and live execution remain blocked.

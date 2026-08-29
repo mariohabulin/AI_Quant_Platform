@@ -1585,3 +1585,28 @@ The locked Kraken dataset remains unopened. The immediate boundary is Windows
 reproduction and hash-bound review, followed by a separate development and
 genuinely untouched evaluation partition protocol. Optimization, Candidate
 v2, PAPER, cloud and live authorization remain false.
+
+### Kraken AI-Driven v2 — PARTITION PROTOCOL FROZEN (LOCAL SYNTHETIC REVIEW)
+
+Risk/execution milestone `f8d2436` is now reproduced and pushed after
+1,348/1,348 Windows tests. The next boundary is frozen as protocol
+`kraken-btc-eth-xrp-ai-driven-v2-partition-v1` without opening the external
+Kraken dataset or calculating performance.
+
+`DEVELOPMENT` covers `2019-01-01T00:00:00Z` through
+`2024-04-01T00:00:00Z` exclusive. `CALIBRATION` covers the following year and
+is inspected, not unseen, because BTC supervised evidence SHA-256
+`56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`
+falls inside it. `EVALUATION` begins `2025-04-01T00:00:00Z` and preserves the
+final 365 days as sealed one-time evidence.
+
+The synthetic validator reconciles exact rows and provider gaps, rejects any
+timestamp mismatch and splits continuous segments without carrying warmup,
+signal state, positions or risk across a gap or partition. It does not locate
+dataset files, read OHLCV or expose a performance field. All three real
+partitions remain unopened.
+
+The immediate boundary is Windows reproduction of the partition tests and
+hash-bound nonexecuting declaration, followed by commit and push. Only then may
+a separate development-only runner be designed. Calibration, evaluation,
+optimization, Candidate v2, PAPER, cloud and live authorization remain false.

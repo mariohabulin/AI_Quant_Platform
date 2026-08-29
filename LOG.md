@@ -2685,3 +2685,29 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - Made a hash-bound nonexecuting review and Windows regression the immediate
   boundary; development/evaluation partitioning follows. Optimization,
   Candidate v2, PAPER, cloud and live authorization remain false.
+
+## 2026-08-29 — Kraken AI-Driven v2 Partition Protocol (Local Preparation)
+
+- Confirmed risk/execution milestone `f8d2436` on Windows after 1,348/1,348
+  complete tests and pushed it without dataset or performance execution.
+- Froze partition identity
+  `kraken-btc-eth-xrp-ai-driven-v2-partition-v1` against exact archive-only
+  dataset manifest SHA-256
+  `8c91b42f2bc0c16a0ef0c6b4373572ac53fbf7f5937d4ebbbe75a0d39483df1c`.
+- Reserved development through `2024-04-01T00:00:00Z`, inspected calibration
+  through `2025-04-01T00:00:00Z` and the last 365 days as sealed one-time
+  evaluation through `2026-04-01T00:00:00Z`.
+- Bound BTC supervised evidence SHA-256
+  `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`
+  wholly to calibration and explicitly prohibited calling it unseen.
+- Reconciled calendar counts `1917/365/365` and observed per-asset counts BTC
+  `1916/365/365`, ETH `1917/365/365`, XRP `1915/365/365` without synthesizing
+  the three known provider-missing buckets.
+- Required empty feature warmup, flat state, no synthetic position and zero
+  carried risk at every partition boundary and provider gap.
+- Implemented an immutable synthetic timestamp validator, continuous-segment
+  splitter, canonical plan hash and exact-hash nonexecuting review.
+- Opened no external dataset, materialized no real partition and calculated no
+  performance. Windows reproduction and integration are next; the development
+  runner, calibration, evaluation, optimization, Candidate v2, PAPER, cloud
+  and live execution remain unauthorized.

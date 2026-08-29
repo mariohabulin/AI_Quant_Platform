@@ -756,7 +756,7 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
   milestone `1f73034` after 1,299/1,299 tests passed without a real-data state
   run.
 
-### AI-Driven v2 Risk and Execution — LOCAL SYNTHETIC REVIEW
+### AI-Driven v2 Risk and Execution — WINDOWS INTEGRATED
 
 - [x] Freeze reference policy `kraken-ai-v2-risk-execution-reference-a-v1`
   before performance: following-open execution, fixed structural stop,
@@ -766,15 +766,29 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
   slippage; fail-closed upward/stop gaps; cash/risk/capacity sizing; entry-bar
   protection; stop-first same-bar ordering; and state/maximum-hold next-open
   exits.
-- [ ] Reproduce the risk/execution focused and complete Windows regression,
+- [x] Reproduce the risk/execution focused and complete Windows regression,
   inspect its hash-bound nonexecuting declaration, then commit and push the
-  exact milestone before opening the locked dataset.
-- [ ] Split reusable locked history into development/calibration and genuinely
-  untouched evaluation identities before reading strategy performance; the
-  inspected BTC v1 window can never be labeled unseen.
+  exact milestone `f8d2436` after 1,348/1,348 tests passed without opening the
+  locked dataset.
+
+### AI-Driven v2 Development/Evaluation Partition — LOCAL SYNTHETIC REVIEW
+
+- [x] Freeze protocol `kraken-btc-eth-xrp-ai-driven-v2-partition-v1` around
+  calendar-only development, inspected calibration and genuinely untouched
+  evaluation identities before reading strategy performance.
+- [x] Place the inspected BTC v1 evidence SHA-256
+  `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`
+  wholly in calibration and permanently prohibit an unseen label for it.
+- [x] Reserve `2025-04-01T00:00:00Z` through `2026-04-01T00:00:00Z`
+  exclusive as sealed one-time evaluation; preserve exact gaps and reset all
+  feature, state, position and risk context at every gap and partition.
+- [x] Implement a synthetic-only timestamp contract and hash-bound review with
+  no external dataset, partition materialization, performance or runner.
+- [ ] Reproduce the partition focused and complete Windows regression, inspect
+  the nonexecuting declaration, then commit and push the exact milestone.
 - [ ] Build a one-shot evidence-locked V2 development runner only after the
-  state machine, risk adapter, execution semantics and full regression are
-  separately reviewed.
+  state machine, risk adapter, execution semantics, partition protocol and full
+  regression are separately reviewed; it may open development only.
 - [ ] Audit point-in-time equity fundamentals, corporate actions, historical
   universe membership, delistings, industry groups and executable costs before
   implementing CAN SLIM.
@@ -783,4 +797,4 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
 - [ ] Evaluate crypto and equity sleeves independently before AI ranking,
   strategy combination or portfolio allocation is studied.
 
-External notification delivery and any real execution capability remain deferred. The completed twelve-hour, 24-hour and three-day gates are bounded infrastructure-endurance evidence, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization. First candidate v1, all eight standalone default screening variants, all three Alpha Development v2 variants and the exact four Trend Pullback Volume v1 variants are closed rejected configurations. The non-performance Kraken BTC/ETH/XRP archive-only v2 daily dataset is locked and independently revalidated. Supervised replay v1 is paused after the single BTC episode bound by SHA-256 `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`; ETH and XRP remain unopened. AI-driven v2 reference state set `kraken-ai-v2-ccvr-reference-a-v1` is Windows-integrated, while risk/execution policy `kraken-ai-v2-risk-execution-reference-a-v1` is locally implemented with synthetic tests only. The active boundary is Windows reproduction and review of that risk/execution adapter, followed by a separately frozen development/evaluation partition—not real-data strategy performance, optimization, Candidate v2, PAPER or live execution.
+External notification delivery and any real execution capability remain deferred. The completed twelve-hour, 24-hour and three-day gates are bounded infrastructure-endurance evidence, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization. First candidate v1, all eight standalone default screening variants, all three Alpha Development v2 variants and the exact four Trend Pullback Volume v1 variants are closed rejected configurations. The non-performance Kraken BTC/ETH/XRP archive-only v2 daily dataset is locked and independently revalidated. Supervised replay v1 is paused after the single BTC episode bound by SHA-256 `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`; ETH and XRP remain unopened. AI-driven v2 reference state set `kraken-ai-v2-ccvr-reference-a-v1` and risk/execution policy `kraken-ai-v2-risk-execution-reference-a-v1` are Windows-integrated through commit `f8d2436`. Partition protocol `kraken-btc-eth-xrp-ai-driven-v2-partition-v1` is locally frozen with evaluation sealed from `2025-04-01T00:00:00Z`. The active boundary is Windows reproduction and review of that nonexecuting partition milestone—not a real-data development run, strategy performance, optimization, Candidate v2, PAPER or live execution.
