@@ -1866,3 +1866,39 @@ The state layer uses synthetic test frames only and opens neither the locked
 Kraken data nor the sealed ETH/XRP v1 episodes. A future risk/execution layer
 may reuse neutral sizing and stop-first primitives through new adapters, but
 Candidate v2, optimization, performance, PAPER, cloud and live remain blocked.
+
+## AI-Driven v2 Risk and Synthetic Execution Layer
+
+`src/kraken_ai_driven_v2_risk_execution.py` is the only current bridge from a
+completed-bar state intent to a synthetic research position. It accepts exact
+`CONFIRMATION_LONG` / `ENTER_NEXT_OPEN` evidence and the next consecutive UTC
+daily open under policy `kraken-ai-v2-risk-execution-reference-a-v1`. The BTC
+supervised evidence remains context-only under SHA-256
+`56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`.
+
+The layer separates four objects that must never be conflated: a state intent,
+an approved synthetic entry plan, a synthetic research position and an exit
+decision. No object is a broker order or venue fill. The entry gate rejects
+stop gaps, excessive upward gaps, unavailable portfolio capacity and less than
+net cost-aware `3R` room to the prior 30-bar close high. Size is the minimum of
+cost-aware stop-risk size, one-third equity notional and available-cash size,
+within `0.50%` per-position and `1.50%` total open-risk ceilings.
+
+`RiskEngine` remains the neutral deterministic size primitive.
+`ProtectiveExitPolicy` remains the neutral stop-first OHLC ordering primitive.
+The adapter owns every V2-specific binding: fixed setup-low stop, causal
+resistance target, following-open timestamp, adverse Kraken taker cost model,
+gap ordering, 20-bar maximum hold and state-scheduled exit. Entry-bar
+protection is mandatory, the structural stop cannot widen and target gaps gain
+no favorable price improvement.
+
+Cost profile `kraken-tier1-taker-adverse-20260829-v1` freezes `0.80%` taker
+commission per side from the reviewed official schedule and research-only
+`0.15%` slippage per side plus `0.30%` full spread. It does not verify the
+operator's account tier, pair minimum, order-book depth, partial fills or
+outages and therefore cannot produce a real order.
+
+This layer has no P&L field and opens no external market data. After Windows
+integration, a separately hash-bound partition layer must freeze development
+and truly untouched evaluation identities before any complete-data runner is
+permitted. Optimization, Candidate v2, PAPER, cloud and live remain blocked.

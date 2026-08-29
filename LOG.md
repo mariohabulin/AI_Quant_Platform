@@ -2659,3 +2659,29 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - Existing Kraken lock remains sufficient for later bounded development; any
   quarterly extension requires a new immutable dataset identity. Optimization,
   Candidate v2, PAPER, cloud and live authorization remain false.
+
+## 2026-08-29 — Kraken AI-Driven v2 Risk and Execution (Local Preparation)
+
+- Confirmed state-machine milestone `1f73034` on Windows after 1,299/1,299
+  complete tests and pushed it to `main` without a real-data state run.
+- Preserved supervised BTC evidence SHA-256
+  `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`
+  as inspected context and kept the external Kraken dataset closed.
+- Pre-registered exact synthetic policy
+  `kraken-ai-v2-risk-execution-reference-a-v1`: `0.50%` risk per position,
+  `1.50%` total open risk, one-third notional, three positions, net cost-aware
+  `3R`, one-half-ATR upward gap and 20 completed holding bars.
+- Froze cost profile `kraken-tier1-taker-adverse-20260829-v1` using the official
+  Kraken Tier-1 `0.80%` taker commission per side plus research assumptions of
+  `0.15%` slippage per side and `0.30%` full spread; no real account tier was
+  asserted.
+- Implemented following-open entry gates, fixed setup-low stop, prior-close-high
+  target, risk/capacity/cash sizing, entry-bar protection, gap priority,
+  conservative target gaps, stop-first conflicts and next-open state or
+  maximum-hold exits.
+- Retained a strict separation between state intent, approved plan, synthetic
+  position and real order. Calculated no P&L or performance and executed no
+  network, account, dataset or venue operation.
+- Made a hash-bound nonexecuting review and Windows regression the immediate
+  boundary; development/evaluation partitioning follows. Optimization,
+  Candidate v2, PAPER, cloud and live authorization remain false.

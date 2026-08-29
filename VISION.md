@@ -326,3 +326,22 @@ under SHA-256
 Until fills, gaps, stops, size and causal reward room are frozen and independently
 validated, no strategy performance, Candidate v2, PAPER, cloud or live claim
 exists.
+
+The next reviewed layer converts those intents into deterministic synthetic
+plans under policy `kraken-ai-v2-risk-execution-reference-a-v1`. It admits a
+following-open entry only when the fixed structural stop survives the gap and
+the causal prior resistance still offers at least net cost-aware `3R` after
+adverse taker commission, spread and slippage assumptions. Risk is capped by
+equity, total open risk, one-third notional, concurrent positions and cash.
+
+Intent, approved plan, synthetic position and real venue order are different
+states of evidence. V2 currently reaches only the synthetic position boundary:
+entry-bar protection, stop-first daily ordering and next-open state or 20-bar
+maximum-hold exits can be tested, but no broker instruction exists. The human
+BTC reconstruction remains immutable context under SHA-256
+`56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`.
+
+Before the locked history is opened for this full path, the project must freeze
+development and genuinely untouched evaluation identities. The adapter is not
+profitability evidence and cannot authorize optimization, Candidate v2,
+PAPER, cloud or live execution.

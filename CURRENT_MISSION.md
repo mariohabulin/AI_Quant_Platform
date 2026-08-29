@@ -1557,3 +1557,31 @@ hash-bound review. After integration, a new protocol must adapt next-open fill,
 gap, structural stop, bounded risk, position size, minimum causal `3R` room,
 protective exit and maximum-hold semantics. Candidate v2, PAPER, cloud and live
 authorization remain false.
+
+### Kraken AI-Driven v2 — RISK AND EXECUTION ADAPTER IMPLEMENTED (LOCAL SYNTHETIC REVIEW)
+
+State milestone `1f73034` is now reproduced and pushed after 1,299 Windows
+tests. The third V2 layer converts its unfilled intents into synthetic research
+plans under exact policy `kraken-ai-v2-risk-execution-reference-a-v1`. The
+prior supervised BTC episode remains immutable inspected context under SHA-256
+`56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`.
+
+An entry can occur only at the following consecutive daily open and only when
+the raw and cost-adjusted open remain above the fixed setup low, the upward gap
+does not exceed one-half prior ATR and the already-known prior 30-bar close high
+offers at least net cost-aware `3R`. Sizing risks at most `0.50%` of current
+equity, respects `1.50%` total open crypto risk, three concurrent positions,
+one-third notional and available cash.
+
+Cost profile `kraken-tier1-taker-adverse-20260829-v1` uses the official Kraken
+Tier-1 `0.80%` taker commission per side plus separate conservative research
+assumptions of `0.15%` slippage per side and `0.30%` full spread. It asserts no
+actual account tier. Stop gaps precede scheduled exits, target gaps receive no
+optimistic improvement, same-bar stop/target conflicts choose the stop and a
+20-completed-bar maximum hold exits only at the next open.
+
+These are synthetic plans and fills, not orders, realized P&L or performance.
+The locked Kraken dataset remains unopened. The immediate boundary is Windows
+reproduction and hash-bound review, followed by a separate development and
+genuinely untouched evaluation partition protocol. Optimization, Candidate
+v2, PAPER, cloud and live authorization remain false.
