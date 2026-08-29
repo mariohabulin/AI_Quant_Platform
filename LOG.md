@@ -2711,3 +2711,28 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
   performance. Windows reproduction and integration are next; the development
   runner, calibration, evaluation, optimization, Candidate v2, PAPER, cloud
   and live execution remain unauthorized.
+
+## 2026-08-29 — Kraken AI-Driven v2 Development Runner (Local Preparation)
+
+- Confirmed partition milestone `421de3f` on Windows after 1,385/1,385 tests
+  and pushed it without opening any real partition.
+- Pre-registered development protocol
+  `kraken-btc-eth-xrp-ai-driven-v2-development-runner-v1` against the exact
+  dataset, partition, feature, state, risk and cost identities.
+- Rejected direct reuse of the complete-value dataset lock loader because it
+  would parse calibration/evaluation rows; implemented full-file opaque hashes
+  plus development-prefix-only OHLCV parsing before
+  `2024-04-01T00:00:00Z`.
+- Required exact development rows BTC `1916`, ETH `1917`, XRP `1915`, segment
+  resets `1916`, `1917`, `1226,689` and zero parsed nondevelopment rows.
+- Froze USD 5,000 research notional, shared cash/equity/open risk, fixed
+  BTC/ETH/XRP entry order and exits-before-entries daily sequencing.
+- Preserved missing-following-open cancellation, gap-with-position halt,
+  unresolved terminal positions and adverse diagnostic marks without any
+  fabricated terminal exit.
+- Added exact-phrase one-shot execution, external non-overlapping evidence,
+  canonical report/sidecar, staging preservation and overwrite refusal.
+- Hash-bound all eight upstream protocol/components plus the development
+  protocol/runner in a nonexecuting review. Opened no dataset and executed no
+  performance. Windows integration is next; authorization, calibration,
+  evaluation, optimization, Candidate v2, PAPER, cloud and live remain false.

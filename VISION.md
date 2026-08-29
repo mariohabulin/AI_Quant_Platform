@@ -366,3 +366,22 @@ Every partition and provider gap starts with empty warmup, flat signal state
 and no synthetic position. Nothing crosses those boundaries to manufacture
 continuity. This partition milestone is governance, not performance:
 optimization, Candidate v2, PAPER, cloud and live execution remain blocked.
+
+## Development-Only Automated Evidence
+
+Protocol `kraken-btc-eth-xrp-ai-driven-v2-development-runner-v1` prepares one
+auditable reference-A observation on development through
+`2024-04-01T00:00:00Z` exclusive. Its reader combines opaque byte hashing of
+the full immutable asset files with OHLCV parsing of the development prefix
+only. Calibration and sealed evaluation values never become runner inputs.
+
+The first portfolio path uses USD 5,000 research notional, shared cash and
+risk, fixed BTC/ETH/XRP same-time priority and adverse cost-aware synthetic
+execution. A provider gap or terminal boundary never manufactures a price or
+exit: affected positions remain unresolved and a mid-run gap halts the path.
+
+This is designed to turn one frozen hypothesis into durable development
+evidence, not to search for an attractive answer. No parameter sweep, ranking
+or automatic promotion exists. Even after an explicitly authorized run,
+calibration, evaluation, optimization, Candidate v2, PAPER, cloud and live
+execution require separate decisions.

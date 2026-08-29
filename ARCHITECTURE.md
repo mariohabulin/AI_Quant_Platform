@@ -1931,3 +1931,33 @@ partition materialization and no performance. A later development runner must
 be separately reviewed and must read only development timestamps. Calibration
 and one-time evaluation require later protocols; optimization, Candidate v2,
 PAPER, cloud and live execution remain unauthorized.
+
+## AI-Driven v2 Development-Only Evidence Runner
+
+`src/kraken_ai_driven_v2_development_runner.py` implements protocol
+`kraken-btc-eth-xrp-ai-driven-v2-development-runner-v1`. It does not reuse the
+complete-value `KrakenDailyDatasetLock` load path. Instead it exact-hash checks
+the manifest, inventory and full canonical files as opaque bytes, then parses
+only timestamps strictly before `2024-04-01T00:00:00Z`. The first excluded
+timestamp must equal that boundary and both calibration/evaluation parsed-row
+counts must remain zero.
+
+The execution graph is a daily multi-asset portfolio rather than three
+independent capital accounts. Existing open exits run first. Pending entries
+then consume shared USD 5,000 research cash and total risk in fixed
+BTC-USD/ETH-USD/XRP-USD order. Intrabar stop-first protection follows, then
+completed-bar scheduling and an adverse net-liquidation close mark. The frozen
+state parameters, risk policy and cost profile are reused without a sweep.
+
+Every continuous segment receives a new feature warmup and signal machine. A
+missing following open cancels a pending entry. An active position at a known
+gap halts the whole path as inconclusive before later data can be processed.
+Terminal positions are marked diagnostically but remain unresolved; no force-
+close trade or realized P&L is fabricated.
+
+The runner writes canonical one-shot evidence under an external staging/final
+pair only after the exact operator phrase. Existing final or incomplete
+staging evidence blocks repeat. The separate nonexecuting review hash-binds
+all feature, state, risk, partition and development artifacts. Review opens no
+dataset and grants no run authorization. Results cannot automatically promote
+calibration, evaluation, Candidate v2, PAPER, cloud or live execution.

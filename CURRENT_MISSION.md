@@ -1610,3 +1610,29 @@ The immediate boundary is Windows reproduction of the partition tests and
 hash-bound nonexecuting declaration, followed by commit and push. Only then may
 a separate development-only runner be designed. Calibration, evaluation,
 optimization, Candidate v2, PAPER, cloud and live authorization remain false.
+
+### Kraken AI-Driven v2 — DEVELOPMENT RUNNER IMPLEMENTED (LOCAL SYNTHETIC REVIEW)
+
+Partition milestone `421de3f` is reproduced and pushed after 1,385/1,385
+Windows tests. Protocol
+`kraken-btc-eth-xrp-ai-driven-v2-development-runner-v1` now prepares the one-
+shot reference-A development boundary without opening the external dataset.
+
+The new reader hash-checks complete canonical inputs as opaque bytes but parses
+OHLCV only before `2024-04-01T00:00:00Z`. It must expose BTC `1916`, ETH
+`1917` and XRP `1915` development rows while parsing zero calibration and zero
+evaluation rows. This avoids the complete-value loader that would otherwise
+materialize sealed observations.
+
+One synthetic portfolio starts with USD 5,000 research notional. Existing
+exits precede BTC/ETH/XRP ordered entries; cash, position count and total risk
+are shared. Entry-bar protection, adverse costs, stop-first conflicts and
+maximum hold remain frozen. A missing next open cancels an intent, an open
+position at a gap halts the path and a terminal position remains unresolved.
+
+Canonical external evidence is one-shot and requires exact phrase
+`EXECUTE_KRAKEN_AI_V2_DEVELOPMENT_REFERENCE_A_ONCE`. The implementation does
+not grant that phrase or authorize execution. The immediate boundary is
+Windows reproduction, hash-bound nonexecuting review, commit and push.
+Development performance, calibration, evaluation, optimization, Candidate v2,
+PAPER, cloud and live authorization remain false.
