@@ -1490,3 +1490,41 @@ tests only and does not authorize or execute a participant view. Windows
 integration and nonexecuting review declaration are next. Real replay,
 strategy, performance, optimization, Candidate v2, PAPER, cloud and live
 authorization remain false.
+
+### Kraken Supervised Replay v1 Closeout — PAUSED AFTER BTC
+
+The first and only authorized supervised episode completed 60 BTC-USD
+decisions from 2024-05-08 through 2024-07-06 and ended flat. Its external
+aggregate evidence SHA-256 is
+`56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`.
+The evidence remains process and inspected hypothesis-reconstruction material;
+no P&L, return, ranking, drawdown or parameter conclusion was produced.
+
+The episode verified the causal and durable replay mechanics but also exposed
+that unassisted human terms such as confirmation, normal pullback and strong
+volume are not reproducible enough to define the strategy. Supervised v1 is
+therefore paused. ETH and XRP remain unopened, and no additional v1 episode is
+authorized.
+
+### Kraken AI-Driven Crypto v2 — AI-DRIVEN V2 CAUSAL FEATURE CONTRACT
+
+The active mission is now a deterministic AI-driven research agent, built one
+reviewed layer at a time. The first layer is exact completed-bar measurement:
+lagged prior-high drawdown, lagged-median relative volume, true range, lagged
+ATR expansion, close location and one-bar close return. All rolling baselines
+exclude the current bar and every recorded dataset gap splits the feature
+history.
+
+`src/kraken_ai_driven_v2_features.py` implements only these measurements. It
+requires explicit lookback values and has no default production parameter set,
+setup threshold, trading action, position state, P&L or optimization. The
+existing locked Kraken dataset can be reused later without updating it; any
+future quarterly extension must receive a new immutable dataset identity.
+
+The next boundary is Windows reproduction and review of the feature contract,
+followed by a separate pre-registration of the smallest deterministic
+`FLAT -> ARMED -> LONG -> FLAT` state machine. Existing generic risk sizing and
+conservative stop-first protective exits are reusable infrastructure only;
+previously rejected Alpha/trend-pullback signals are not transferred. Strategy
+performance, optimization, Candidate v2, PAPER, cloud and live authorization
+remain false.

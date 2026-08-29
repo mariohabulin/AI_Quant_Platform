@@ -287,3 +287,26 @@ locked before the next asset can be considered; an interruption preserves
 evidence and stops progression. This makes careful observation reversible at
 asset boundaries while keeping hindsight, automatic retry and performance
 interpretation outside the replay itself.
+
+## Deterministic AI-Driven Crypto Research
+
+The single completed BTC supervised episode, bound by evidence SHA-256
+`56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`,
+showed why the long-term system must convert visual intuition into explicit,
+testable language. Human observation remains useful for forming hypotheses,
+but an unassisted operator should not be asked to improvise confirmation,
+pullback, volume, stop and exit rules sixty times per asset.
+
+The next system is a deterministic AI-driven research agent. It first measures
+completed-bar decline, relative volume, volatility expansion and close
+location; a separately frozen state machine will later decide whether an event
+is absent, armed, confirmed, invalidated or held. Every runtime decision must
+be reproducible from named inputs and versioned rules, with next-bar execution,
+risk and evidence outside the language model.
+
+AI may help offline with hypothesis design, code, diagnostics and proposal of
+new versions. It cannot use future outcomes, silently mutate active thresholds
+or self-promote a strategy. The locked BTC/ETH/XRP dataset can support bounded
+development without an immediate update, while later archive extensions form
+new immutable datasets. No feature milestone alone authorizes strategy
+performance, optimization, Candidate v2, PAPER, cloud or live execution.

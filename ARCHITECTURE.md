@@ -1802,3 +1802,40 @@ lock revalidates exact identity, order and non-performance safety flags. This
 boundary prepares supervised reconstruction only; real replay remains
 unauthorized until a later explicit operator decision, and strategy,
 performance, Candidate v2, PAPER, cloud and live remain separate boundaries.
+
+## Kraken AI-Driven v2 Layer Boundary
+
+The supervised replay v1 execution layer is retained unchanged as historical
+infrastructure and evidence. Its one completed BTC episode is bound by
+aggregate SHA-256
+`56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`.
+ETH and XRP participant views remain unopened. V2 uses a new protocol identity
+and will use a separate schedule and evidence root; it cannot append automated
+decisions to v1 evidence.
+
+The first V2 dependency direction is:
+
+`locked OHLCV -> continuous segment -> causal measurements -> future state machine -> future risk/execution -> future durable decision evidence`.
+
+`src/kraken_ai_driven_v2_features.py` owns only the causal-measurement layer.
+It validates exact daily OHLCV, rejects crossing known gaps, excludes the
+current bar from rolling comparison baselines and returns unavailable warm-up
+or zero-denominator measurements instead of creating a signal. Its output has
+no action, position, performance or optimizer field.
+
+The future state-machine layer must be a versioned deterministic program with
+explicit `FLAT`, `ARMED` and `LONG` transitions. A language model may assist
+offline research and code review but cannot improvise runtime rules. The
+future risk/execution adapter may reuse neutral `RiskEngine` sizing and
+`ProtectiveExitPolicy` stop-first semantics only after it binds V2-specific
+columns and next-open timing through new tests. Rejected trend-pullback and
+Alpha signal conditions remain historical and are not dependencies of V2.
+
+The source dataset does not require an update for initial development. Any new
+Kraken quarterly bytes create a new immutable dataset ID instead of changing
+manifest
+`8c91b42f2bc0c16a0ef0c6b4373572ac53fbf7f5937d4ebbbe75a0d39483df1c`.
+Before any performance runner, the architecture must freeze development,
+calibration and genuinely untouched evaluation partitions. The inspected BTC
+v1 window is permanently ineligible for unseen-validation claims. Candidate
+v2, PAPER, cloud and live authorization remain false.

@@ -2609,3 +2609,30 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - Executed synthetic tests only. No real dataset was opened and no participant
   view, decision, chart replay, strategy, performance or optimization ran.
   Real replay, Candidate v2, PAPER, cloud and live authorization remain false.
+
+## 2026-08-29 — BTC Supervised Episode Closed and AI-Driven v2 Causal Feature Contract
+
+- Completed the one authorized BTC-USD supervised v1 episode with 60 durable
+  decisions, a flat terminal state and aggregate evidence SHA-256
+  `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`.
+- Retained the episode as inspected process and hypothesis-reconstruction
+  evidence only; calculated no return, P&L, ranking, drawdown or selected
+  parameter.
+- Paused supervised replay v1 after identifying the cognitive burden and
+  under-specified discretion of unassisted confirmation, pullback, volume and
+  exit labels. ETH and XRP remain unopened and no further v1 replay is
+  authorized.
+- Pre-registered the first AI-driven v2 layer under protocol
+  `kraken-btc-eth-xrp-ai-driven-v2-causal-feature-contract-v1`.
+- Implemented explicit completed-bar prior-high drawdown, relative-volume,
+  true-range/prior-ATR expansion, close-location and one-bar-return features.
+- Required every rolling baseline to end at the prior bar, every known gap to
+  split feature generation and every unavailable denominator to fail closed.
+- Added synthetic prefix-causality, future-mutation, source-immutability,
+  formula and strict input-validation tests.
+- Reused no rejected Alpha or trend-pullback signal. Opened no external
+  dataset, executed no network request and defined no action, state machine,
+  performance runner or production parameter set.
+- Existing Kraken lock remains sufficient for later bounded development; any
+  quarterly extension requires a new immutable dataset identity. Optimization,
+  Candidate v2, PAPER, cloud and live authorization remain false.

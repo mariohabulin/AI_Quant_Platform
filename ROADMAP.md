@@ -719,12 +719,39 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
 - [x] Review the compact sealed-preflight evidence and prepare a fail-closed,
   one-episode-at-a-time supervised runner without opening a participant view or
   authorizing real replay.
-- [ ] After Windows integration and review-mode verification, explicitly decide
-  whether to authorize only the next 60-decision asset episode; independently
-  lock and review it before considering the following asset.
-- [ ] Pre-register a small Crypto Capitulation-Volume Reversal v1 catalog only
-  after sealed preflight evidence and supervised replay reconstruction are
-  separately closed.
+- [x] Integrate the one-episode-at-a-time supervised runner on Windows, verify
+  review mode and explicitly decide to authorize only the first BTC episode.
+- [x] Complete the 60-decision BTC reconstruction and retain aggregate evidence
+  SHA-256
+  `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`
+  without calculating performance or authorizing the following asset.
+- [x] Pause supervised replay v1 with ETH/XRP unopened after confirming that
+  unassisted discretionary labeling is too underspecified and cognitively
+  expensive to serve as the strategy-construction engine.
+
+## AI-Driven Crypto Research v2 — ACTIVE
+
+- [x] Freeze the first deterministic causal feature contract around lagged
+  decline, relative volume, true range/ATR expansion, close location and
+  completed-bar return without signal thresholds or trading actions.
+- [x] Implement the standalone causal feature engine with explicit window
+  configuration, strict continuous-daily validation, unavailable warm-up
+  values, prefix-causality tests and no real dataset execution.
+- [ ] Reproduce the focused and complete Windows regression, inspect the
+  nonexecuting V2 declaration, then commit and push this exact first milestone.
+- [ ] Pre-register the smallest deterministic
+  `FLAT -> ARMED -> LONG -> FLAT` capitulation/stabilization/confirmation state
+  machine, including explanation fields, expiry and fail-closed missing-feature
+  behavior before implementing it.
+- [ ] Freeze next-open execution, structural stop, risk sizing, minimum causal
+  reward room, protective exits and maximum-hold rules before any performance
+  runner exists.
+- [ ] Split reusable locked history into development/calibration and genuinely
+  untouched evaluation identities before reading strategy performance; the
+  inspected BTC v1 window can never be labeled unseen.
+- [ ] Build a one-shot evidence-locked V2 development runner only after the
+  state machine, risk adapter, execution semantics and full regression are
+  separately reviewed.
 - [ ] Audit point-in-time equity fundamentals, corporate actions, historical
   universe membership, delistings, industry groups and executable costs before
   implementing CAN SLIM.
@@ -733,4 +760,4 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
 - [ ] Evaluate crypto and equity sleeves independently before AI ranking,
   strategy combination or portfolio allocation is studied.
 
-External notification delivery and any real execution capability remain deferred. The completed twelve-hour, 24-hour and three-day gates are bounded infrastructure-endurance evidence, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization. First candidate v1, all eight standalone default screening variants, all three Alpha Development v2 variants and the exact four Trend Pullback Volume v1 variants are closed rejected configurations. The non-performance Kraken BTC/ETH/XRP archive-only v2 daily dataset is locked and independently revalidated, and its sealed blinded-replay preflight passed without exposing episode timestamps. The active boundary is Windows integration and review of the one-episode-at-a-time supervised runner, followed by a separate explicit decision on the first BTC reconstruction—not strategy performance, Candidate v2, PAPER or live execution.
+External notification delivery and any real execution capability remain deferred. The completed twelve-hour, 24-hour and three-day gates are bounded infrastructure-endurance evidence, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization. First candidate v1, all eight standalone default screening variants, all three Alpha Development v2 variants and the exact four Trend Pullback Volume v1 variants are closed rejected configurations. The non-performance Kraken BTC/ETH/XRP archive-only v2 daily dataset is locked and independently revalidated. Supervised replay v1 is paused after the single BTC episode bound by SHA-256 `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`; ETH and XRP remain unopened. The active boundary is Windows reproduction and review of the AI-driven v2 causal feature contract—not strategy performance, optimization, Candidate v2, PAPER or live execution.
