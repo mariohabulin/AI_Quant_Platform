@@ -2297,6 +2297,29 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
   strategy and nested runner remain separately reviewed prerequisites;
   Candidate v2, PAPER, cloud and live authorization remain false.
 
+## 2026-08-29 — Kraken AI-Driven v2 State Machine (Local Preparation)
+
+- Confirmed feature milestone commit `8fb2307` on Windows after 41/41 new,
+  143/143 focused and 1,258/1,258 complete tests, then pushed it to `main`.
+- Preserved supervised BTC evidence SHA-256
+  `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`
+  as inspected non-performance context; ETH/XRP v1 remain unopened.
+- Pre-registered reference state set
+  `kraken-ai-v2-ccvr-reference-a-v1` before any real-data result.
+- Implemented causal `FLAT`, `ARMED` and `LONG` signal states with explicit
+  capitulation, re-arm, structural invalidation, five-bar expiry, confirmation,
+  structural exit and bearish-volume exit priority.
+- Retained per-bar state before/after, canonical transition, action intent,
+  condition booleans, state ages, event timestamp and setup low.
+- Kept `ENTER_NEXT_OPEN` and `EXIT_NEXT_OPEN` as unfilled intents; imported no
+  broker, backtester, risk engine or protective-exit engine.
+- Added synthetic tests for exact parameters, same-bar prohibition, age-five
+  confirmation, age-six expiry, re-arm priority, setup-low capture, every exit,
+  unavailable features, prefix causality and source immutability.
+- Opened no external dataset and executed no network, fill, position sizing,
+  P&L, performance or optimization. Risk/execution, Candidate v2, PAPER, cloud
+  and live authorization remain false.
+
 ## 2026-08-25 — Trend Pullback Volume Strategy v1 (Local Preparation)
 
 - Implemented an explicit completed-bar setup state instead of reducing the

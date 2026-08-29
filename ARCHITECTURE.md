@@ -1839,3 +1839,30 @@ Before any performance runner, the architecture must freeze development,
 calibration and genuinely untouched evaluation partitions. The inspected BTC
 v1 window is permanently ineligible for unseen-validation claims. Candidate
 v2, PAPER, cloud and live authorization remain false.
+
+## AI-Driven v2 Signal-State Layer
+
+`src/kraken_ai_driven_v2_state_machine.py` consumes the exact causal feature
+component and owns only signal state. Reference identity
+`kraken-ai-v2-ccvr-reference-a-v1` is hash-bound to its protocol. The inspected
+BTC supervised evidence remains separately identified by SHA-256
+`56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`.
+
+The state component is sequential and prefix-causal. It keeps one immutable
+event timestamp and evolving setup low while `ARMED`, then fixes that low if
+confirmation changes signal state to `LONG`. Re-arm, invalidation, expiry and
+confirmation have explicit priority; structural and bearish-volume exits have
+explicit priority. Every row retains state before/after, reason code, intent,
+condition flags and causal anchors.
+
+`LONG` means an active research signal, not an executed position. The component
+does not import the backtester, broker, `RiskEngine` or `ProtectiveExitPolicy`,
+and it stores no fill, quantity, equity or P&L. `ENTER_NEXT_OPEN` and
+`EXIT_NEXT_OPEN` cross a future adapter boundary where next-open gaps and real
+fill semantics must be resolved. That adapter must never reinterpret an intent
+as an already completed trade.
+
+The state layer uses synthetic test frames only and opens neither the locked
+Kraken data nor the sealed ETH/XRP v1 episodes. A future risk/execution layer
+may reuse neutral sizing and stop-first primitives through new adapters, but
+Candidate v2, optimization, performance, PAPER, cloud and live remain blocked.

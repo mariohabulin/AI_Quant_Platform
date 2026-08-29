@@ -737,12 +737,23 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
 - [x] Implement the standalone causal feature engine with explicit window
   configuration, strict continuous-daily validation, unavailable warm-up
   values, prefix-causality tests and no real dataset execution.
-- [ ] Reproduce the focused and complete Windows regression, inspect the
-  nonexecuting V2 declaration, then commit and push this exact first milestone.
-- [ ] Pre-register the smallest deterministic
+- [x] Reproduce the focused and complete Windows regression, inspect the
+  nonexecuting V2 declaration, then commit and push exact feature milestone
+  `8fb2307` after 1,258/1,258 tests passed.
+
+### AI-Driven v2 State Machine — LOCAL SYNTHETIC REVIEW
+
+- [x] Pre-register the smallest deterministic
   `FLAT -> ARMED -> LONG -> FLAT` capitulation/stabilization/confirmation state
   machine, including explanation fields, expiry and fail-closed missing-feature
   behavior before implementing it.
+- [x] Implement reference parameter set
+  `kraken-ai-v2-ccvr-reference-a-v1` with event/re-arm/invalidation/expiry,
+  confirmation and structural/bearish-volume signal exits using synthetic data
+  only.
+- [ ] Reproduce the state-machine focused and complete Windows regression,
+  inspect the hash-bound nonexecuting declaration, then commit and push the
+  exact milestone before any real-data state run.
 - [ ] Freeze next-open execution, structural stop, risk sizing, minimum causal
   reward room, protective exits and maximum-hold rules before any performance
   runner exists.
@@ -760,4 +771,4 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
 - [ ] Evaluate crypto and equity sleeves independently before AI ranking,
   strategy combination or portfolio allocation is studied.
 
-External notification delivery and any real execution capability remain deferred. The completed twelve-hour, 24-hour and three-day gates are bounded infrastructure-endurance evidence, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization. First candidate v1, all eight standalone default screening variants, all three Alpha Development v2 variants and the exact four Trend Pullback Volume v1 variants are closed rejected configurations. The non-performance Kraken BTC/ETH/XRP archive-only v2 daily dataset is locked and independently revalidated. Supervised replay v1 is paused after the single BTC episode bound by SHA-256 `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`; ETH and XRP remain unopened. The active boundary is Windows reproduction and review of the AI-driven v2 causal feature contract—not strategy performance, optimization, Candidate v2, PAPER or live execution.
+External notification delivery and any real execution capability remain deferred. The completed twelve-hour, 24-hour and three-day gates are bounded infrastructure-endurance evidence, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization. First candidate v1, all eight standalone default screening variants, all three Alpha Development v2 variants and the exact four Trend Pullback Volume v1 variants are closed rejected configurations. The non-performance Kraken BTC/ETH/XRP archive-only v2 daily dataset is locked and independently revalidated. Supervised replay v1 is paused after the single BTC episode bound by SHA-256 `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`; ETH and XRP remain unopened. AI-driven v2 reference state set `kraken-ai-v2-ccvr-reference-a-v1` is locally implemented with synthetic tests only. The active boundary is Windows reproduction and review of that state machine, followed by a separately frozen risk/execution adapter—not real-data strategy performance, optimization, Candidate v2, PAPER or live execution.

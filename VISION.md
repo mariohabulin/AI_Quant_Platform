@@ -310,3 +310,19 @@ or self-promote a strategy. The locked BTC/ETH/XRP dataset can support bounded
 development without an immediate update, while later archive extensions form
 new immutable datasets. No feature milestone alone authorizes strategy
 performance, optimization, Candidate v2, PAPER, cloud or live execution.
+
+The first explicit agent path is
+`FLAT -> ARMED -> LONG -> FLAT` under reference identity
+`kraken-ai-v2-ccvr-reference-a-v1`. It replaces phrases such as “maybe
+confirmation” with exact price, volume, volatility, time and structure gates.
+Each transition must explain itself, and a missing required measurement must
+hold or cancel safely rather than become a guessed signal.
+
+This layer is still observation and decision logic, not trading. Its
+`ENTER_NEXT_OPEN` and `EXIT_NEXT_OPEN` outputs are intents awaiting a separate
+risk/execution contract. The prior BTC human reconstruction remains immutable
+under SHA-256
+`56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`.
+Until fills, gaps, stops, size and causal reward room are frozen and independently
+validated, no strategy performance, Candidate v2, PAPER, cloud or live claim
+exists.

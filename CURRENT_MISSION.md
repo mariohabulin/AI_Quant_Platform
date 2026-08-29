@@ -1528,3 +1528,32 @@ conservative stop-first protective exits are reusable infrastructure only;
 previously rejected Alpha/trend-pullback signals are not transferred. Strategy
 performance, optimization, Candidate v2, PAPER, cloud and live authorization
 remain false.
+
+### Kraken AI-Driven v2 — STATE MACHINE IMPLEMENTED (LOCAL SYNTHETIC REVIEW)
+
+The second V2 layer now converts the causal measurements into an explicit
+signal-state path under reference set
+`kraken-ai-v2-ccvr-reference-a-v1`. The prior supervised BTC episode remains
+bound by SHA-256
+`56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`
+and is inspected context only.
+
+`FLAT` arms only when prior-high drawdown, a negative completed-bar return,
+relative volume, range expansion and low close location jointly pass their
+frozen gates. `ARMED` can re-anchor on a new complete event, invalidate on a
+close below its prior setup low, expire after five later bars or confirm when a
+positive bar closes above the previous high with sufficient relative volume
+and upper-range close location. `LONG` exits its signal state only on fixed-low
+structural failure or frozen bearish-volume failure.
+
+The component retains state before/after, canonical reason, setup/long age,
+event timestamp, setup low, condition booleans and only
+`ENTER_NEXT_OPEN`/`EXIT_NEXT_OPEN` intents. Those intents are not fills and no
+brokerage position exists. The external Kraken dataset has not been opened and
+no return, P&L, optimization or performance evaluation has run.
+
+The immediate boundary is Windows reproduction of the state-machine tests and
+hash-bound review. After integration, a new protocol must adapt next-open fill,
+gap, structural stop, bounded risk, position size, minimum causal `3R` room,
+protective exit and maximum-hold semantics. Candidate v2, PAPER, cloud and live
+authorization remain false.
