@@ -1767,7 +1767,7 @@ separate task is synthetic family-specific execution adapters. Reference A is
 still closed, no market dataset was opened and Calibration, Evaluation,
 Candidate v2, PAPER, cloud and live remain false.
 
-### Kraken AI-Driven v2 — Round 1 Family Execution (Local Review)
+### Kraken AI-Driven v2 — Round 1 Family Execution (Windows Integrated)
 
 Exact signal milestone `05e5f45` is the parent. Four new explicit family
 adapters consume only its eligible `ENTER_NEXT_OPEN` evidence and bind the
@@ -1782,8 +1782,29 @@ same-bar stop/target conflicts are stop-first and entry-bar protection is
 mandatory. Real Pandas signal integration and continuous daily position paths
 are explicitly tested.
 
-No dataset, runner, performance, route gate, ranking or strategy selection has
-executed. The active mission is Windows focused/full regression and hash-bound
-review, then commit/push of this execution-only milestone. Reference A remains
-closed; Calibration, Evaluation, Candidate v2, PAPER, cloud and live remain
-false. Only afterward may an unexecuted Development discovery runner be built.
+Windows focused/full regression and hash-bound review passed, and exact
+execution-only milestone `60664a2` is committed and pushed. No dataset,
+performance, route gate, ranking or strategy selection executed. Reference A
+remains closed; Calibration, Evaluation, Candidate v2, PAPER, cloud and live
+remain false.
+
+### Kraken AI-Driven v2 — Round 1 Discovery Runner (Local Review)
+
+Exact family-execution milestone `60664a2` is the parent. A one-shot runner now
+evaluates all 12 BTC/ETH/XRP asset-family routes independently under baseline
+and stress costs. It reuses the exact Development-only reader, partition gap
+contract, causal signals, family adapters and USD 5,000 safety envelope.
+
+Five slices are reporting windows, not hidden resets. Trades are attributed by
+entry timestamp; gaps reset causal context, cancel pending entries and make an
+open route position unresolved. No terminal force-close is permitted. Every
+route is judged only by the frozen absolute gates; round interest requires two
+assets and two routes, and same-asset multiple passes require separate
+portfolio review without ranking or selection.
+
+The runner, canonical atomic evidence and independent lock are implemented but
+unexecuted. The active mission is Windows focused/full regression and
+hash-bound review, then commit/push with a clean worktree. No dataset has been
+opened and the authorization phrase is inactive. A real Development discovery
+run requires a later separate operator decision. Reference A stays closed;
+Calibration, Evaluation, Candidate v2, PAPER, cloud and live remain false.

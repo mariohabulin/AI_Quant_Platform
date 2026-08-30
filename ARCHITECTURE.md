@@ -2093,3 +2093,29 @@ causal-signal protocol/component/review and the new execution artifacts.
 Reference A remains closed. No dataset or discovery runner is imported or
 opened, and Candidate v2, Calibration, Evaluation, PAPER, cloud and live remain
 blocked.
+
+## AI-Driven v2 Round 1 Discovery Runner Boundary
+
+`src/kraken_ai_driven_v2_round_1_discovery_runner.py` composes the locked
+Development-only reader, exact partition segmentation, four causal signal
+engines and four family adapters into 12 ordered asset-family routes evaluated
+under baseline and stress costs. Route ledgers are deliberately independent;
+the component evaluates absolute pre-registered interest gates and never
+performs cross-route capital allocation, ranking or winner selection.
+
+Slice attribution uses entry time and does not reset a continuous position.
+Known daily gaps reset causal context. Pending entries are canceled across a
+gap, while any open position makes that route/profile inconclusive and remains
+unresolved. Development-end positions are likewise preserved without terminal
+force-close. Daily equity uses adverse sell/commission marks for drawdown.
+
+One-shot execution requires an exact phrase and disjoint external dataset and
+evidence paths. The runner writes canonical report/checksum evidence to an
+exclusive staging directory, atomically promotes it and independently relocks
+every identity, route order and nondevelopment-access flag.
+
+`src/kraken_ai_driven_v2_round_1_discovery_runner_review.py` hash-binds the
+family-execution protocol/component/review and the runner protocol/component.
+Import and review open no data. Development execution, Calibration, Evaluation,
+Candidate v2, automatic ranking, PAPER, cloud and live remain blocked pending a
+separate operator decision.

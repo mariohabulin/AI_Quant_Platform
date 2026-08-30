@@ -485,3 +485,25 @@ dataset, runner, route result, ranking or strategy selection exists. Reference A
 remains closed and Candidate v2 remains unauthorized. The next boundary is an
 unexecuted, hash-bound Development discovery runner followed by a separate
 operator decision about one-shot Development authorization.
+
+## Round 1 Discovery Runner
+
+Round 1 now has a one-shot Development-only discovery runner over the exact 12
+BTC/ETH/XRP asset-family routes and both frozen cost profiles. Every route and
+cost profile receives an independent USD 5,000 research ledger so the absolute
+pre-registered gates remain comparable; these are not combined portfolio
+allocations and the runner produces no leaderboard or winner.
+
+Five chronological slices measure persistence without resetting positions or
+causal state. Known provider gaps do reset feature/signal context; an open
+position at a gap or Development end remains unresolved and fails the route
+without a synthetic force-close. Route interest requires every absolute gate,
+and round interest still requires two assets and two routes. Multiple passing
+families for one asset require a new portfolio review.
+
+The implementation and independent evidence lock are complete but unexecuted.
+No dataset has been opened and no Development authorization has been granted.
+Reference A remains closed; Calibration, Evaluation, Candidate v2, ranking,
+PAPER, cloud and live execution remain unauthorized. The next boundary is
+Windows regression/hash review and commit, followed by a separate operator
+decision about exactly one Development discovery run.

@@ -2881,3 +2881,27 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
   continuous daily position timestamps.
 - Added hash-bound nonexecuting review. No dataset, runner, performance,
   ranking, Candidate v2, PAPER, cloud or live action exists.
+
+## 2026-08-30 — Kraken AI-Driven v2 Round 1 Discovery Runner (Local Preparation)
+
+- Confirmed family-execution milestone `60664a2` as exact parent after its
+  Windows focused/full regression and hash-bound review.
+- Implemented a Development-only one-shot runner over 12 ordered asset-family
+  routes and baseline/stress cost profiles without opening the locked dataset.
+- Gave each route/profile an independent USD 5,000 research ledger so frozen
+  absolute gates are comparable without silently creating a combined portfolio.
+- Froze entry-time slice attribution, no reset at slice boundaries, exact gap
+  causal resets, pending-entry cancellation and unresolved-position failure at
+  a gap or terminal boundary without synthetic force-close.
+- Implemented trade/P&L/R, adverse marked drawdown, five-slice persistence,
+  profit factor, largest-trade share and all route/round interest gates.
+- Preserved `HOLD_CASH`, no-trade slices not counting as nonnegative, no
+  parameter sweep, no leaderboard, no automatic selection and a mandatory
+  separate portfolio review for multiple eligible families on one asset.
+- Reused the locked Development-only reader and added exclusive external
+  staging/final evidence, canonical report/checksum and an independent evidence
+  lock with exact 12-route ordering.
+- Added exact authorization gating, hash-bound nonexecuting review and synthetic
+  tests for following-open entry, entry-bar protection, gap halt, every numeric
+  gate and one-shot evidence. No Development run, dataset access, Candidate v2,
+  PAPER, cloud or live action occurred.
