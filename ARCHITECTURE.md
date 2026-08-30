@@ -2116,6 +2116,28 @@ every identity, route order and nondevelopment-access flag.
 
 `src/kraken_ai_driven_v2_round_1_discovery_runner_review.py` hash-binds the
 family-execution protocol/component/review and the runner protocol/component.
-Import and review open no data. Development execution, Calibration, Evaluation,
-Candidate v2, automatic ranking, PAPER, cloud and live remain blocked pending a
-separate operator decision.
+Import and review open no data. Exact runner commit `98a7218` subsequently
+executed once on Development and produced locked report SHA-256
+`3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`.
+No route passed all gates; Calibration, Evaluation, Candidate v2, automatic
+ranking, PAPER, cloud and live remain blocked.
+
+## AI-Driven v2 Round 1 Closure Boundary
+
+`src/kraken_ai_driven_v2_round_1_closure.py` accepts only the independently
+locked external report with the exact recorded SHA-256. It revalidates the
+execution commit, parent runner review, 12-route order, zero eligible routes,
+zero unresolved positions and every nonauthorization before closing Round 1 as
+`HOLD_CASH`.
+
+The component emits route-ordered offline feedback classes rather than a
+ranking. BTC and ETH volatility breakout are recorded as distinct single-gate
+failures; range reversion has no closed-trade evidence; XRP trend and breakout
+have negative expectancy in both cost profiles; remaining routes retain their
+multiple frozen failures. The classification cannot change eligibility.
+
+`src/kraken_ai_driven_v2_round_1_closure_review.py` hash-binds the discovery
+runner protocol/component/review and closure document/component without opening
+external evidence. Round 1 rerun remains false and Round 2 is not registered.
+Any future manifest must be a separately reviewed version citing the immutable
+report hash before another authorization decision.

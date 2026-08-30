@@ -1788,7 +1788,7 @@ performance, route gate, ranking or strategy selection executed. Reference A
 remains closed; Calibration, Evaluation, Candidate v2, PAPER, cloud and live
 remain false.
 
-### Kraken AI-Driven v2 — Round 1 Discovery Runner (Local Review)
+### Kraken AI-Driven v2 — Round 1 Discovery Runner (Executed Once)
 
 Exact family-execution milestone `60664a2` is the parent. A one-shot runner now
 evaluates all 12 BTC/ETH/XRP asset-family routes independently under baseline
@@ -1802,9 +1802,32 @@ route is judged only by the frozen absolute gates; round interest requires two
 assets and two routes, and same-asset multiple passes require separate
 portfolio review without ranking or selection.
 
-The runner, canonical atomic evidence and independent lock are implemented but
-unexecuted. The active mission is Windows focused/full regression and
-hash-bound review, then commit/push with a clean worktree. No dataset has been
-opened and the authorization phrase is inactive. A real Development discovery
-run requires a later separate operator decision. Reference A stays closed;
+Windows focused/full regression passed and exact runner milestone `98a7218` was
+committed and pushed. After clean-worktree and absent-evidence preflight, one
+separately authorized Attempt 1 completed with locked report SHA-256
+`3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`.
+
+All 12 routes completed with zero unresolved positions, but none passed every
+frozen gate. The round status is
+`KRAKEN_AI_V2_ROUND_1_DEVELOPMENT_NO_INTEREST_HOLD_CASH`. Calibration and
+Evaluation remained unopened; Candidate v2, ranking, PAPER, cloud and live
+remain false.
+
+### Kraken AI-Driven v2 — Round 1 Closure (Local Review)
+
+A read-only closure now binds exact execution commit `98a7218`, the parent
+runner protocol/component/review and the immutable report SHA-256. It requires
+zero eligible routes/assets and zero unresolved positions before emitting
+`KRAKEN_AI_V2_ROUND_1_CLOSED_NO_ELIGIBLE_ROUTE_HOLD_CASH`.
+
+Offline feedback preserves route order and records failure classes without
+promotion. BTC volatility breakout failed only stress concentration; ETH
+volatility breakout failed only minimum nonnegative slices. All three range
+routes had no closed trades, while XRP trend and breakout had negative
+expectancy under both cost profiles.
+
+The active mission is Windows focused/full regression, hash-bound review and a
+read-only closure call against the existing external evidence. Round 1 rerun is
+permanently false and Round 2 is not registered. Only after closure commit may
+we decide to pre-register bounded Round 2 or stop. Reference A remains closed;
 Calibration, Evaluation, Candidate v2, PAPER, cloud and live remain false.

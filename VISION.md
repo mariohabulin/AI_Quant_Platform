@@ -501,9 +501,28 @@ without a synthetic force-close. Route interest requires every absolute gate,
 and round interest still requires two assets and two routes. Multiple passing
 families for one asset require a new portfolio review.
 
-The implementation and independent evidence lock are complete but unexecuted.
-No dataset has been opened and no Development authorization has been granted.
-Reference A remains closed; Calibration, Evaluation, Candidate v2, ranking,
-PAPER, cloud and live execution remain unauthorized. The next boundary is
-Windows regression/hash review and commit, followed by a separate operator
-decision about exactly one Development discovery run.
+The implementation and independent evidence lock were integrated at commit
+`98a7218`. One separately authorized Development run completed and recorded
+canonical report SHA-256
+`3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`.
+No route passed every frozen gate, so the exact result is `HOLD_CASH`.
+Calibration, Evaluation, Candidate v2, ranking, PAPER, cloud and live execution
+remain unauthorized.
+
+## Round 1 Closure
+
+Round 1 closes as
+`KRAKEN_AI_V2_ROUND_1_CLOSED_NO_ELIGIBLE_ROUTE_HOLD_CASH`. Its one-shot
+authorization is consumed and no gate may be weakened after inspection.
+
+Offline feedback identifies two descriptive single-gate failures without
+promoting either: BTC volatility breakout failed stress profit concentration,
+while ETH volatility breakout failed chronological stability by one stress
+slice. All range-reversion routes produced no closed trade; XRP trend and
+breakout expectancy were negative under both costs. These facts may inform a
+new version but are not a leaderboard or Candidate evidence.
+
+Round 2 is not registered. The next boundary is a human-reviewed decision to
+pre-register a bounded Round 2 or stop, with this report hash as immutable
+lineage. Reference A remains closed and Calibration, Evaluation, Candidate v2,
+PAPER, cloud and live remain unauthorized.

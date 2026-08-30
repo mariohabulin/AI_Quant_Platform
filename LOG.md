@@ -2905,3 +2905,36 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
   tests for following-open entry, entry-bar protection, gap halt, every numeric
   gate and one-shot evidence. No Development run, dataset access, Candidate v2,
   PAPER, cloud or live action occurred.
+
+## 2026-08-30 — Kraken AI-Driven v2 Round 1 Discovery Attempt 1
+
+- Reproduced 30/30 focused and 1,611/1,611 full Windows tests, verified all
+  source bindings and committed/pushed exact runner milestone `98a7218`.
+- Confirmed clean `HEAD=origin/main`, exact locked dataset manifest and absent
+  final/staging evidence before one separate operator authorization.
+- Executed the one-shot Development discovery and atomically recorded report
+  SHA-256
+  `3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`.
+- Independently relocked the two-file evidence; repository remained clean and
+  staging was absent. Calibration/Evaluation stayed unopened and no real order
+  or Candidate authorization occurred.
+- Recorded `0` eligible routes and assets across 12 routes. Round action is
+  `KRAKEN_AI_V2_ROUND_1_DEVELOPMENT_NO_INTEREST_HOLD_CASH`.
+- Observed BTC and ETH volatility breakout as descriptive single-gate failures,
+  all range routes with zero closed trades, and XRP trend/breakout with negative
+  expectancy under both cost profiles. No post-hoc gate change or rerun exists.
+
+## 2026-08-30 — Kraken AI-Driven v2 Round 1 Closure (Local Preparation)
+
+- Implemented read-only closure against exact execution commit `98a7218`,
+  immutable report hash and the parent runner hash-bound review chain.
+- Required 12 ineligible routes, zero eligible assets, zero unresolved positions
+  and all safety/nonauthorization fields before closing Round 1 as `HOLD_CASH`.
+- Added ordered offline feedback attribution without ranking, winner selection,
+  runtime mutation or Candidate promotion.
+- Permanently prohibited Round 1 rerun and kept Round 2 unregistered; the next
+  permitted choice is a separately reviewed bounded Round 2 pre-registration or
+  stop.
+- Added exact-hash closure review and synthetic tamper, reinterpretation,
+  unresolved-position, no-trade and negative-expectancy tests without opening
+  external evidence.
