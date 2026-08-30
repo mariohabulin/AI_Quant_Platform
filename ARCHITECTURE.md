@@ -2017,3 +2017,34 @@ hypothesis. Runtime learning, parameter grids, ranking, strategy selection and
 automatic promotion are prohibited; feedback can only produce a separately
 reviewed version after an immutable round is closed. Candidate v2, calibration,
 sealed evaluation, PAPER, cloud and live remain unauthorized.
+
+## AI-Driven v2 Hybrid Discovery Round 1 Registration Boundary
+
+`src/kraken_ai_driven_v2_hybrid_discovery_round_1.py` implements protocol
+`kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-1-v1` as configuration
+and evidence identity only. Its four hypotheses cover capitulation recovery,
+trend-pullback continuation, range mean reversion and volatility breakout in
+fixed order. All initially register BTC/ETH/XRP routes; the later evaluation
+unit is one asset-family pair, not a forced universal strategy.
+
+Every hypothesis binds its economic thesis, family/regime vocabulary,
+two-to-five indicators, exact numeric regime and confirmation parameters,
+following-open gap rule, structural stop, net `3R` target/room, scheduled exit
+and maximum hold. Rolling baselines exclude the current bar. The capitulation
+member cites Reference A evidence but uses new signal/execution identities and
+explicitly removes prior-resistance gate reuse.
+
+The lock also freezes baseline and doubled-slippage/spread stress profiles,
+five chronological Development slices and absolute route-interest gates:
+minimum sample and time coverage, baseline/stress expectancy and profit factor,
+marked drawdown, outlier concentration and zero unresolved positions. A round-
+level gate requires at least two assets and two routes. Same-asset multiple
+passes require a separate portfolio review; the configuration exposes no
+ranking or selection function.
+
+`src/kraken_ai_driven_v2_hybrid_discovery_round_1_review.py` hash-binds the
+parent hybrid protocol/component/review and the complete Round-1
+protocol/component. Neither module imports market-data or backtesting code.
+Regime, signal and execution components remain absent, so Development access
+and execution remain structurally unavailable. Candidate v2, Calibration,
+Evaluation, PAPER, cloud and live remain blocked.

@@ -1717,3 +1717,33 @@ hypothesis, signal component, execution adapter or runner exists; no market
 data was opened. The immediate boundary is Windows focused/full regression and
 review, commit/push, then a separate pre-registration of bounded Round 1.
 Calibration, evaluation, Candidate v2, PAPER, cloud and live remain false.
+
+### Kraken AI-Driven v2 — HYBRID DISCOVERY ROUND 1 PRE-REGISTERED (LOCAL REVIEW)
+
+Parent hybrid milestone `20d6767` is the exact base for protocol
+`kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-1-v1`. Round 1 now
+contains four hypotheses: volatility-path capitulation recovery, trend-pullback
+continuation, range mean reversion and volatility breakout. Each initially
+registers BTC, ETH and XRP, but future interest is retained per asset-family
+route, so an unsuccessful route remains `HOLD_CASH`.
+
+All four freeze completed-bar, prior-baseline indicators and following-open
+execution with a minimum net `3R` path. Family-specific regime, confirmation,
+stop, exit and maximum-hold values are exact. The capitulation member uses
+Reference A only as evidence lineage and cannot reuse its identities or failed
+prior-resistance gate.
+
+Baseline adverse Kraken costs and a doubled slippage/spread stress profile are
+fixed. Five chronological Development slices and absolute route gates require
+eight trades, time persistence, baseline/stress expectancy and profit factor,
+bounded drawdown, bounded largest-trade contribution and no unresolved
+position. At least two assets and two routes must pass before later portfolio
+interest exists; multiple routes for one asset trigger a separate review, not
+automatic selection.
+
+Only canonical manifest/configuration locks and a hash-bound nonexecuting review
+exist. Regime, signal, execution and runner components are not implemented, no
+data was opened and no performance was calculated. The immediate boundary is
+Windows regression/review, commit/push, then synthetic-only implementation of
+the four causal components. Calibration, Evaluation, Candidate v2, PAPER,
+cloud and live remain false.

@@ -2817,3 +2817,28 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
   partition and new discovery artifacts. No hypothesis, strategy component,
   runner or performance result exists. Windows integration is next; Candidate
   v2, PAPER, cloud and live remain false.
+
+## 2026-08-30 — Kraken AI-Driven v2 Hybrid Discovery Round 1 (Local Preparation)
+
+- Confirmed parent hybrid protocol commit `20d6767` and selected four Round 1
+  mechanisms, one per permitted family, rather than consuming the six-member
+  ceiling with early within-family variants.
+- Pre-registered protocol
+  `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-1-v1` with exact
+  economic theses, BTC/ETH/XRP routes, causal regimes, indicators, numeric
+  signals and family-specific net-`3R` execution paths.
+- Retained Reference A only as capitulation feedback lineage and explicitly
+  prohibited its signal/execution identity and prior-resistance gate reuse.
+- Froze the adverse baseline cost profile plus doubled research slippage/spread
+  stress, while keeping the official taker commission assumption unchanged.
+- Fixed five chronological Development slices and absolute asset-family route
+  gates for sample, time coverage, expectancy, profit factor, drawdown, outlier
+  concentration and unresolved positions.
+- Required at least two eligible assets and two routes for later portfolio
+  interest. Multiple passing families for one asset require a new portfolio
+  review; no result leaderboard or automatic winner exists.
+- Added canonical parent-manifest and complete configuration locks plus exact-
+  hash review of the parent hybrid and Round-1 artifacts.
+- Opened no dataset and implemented no regime, signal, execution or runner
+  component. Windows integration and commit/push are next; Candidate v2,
+  Calibration, Evaluation, PAPER, cloud and live remain false.

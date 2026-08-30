@@ -426,3 +426,22 @@ failure and propose a new manifest, but no running strategy can mutate itself.
 Reference A stays closed and its exact identities cannot be reused. This layer
 opens no market data and creates no strategy runner, performance result,
 calibration access or Candidate v2 authorization.
+
+## Pre-Registered Hybrid Discovery Round 1
+
+Protocol `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-1-v1`
+turns the shared catalog into four exact, still-nonexecuting hypotheses: a new
+volatility-path capitulation recovery, trend-pullback continuation, range mean
+reversion and volatility breakout. Each begins with BTC, ETH and XRP routes,
+but later retention is decided per asset-family pair; different assets may
+retain different mechanisms or remain `HOLD_CASH`.
+
+Round 1 freezes completed-bar indicators, net `3R` family-specific trade paths,
+baseline and doubled-friction stress costs, five chronological Development
+slices and absolute sample, expectancy, profit-factor, drawdown and outlier
+gates. It does not rank terminal returns. More than one passing route for an
+asset requires a separate portfolio review rather than automatic selection.
+
+Reference A remains immutable lineage only. No regime, signal or execution
+component has yet been implemented, and no data has been opened. Candidate v2,
+Calibration, Evaluation and every deployment authorization remain false.
