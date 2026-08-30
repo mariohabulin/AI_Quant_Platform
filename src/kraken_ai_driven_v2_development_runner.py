@@ -224,6 +224,7 @@ class KrakenAIDrivenV2DevelopmentDatasetReader:
             values,
             index=pd.DatetimeIndex(index),
             columns=REQUIRED_OHLCV_COLUMNS,
+            dtype="float64",
         )
         return frame
 

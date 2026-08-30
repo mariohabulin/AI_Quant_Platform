@@ -442,6 +442,26 @@ def test_dataset_reader_hashes_full_files_but_parses_development_only(
         frame = locked.frame(asset)
         assert len(frame) == {"BTC-USD": 1916, "ETH-USD": 1917, "XRP-USD": 1915}[asset]
         assert frame.index.max() < pd.Timestamp("2024-04-01T00:00:00Z")
+        assert frame.dtypes.eq("float64").all()
+
+
+def test_real_reader_rows_reach_risk_adapter_as_supported_numeric_values(
+    tmp_path, monkeypatch
+):
+    dataset = tmp_path / "locked"
+    evidence = tmp_path / "evidence"
+    digest = _write_synthetic_locked_dataset(dataset)
+    monkeypatch.setattr(development_module, "DATASET_MANIFEST_SHA256", digest)
+    signal_day = "2019-02-01T00:00:00Z"
+    signals = {asset: (signal_day,) for asset in ASSET_ORDER}
+    runner = KrakenAIDrivenV2DevelopmentRunner(
+        state_machine_factory=controlled_factory([], signals)
+    )
+
+    recorded = runner.run(dataset, evidence, AUTHORIZATION_PHRASE)
+
+    assert recorded.status == "KRAKEN_AI_V2_DEVELOPMENT_EVIDENCE_RECORDED"
+    assert recorded.closed_trade_count == 3
 
 
 def test_dataset_reader_rejects_asset_byte_tampering(tmp_path, monkeypatch):

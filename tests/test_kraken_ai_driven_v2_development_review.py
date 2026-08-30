@@ -35,6 +35,9 @@ DEVELOPMENT_PROTOCOL = (
     ROOT / "KRAKEN_BTC_ETH_XRP_AI_DRIVEN_V2_DEVELOPMENT_RUNNER_PROTOCOL_V1.md"
 )
 DEVELOPMENT_RUNNER = ROOT / "src" / "kraken_ai_driven_v2_development_runner.py"
+ATTEMPT_1_INCIDENT = (
+    ROOT / "KRAKEN_AI_DRIVEN_V2_DEVELOPMENT_ATTEMPT_1_INCIDENT.md"
+)
 
 
 def test_development_review_exactly_hash_binds_the_complete_v2_chain():
@@ -156,3 +159,14 @@ def test_project_documents_name_development_runner_and_authorization_boundary():
         assert "2024-04-01T00:00:00Z" in text
         assert "Candidate v2" in text
         assert "live" in text.lower()
+
+
+def test_attempt_1_incident_is_technical_and_requires_new_authorization():
+    text = ATTEMPT_1_INCIDENT.read_text(encoding="utf-8")
+
+    assert "TECHNICAL_NUMERIC_TYPE_INTEGRATION_FAILURE" in text
+    assert "Signal close must be numeric" in text
+    assert "float64" in text
+    assert "not a completed development" in text
+    assert "authorization is consumed" in text
+    assert "calibration and evaluation OHLCV values were not parsed" in text

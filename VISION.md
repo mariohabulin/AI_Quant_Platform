@@ -385,3 +385,10 @@ evidence, not to search for an attractive answer. No parameter sweep, ranking
 or automatic promotion exists. Even after an explicitly authorized run,
 calibration, evaluation, optimization, Candidate v2, PAPER, cloud and live
 execution require separate decisions.
+
+The first authorized attempt exposed an input-representation boundary before
+evidence could be written: exact external decimal text passed validation but
+was not normalized to the internal `float64` OHLCV contract. Recovery preserves
+all research semantics and adds only that explicit conversion plus a matching
+real-reader integration test. A technical attempt is never reinterpreted as a
+strategy result, and its authorization cannot be silently reused.

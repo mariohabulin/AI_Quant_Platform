@@ -1636,3 +1636,29 @@ not grant that phrase or authorize execution. The immediate boundary is
 Windows reproduction, hash-bound nonexecuting review, commit and push.
 Development performance, calibration, evaluation, optimization, Candidate v2,
 PAPER, cloud and live authorization remain false.
+
+### Kraken AI-Driven v2 — DEVELOPMENT ATTEMPT 1 TECHNICAL INCIDENT
+
+Windows reproduced 48/48 focused and 1,413/1,413 complete tests, then committed
+and pushed development-runner milestone `5054da1`. A separate operator decision
+authorized one reference-A development attempt on `2026-08-30`.
+
+The runner validated the exact manifest and full-file hashes, parsed only the
+development prefix and reached the first eligible entry. It then failed closed
+with `TypeError: Signal close must be numeric.` The reader had validated CSV
+numbers as `Decimal` but retained that representation in its Pandas frame;
+synthetic tests had used `float`, and the frozen risk adapter accepts its
+existing `numbers.Real` contract.
+
+No canonical report, checksum or result was emitted. The exception preceded
+evidence-root creation and atomic staging/final promotion. Calibration and
+evaluation OHLCV remained unparsed, and no real order, sweep, ranking or
+promotion occurred. Attempt 1 is not strategy evidence and its authorization
+is consumed.
+
+The active mission is limited to explicit `float64` normalization after exact
+decimal validation, a real-reader-to-risk-adapter regression, renewed hash
+binding, complete Windows regression, incident commit/push and explicit
+absence checks for final/staging evidence. Only then may a new operator
+decision consider one recovery attempt. All calibration, evaluation,
+optimization, Candidate v2, PAPER, cloud and live authorization remain false.

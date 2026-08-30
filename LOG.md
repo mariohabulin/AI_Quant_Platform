@@ -2736,3 +2736,30 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
   protocol/runner in a nonexecuting review. Opened no dataset and executed no
   performance. Windows integration is next; authorization, calibration,
   evaluation, optimization, Candidate v2, PAPER, cloud and live remain false.
+
+## 2026-08-30 — Kraken AI-Driven v2 Development Attempt 1 Incident
+
+- Reproduced 48/48 focused and 1,413/1,413 complete Windows tests, reviewed the
+  nonexecuting declaration, then committed and pushed runner milestone
+  `5054da1` with a clean worktree.
+- Separately authorized exactly one development-only reference-A attempt after
+  confirming the exact ZIP, commit, upstream bindings, dataset directory and
+  absent final/staging evidence.
+- Revalidated the locked manifest and full asset-file hashes, parsed only
+  development and reached the first eligible entry. The run failed closed with
+  `TypeError: Signal close must be numeric.` before report or evidence-root
+  creation.
+- Root cause was an untested representation seam: canonical CSV values were
+  validated as finite `Decimal` objects and retained in the reader frame,
+  while synthetic runner tests used `float` and the risk adapter preserved its
+  strict `numbers.Real` contract.
+- Added a regression that reproduces the real reader through `plan_entry`, then
+  normalized validated reader output to explicit `float64`. Strategy, state,
+  risk, cost, portfolio, partition and evidence semantics are unchanged.
+- Classified Attempt 1 as `TECHNICAL_NUMERIC_TYPE_INTEGRATION_FAILURE`, not a
+  development result. Its authorization is consumed. Windows absence checks,
+  recovery regression, hash-bound review, commit/push and a new separate
+  operator decision are required before any recovery attempt.
+- Calibration and evaluation OHLCV remained unparsed. No network request, real
+  order, parameter sweep, ranking, Candidate v2, PAPER, cloud or live
+  authorization occurred.

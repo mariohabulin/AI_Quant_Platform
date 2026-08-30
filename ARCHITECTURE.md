@@ -1961,3 +1961,12 @@ staging evidence blocks repeat. The separate nonexecuting review hash-binds
 all feature, state, risk, partition and development artifacts. Review opens no
 dataset and grants no run authorization. Results cannot automatically promote
 calibration, evaluation, Candidate v2, PAPER, cloud or live execution.
+
+Development Attempt 1 established one additional representation boundary.
+Canonical CSV text is validated with `Decimal` so malformed or non-finite
+input fails before the state path, then stored as `float64` for the existing
+feature, state and risk/execution contracts. The original implementation
+retained `Decimal` objects and failed closed at the first eligible signal before
+evidence-root creation. Recovery changes no strategy, partition, risk, cost or
+execution semantic and requires a newly hash-bound runner plus separate retry
+authorization.
