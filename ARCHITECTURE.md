@@ -2048,3 +2048,24 @@ protocol/component. Neither module imports market-data or backtesting code.
 Regime, signal and execution components remain absent, so Development access
 and execution remain structurally unavailable. Candidate v2, Calibration,
 Evaluation, PAPER, cloud and live remain blocked.
+
+## AI-Driven v2 Round 1 Causal Signals Boundary
+
+`src/kraken_ai_driven_v2_round_1_causal_signals.py` implements the shared
+feature engine and four family-isolated entry-signal automata. The feature
+engine requires one continuous UTC daily OHLCV segment, preserves source data,
+excludes the current bar from rolling baselines and emits unavailable warm-up
+values rather than filling them from future observations.
+
+The four paths preserve their registered behavior: capitulation uses an armed
+five-bar recovery window; trend-pullback and range reversion require the
+immediate next completed-bar confirmation; volatility breakout confirms on the
+current completed bar. Each successful path emits only `ENTER_NEXT_OPEN` plus
+causal setup/ATR/target anchors. No path owns quantity, fill, position, cost,
+P&L or portfolio state.
+
+`src/kraken_ai_driven_v2_round_1_causal_signals_review.py` hash-binds the
+Round 1 protocol/component/review and the new signal protocol/component, then
+verifies the immutable configuration identity. Development, Calibration and
+Evaluation remain unopened. Reference A stays closed, Candidate v2 stays
+unauthorized and execution adapters remain the next synthetic-only boundary.

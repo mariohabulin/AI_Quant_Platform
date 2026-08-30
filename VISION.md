@@ -445,3 +445,23 @@ asset requires a separate portfolio review rather than automatic selection.
 Reference A remains immutable lineage only. No regime, signal or execution
 component has yet been implemented, and no data has been opened. Candidate v2,
 Calibration, Evaluation and every deployment authorization remain false.
+
+## Round 1 Causal Signals
+
+Round 1 now has one shared causal feature engine and four deterministic entry-
+signal paths: capitulation recovery, trend-pullback continuation, range mean
+reversion and volatility breakout. Every rolling baseline excludes the current
+bar, every decision uses completed-bar evidence and every accepted signal emits
+only a following-open research intent.
+
+The four paths are independent state machines bound to the immutable Round 1
+configuration. Trend and range permit confirmation only on the immediate next
+completed bar; capitulation retains its five-bar window; breakout confirms on
+the current completed bar. Gaps, invalid OHLCV, unavailable warm-up features
+and unknown families fail closed.
+
+This is not execution or performance evidence. No quantity, fill, position,
+cost, P&L, ranking or runner exists and no dataset was opened. Reference A
+remains closed and is feedback lineage only; Candidate v2 remains unauthorized.
+The next boundary is synthetic implementation of four family-specific
+execution adapters under the already frozen shared risk envelope.

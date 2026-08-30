@@ -1747,3 +1747,22 @@ data was opened and no performance was calculated. The immediate boundary is
 Windows regression/review, commit/push, then synthetic-only implementation of
 the four causal components. Calibration, Evaluation, Candidate v2, PAPER,
 cloud and live remain false.
+
+### Kraken AI-Driven v2 — Round 1 Causal Signals (Local Review)
+
+Exact parent milestone `b6ea2ab` is the base. A shared causal feature engine
+now computes the frozen prior-only baselines and current completed-bar
+measurements for all four Round 1 families. Prefix-causality, source
+preservation, strict UTC/OHLCV geometry and gap rejection are synthetic-tested.
+
+Four independent signal paths now emit evidence and `ENTER_NEXT_OPEN` intents
+without producing an order or position. Capitulation uses its five-bar window;
+trend and range confirm only on the immediate next completed bar; breakout
+confirms on the same completed bar. Range freezes its signal-time Bollinger
+midline anchor. No cost, fill, P&L, ranking or performance calculation exists.
+
+The active mission is Windows focused/full regression and hash-bound review,
+then commit/push of this exact signal-only milestone. After that, the next
+separate task is synthetic family-specific execution adapters. Reference A is
+still closed, no market dataset was opened and Calibration, Evaluation,
+Candidate v2, PAPER, cloud and live remain false.

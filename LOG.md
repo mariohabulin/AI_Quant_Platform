@@ -2842,3 +2842,23 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - Opened no dataset and implemented no regime, signal, execution or runner
   component. Windows integration and commit/push are next; Candidate v2,
   Calibration, Evaluation, PAPER, cloud and live remain false.
+
+## 2026-08-30 — Kraken AI-Driven v2 Round 1 Causal Signals (Local Preparation)
+
+- Bound the new milestone to exact Round 1 commit `b6ea2ab`, its four-hypothesis
+  manifest and full configuration SHA-256.
+- Implemented one strict continuous-segment feature engine with causal prior
+  baselines for ATR, volume, EMA, ADX, Bollinger, RSI, stochastic, Donchian,
+  drawdown and structural lows.
+- Implemented four independent deterministic signal paths for capitulation
+  recovery, trend-pullback continuation, range mean reversion and volatility
+  breakout. Every accepted signal emits only `ENTER_NEXT_OPEN` evidence.
+- Froze trend and range to immediate-next-bar confirmation, capitulation to its
+  five-bar window and breakout to same-completed-bar confirmation. Range stores
+  the immutable signal-time midline target anchor.
+- Added synthetic source-preservation, exact-formula, current-bar exclusion,
+  prefix-causality, warm-up, gap, validation and state-transition tests.
+- Added an exact-hash nonexecuting review. No execution adapter, runner,
+  position, fill, performance, ranking or data access exists. Reference A
+  remains closed and Candidate v2, Calibration, Evaluation, PAPER, cloud and
+  live remain false.
