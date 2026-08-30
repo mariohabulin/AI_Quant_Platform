@@ -402,3 +402,27 @@ failed the frozen causal/cost-aware entry-feasibility gates. Zero P&L is
 therefore absence of exposure, not a break-even edge. Any continuation requires
 a new pre-registered development hypothesis; Candidate v2 and every deployment
 authorization remain false.
+
+## Bounded Hybrid Strategy Discovery and Learning
+
+Protocol
+`kraken-btc-eth-xrp-ai-driven-v2-hybrid-strategy-discovery-learning-v1`
+selects a hybrid architecture after Reference A: one shared, economically named
+strategy-family catalog with asset/regime-specific routing and one common hard
+portfolio safety envelope. BTC, ETH and XRP may justify different causal
+mechanisms; an asset without an eligible route remains `HOLD_CASH` rather than
+being forced into a universal strategy.
+
+The first catalog bounds research to capitulation recovery, trend-pullback
+continuation, range mean reversion and volatility breakout. These are permitted
+mechanism classes, not implemented winners. Each future hypothesis must bind
+its assets, regimes, two-to-five permitted indicator primitives, causal signal,
+family-specific execution, development gates and evidence lineage before data
+access. At most six hypotheses may enter one round, and no leaderboard or
+Cartesian parameter sweep exists.
+
+Learning is offline and versioned: immutable development evidence may explain
+failure and propose a new manifest, but no running strategy can mutate itself.
+Reference A stays closed and its exact identities cannot be reused. This layer
+opens no market data and creates no strategy runner, performance result,
+calibration access or Candidate v2 authorization.

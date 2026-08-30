@@ -1981,3 +1981,39 @@ With zero approved plans, positions or trades, status
 `KRAKEN_AI_V2_DEVELOPMENT_REFERENCE_A_CLOSED_NO_TRADE_HOLD_CASH` closes the
 mechanism without interpreting zero P&L as performance. Calibration,
 evaluation, Candidate v2 and deployment remain separate blocked boundaries.
+
+## AI-Driven v2 Hybrid Strategy Discovery and Learning Boundary
+
+After Reference A closure, `src/kraken_ai_driven_v2_strategy_discovery.py` implements nonexecuting
+protocol
+`kraken-btc-eth-xrp-ai-driven-v2-hybrid-strategy-discovery-learning-v1`.
+The architecture is hybrid: a shared family/regime vocabulary governs all
+three assets, while each immutable hypothesis explicitly owns an ordered asset
+subset, eligible causal regimes, permitted indicators, signal identity,
+family-specific execution identity and development-gate identity. `HOLD_CASH`
+is the required fallback for an unclassified regime or an asset without an
+eligible route.
+
+The bounded catalog contains capitulation recovery, trend-pullback
+continuation, range mean reversion and volatility breakout. It permits no more
+than six hypotheses per round, two variants per family, four routes per asset,
+two separately authorized rounds and twelve hypotheses over protocol v1. The
+component validates future JSON-compatible manifests and returns canonical
+content plus SHA-256; it has no market-data reader, signal calculation,
+backtester, optimizer or execution method.
+
+Every future family adapter must preserve the common USD 5,000 cash-only
+safety envelope: `0.50%` position risk, `1.50%` total open risk, three
+positions, one-third notional, completed-bar/next-open causality, entry-bar
+protection, stop-first ordering and the frozen adverse Kraken cost profile.
+It must separately define a causal stop and exit/target path. The closed
+Reference-A prior-resistance adapter is not a generic policy and cannot be
+reused simply to alter its failed `3R` gate.
+
+`src/kraken_ai_driven_v2_strategy_discovery_review.py` exact-hash binds the
+Reference-A closure, risk/execution and partition protocol/components plus the
+new protocol and manifest-validator. Review opens no data and registers no
+hypothesis. Runtime learning, parameter grids, ranking, strategy selection and
+automatic promotion are prohibited; feedback can only produce a separately
+reviewed version after an immutable round is closed. Candidate v2, calibration,
+sealed evaluation, PAPER, cloud and live remain unauthorized.

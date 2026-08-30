@@ -2788,3 +2788,32 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - Prohibited rerun, gate loosening, calibration transfer and Candidate v2,
   PAPER, cloud or live promotion. The next boundary is a new pre-registered
   development hypothesis or stop.
+
+## 2026-08-30 — Kraken AI-Driven v2 Hybrid Discovery Protocol (Local Preparation)
+
+- Selected a hybrid continuation after Reference A: shared strategy-family and
+  safety catalogs with asset/regime-specific BTC/ETH/XRP routing and explicit
+  `HOLD_CASH` fallback.
+- Froze protocol
+  `kraken-btc-eth-xrp-ai-driven-v2-hybrid-strategy-discovery-learning-v1`
+  against the immutable Reference-A closure/report and exact risk/partition
+  predecessors without opening market data.
+- Bounded permitted mechanisms to capitulation recovery, trend-pullback
+  continuation, range mean reversion and volatility breakout with family-owned
+  regime and indicator vocabularies.
+- Limited discovery to six hypotheses per round, two variants per family, four
+  routes per asset, two separately authorized rounds and twelve cumulative
+  hypotheses under protocol v1.
+- Preserved the shared USD 5,000 cash-only safety envelope, adverse Kraken cost
+  profile, `0.50%` position risk, `1.50%` total risk, three positions,
+  one-third notional, causal next-open execution and stop-first protection.
+- Added a strict canonical manifest validator that rejects Reference-A identity
+  reuse, unknown assets/regimes/indicators, budget excess and every execution,
+  mutation, ranking, calibration, evaluation and Candidate authorization.
+- Defined learning as offline immutable feedback and versioned proposal only;
+  runtime mutation, global leaderboards and automatic strategy selection remain
+  prohibited.
+- Added exact-hash nonexecuting review over Reference-A closure, risk/execution,
+  partition and new discovery artifacts. No hypothesis, strategy component,
+  runner or performance result exists. Windows integration is next; Candidate
+  v2, PAPER, cloud and live remain false.

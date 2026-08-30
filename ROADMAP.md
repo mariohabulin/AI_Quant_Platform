@@ -824,9 +824,34 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
   and close Reference A as
   `KRAKEN_AI_V2_DEVELOPMENT_REFERENCE_A_CLOSED_NO_TRADE_HOLD_CASH` after all
   13 confirmations were rejected before entry.
-- [ ] Decide whether to stop this path or pre-register a structurally new
-  development-only hypothesis; do not open calibration or evaluation merely
-  to force an executable sample.
+- [x] Decide to continue with bounded hybrid discovery: one shared strategy-
+  family catalog and hard portfolio safety envelope with asset/regime-specific
+  BTC/ETH/XRP routing and first-class `HOLD_CASH`.
+
+### AI-Driven v2 Hybrid Strategy Discovery and Learning — LOCAL SYNTHETIC REVIEW
+
+- [x] Freeze protocol
+  `kraken-btc-eth-xrp-ai-driven-v2-hybrid-strategy-discovery-learning-v1`
+  without registering a hypothesis or opening development data.
+- [x] Bound the catalog to capitulation recovery, trend-pullback continuation,
+  range mean reversion and volatility breakout with family-owned causal regimes
+  and permitted indicator primitives.
+- [x] Limit one round to six hypotheses, two variants per family and four routes
+  per asset; limit protocol v1 to two separately authorized rounds and twelve
+  cumulative hypotheses.
+- [x] Preserve the shared `0.50%` position-risk, `1.50%` portfolio-risk,
+  three-position, one-third-notional and adverse-cost safety envelope while
+  requiring new family-specific causal signal and execution contracts.
+- [x] Implement canonical hypothesis-manifest validation, Reference-A identity
+  reuse rejection, immutable offline-feedback lineage and hash-bound
+  nonexecuting review.
+- [ ] Reproduce focused/full regression and hash-bound review on Windows, then
+  commit and push the exact hybrid protocol milestone.
+- [ ] Pre-register bounded hybrid discovery Round 1 with exact hypotheses,
+  causal regime/signal/execution components and numeric development-interest
+  gates before requesting any development-data authorization.
+- [ ] Build a one-shot development-only discovery runner only after Round 1
+  components pass prefix-causality, safety and hash-binding review.
 - [ ] Audit point-in-time equity fundamentals, corporate actions, historical
   universe membership, delistings, industry groups and executable costs before
   implementing CAN SLIM.
@@ -835,4 +860,4 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
 - [ ] Evaluate crypto and equity sleeves independently before AI ranking,
   strategy combination or portfolio allocation is studied.
 
-External notification delivery and any real execution capability remain deferred. The completed twelve-hour, 24-hour and three-day gates are bounded infrastructure-endurance evidence, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization. First candidate v1, all eight standalone default screening variants, all three Alpha Development v2 variants and the exact four Trend Pullback Volume v1 variants are closed rejected configurations. The non-performance Kraken BTC/ETH/XRP archive-only v2 daily dataset is locked and independently revalidated. Supervised replay v1 is paused after the single BTC episode bound by SHA-256 `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`; ETH and XRP remain unopened. AI-driven v2 state, risk/execution and partition layers are Windows-integrated through commit `421de3f`; recovery runner commit is `1f040e2`. Reference A is closed `NO_TRADE_HOLD_CASH` against report SHA-256 `f537410d2a237be207951b638518d80e861289dafa7db9b5c2322ffa32d4e594`. The active boundary is a new pre-registered development hypothesis or stop—not calibration, sealed evaluation, optimization, Candidate v2, PAPER or live execution.
+External notification delivery and any real execution capability remain deferred. The completed twelve-hour, 24-hour and three-day gates are bounded infrastructure-endurance evidence, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization. First candidate v1, all eight standalone default screening variants, all three Alpha Development v2 variants and the exact four Trend Pullback Volume v1 variants are closed rejected configurations. The non-performance Kraken BTC/ETH/XRP archive-only v2 daily dataset is locked and independently revalidated. Supervised replay v1 is paused after the single BTC episode bound by SHA-256 `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`; ETH and XRP remain unopened. AI-driven v2 state, risk/execution and partition layers are Windows-integrated through commit `421de3f`; recovery runner commit is `1f040e2`. Reference A is closed `NO_TRADE_HOLD_CASH` against report SHA-256 `f537410d2a237be207951b638518d80e861289dafa7db9b5c2322ffa32d4e594`. Protocol `kraken-btc-eth-xrp-ai-driven-v2-hybrid-strategy-discovery-learning-v1` freezes the next hybrid architecture without a registered hypothesis or data access. The active boundary is Windows integration followed by pre-registration of bounded Round 1—not calibration, sealed evaluation, optimization, Candidate v2, PAPER or live execution.

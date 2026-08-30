@@ -1688,3 +1688,32 @@ be rerun or loosened after inspection and creates no calibration or Candidate
 v2 authorization. The active decision is whether to stop or pre-register a
 structurally new development-only hypothesis with an executable causal target.
 Evaluation, optimization, PAPER, cloud and live remain blocked.
+
+### Kraken AI-Driven v2 — HYBRID STRATEGY DISCOVERY PROTOCOL FROZEN (LOCAL REVIEW)
+
+The continuation decision is now hybrid under protocol
+`kraken-btc-eth-xrp-ai-driven-v2-hybrid-strategy-discovery-learning-v1`.
+BTC, ETH and XRP share a four-family catalog and the same hard portfolio safety
+envelope, but a future immutable hypothesis may route different strategy
+families to different assets and causal regimes. No asset is forced to trade;
+`HOLD_CASH` remains a valid output.
+
+The catalog permits capitulation recovery, trend-pullback continuation, range
+mean reversion and volatility breakout using two-to-five family-permitted
+indicator primitives. One round is limited to six hypotheses, two variants per
+family and four routes per asset. Protocol v1 is limited to two separately
+authorized rounds and twelve cumulative hypotheses, with no parameter grid,
+performance leaderboard or automatic winner.
+
+The shared safety floor preserves USD 5,000 research notional, `0.50%`
+position risk, `1.50%` total open risk, three positions, one-third notional,
+adverse costs, completed-bar/next-open causality, entry-bar protection and
+stop-first ordering. Each family must still define a new causal execution path;
+Reference A remains closed and its exact signal, execution and run identities
+cannot be reused.
+
+Only a manifest validator and hash-bound nonexecuting review exist. No Round 1
+hypothesis, signal component, execution adapter or runner exists; no market
+data was opened. The immediate boundary is Windows focused/full regression and
+review, commit/push, then a separate pre-registration of bounded Round 1.
+Calibration, evaluation, Candidate v2, PAPER, cloud and live remain false.
