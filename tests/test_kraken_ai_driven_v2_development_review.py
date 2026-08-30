@@ -98,7 +98,16 @@ def test_changed_development_artifact_is_rejected(tmp_path, source, keyword):
 def test_development_review_is_nonexecuting_and_authorization_blocked():
     declaration = review_declaration()
 
-    assert declaration["status"].endswith("EXECUTION_AUTHORIZATION_REQUIRED")
+    assert declaration["status"] == (
+        "KRAKEN_AI_V2_DEVELOPMENT_REFERENCE_A_"
+        "CLOSED_NO_FURTHER_EXECUTION_AUTHORIZATION"
+    )
+    assert declaration["recorded_development_report_sha256"] == (
+        "f537410d2a237be207951b638518d80e861289dafa7db9b5c2322ffa32d4e594"
+    )
+    assert declaration["reference_a_closed"] is True
+    assert declaration["reference_a_rerun_authorized"] is False
+    assert declaration["recorded_development_run_executed"] is True
     assert declaration["development_protocol_id"] == DEVELOPMENT_PROTOCOL_ID
     assert declaration["development_run_id"] == DEVELOPMENT_RUN_ID
     assert declaration["partition_protocol_id"] == PARTITION_PROTOCOL_ID
@@ -132,6 +141,8 @@ def test_development_review_cli_prints_only_declaration(capsys):
     payload = json.loads(capsys.readouterr().out)
 
     assert payload == result
+    assert payload["reference_a_closed"] is True
+    assert payload["reference_a_rerun_authorized"] is False
     assert payload["development_data_opened"] is False
     assert payload["calibration_data_opened"] is False
     assert payload["evaluation_data_opened"] is False

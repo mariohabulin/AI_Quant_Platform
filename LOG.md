@@ -2763,3 +2763,28 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - Calibration and evaluation OHLCV remained unparsed. No network request, real
   order, parameter sweep, ranking, Candidate v2, PAPER, cloud or live
   authorization occurred.
+
+## 2026-08-30 — Kraken AI-Driven v2 Development Reference A Closure
+
+- Reproduced the numeric-boundary recovery on Windows with 50/50 focused and
+  1,415/1,415 complete tests, then committed and pushed exact repair `1f040e2`.
+- Confirmed Attempt 1 and Attempt 2 final/staging paths absent before a new
+  explicit operator decision authorized exactly one recovery run.
+- Attempt 2 completed `KRAKEN_AI_V2_DEVELOPMENT_COMPLETED_FLAT`, atomically
+  recorded final evidence and left no staging or repository modification.
+- Independently locked canonical report SHA-256
+  `f537410d2a237be207951b638518d80e861289dafa7db9b5c2322ffa32d4e594`
+  with exact dataset, partition and non-promotion identities.
+- Verified development rows BTC `1916`, ETH `1917`, XRP `1915`, exact segment
+  resets and 730 opaque later rows per asset. Calibration/evaluation parsed-row
+  counts remained zero.
+- Observed 13 state confirmations and 13 risk/execution rejections: two
+  `CAUSAL_RESISTANCE_NOT_ABOVE_ENTRY` and eleven
+  `NET_THREE_R_CAUSAL_ROOM_NOT_AVAILABLE`. No plan, position or trade existed.
+- Closed Reference A as
+  `KRAKEN_AI_V2_DEVELOPMENT_REFERENCE_A_CLOSED_NO_TRADE_HOLD_CASH`. USD 5,000
+  unchanged cash and zero P&L/drawdown/cost are no-exposure evidence, not a
+  break-even strategy claim.
+- Prohibited rerun, gate loosening, calibration transfer and Candidate v2,
+  PAPER, cloud or live promotion. The next boundary is a new pre-registered
+  development hypothesis or stop.

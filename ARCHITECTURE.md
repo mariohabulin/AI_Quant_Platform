@@ -1970,3 +1970,14 @@ retained `Decimal` objects and failed closed at the first eligible signal before
 evidence-root creation. Recovery changes no strategy, partition, risk, cost or
 execution semantic and requires a newly hash-bound runner plus separate retry
 authorization.
+
+Recovery Attempt 2 produced canonical report SHA-256
+`f537410d2a237be207951b638518d80e861289dafa7db9b5c2322ffa32d4e594`.
+The read-only closure joins that report hash to execution commit `1f040e2` and
+the successful hash-bound preflight, then requires the exact complete outcome.
+All 13 `CONFIRMATION_LONG` transitions became risk/execution rejections: two
+had no resistance above entry and eleven lacked net adverse-cost `3R` room.
+With zero approved plans, positions or trades, status
+`KRAKEN_AI_V2_DEVELOPMENT_REFERENCE_A_CLOSED_NO_TRADE_HOLD_CASH` closes the
+mechanism without interpreting zero P&L as performance. Calibration,
+evaluation, Candidate v2 and deployment remain separate blocked boundaries.

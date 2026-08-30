@@ -788,7 +788,7 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
   the nonexecuting declaration, then commit and push exact milestone `421de3f`
   after 1,385/1,385 tests passed.
 
-### AI-Driven v2 Development Runner — ATTEMPT 1 RECOVERY
+### AI-Driven v2 Development Runner — REFERENCE A CLOSED
 
 - Protocol identity remains
   `kraken-btc-eth-xrp-ai-driven-v2-development-runner-v1`; recovery changes
@@ -814,14 +814,19 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
 - [x] Reproduce the exact failure with a real-reader-to-risk-adapter test and
   normalize validated external decimal OHLCV to internal `float64` without
   changing research semantics.
-- [ ] Confirm final/staging evidence absence on Windows, reproduce focused and
-  complete recovery regressions, inspect the renewed hash-bound declaration,
-  then commit and push the exact repair.
-- [ ] Separately decide whether to authorize one recovery attempt; the first
+- [x] Confirm final/staging evidence absence on Windows, reproduce 50/50
+  focused and 1,415/1,415 complete recovery tests, then commit and push repair
+  `1f040e2`.
+- [x] Separately authorize one recovery attempt; the first
   attempt's authorization is consumed and cannot be reused.
-- [ ] If recovery is authorized, execute once against the external lock,
-  independently review the canonical report and close reference A before any
-  calibration proposal.
+- [x] Execute Attempt 2 once, independently lock report SHA-256
+  `f537410d2a237be207951b638518d80e861289dafa7db9b5c2322ffa32d4e594`
+  and close Reference A as
+  `KRAKEN_AI_V2_DEVELOPMENT_REFERENCE_A_CLOSED_NO_TRADE_HOLD_CASH` after all
+  13 confirmations were rejected before entry.
+- [ ] Decide whether to stop this path or pre-register a structurally new
+  development-only hypothesis; do not open calibration or evaluation merely
+  to force an executable sample.
 - [ ] Audit point-in-time equity fundamentals, corporate actions, historical
   universe membership, delistings, industry groups and executable costs before
   implementing CAN SLIM.
@@ -830,4 +835,4 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
 - [ ] Evaluate crypto and equity sleeves independently before AI ranking,
   strategy combination or portfolio allocation is studied.
 
-External notification delivery and any real execution capability remain deferred. The completed twelve-hour, 24-hour and three-day gates are bounded infrastructure-endurance evidence, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization. First candidate v1, all eight standalone default screening variants, all three Alpha Development v2 variants and the exact four Trend Pullback Volume v1 variants are closed rejected configurations. The non-performance Kraken BTC/ETH/XRP archive-only v2 daily dataset is locked and independently revalidated. Supervised replay v1 is paused after the single BTC episode bound by SHA-256 `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`; ETH and XRP remain unopened. AI-driven v2 state, risk/execution and partition layers are Windows-integrated through commit `421de3f`, and the development runner through `5054da1`. Attempt 1 is a technical numeric-type incident with no durable result. The active boundary is exact recovery review—not a silent retry, calibration, sealed evaluation, optimization, Candidate v2, PAPER or live execution.
+External notification delivery and any real execution capability remain deferred. The completed twelve-hour, 24-hour and three-day gates are bounded infrastructure-endurance evidence, not ad hoc activation, unattended 24/7 production readiness, profitability evidence or live-money authorization. First candidate v1, all eight standalone default screening variants, all three Alpha Development v2 variants and the exact four Trend Pullback Volume v1 variants are closed rejected configurations. The non-performance Kraken BTC/ETH/XRP archive-only v2 daily dataset is locked and independently revalidated. Supervised replay v1 is paused after the single BTC episode bound by SHA-256 `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`; ETH and XRP remain unopened. AI-driven v2 state, risk/execution and partition layers are Windows-integrated through commit `421de3f`; recovery runner commit is `1f040e2`. Reference A is closed `NO_TRADE_HOLD_CASH` against report SHA-256 `f537410d2a237be207951b638518d80e861289dafa7db9b5c2322ffa32d4e594`. The active boundary is a new pre-registered development hypothesis or stop—not calibration, sealed evaluation, optimization, Candidate v2, PAPER or live execution.

@@ -1662,3 +1662,29 @@ binding, complete Windows regression, incident commit/push and explicit
 absence checks for final/staging evidence. Only then may a new operator
 decision consider one recovery attempt. All calibration, evaluation,
 optimization, Candidate v2, PAPER, cloud and live authorization remain false.
+
+### Kraken AI-Driven v2 — DEVELOPMENT REFERENCE A CLOSED HOLD CASH
+
+Recovery commit `1f040e2` passed 50/50 focused and 1,415/1,415 complete Windows
+tests. A new explicit operator decision authorized Attempt 2 after both Attempt
+1 and Attempt 2 final/staging paths were confirmed absent. The runner completed
+with no staging remainder and a clean repository.
+
+Canonical report SHA-256
+`f537410d2a237be207951b638518d80e861289dafa7db9b5c2322ffa32d4e594`
+passed its independent EvidenceLock. It parsed BTC `1916`, ETH `1917` and XRP
+`1915` development rows in exact segments, while parsing zero calibration and
+zero evaluation rows.
+
+The state path produced 13 `CONFIRMATION_LONG` transitions. Risk/execution
+approved none: two failed `CAUSAL_RESISTANCE_NOT_ABOVE_ENTRY` and eleven failed
+`NET_THREE_R_CAUSAL_ROOM_NOT_AVAILABLE`. There were no positions, trades,
+commissions or drawdown; cash remained USD 5,000 research notional. This is a
+no-exposure result, not break-even performance.
+
+Reference A is now
+`KRAKEN_AI_V2_DEVELOPMENT_REFERENCE_A_CLOSED_NO_TRADE_HOLD_CASH`. It may not
+be rerun or loosened after inspection and creates no calibration or Candidate
+v2 authorization. The active decision is whether to stop or pre-register a
+structurally new development-only hypothesis with an executable causal target.
+Evaluation, optimization, PAPER, cloud and live remain blocked.

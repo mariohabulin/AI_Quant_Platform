@@ -392,3 +392,13 @@ was not normalized to the internal `float64` OHLCV contract. Recovery preserves
 all research semantics and adds only that explicit conversion plus a matching
 real-reader integration test. A technical attempt is never reinterpreted as a
 strategy result, and its authorization cannot be silently reused.
+
+Recovery evidence SHA-256
+`f537410d2a237be207951b638518d80e861289dafa7db9b5c2322ffa32d4e594`
+closes Reference A as
+`KRAKEN_AI_V2_DEVELOPMENT_REFERENCE_A_CLOSED_NO_TRADE_HOLD_CASH`. Thirteen
+state confirmations proved the decision path was active, but all thirteen
+failed the frozen causal/cost-aware entry-feasibility gates. Zero P&L is
+therefore absence of exposure, not a break-even edge. Any continuation requires
+a new pre-registered development hypothesis; Candidate v2 and every deployment
+authorization remain false.

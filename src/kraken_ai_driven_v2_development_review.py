@@ -44,6 +44,9 @@ DEVELOPMENT_PROTOCOL_NORMALIZED_SHA256 = (
 DEVELOPMENT_RUNNER_NORMALIZED_SHA256 = (
     "a82060f438cb97e51bfaf0dc16234a85a48958eed9fe7c6eb275756c1660551f"
 )
+RECORDED_DEVELOPMENT_REPORT_SHA256 = (
+    "f537410d2a237be207951b638518d80e861289dafa7db9b5c2322ffa32d4e594"
+)
 COMPONENT_BINDINGS = (
     {
         "label": "AI-driven v2 feature protocol",
@@ -180,8 +183,8 @@ def review_declaration(
     return {
         "schema_version": SCHEMA_VERSION,
         "status": (
-            "KRAKEN_AI_DRIVEN_V2_DEVELOPMENT_RUNNER_REVIEWED_"
-            "EXECUTION_AUTHORIZATION_REQUIRED"
+            "KRAKEN_AI_V2_DEVELOPMENT_REFERENCE_A_"
+            "CLOSED_NO_FURTHER_EXECUTION_AUTHORIZATION"
         ),
         "development_protocol_id": DEVELOPMENT_PROTOCOL_ID,
         "development_run_id": DEVELOPMENT_RUN_ID,
@@ -198,6 +201,16 @@ def review_declaration(
         "initial_capital": INITIAL_CAPITAL,
         "quote_currency": configuration["quote_currency"],
         "authorization_phrase": AUTHORIZATION_PHRASE,
+        "authorization_phrase_active": False,
+        "recorded_development_report_sha256": (
+            RECORDED_DEVELOPMENT_REPORT_SHA256
+        ),
+        "reference_a_closed": True,
+        "reference_a_rerun_authorized": False,
+        "recorded_development_run_executed": True,
+        "recorded_development_data_opened": True,
+        "recorded_calibration_data_opened": False,
+        "recorded_evaluation_data_opened": False,
         "upstream_binding_matches": binding_matches,
         "development_protocol_sha256_match": (
             protocol_digest == DEVELOPMENT_PROTOCOL_NORMALIZED_SHA256
