@@ -465,3 +465,23 @@ cost, P&L, ranking or runner exists and no dataset was opened. Reference A
 remains closed and is feedback lineage only; Candidate v2 remains unauthorized.
 The next boundary is synthetic implementation of four family-specific
 execution adapters under the already frozen shared risk envelope.
+
+## Round 1 Family Execution
+
+Round 1 now has four family-specific synthetic execution adapters bound to the
+four causal signal paths. Capitulation recovery, trend-pullback continuation
+and volatility breakout calculate the exact adverse-cost target required for
+net `3R`; range mean reversion uses its immutable signal-time Bollinger midline
+and holds cash when that anchor lacks net `3R` room.
+
+Every adapter preserves next-open timing, baseline and stress cost profiles,
+family stops and maximum holds, entry-bar protection, stop-first ambiguity and
+the shared `0.50%` position-risk, `1.50%` total-risk, three-position and one-
+third asset-notional ceilings. Gaps never widen a stop, and completed position
+paths cannot cross a missing daily timestamp.
+
+This completes signal-to-synthetic-execution mechanics, not discovery. No
+dataset, runner, route result, ranking or strategy selection exists. Reference A
+remains closed and Candidate v2 remains unauthorized. The next boundary is an
+unexecuted, hash-bound Development discovery runner followed by a separate
+operator decision about one-shot Development authorization.

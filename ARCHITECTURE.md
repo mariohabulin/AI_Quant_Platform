@@ -2069,3 +2069,27 @@ Round 1 protocol/component/review and the new signal protocol/component, then
 verifies the immutable configuration identity. Development, Calibration and
 Evaluation remain unopened. Reference A stays closed, Candidate v2 stays
 unauthorized and execution adapters remain the next synthetic-only boundary.
+
+## AI-Driven v2 Round 1 Family Execution Boundary
+
+`src/kraken_ai_driven_v2_round_1_family_execution.py` implements four explicit
+adapter classes behind shared validated cost, sizing and protective helpers.
+Each class binds one registered family, hypothesis and execution-contract ID;
+cross-family evidence fails closed. A real Pandas signal row, not only a hand-
+constructed fixture, is covered by the integration contract.
+
+Entry planning resolves family stops, baseline or stress adverse fills, exact
+net-`3R` requirements and units under current risk, portfolio risk, per-asset
+notional and cash ceilings. Range alone retains its frozen signal-time midline
+as target. Approved objects are still plans, never orders.
+
+Synthetic positions require the immediate post-signal day and a continuous
+daily path. Open priority is stop gap, target gap, scheduled exit, hold;
+intrabar priority is stop, target, hold. Family structural exits and exact
+15/20/40/60-bar limits schedule only the following open.
+
+`src/kraken_ai_driven_v2_round_1_family_execution_review.py` hash-binds the
+causal-signal protocol/component/review and the new execution artifacts.
+Reference A remains closed. No dataset or discovery runner is imported or
+opened, and Candidate v2, Calibration, Evaluation, PAPER, cloud and live remain
+blocked.

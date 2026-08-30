@@ -2862,3 +2862,22 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
   position, fill, performance, ranking or data access exists. Reference A
   remains closed and Candidate v2, Calibration, Evaluation, PAPER, cloud and
   live remain false.
+
+## 2026-08-30 — Kraken AI-Driven v2 Round 1 Family Execution (Local Preparation)
+
+- Bound four explicit family adapters to causal-signal milestone `05e5f45`,
+  the immutable Round 1 configuration and four new execution identities.
+- Implemented baseline and doubled-spread/slippage stress costs with adverse
+  buy/sell fills and taker commission on adjusted prices.
+- Implemented capitulation, trend and breakout exact net-`3R` targets; preserved
+  the range signal-time Bollinger midline and fail-closed net-`3R` room gate.
+- Applied family stop rules, 20/40/15/60-bar limits and causal prior-low or
+  EMA-50 structural exits without reopening the Reference-A resistance gate.
+- Enforced position, total-risk, concurrent-position, per-asset-notional and
+  cash ceilings plus entry-bar protection, stop-first conflicts and adverse
+  protective fills.
+- Added real Pandas signal integration after catching and fixing the
+  `numpy.bool_`/Python-`bool` evidence boundary, plus exact signal-to-entry and
+  continuous daily position timestamps.
+- Added hash-bound nonexecuting review. No dataset, runner, performance,
+  ranking, Candidate v2, PAPER, cloud or live action exists.

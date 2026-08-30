@@ -1766,3 +1766,24 @@ then commit/push of this exact signal-only milestone. After that, the next
 separate task is synthetic family-specific execution adapters. Reference A is
 still closed, no market dataset was opened and Calibration, Evaluation,
 Candidate v2, PAPER, cloud and live remain false.
+
+### Kraken AI-Driven v2 — Round 1 Family Execution (Local Review)
+
+Exact signal milestone `05e5f45` is the parent. Four new explicit family
+adapters consume only its eligible `ENTER_NEXT_OPEN` evidence and bind the
+immutable Round 1 configuration. They implement family-specific stop, target,
+maximum-hold and structural-exit contracts under both frozen adverse cost
+profiles.
+
+The shared safety envelope is active in every entry plan: current-equity
+`0.50%` position risk, `1.50%` total open risk, three positions, one-third
+notional per asset and available cash. Stop gaps precede scheduled exits,
+same-bar stop/target conflicts are stop-first and entry-bar protection is
+mandatory. Real Pandas signal integration and continuous daily position paths
+are explicitly tested.
+
+No dataset, runner, performance, route gate, ranking or strategy selection has
+executed. The active mission is Windows focused/full regression and hash-bound
+review, then commit/push of this execution-only milestone. Reference A remains
+closed; Calibration, Evaluation, Candidate v2, PAPER, cloud and live remain
+false. Only afterward may an unexecuted Development discovery runner be built.
