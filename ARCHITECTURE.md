@@ -2189,3 +2189,27 @@ Round 2 protocol/component/review and the new signal protocol/component, then
 verifies the frozen configuration identity. Execution and discovery-runner
 components remain absent. No dataset was opened; Candidate v2, Calibration,
 Evaluation, PAPER, cloud and live remain blocked.
+
+## AI-Driven v2 Round 2 Family Execution Boundary
+
+`src/kraken_ai_driven_v2_round_2_family_execution.py` implements three
+explicit adapters behind shared cost, sizing and protective helpers. Each
+adapter binds one Round 2 family, hypothesis, execution identity and registered
+asset scope against immutable Round 1 report SHA-256
+`3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`.
+
+Entry planning validates the exact causal transition and setup age, following-
+day open, route scope, both unchanged adverse cost profiles, net `3R`, current
+risk capacity, per-asset notional and cash. All three stops are the retained
+causal low minus `0.25` signal-time prior ATR; the Round 1 breakout two-ATR open
+branch is not reused.
+
+Synthetic positions enforce entry-bar protection, stop-first ambiguity, daily
+continuity and immutable levels. Capitulation and breakout schedule structural
+exits below prior 10-close low; trend does so below prior EMA-50. Exact maximum
+holds are 25, 60 and 40 bars.
+
+`src/kraken_ai_driven_v2_round_2_family_execution_review.py` hash-binds the
+Round 2 causal protocol/component/review and the execution protocol/component.
+No dataset or runner is imported or opened. Candidate v2, Calibration,
+Evaluation, PAPER, cloud, real orders and live remain blocked.

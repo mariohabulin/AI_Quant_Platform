@@ -2995,3 +2995,32 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
   invalidation, expiry, retest and confirmation tests plus an exact-hash review.
 - No execution adapter, dataset, runner, position, P&L or ranking exists.
   Candidate v2, Calibration, Evaluation, PAPER, cloud and live remain false.
+
+## 2026-08-31 — Kraken AI-Driven v2 Round 2 Causal Signals (Windows Integration)
+
+- Reproduced 36/36 focused and 1,702/1,702 full Windows tests.
+- Verified the exact configuration and parent/report lineage plus both new
+  causal artifact hashes without opening data.
+- Confirmed three signal paths, no execution component, no runner and every
+  Development, Calibration, Evaluation, Candidate and deployment prohibition.
+- Committed and pushed exact signal-only milestone `9f58a8b` with the expected
+  ten-file change set.
+
+## 2026-08-31 — Kraken AI-Driven v2 Round 2 Family Execution (Local Preparation)
+
+- Bound three explicit adapters to exact signal milestone `9f58a8b`, Round 2
+  configuration and immutable Round 1 report SHA-256
+  `3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`.
+- Enforced registered routes: capitulation BTC/ETH/XRP, breakout and trend
+  BTC/ETH only, with XRP retirement preserved as `HOLD_CASH`.
+- Reused unchanged adverse baseline/stress costs and shared position, total-
+  risk, concurrent-position, per-asset-notional and cash ceilings.
+- Implemented setup/retest/pullback low minus `0.25` prior ATR stops, exact net
+  `3R` targets and exact 25/60/40-bar maximum holds.
+- Preserved entry-bar protection, adverse protective fills, stop-first
+  ambiguity, causal structural exits, continuous daily paths and immutable
+  position levels.
+- Added real Round 2 Pandas signal integration plus synthetic identity, timing,
+  scope, gap, cost, sizing and safety tests and an exact-hash review. No
+  dataset, runner, performance, Candidate v2, PAPER, cloud or live action
+  exists.

@@ -1850,7 +1850,7 @@ hash binding and committed/pushed exact registration milestone `903a447`. No
 dataset view or Development run occurred. Calibration, Evaluation, Candidate
 v2, PAPER, cloud and live remained false.
 
-### Kraken AI-Driven v2 — Round 2 Causal Signals (Local Review)
+### Kraken AI-Driven v2 — Round 2 Causal Signals (Windows Integrated)
 
 Exact registration milestone `903a447` is the parent. One causal feature
 engine and three exact state machines now implement ATR-normalized
@@ -1864,7 +1864,28 @@ two-to-five-bar pullback and a real MACD histogram zero cross. Strict UTC daily
 continuity, prior-only baselines, prefix causality, missing-feature failure and
 state invalidation/expiry are covered with synthetic tests.
 
+Windows reproduced 36/36 focused and 1,702/1,702 full tests, verified every
+hash binding and committed/pushed exact signal milestone `9f58a8b`. No dataset,
+position, P&L, ranking or runner was created. Candidate v2, Calibration,
+Evaluation, PAPER, cloud and live remained unauthorized.
+
+### Kraken AI-Driven v2 — Round 2 Family Execution (Local Review)
+
+Exact signal milestone `9f58a8b` is the parent. Three explicit adapters now
+consume only eligible Round 2 `ENTER_NEXT_OPEN` evidence and bind immutable
+Round 1 report SHA-256
+`3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`.
+Capitulation permits BTC/ETH/XRP; breakout and trend reject XRP exactly as
+registered.
+
+Both unchanged adverse cost profiles and the shared safety envelope apply to
+every plan. All three use retained causal low minus `0.25` prior ATR stops and
+exact net `3R` targets. Maximum holds are 25 bars for capitulation, 60 for
+breakout-retest and 40 for MACD trend resumption. Entry-bar protection,
+stop-first conflicts, structural exits and continuous daily paths are covered
+synthetically.
+
 The active mission is Windows focused/full regression and hash-bound review,
-then commit/push of this signal-only milestone. No dataset, execution adapter,
-position, P&L, ranking or runner exists. Candidate v2, Calibration, Evaluation,
-PAPER, cloud and live remain unauthorized.
+then commit/push of this execution-only milestone. No dataset, discovery
+runner, performance result, ranking or real order exists. Candidate v2,
+Calibration, Evaluation, PAPER, cloud and live remain unauthorized.

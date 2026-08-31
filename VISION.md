@@ -568,3 +568,24 @@ position, fill, performance, ranking or runner exists in this milestone.
 Candidate v2, Calibration, Evaluation, PAPER, cloud and live remain
 unauthorized. The next boundary is synthetic implementation of three exact
 family execution adapters under the unchanged shared safety envelope.
+
+## Round 2 Family Execution
+
+Round 2 now has three exact synthetic execution adapters bound to immutable
+Round 1 report SHA-256
+`3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`
+and the Round 2 causal signals. The asymmetric scope is enforced: capitulation
+may route BTC/ETH/XRP, while breakout-retest and MACD trend resumption remain
+BTC/ETH only.
+
+Every family uses next-open entry, both unchanged adverse cost profiles, exact
+net `3R`, the shared `0.50%` position-risk and `1.50%` total-risk envelope,
+one-third asset notional and three-position limits. Stops remain tied to the
+causal setup/retest/pullback low minus `0.25` signal-time ATR. Maximum holds are
+25, 60 and 40 completed bars respectively.
+
+This completes synthetic signal-to-position mechanics, not discovery
+evidence. No dataset, runner, route result, ranking or strategy selection
+exists. Candidate v2, Calibration, Evaluation, PAPER, cloud and live remain
+unauthorized. The next boundary is an unexecuted, hash-bound Round 2
+Development discovery runner followed by a separate one-shot operator choice.
