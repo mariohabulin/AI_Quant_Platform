@@ -547,3 +547,24 @@ interest gates and shared safety envelope. Cumulative use is seven of twelve
 hypotheses and this is the second of two permitted rounds. No component, data
 access, run, Candidate v2 or deployment is authorized by registration. The next
 boundary is synthetic-only implementation of the three exact causal paths.
+
+## Round 2 Causal Signals
+
+Round 2 now implements three exact causal state machines against immutable
+Round 1 report SHA-256
+`3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`:
+ATR-normalized capitulation recovery, breakout-retest continuation and
+multi-bar MACD trend resumption. The routes remain asymmetric exactly as
+registered; implementation does not restore retired range or XRP routes.
+
+All rolling decision baselines exclude the current bar. Capitulation requires
+at least two completed post-setup bars, breakout requires an ordered breakout,
+later retest and still-later confirmation, and trend requires a two-to-five-bar
+pullback plus a real MACD histogram zero cross. Every success emits only an
+`ENTER_NEXT_OPEN` research intent.
+
+This is causal mechanics, not strategy evidence. No dataset, execution plan,
+position, fill, performance, ranking or runner exists in this milestone.
+Candidate v2, Calibration, Evaluation, PAPER, cloud and live remain
+unauthorized. The next boundary is synthetic implementation of three exact
+family execution adapters under the unchanged shared safety envelope.

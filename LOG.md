@@ -2967,3 +2967,31 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - Added canonical configuration locking, parent-manifest validation, exact-hash
   review and tamper/budget/nonauthorization tests. Causal components, runner,
   data access, Candidate v2, PAPER, cloud and live remain absent.
+
+## 2026-08-31 — Kraken AI-Driven v2 Hybrid Discovery Round 2 (Windows Integration)
+
+- Reproduced 27/27 focused and 1,666/1,666 full Windows tests.
+- Verified the three-hypothesis manifest, exact Round 1 report SHA-256
+  `3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`
+  and every parent hash binding without opening data.
+- Confirmed unchanged costs, slices, gates and route dispositions plus two of
+  two rounds and seven of twelve cumulative hypotheses.
+- Committed and pushed exact nonexecuting registration milestone `903a447`.
+  Candidate v2, Development execution, Calibration, Evaluation, PAPER, cloud
+  and live remained unauthorized.
+
+## 2026-08-31 — Kraken AI-Driven v2 Round 2 Causal Signals (Local Preparation)
+
+- Bound the milestone to exact registration `903a447`, its three hypotheses,
+  asymmetric routes and immutable Round 1 report lineage.
+- Implemented prior-only ATR, volume, EMA, ADX, MACD, Donchian and structural
+  features over one strict continuous UTC daily segment.
+- Implemented three deterministic state machines: delayed ATR-normalized
+  capitulation recovery, ordered breakout-retest continuation and multi-bar
+  MACD trend resumption.
+- Prevented same-bar and early-cross shortcuts, cross-gap state carry and
+  current-bar contamination of rolling decision baselines.
+- Added synthetic exact-formula, prefix-causality, validation, setup,
+  invalidation, expiry, retest and confirmation tests plus an exact-hash review.
+- No execution adapter, dataset, runner, position, P&L or ranking exists.
+  Candidate v2, Calibration, Evaluation, PAPER, cloud and live remain false.

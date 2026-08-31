@@ -1832,7 +1832,7 @@ Exact closure milestone `58bdae0` is committed and pushed. Round 1 rerun is
 permanently false. Reference A remains closed; Calibration, Evaluation,
 Candidate v2, PAPER, cloud and live remain false.
 
-### Kraken AI-Driven v2 — Round 2 Pre-Registration (Local Review)
+### Kraken AI-Driven v2 — Round 2 Pre-Registration (Windows Integrated)
 
 Protocol `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-2-v1`
 registers three new hypotheses against immutable Round 1 report SHA-256
@@ -1845,6 +1845,26 @@ recorded failure classes. Round 2 retains every Round 1 cost, slice, safety and
 interest gate. It uses three hypotheses, reaches seven cumulative hypotheses
 and is the second of two rounds; unused budget is not authorization.
 
-The active mission is Windows focused/full regression and hash-bound review of
-this registration. No causal component, dataset view, Development run,
-Calibration, Evaluation, Candidate v2, PAPER, cloud or live action is permitted.
+Windows reproduced 27/27 focused and 1,666/1,666 full tests, verified every
+hash binding and committed/pushed exact registration milestone `903a447`. No
+dataset view or Development run occurred. Calibration, Evaluation, Candidate
+v2, PAPER, cloud and live remained false.
+
+### Kraken AI-Driven v2 — Round 2 Causal Signals (Local Review)
+
+Exact registration milestone `903a447` is the parent. One causal feature
+engine and three exact state machines now implement ATR-normalized
+capitulation recovery, breakout-retest continuation and multi-bar MACD trend
+resumption against immutable Round 1 report SHA-256
+`3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`.
+
+Capitulation requires at least two post-setup completed bars. Breakout enforces
+ordered setup, later retest and still-later confirmation. Trend requires a
+two-to-five-bar pullback and a real MACD histogram zero cross. Strict UTC daily
+continuity, prior-only baselines, prefix causality, missing-feature failure and
+state invalidation/expiry are covered with synthetic tests.
+
+The active mission is Windows focused/full regression and hash-bound review,
+then commit/push of this signal-only milestone. No dataset, execution adapter,
+position, P&L, ranking or runner exists. Candidate v2, Calibration, Evaluation,
+PAPER, cloud and live remain unauthorized.

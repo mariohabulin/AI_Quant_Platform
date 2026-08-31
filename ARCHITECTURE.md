@@ -2167,3 +2167,25 @@ hybrid budget, Round 1 registration and closure artifacts plus the new protocol
 and component. Neither module imports data, signals, execution or backtesting.
 The next boundary is synthetic-only implementation; Development, Calibration,
 Evaluation, Candidate v2, PAPER, cloud and live remain blocked.
+
+## AI-Driven v2 Round 2 Causal Signals Boundary
+
+`src/kraken_ai_driven_v2_round_2_causal_signals.py` implements one strict
+continuous-segment feature engine and three family-isolated state machines
+bound to the Round 2 configuration and immutable Round 1 report SHA-256
+`3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`.
+It accepts completed UTC daily OHLCV only, rejects gaps and malformed geometry,
+and excludes the current bar from every rolling decision baseline.
+
+Capitulation recovery cannot confirm before two completed post-setup bars.
+Breakout continuation enforces setup, later retest and still-later
+confirmation. Trend resumption retains multi-bar pullback memory and requires
+a real nonpositive-to-positive MACD histogram cross. Each path returns causal
+evidence and at most an `ENTER_NEXT_OPEN` intent; it owns no asset routing,
+quantity, fill, cost, position, P&L or performance state.
+
+`src/kraken_ai_driven_v2_round_2_causal_signals_review.py` hash-binds the
+Round 2 protocol/component/review and the new signal protocol/component, then
+verifies the frozen configuration identity. Execution and discovery-runner
+components remain absent. No dataset was opened; Candidate v2, Calibration,
+Evaluation, PAPER, cloud and live remain blocked.
