@@ -2938,3 +2938,32 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - Added exact-hash closure review and synthetic tamper, reinterpretation,
   unresolved-position, no-trade and negative-expectancy tests without opening
   external evidence.
+
+## 2026-08-30 — Kraken AI-Driven v2 Round 1 Closure (Windows Integration)
+
+- Reproduced 28/28 focused and 1,639/1,639 full Windows tests.
+- Verified closure protocol/component hashes and the complete parent runner
+  binding chain without opening data during review.
+- Ran closure read-only against locked report SHA-256
+  `3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`.
+- Confirmed 12 ineligible routes, zero unresolved positions, `HOLD_CASH`, no
+  rerun and no Calibration, Evaluation, Candidate or deployment authorization.
+- Committed and pushed exact closure milestone `58bdae0` with a clean worktree.
+
+## 2026-08-31 — Kraken AI-Driven v2 Hybrid Discovery Round 2 (Local Preparation)
+
+- Pre-registered nonexecuting protocol
+  `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-2-v1` from immutable
+  Round 1 feedback; no dataset or external evidence was opened.
+- Registered three hypotheses only: ATR-normalized capitulation recovery for
+  BTC/ETH/XRP, breakout-retest continuation for BTC/ETH and multi-bar MACD
+  trend resumption for BTC/ETH.
+- Retired all range routes and XRP trend/breakout from Round 2 while preserving
+  their no-trade or negative-expectancy evidence and prohibiting ranking.
+- Reused exact Round 1 costs, five Development slices, route/round gates and
+  shared safety envelope without post-hoc weakening.
+- Locked cumulative use at seven of twelve hypotheses and two of two rounds;
+  unused capacity grants neither Round 3 nor execution.
+- Added canonical configuration locking, parent-manifest validation, exact-hash
+  review and tamper/budget/nonauthorization tests. Causal components, runner,
+  data access, Candidate v2, PAPER, cloud and live remain absent.

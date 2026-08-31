@@ -2138,6 +2138,32 @@ multiple frozen failures. The classification cannot change eligibility.
 
 `src/kraken_ai_driven_v2_round_1_closure_review.py` hash-binds the discovery
 runner protocol/component/review and closure document/component without opening
-external evidence. Round 1 rerun remains false and Round 2 is not registered.
-Any future manifest must be a separately reviewed version citing the immutable
-report hash before another authorization decision.
+external evidence. Read-only Windows closure was integrated at commit
+`58bdae0`; Round 1 rerun remains false. Any later manifest must cite the
+immutable report hash before another authorization decision.
+
+## AI-Driven v2 Hybrid Discovery Round 2 Registration Boundary
+
+`src/kraken_ai_driven_v2_hybrid_discovery_round_2.py` implements nonexecuting
+protocol `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-2-v1` as one
+three-hypothesis configuration lock. Every member cites Round 1 report SHA-256
+`3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`
+and a specific Round 1 parent identity.
+
+The routes are deliberately asymmetric: ATR-normalized capitulation recovery
+owns BTC/ETH/XRP; breakout-retest and multi-bar MACD trend resumption own only
+BTC/ETH. Range reversion is retired for no closed-trade evidence, while XRP
+trend and breakout are retired for negative expectancy under both profiles.
+These dispositions are immutable feedback attribution, not ranking.
+
+Round 2 copies the exact Round 1 cost profiles, Development slices, route gates,
+round gates and shared risk envelope. It records two of two rounds and seven of
+twelve cumulative hypotheses; unused capacity grants no Round 3 or execution.
+The manifest validator enforces family indicator vocabulary, canonical route
+order and every false authorization before SHA-256 locking detailed rules.
+
+`src/kraken_ai_driven_v2_hybrid_discovery_round_2_review.py` binds the parent
+hybrid budget, Round 1 registration and closure artifacts plus the new protocol
+and component. Neither module imports data, signals, execution or backtesting.
+The next boundary is synthetic-only implementation; Development, Calibration,
+Evaluation, Candidate v2, PAPER, cloud and live remain blocked.

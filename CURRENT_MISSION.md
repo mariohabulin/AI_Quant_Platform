@@ -1813,7 +1813,7 @@ frozen gate. The round status is
 Evaluation remained unopened; Candidate v2, ranking, PAPER, cloud and live
 remain false.
 
-### Kraken AI-Driven v2 — Round 1 Closure (Local Review)
+### Kraken AI-Driven v2 — Round 1 Closure (Integrated)
 
 A read-only closure now binds exact execution commit `98a7218`, the parent
 runner protocol/component/review and the immutable report SHA-256. It requires
@@ -1826,8 +1826,25 @@ volatility breakout failed only minimum nonnegative slices. All three range
 routes had no closed trades, while XRP trend and breakout had negative
 expectancy under both cost profiles.
 
-The active mission is Windows focused/full regression, hash-bound review and a
-read-only closure call against the existing external evidence. Round 1 rerun is
-permanently false and Round 2 is not registered. Only after closure commit may
-we decide to pre-register bounded Round 2 or stop. Reference A remains closed;
-Calibration, Evaluation, Candidate v2, PAPER, cloud and live remain false.
+Windows reproduced 28/28 focused and 1,639/1,639 full tests, verified the
+hash-bound review and ran closure read-only against existing external evidence.
+Exact closure milestone `58bdae0` is committed and pushed. Round 1 rerun is
+permanently false. Reference A remains closed; Calibration, Evaluation,
+Candidate v2, PAPER, cloud and live remain false.
+
+### Kraken AI-Driven v2 — Round 2 Pre-Registration (Local Review)
+
+Protocol `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-2-v1`
+registers three new hypotheses against immutable Round 1 report SHA-256
+`3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`.
+They are ATR-normalized capitulation recovery for BTC/ETH/XRP, breakout-retest
+continuation for BTC/ETH and multi-bar MACD trend resumption for BTC/ETH.
+
+Range reversion and XRP trend/breakout are retired from this round for exact
+recorded failure classes. Round 2 retains every Round 1 cost, slice, safety and
+interest gate. It uses three hypotheses, reaches seven cumulative hypotheses
+and is the second of two rounds; unused budget is not authorization.
+
+The active mission is Windows focused/full regression and hash-bound review of
+this registration. No causal component, dataset view, Development run,
+Calibration, Evaluation, Candidate v2, PAPER, cloud or live action is permitted.

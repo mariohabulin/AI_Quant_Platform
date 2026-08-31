@@ -522,7 +522,28 @@ slice. All range-reversion routes produced no closed trade; XRP trend and
 breakout expectancy were negative under both costs. These facts may inform a
 new version but are not a leaderboard or Candidate evidence.
 
-Round 2 is not registered. The next boundary is a human-reviewed decision to
-pre-register a bounded Round 2 or stop, with this report hash as immutable
-lineage. Reference A remains closed and Calibration, Evaluation, Candidate v2,
-PAPER, cloud and live remain unauthorized.
+Closure was reproduced against the locked evidence and integrated at commit
+`58bdae0`. Round 1 remains immutable; its report hash is the feedback lineage
+for any later version. Reference A remains closed and Calibration, Evaluation,
+Candidate v2, PAPER, cloud and live remain unauthorized.
+
+## Pre-Registered Hybrid Discovery Round 2
+
+Protocol `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-2-v1`
+registers three new, nonexecuting hypotheses from immutable Round 1 report
+SHA-256
+`3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`.
+The set is deliberately smaller than the six-hypothesis ceiling: an ATR-
+normalized capitulation recovery for BTC/ETH/XRP, breakout-retest continuation
+for BTC/ETH and multi-bar MACD trend resumption for BTC/ETH.
+
+All range routes are retired after producing no closed-trade evidence. XRP
+trend and breakout are retired after negative expectancy under both costs.
+Retirement preserves the failed evidence; it does not delete history or rank
+the retained mechanisms as winners.
+
+Round 2 keeps the exact Round 1 costs, five chronological Development slices,
+interest gates and shared safety envelope. Cumulative use is seven of twelve
+hypotheses and this is the second of two permitted rounds. No component, data
+access, run, Candidate v2 or deployment is authorized by registration. The next
+boundary is synthetic-only implementation of the three exact causal paths.
