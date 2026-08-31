@@ -1869,7 +1869,7 @@ hash binding and committed/pushed exact signal milestone `9f58a8b`. No dataset,
 position, P&L, ranking or runner was created. Candidate v2, Calibration,
 Evaluation, PAPER, cloud and live remained unauthorized.
 
-### Kraken AI-Driven v2 — Round 2 Family Execution (Local Review)
+### Kraken AI-Driven v2 — Round 2 Family Execution (Windows Integrated)
 
 Exact signal milestone `9f58a8b` is the parent. Three explicit adapters now
 consume only eligible Round 2 `ENTER_NEXT_OPEN` evidence and bind immutable
@@ -1885,7 +1885,26 @@ breakout-retest and 40 for MACD trend resumption. Entry-bar protection,
 stop-first conflicts, structural exits and continuous daily paths are covered
 synthetically.
 
-The active mission is Windows focused/full regression and hash-bound review,
-then commit/push of this execution-only milestone. No dataset, discovery
-runner, performance result, ranking or real order exists. Candidate v2,
+Windows reproduced 76/76 focused and 1,778/1,778 full tests, verified every
+hash binding and committed/pushed exact execution milestone `5c226f1`. No
+dataset, performance result, ranking or real order exists. Candidate v2,
 Calibration, Evaluation, PAPER, cloud and live remain unauthorized.
+
+### Kraken AI-Driven v2 — Round 2 Discovery Runner (Local Review)
+
+Exact family-execution milestone `5c226f1` is the parent. A one-shot runner now
+composes exactly seven registered routes under baseline and stress costs: all
+three families for BTC and ETH, and capitulation recovery only for XRP. The
+route set is derived from the Round 2 manifest so retired XRP trend/breakout
+and all retired range routes cannot reappear.
+
+Each route/profile uses an independent USD 5,000 ledger and unchanged absolute
+interest gates. Slice boundaries do not reset positions; known gaps reset
+causal state and leave any open position unresolved. Terminal force-close,
+ranking, automatic selection and hidden portfolio combination are prohibited.
+
+The active mission is Windows focused/full regression and hash-bound review,
+then commit/push before any separate one-shot operator decision. The dataset
+has not been opened and the authorization phrase is inactive. Reference A and
+Round 1 remain closed; Calibration, Evaluation, Candidate v2, PAPER, cloud,
+real orders and live remain unauthorized.

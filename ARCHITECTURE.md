@@ -2213,3 +2213,31 @@ holds are 25, 60 and 40 bars.
 Round 2 causal protocol/component/review and the execution protocol/component.
 No dataset or runner is imported or opened. Candidate v2, Calibration,
 Evaluation, PAPER, cloud, real orders and live remain blocked.
+
+## AI-Driven v2 Round 2 Discovery Runner Boundary
+
+`src/kraken_ai_driven_v2_round_2_discovery_runner.py` composes the reviewed
+Round 2 signals and family adapters into seven and only seven asset-family
+routes. Route order is asset-major: BTC and ETH each own capitulation,
+breakout and trend, while XRP owns capitulation only. The route set is derived
+from the registered hypothesis asset scopes rather than a family cross-product.
+
+Each route/profile is an independent USD 5,000 research path. Positions and
+causal state cross the five reporting-slice boundaries, while known provider
+gaps reset feature/signal context, cancel pending entries and halt an open
+position as unresolved. Development-terminal positions also remain unresolved;
+synthetic force-close is unavailable. Exits precede pending entries and
+entry-bar protection remains stop-first.
+
+The runner reuses the exact Development-only locked reader. It hashes complete
+asset files as opaque bytes, parses zero Calibration/Evaluation rows and writes
+canonical JSON plus SHA-256 sidecar through an external atomic staging/final
+evidence boundary. `src/kraken_ai_driven_v2_round_2_discovery_runner_review.py`
+hash-binds the Round 2 family-execution protocol/component/review and the new
+runner protocol/component without opening data.
+
+Implementation exposes no active authorization. One run would require exact
+phrase `EXECUTE_KRAKEN_AI_V2_ROUND_2_DISCOVERY_ONCE` only after Windows
+regression, commit, clean-worktree and a separate operator decision. Reference
+A and Round 1 remain closed; Candidate v2, Calibration, Evaluation, ranking,
+PAPER, cloud, real orders and live remain blocked.

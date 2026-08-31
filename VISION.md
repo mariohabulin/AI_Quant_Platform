@@ -589,3 +589,23 @@ evidence. No dataset, runner, route result, ranking or strategy selection
 exists. Candidate v2, Calibration, Evaluation, PAPER, cloud and live remain
 unauthorized. The next boundary is an unexecuted, hash-bound Round 2
 Development discovery runner followed by a separate one-shot operator choice.
+
+## Round 2 Discovery Runner
+
+Round 2 now has a nonexecuting one-shot Development runner for exactly seven
+registered routes: three each for BTC and ETH and capitulation recovery only
+for XRP. Retired range routes and retired XRP trend/breakout routes cannot
+silently return through a cross-product loop.
+
+Each route and cost profile has an independent USD 5,000 research ledger. The
+five slices remain reporting windows; known gaps reset causal context and an
+open position at a gap or Development end remains unresolved. There is no
+synthetic terminal force-close, ranking, automatic strategy selection or
+portfolio combination.
+
+The runner reuses the locked Development-only reader, opaque full-file hashes,
+atomic external evidence and an independent evidence lock. This milestone only
+implements and hash-reviews those mechanics. The dataset remains unopened and
+the exact one-shot phrase is inactive. Reference A and Round 1 remain closed;
+Calibration, Evaluation, Candidate v2, PAPER, cloud and live remain
+unauthorized pending a separate operator decision.

@@ -3024,3 +3024,31 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
   scope, gap, cost, sizing and safety tests and an exact-hash review. No
   dataset, runner, performance, Candidate v2, PAPER, cloud or live action
   exists.
+
+## 2026-08-31 — Kraken AI-Driven v2 Round 2 Family Execution (Windows Integration)
+
+- Reproduced 76/76 focused and 1,778/1,778 full Windows tests.
+- Verified the parent causal chain plus execution protocol/component hashes
+  without opening any dataset.
+- Confirmed three adapters, exact BTC/ETH/XRP scopes, both frozen costs and all
+  shared safety/protective invariants.
+- Committed and pushed exact execution-only milestone `5c226f1`; Reference A,
+  Round 1, Calibration, Evaluation, Candidate v2 and deployment remain closed.
+
+## 2026-08-31 — Kraken AI-Driven v2 Round 2 Discovery Runner (Local Preparation)
+
+- Bound the runner to exact family-execution milestone `5c226f1`, Round 2
+  configuration and immutable Round 1 report lineage.
+- Derived seven asset-major routes from registered asset scopes: three for BTC,
+  three for ETH and capitulation recovery only for XRP.
+- Reused the Development-only locked reader, opaque full-file hashes, known-gap
+  segmentation and two unchanged adverse cost profiles.
+- Preserved independent USD 5,000 route/profile ledgers, five reporting slices,
+  unresolved gap/terminal positions and no synthetic terminal force-close.
+- Implemented unchanged absolute route gates, two-asset/two-route round interest
+  and separate same-asset portfolio review without ranking or selection.
+- Added atomic external evidence, an independent evidence lock, exact one-shot
+  phrase and synthetic tamper/path/gate tests plus hash-bound review.
+- No dataset or external evidence was opened and no run was authorized.
+  Reference A and Round 1 remain closed; Candidate v2, Calibration, Evaluation,
+  PAPER, cloud, real orders and live remain false.
