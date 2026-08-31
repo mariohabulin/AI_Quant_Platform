@@ -2241,3 +2241,28 @@ phrase `EXECUTE_KRAKEN_AI_V2_ROUND_2_DISCOVERY_ONCE` only after Windows
 regression, commit, clean-worktree and a separate operator decision. Reference
 A and Round 1 remain closed; Candidate v2, Calibration, Evaluation, ranking,
 PAPER, cloud, real orders and live remain blocked.
+
+## AI-Driven v2 Round 2 Closure and Scope Boundary
+
+Round 2 Closure binds execution commit
+`a601a322b353179663a96423bc29d50adc28627e`, report SHA-256
+`5f9acde53d0e2cf35cd1010d0002222182670d7255bdf44e18715f4902c85a01`
+and the complete discovery-runner source chain. It accepts only the exact
+seven-route, zero-eligible, zero-unresolved `HOLD_CASH` outcome. The closure is
+read-only, records descriptive failure attribution and cannot authorize a
+rerun, ranking or candidate.
+
+The current architecture is split explicitly:
+
+1. **Rule Discovery Foundation** — existing locked data partitions, causal
+   features/states, risk/execution, deterministic simulation and immutable
+   evidence.
+2. **True Learning Engine** — not yet implemented; it must create causal labels,
+   fit bounded model parameters on earlier Development examples, predict later
+   examples and serialize a reproducible learned artifact.
+
+The True Learning Engine will be offline and versioned. Runtime cannot train,
+mutate weights or self-promote. The next component is the nonexecuting True
+Learning Contract, followed by resolution sufficiency, Development-only
+training and walk-forward validation. Calibration, Evaluation and Candidate v2
+remain unauthorized.

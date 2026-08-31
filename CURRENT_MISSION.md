@@ -1908,3 +1908,23 @@ then commit/push before any separate one-shot operator decision. The dataset
 has not been opened and the authorization phrase is inactive. Reference A and
 Round 1 remain closed; Calibration, Evaluation, Candidate v2, PAPER, cloud,
 real orders and live remain unauthorized.
+
+### Kraken AI-Driven v2 — Round 2 Closure and Scope Correction (Active)
+
+Runner milestone `a601a32` was Windows-integrated before one separately
+authorized Development Attempt 1. The run completed with report SHA-256
+`5f9acde53d0e2cf35cd1010d0002222182670d7255bdf44e18715f4902c85a01`,
+seven ineligible routes, zero eligible assets and `HOLD_CASH`. Calibration and
+Evaluation remained unopened and no real order was submitted.
+
+The active mission is Stage 0: implement and review read-only Round 2 Closure,
+run it once against that exact external evidence, permanently prohibit rerun
+and record the scope correction. Existing components become the **Rule Discovery Foundation**;
+they are not the True Learning Engine.
+
+After closure integration, the next mission is Stage 1: write and hash-review a
+True Learning Contract before opening data or training. It must define causal
+examples, label/horizon, allowable features and model classes, reproducibility,
+walk-forward predictions and learned-artifact identity in understandable
+language. Candidate v2, Calibration, Evaluation, PAPER and live remain
+unauthorized.

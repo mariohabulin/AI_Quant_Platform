@@ -609,3 +609,23 @@ implements and hash-reviews those mechanics. The dataset remains unopened and
 the exact one-shot phrase is inactive. Reference A and Round 1 remain closed;
 Calibration, Evaluation, Candidate v2, PAPER, cloud and live remain
 unauthorized pending a separate operator decision.
+
+## Round 2 Closure and True Learning Transition
+
+Round 2 Attempt 1 executed once from commit
+`a601a322b353179663a96423bc29d50adc28627e`. Its canonical report SHA-256 is
+`5f9acde53d0e2cf35cd1010d0002222182670d7255bdf44e18715f4902c85a01`.
+All seven routes were ineligible, so Round 2 Closure preserves `HOLD_CASH` and
+permanently prohibits a rerun.
+
+The existing deterministic state, feature, execution, partition and discovery
+stack is now named the **Rule Discovery Foundation**. It is valuable causal and
+audit infrastructure, but it is not the intended system.
+The True Learning Engine is not yet implemented. It must learn model parameters
+from labeled market examples rather than receive them from us.
+
+The project therefore returns to its intended V2 goal. The next deliverable is
+a True Learning Contract; after that come data-sufficiency review, offline
+model training, Development walk-forward prediction, a frozen Candidate v2,
+one-time Calibration, untouched Evaluation and only then bounded PAPER.
+Calibration, Evaluation and Candidate v2 remain unauthorized.

@@ -3052,3 +3052,31 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
 - No dataset or external evidence was opened and no run was authorized.
   Reference A and Round 1 remain closed; Candidate v2, Calibration, Evaluation,
   PAPER, cloud, real orders and live remain false.
+
+## 2026-08-31 — Kraken AI-Driven v2 Round 2 Discovery (Windows Execution)
+
+- Reproduced the Round 2 runner tests and exact hash-bound review, then
+  committed/pushed runner milestone `a601a32`.
+- Confirmed clean worktree, exact locked dataset manifest and absent final and
+  staging evidence before the separate operator authorization.
+- Executed one Development Attempt 1 for exactly seven routes and two frozen
+  cost profiles; recorded canonical report SHA-256
+  `5f9acde53d0e2cf35cd1010d0002222182670d7255bdf44e18715f4902c85a01`.
+- Recorded zero eligible routes/assets and status
+  `KRAKEN_AI_V2_ROUND_2_DEVELOPMENT_NO_INTEREST_HOLD_CASH`; Calibration and
+  Evaluation stayed unopened and real orders stayed false.
+
+## 2026-08-31 — Kraken AI-Driven v2 Round 2 Closure and Scope Correction (Local Preparation)
+
+- Added read-only Round 2 Closure bound to execution commit `a601a32`, exact
+  report SHA-256 and the three discovery-runner parent artifacts.
+- Froze exact failure attribution for all seven routes without ranking,
+  selection, gate weakening or rerun authorization.
+- Corrected project terminology: the existing deterministic research stack is
+  the **Rule Discovery Foundation**, not the True Learning Engine.
+- Recorded the missing True Learning Engine stages: contract, resolution/data
+  sufficiency, bounded offline training, Development walk-forward evidence,
+  frozen Candidate v2, one-time Calibration, untouched Evaluation and bounded
+  PAPER with offline challengers.
+- Candidate v2, Calibration, Evaluation, PAPER, cloud, real orders and live
+  remain unauthorized.

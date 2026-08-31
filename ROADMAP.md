@@ -912,8 +912,41 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
   for exactly seven registered routes and both unchanged cost profiles.
 - [x] Add synthetic route/gate/path/evidence-lock tests and a hash-bound
   nonexecuting review without opening the dataset or activating authorization.
-- [ ] Reproduce Round 2 Discovery Runner focused/full regression and hash-bound
-  review on Windows, then commit/push before any one-shot operator decision.
+- [x] Reproduce Round 2 Discovery Runner focused/full regression and hash-bound
+  review on Windows, then commit/push exact runner milestone `a601a32` before
+  any one-shot operator decision.
+- [x] Execute exactly one Round 2 Development discovery Attempt 1; lock report
+  SHA-256
+  `5f9acde53d0e2cf35cd1010d0002222182670d7255bdf44e18715f4902c85a01`
+  and preserve the seven-route, zero-eligible `HOLD_CASH` result.
+- [ ] Reproduce Round 2 Closure focused/full regression and hash-bound review on
+  Windows, then run closure read-only against exact external evidence.
+- [ ] Commit/push Round 2 Closure and scope-gap correction; permanently consume
+  the Round 2 authorization and retain the existing stack as Rule Discovery
+  Foundation.
+
+### AI-Driven v2 True Learning Engine
+
+Current subsystem: **Rule Discovery Foundation**. Target subsystem: **True
+Learning Engine**.
+
+- [ ] Stage 1 — freeze a plain-language True Learning Contract: causal decision
+  timestamp, label/horizon, feature availability, model budget, deterministic
+  training, walk-forward folds, costs, metrics and rejection gates.
+- [ ] Stage 2 — audit Development example sufficiency by source-native
+  resolution and select resolution from evidence rather than a preferred chart.
+- [ ] Stage 3 — implement deterministic offline feature/label generation,
+  bounded training, later-period prediction and a hash-identified learned model
+  artifact.
+- [ ] Stage 4 — execute Development walk-forward learning with immutable
+  prediction evidence and versioned challenger feedback.
+- [ ] Stage 5 — freeze exactly one Candidate v2 only if all Development gates
+  pass; otherwise keep `HOLD_CASH`.
+- [ ] Stage 6 — run one-time Calibration on the frozen candidate without turning
+  Calibration into another tuning loop.
+- [ ] Stage 7 — run untouched Evaluation once only after Calibration approval.
+- [ ] Stage 8 — allow bounded PAPER only after Evaluation approval; train future
+  challengers offline and require explicit promotion.
 - [ ] Audit point-in-time equity fundamentals, corporate actions, historical
   universe membership, delistings, industry groups and executable costs before
   implementing CAN SLIM.
