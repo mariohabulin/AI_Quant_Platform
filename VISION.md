@@ -629,3 +629,25 @@ a True Learning Contract; after that come data-sufficiency review, offline
 model training, Development walk-forward prediction, a frozen Candidate v2,
 one-time Calibration, untouched Evaluation and only then bounded PAPER.
 Calibration, Evaluation and Candidate v2 remain unauthorized.
+
+Windows reproduced 29/29 focused and 1,837/1,837 full tests. The read-only
+Round 2 Closure then independently locked the exact report, returned seven
+ineligible routes and confirmed that both evidence files were unchanged. Stage
+0 is complete subject only to committing this exact source state.
+
+## True Learning Contract V1
+
+Stage 0 is integrated at `70e7bca`. Stage 1 now freezes the first actual
+learning objective without opening data or training. One causal BTC/ETH/XRP
+context becomes one three-class example: net `3R` target first, `1R` stop first
+or timeout without either barrier inside 30 UTC days.
+
+The shared offline model will learn parameters from those labeled Development
+examples while retaining asset identity. It may use causal price, structure,
+volatility, volume, regime, cross-asset and calendar context. Future values,
+full-sample preprocessing and Calibration/Evaluation rows are prohibited.
+
+The resolution remains unselected until Stage 2 compares official source-native
+candidates using nonperformance sufficiency facts. Candidate v2 remains
+unauthorized; the immediate goal is a reproducible learned artifact, not another
+hand-written strategy round.

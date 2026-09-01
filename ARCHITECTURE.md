@@ -2266,3 +2266,28 @@ mutate weights or self-promote. The next component is the nonexecuting True
 Learning Contract, followed by resolution sufficiency, Development-only
 training and walk-forward validation. Calibration, Evaluation and Candidate v2
 remain unauthorized.
+
+Windows closure verification reproduced 29 focused and 1,837 complete tests.
+The external evidence lock returned
+`KRAKEN_AI_V2_ROUND_2_DISCOVERY_EVIDENCE_LOCK_PASS`; the closure emitted
+`KRAKEN_AI_V2_ROUND_2_CLOSED_NO_ELIGIBLE_ROUTE_HOLD_CASH` and before/after
+SHA-256 comparison confirmed `EVIDENCE_UNCHANGED=True`. This read-only action
+did not create a new run or data partition access.
+
+## AI-Driven v2 True Learning Contract V1 Boundary
+
+Stage 1 is parent-bound to integrated closure commit `70e7bca`. The contract
+defines a shared offline BTC/ETH/XRP three-class probability model with asset
+identity. At completed bar `t`, causal features stop at `t`; the research entry
+is the next observed open; labels distinguish target-first, stop-first and
+timeout paths under an exact 30-day triple-barrier contract.
+
+Two bounded model families are permitted: multinomial logistic regression as a
+transparent baseline and histogram gradient-boosted trees as the nonlinear
+challenger, with twelve total variants and one deterministic seed. Walk-forward
+splits are expanding, globally chronological, purged and embargoed. All
+preprocessing, calibration and thresholds fit inside training folds only.
+
+The resolution remains unselected pending a nonperformance Stage 2 sufficiency
+audit. No feature/label generator, fold plan, model training or artifact exists
+yet. Candidate v2, Calibration, Evaluation, PAPER and live remain unauthorized.

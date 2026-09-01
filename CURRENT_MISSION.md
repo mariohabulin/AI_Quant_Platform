@@ -1917,14 +1917,28 @@ authorized Development Attempt 1. The run completed with report SHA-256
 seven ineligible routes, zero eligible assets and `HOLD_CASH`. Calibration and
 Evaluation remained unopened and no real order was submitted.
 
-The active mission is Stage 0: implement and review read-only Round 2 Closure,
-run it once against that exact external evidence, permanently prohibit rerun
-and record the scope correction. Existing components become the **Rule Discovery Foundation**;
-they are not the True Learning Engine.
+Stage 0 execution is complete. Windows reproduced 29/29 focused and 1,837/1,837
+full tests, then ran read-only closure against the exact external evidence. The
+lock passed, all seven routes remained ineligible, `HOLD_CASH` was preserved and
+both evidence files remained byte-identical. Existing components are the
+**Rule Discovery Foundation**; they are not the True Learning Engine.
 
-After closure integration, the next mission is Stage 1: write and hash-review a
-True Learning Contract before opening data or training. It must define causal
-examples, label/horizon, allowable features and model classes, reproducibility,
-walk-forward predictions and learned-artifact identity in understandable
-language. Candidate v2, Calibration, Evaluation, PAPER and live remain
+Stage 0 is integrated at `70e7bca`.
+
+### Kraken AI-Driven v2 — True Learning Contract V1 (Local Review)
+
+The active mission is Windows review of the frozen Stage 1 contract. It defines
+one causal context as a three-class target-first, stop-first or timeout example;
+the shared BTC/ETH/XRP learner must fit its parameters from Development labels
+rather than receive trading rules from us.
+
+The budget is two model families, twelve total variants and one deterministic
+seed. Expanding walk-forward folds use 30-day purge/embargo boundaries, and
+every preprocessing, probability-calibration and threshold step fits on earlier
+training rows only. A learned artifact must hash the model, data, features,
+labels, folds, environment and out-of-fold predictions.
+
+The resolution remains unselected until a separately implemented Stage 2
+nonperformance sufficiency audit. No dataset has been opened and no label or
+model exists. Candidate v2, Calibration, Evaluation, PAPER and live remain
 unauthorized.

@@ -919,20 +919,26 @@ Deferred from v1: cloud-provider selection, paid resource creation, container/se
   SHA-256
   `5f9acde53d0e2cf35cd1010d0002222182670d7255bdf44e18715f4902c85a01`
   and preserve the seven-route, zero-eligible `HOLD_CASH` result.
-- [ ] Reproduce Round 2 Closure focused/full regression and hash-bound review on
-  Windows, then run closure read-only against exact external evidence.
-- [ ] Commit/push Round 2 Closure and scope-gap correction; permanently consume
-  the Round 2 authorization and retain the existing stack as Rule Discovery
-  Foundation.
+- [x] Reproduce Round 2 Closure 29/29 focused and 1,837/1,837 full regression
+  plus hash-bound review on Windows, then run closure read-only against exact
+  external evidence with `EVIDENCE_UNCHANGED=True`.
+- [x] Commit/push Round 2 Closure and scope-gap correction at `70e7bca`;
+  permanently consume the Round 2 authorization and retain the existing stack
+  as Rule Discovery Foundation.
 
 ### AI-Driven v2 True Learning Engine
 
 Current subsystem: **Rule Discovery Foundation**. Target subsystem: **True
 Learning Engine**.
 
-- [ ] Stage 1 — freeze a plain-language True Learning Contract: causal decision
+Stage 1 uses a three-class learning target; the resolution remains unselected
+until the Stage 2 nonperformance audit.
+
+- [x] Locally freeze True Learning Contract V1: causal decision
   timestamp, label/horizon, feature availability, model budget, deterministic
   training, walk-forward folds, costs, metrics and rejection gates.
+- [ ] Reproduce focused/full regression and hash-bound Stage 1 review on Windows,
+  then commit/push before Stage 2 data-sufficiency implementation.
 - [ ] Stage 2 — audit Development example sufficiency by source-native
   resolution and select resolution from evidence rather than a preferred chart.
 - [ ] Stage 3 — implement deterministic offline feature/label generation,

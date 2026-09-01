@@ -3080,3 +3080,31 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
   PAPER with offline challengers.
 - Candidate v2, Calibration, Evaluation, PAPER, cloud, real orders and live
   remain unauthorized.
+
+## 2026-08-31 — Kraken AI-Driven v2 Round 2 Closure (Windows Verification)
+
+- Reproduced 29/29 focused and 1,837/1,837 complete Windows tests.
+- Verified the closure document, scope correction, closure component and all
+  three parent runner SHA-256 bindings.
+- Ran closure read-only against exact report SHA-256
+  `5f9acde53d0e2cf35cd1010d0002222182670d7255bdf44e18715f4902c85a01`.
+- Confirmed evidence-lock PASS, seven ineligible routes, zero eligible assets,
+  `HOLD_CASH`, permanent no-rerun and no Candidate v2 authorization.
+- Compared both external evidence files before and after closure and recorded
+  `EVIDENCE_UNCHANGED=True`; no new run or data access occurred.
+- Stage 0 now awaits only commit/push before the True Learning Contract begins.
+
+## 2026-08-31 — Kraken AI-Driven v2 True Learning Contract V1 (Local Preparation)
+
+- Bound Stage 1 to integrated Round 2 Closure commit `70e7bca`, the exact
+  closure/scope artifacts and immutable report lineage.
+- Defined a next-open, 30-day, three-class label: net `3R` target first, `1R`
+  stop first or timeout without either barrier; same-bar ambiguity is stop-first.
+- Defined causal BTC/ETH/XRP context groups and prohibited future values,
+  full-sample transforms, performance-outcome features and nondevelopment rows.
+- Bounded offline learning to logistic baseline plus gradient-boosted challenger,
+  twelve total variants, one fixed seed and no runtime mutation or auto-promotion.
+- Required expanding purged/embargoed walk-forward prediction and full learned-
+  artifact, environment and out-of-fold prediction hashes.
+- The resolution remains unselected until Stage 2 nonperformance sufficiency
+  review. No data, labels or training were opened; Candidate v2 remains false.
