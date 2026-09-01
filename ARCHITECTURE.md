@@ -2291,3 +2291,36 @@ preprocessing, calibration and thresholds fit inside training folds only.
 The resolution remains unselected pending a nonperformance Stage 2 sufficiency
 audit. No feature/label generator, fold plan, model training or artifact exists
 yet. Candidate v2, Calibration, Evaluation, PAPER and live remain unauthorized.
+
+Windows Stage 1 review reproduced 29 focused and 1,866 complete tests. Protocol
+SHA-256, component SHA-256 and all four closure/scope parent bindings matched;
+the declaration retained `selected_resolution=null`, `labels_generated=false`
+and `model_training_executed=false`.
+
+## AI-Driven v2 Stage 2 Timestamp-Only Audit Boundary
+
+Stage 2 is parent-bound to True Learning Contract milestone `796c8de`. The
+component compares 1d, 12h and 4h archive-native candidates in coarsest-first
+order. Its input surface is deliberately narrower than a backtest: it locates
+the exact frozen Kraken archive members and consumes only Unix timestamps
+inside Development. Remaining OHLCVT fields are ignored and no network source
+is available.
+
+For every asset/resolution, the timestamp-only analyzer validates grid
+alignment and partitions continuous segments at missing buckets. A shared
+90-day causal warm-up and 30-day label horizon produce counts of warm-up loss,
+right censoring, valid potential examples and nonoverlapping-horizon capacity.
+Three exact calendar folds then measure training/validation capacity after
+30-day purge and embargo boundaries.
+
+Absolute gates are fixed before archive access. A shared resolution passes only
+when BTC, ETH and XRP all pass coverage, gap, continuity, example and fold
+support. Multiple passes choose the coarsest passing candidate; no pass selects
+nothing. The runner is one-shot, hash-verifies the prior 7.885 GB complete
+archive and atomically records canonical evidence outside the repository.
+
+Review leaves the authorization phrase inactive and every archive/data-opened
+flag false. There is no model training, label generation, walk-forward
+prediction or performance evaluation. Calibration, Evaluation and Candidate v2
+remain closed, and a selected resolution still requires a separate dataset
+lock before Stage 3.

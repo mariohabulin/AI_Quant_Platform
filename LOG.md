@@ -3108,3 +3108,37 @@ Forward-paper evidence isolated a real lifecycle edge case rather than a strateg
   artifact, environment and out-of-fold prediction hashes.
 - The resolution remains unselected until Stage 2 nonperformance sufficiency
   review. No data, labels or training were opened; Candidate v2 remains false.
+
+## 2026-09-01 — Kraken AI-Driven v2 True Learning Contract V1 (Windows Review)
+
+- Reproduced 29/29 focused and 1,866/1,866 complete Windows tests.
+- Verified protocol/component SHA-256 plus Round 2 closure document, scope-gap
+  correction, closure component and closure-review parent bindings.
+- Confirmed exact three-class label, twelve registered model variants, bounded
+  fold-local decision thresholds and required learned-artifact identity.
+- Confirmed `selected_resolution=null`, `labels_generated=false`,
+  `model_training_executed=false` and every Candidate/deployment authorization
+  false.
+- Stage 1 now awaits only commit/push before nonperformance Stage 2 audit work.
+
+## 2026-09-01 — Kraken AI-Driven v2 Stage 2 Data Sufficiency Audit (Local Preparation)
+
+- Bound Stage 2 to completed True Learning Contract milestone `796c8de` and
+  exact Stage 1 plus archive-only dataset source hashes.
+- Froze 1d, 12h and 4h as the official archive-native candidates; excluded 6h
+  so an earlier preferred chart cannot select the new learning resolution.
+- Implemented a timestamp-only Development reader for the exact frozen complete
+  Kraken archive. OHLCV value fields, returns, labels and model scores are
+  prohibited.
+- Froze a common 90-day feature warm-up, 30-day horizon geometry, three global
+  purged/embargoed folds and absolute per-asset support gates before audit data
+  access.
+- Implemented gap segmentation, warm-up/right-censor reporting, valid-example
+  identities, nonoverlapping-horizon capacity and coarsest-passing deterministic
+  selection.
+- Added exact archive hash checks, external-path isolation, one-shot atomic
+  evidence and an independent canonical evidence lock.
+- Synthetic tests prove the 4h candidate passes only when its timestamp support
+  satisfies every frozen gate; no real resolution has been selected.
+- No archive or market value has been opened, there is no model training, and
+  Calibration, Evaluation, Candidate v2, PAPER, cloud and live remain false.

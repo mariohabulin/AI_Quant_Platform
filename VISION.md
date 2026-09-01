@@ -651,3 +651,25 @@ The resolution remains unselected until Stage 2 compares official source-native
 candidates using nonperformance sufficiency facts. Candidate v2 remains
 unauthorized; the immediate goal is a reproducible learned artifact, not another
 hand-written strategy round.
+
+Windows reproduced 29/29 focused and 1,866/1,866 complete tests and verified the
+contract, component and all four Stage 0 parent hashes. Stage 1 is ready for
+integration; no dataset, label, model fit or performance result was produced.
+
+## Stage 2 Data Sufficiency and Resolution Audit
+
+True Learning Contract V1 is integrated at `796c8de`. Stage 2 now asks a narrow
+question before any model work: which official Kraken resolution can support
+enough causal Development examples for a shared BTC/ETH/XRP learner?
+
+The frozen comparison is 1d, 12h and 4h, all present natively in the official
+Kraken historical archive. Six-hour data is not reintroduced from the earlier
+strategy path. Selection uses timestamp-only availability geometry: coverage,
+gaps, continuous spans, a common 90-day feature warm-up, 30-day horizon
+censoring and three purged chronological fold capacities.
+
+The review milestone does not open the archive. A later separately authorized
+one-shot audit may read only Development timestamp fields; OHLCV values,
+returns, labels and model scores remain prohibited. There is no model training
+and no automatic Candidate v2 promotion. A selected resolution must receive a
+new immutable dataset lock before Stage 3 feature or label generation.

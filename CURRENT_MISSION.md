@@ -1925,12 +1925,12 @@ both evidence files remained byte-identical. Existing components are the
 
 Stage 0 is integrated at `70e7bca`.
 
-### Kraken AI-Driven v2 — True Learning Contract V1 (Local Review)
+### Kraken AI-Driven v2 — True Learning Contract V1 (Windows Reviewed)
 
-The active mission is Windows review of the frozen Stage 1 contract. It defines
-one causal context as a three-class target-first, stop-first or timeout example;
-the shared BTC/ETH/XRP learner must fit its parameters from Development labels
-rather than receive trading rules from us.
+Windows reproduced 29/29 focused and 1,866/1,866 complete tests and every new or
+parent hash matched. The contract defines one causal context as a three-class
+target-first, stop-first or timeout example; the shared BTC/ETH/XRP learner must
+fit its parameters from Development labels rather than receive rules from us.
 
 The budget is two model families, twelve total variants and one deterministic
 seed. Expanding walk-forward folds use 30-day purge/embargo boundaries, and
@@ -1938,7 +1938,27 @@ every preprocessing, probability-calibration and threshold step fits on earlier
 training rows only. A learned artifact must hash the model, data, features,
 labels, folds, environment and out-of-fold predictions.
 
-The resolution remains unselected until a separately implemented Stage 2
+The immediate mission is commit/push of this exact Stage 1 state. The
+resolution remains unselected until a separately implemented Stage 2
 nonperformance sufficiency audit. No dataset has been opened and no label or
-model exists. Candidate v2, Calibration, Evaluation, PAPER and live remain
-unauthorized.
+model exists.
+Candidate v2, Calibration, Evaluation, PAPER and live remain unauthorized.
+
+### Kraken AI-Driven v2 — Stage 2 Data Sufficiency Audit (Local Review)
+
+Stage 1 is integrated at `796c8de`. The active mission is a nonperformance
+comparison of 1d, 12h and 4h official Kraken archive members. The audit uses a
+timestamp-only reader over Development availability; it cannot parse OHLCV
+values, calculate returns, generate labels or inspect model scores.
+
+The shared comparison applies a 90-day causal warm-up, a 30-day future-path
+requirement and three fixed expanding folds with 30-day purge/embargo. Every
+candidate must pass absolute coverage, continuity, gap, per-asset example and
+per-fold capacity gates. If several pass, the coarsest passing candidate wins;
+if none passes, no resolution is selected and gates remain unchanged.
+
+The immediate task is Windows focused/full regression and hash-bound review,
+then commit/push. The exact one-shot phrase remains inactive until a separate
+operator decision. There is no model training. No archive has been opened,
+`selected_resolution` remains null, and Calibration, Evaluation, Candidate v2,
+PAPER, cloud, real orders and live remain unauthorized.

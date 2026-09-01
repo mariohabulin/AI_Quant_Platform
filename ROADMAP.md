@@ -937,10 +937,21 @@ until the Stage 2 nonperformance audit.
 - [x] Locally freeze True Learning Contract V1: causal decision
   timestamp, label/horizon, feature availability, model budget, deterministic
   training, walk-forward folds, costs, metrics and rejection gates.
-- [ ] Reproduce focused/full regression and hash-bound Stage 1 review on Windows,
-  then commit/push before Stage 2 data-sufficiency implementation.
-- [ ] Stage 2 — audit Development example sufficiency by source-native
-  resolution and select resolution from evidence rather than a preferred chart.
+- [x] Reproduce 29/29 focused and 1,866/1,866 full regression plus hash-bound
+  Stage 1 review on Windows without selecting resolution or training.
+- [x] Commit/push the exact True Learning Contract V1 milestone at `796c8de`
+  before Stage 2 data-sufficiency implementation.
+- [x] Locally implement Stage 2 comparison of 1d, 12h and 4h using a
+  timestamp-only reader, frozen nonperformance support gates, exact global
+  folds, one-shot atomic evidence and no model training.
+- [ ] Reproduce focused/full Windows tests and hash-bound Stage 2 review, then
+  commit/push before any source archive access.
+- [ ] Make a separate operator decision for one timestamp-only Stage 2 audit;
+  record selection or no-selection without opening Calibration/Evaluation or
+  authorizing Candidate v2.
+- [ ] If a resolution passes, lock a new immutable selected-resolution dataset
+  before Stage 3; if none passes, extend or re-lock source evidence instead of
+  weakening the gates.
 - [ ] Stage 3 — implement deterministic offline feature/label generation,
   bounded training, later-period prediction and a hash-identified learned model
   artifact.
