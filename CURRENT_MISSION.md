@@ -2,15 +2,15 @@
 
 ## Mission
 
-Recover the fail-closed 12h Development Learning Attempt 1, correct the Kraken
-native row adapter from an assumed eight-column fixture to the frozen official
-seven-column schema, and review the corrected one-shot Attempt 2 boundary.
-The corrected 12h Development Learning Runner remains inert during this review.
+Recover the fail-closed 12h Development Learning Attempt 2, remove the
+contradictory endpoint assertion while retaining exact hash/grid/count checks,
+and review a new one-shot Attempt 3 boundary. The corrected Development
+Learning Runner remains inert during this review.
 
 Status:
-`KRAKEN_AI_V2_12H_DEVELOPMENT_LEARNING_ATTEMPT_1_FAILED_RECOVERY_REVIEW_REQUIRED`
+`KRAKEN_AI_V2_12H_DEVELOPMENT_LEARNING_ATTEMPT_2_FAILED_RECOVERY_REVIEW_REQUIRED`
 
-Recovery parent milestone: `cc8ae44`
+Recovery parent milestone: `203b4c5`
 
 Active protocol:
 `kraken-btc-eth-xrp-ai-driven-v2-12h-development-learning-runner-v1`
@@ -33,11 +33,13 @@ The runner additionally persists real estimator bytes, canonical OOF
 predictions, label/censor diagnostics and exact source/artifact hashes. It has a
 noncrashing `HOLD_CASH` evidence branch if a fold lacks class support.
 
-Synthetic tests train actual parameters. Attempt 1 opened the complete archive
-and first BTC 12h source row, then failed before parsing that row's OHLCV values
-because it expected eight fields. It generated no frame, feature, label, model,
-prediction or conclusion. Its empty staging marker remains preserved, its
-authorization is consumed and no real Development model has yet been fitted.
+Synthetic tests train actual parameters. Attempt 1 failed on an incorrect
+eight-column assumption before parsing OHLCV. Attempt 2 corrected that schema,
+validated the full archive and parsed BTC Development rows, then failed before
+returning any frame because the reader simultaneously accepted one missing BTC
+bucket and required the final bucket to exist. Neither attempt generated a
+feature, label, model, prediction or conclusion. Both staging markers are
+preserved and both authorizations are consumed. No real Development model has yet been fitted.
 
 ## Why 12h is active
 
@@ -63,14 +65,16 @@ two-model learning design.
 4. Windows reproduces the results;
 5. commit/push occurs from a clean reviewed worktree.
 
-Only then do we run a clean Attempt 2 source/evidence preflight. Recovery
-requires the preserved Attempt 1 staging marker, a new Attempt 2 evidence root
+Only then do we run a clean Attempt 3 source/evidence preflight. Recovery
+requires both preserved prior staging markers, a new Attempt 3 evidence root
 and the new separate phrase
-`EXECUTE_KRAKEN_AI_V2_12H_DEVELOPMENT_LEARNING_RECOVERY_ATTEMPT_2_ONCE`.
+`EXECUTE_KRAKEN_AI_V2_12H_DEVELOPMENT_LEARNING_RECOVERY_ATTEMPT_3_ONCE`.
 
 ## Nonauthorization
 
-- real Development data opened: `false`;
+- source archive opened during failed Attempt 2: `true`;
+- BTC Development source values parsed during failed Attempt 2: `true`;
+- complete Development frames returned to Learning Core: `false`;
 - real labels generated: `false`;
 - real model training executed: `false`;
 - Calibration data opened: `false`;

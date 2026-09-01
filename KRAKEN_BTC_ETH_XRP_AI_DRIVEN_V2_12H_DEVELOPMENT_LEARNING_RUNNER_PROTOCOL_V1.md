@@ -7,11 +7,17 @@ Run ID:
 `kraken-ai-v2-12h-development-learning-v1`
 
 Recovery parent commit:
-`cc8ae44c45d41182af3bc91ee21cf075e65011b5`.
+`203b4c5b81434be3edab7ec5372448cd12472288`.
 
 Attempt 1 failed closed at that commit because the new adapter expected an
 eight-column source row. The immutable incident record is
 `KRAKEN_AI_DRIVEN_V2_12H_DEVELOPMENT_LEARNING_ATTEMPT_1_INCIDENT.md`.
+
+Attempt 2 failed closed at `203b4c5` after the correct seven-column BTC rows
+were parsed but before the Learning Core received a frame. The adapter accepted
+the frozen count of one missing BTC bucket while contradictorily requiring both
+Development endpoints to exist. The immutable record is
+`KRAKEN_AI_DRIVEN_V2_12H_DEVELOPMENT_LEARNING_ATTEMPT_2_INCIDENT.md`.
 
 ## Purpose
 
@@ -23,7 +29,7 @@ model code from Learning Core V1.
 The implemented component is inert. A run requires a separate exact operator
 authorization:
 
-`EXECUTE_KRAKEN_AI_V2_12H_DEVELOPMENT_LEARNING_RECOVERY_ATTEMPT_2_ONCE`
+`EXECUTE_KRAKEN_AI_V2_12H_DEVELOPMENT_LEARNING_RECOVERY_ATTEMPT_3_ONCE`
 
 Reviewing, testing, committing or downloading this component does not activate
 that phrase.
@@ -60,6 +66,13 @@ Expected Development rows are 3,833 BTC, 3,834 ETH and 3,830 XRP. The reader
 does not fill the one BTC or four XRP missing 12h buckets. Frame validation
 rejects malformed timestamps, non-finite values, nonpositive prices, negative
 volume and invalid OHLC geometry.
+
+The reader validates the complete expected 12h calendar grid, subtracts every
+observed aligned timestamp and records the exact missing timestamps. Exact
+archive bytes, archive SHA-256, observed counts and missing counts remain
+mandatory. A missing edge bucket is valid only because it is already part of
+the hash-bound source and frozen missing-bucket count; the runner no longer
+claims that a known-missing edge bucket must simultaneously be present.
 
 Calibration and Evaluation market values remain unopened.
 
@@ -99,7 +112,8 @@ The evidence package contains:
 - zero models for the class-support `HOLD_CASH` branch, or exactly six learned
   `.pkl` fold-model artifacts for a completed training branch;
 - complete-archive identity;
-- decompressed member-byte SHA-256, timestamp-identity SHA-256 and row counts;
+- decompressed member-byte SHA-256, timestamp-identity SHA-256, row counts and
+  exact missing Development timestamps;
 - Learning Core configuration and component hashes;
 - labeled-table identity SHA-256, censoring/label diagnostics and fold support;
 - predictive metrics and exact artifact manifests; and
@@ -110,10 +124,10 @@ serialization. Existing final or staging evidence blocks a repeat. The
 independent lock rehashes every file, validates the exact file manifest and
 does not unpickle learned artifacts.
 
-Recovery Attempt 2 additionally requires the original empty Attempt 1 staging
-directory as a read-only incident marker and a new external Attempt 2 evidence
-root. The recovery runner verifies but never deletes, renames or writes into
-the Attempt 1 marker.
+Recovery Attempt 3 additionally requires the original empty Attempt 1 and
+Attempt 2 staging directories as distinct read-only incident markers and a new
+external Attempt 3 evidence root. The recovery runner verifies but never
+deletes, renames or writes into either prior marker.
 
 ## Deliberate nonselection
 

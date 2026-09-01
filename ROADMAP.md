@@ -19,7 +19,7 @@ adding another strategy family, resolution search or deployment feature.
 - [x] Reproduce focused and full Windows tests.
 - [x] Commit and push the exact Learning Core milestone.
 
-### 2. Hash-Bound 12h Development Learning Runner — ATTEMPT 1 FAILED CLOSED
+### 2. Hash-Bound 12h Development Learning Runner — ATTEMPTS 1–2 FAILED CLOSED
 
 - [x] Implement Development-only reader for exact official native 12h members.
 - [x] Implement archive, member-byte and timestamp-identity hashes.
@@ -34,10 +34,18 @@ adding another strategy family, resolution search or deployment feature.
 - [x] Preserve fail-closed Attempt 1 staging after the eight-column adapter error.
 - [x] Record the incident and correct to the frozen seven-column Kraken schema.
 - [x] Require the untouched Attempt 1 marker and a new recovery authorization.
-- [ ] Reproduce focused/full Windows recovery tests and static review.
-- [ ] Commit/push the reviewed recovery.
-- [ ] Run clean Attempt 2 preflight and request a separate recovery decision.
-- [ ] Execute at most one authorized real Recovery Attempt 2.
+- [x] Reproduce focused/full Windows Attempt 2 recovery tests and static review.
+- [x] Commit/push the reviewed Attempt 2 recovery at `203b4c5`.
+- [x] Run clean Attempt 2 preflight and receive a separate recovery authorization.
+- [x] Preserve fail-closed Attempt 2 staging after the contradictory endpoint check.
+- [x] Record that no frame reached the Learning Core and no label/model was created.
+- [x] Replace endpoint presence with full-grid missing-timestamp validation while
+  retaining exact archive hash, row counts and missing counts.
+- [x] Require both untouched prior markers and a new Attempt 3 authorization.
+- [ ] Reproduce focused/full Windows Attempt 3 recovery tests and static review.
+- [ ] Commit/push the reviewed Attempt 3 recovery.
+- [ ] Run clean Attempt 3 preflight and request a separate recovery decision.
+- [ ] Execute at most one authorized real Recovery Attempt 3.
 
 Baseline labels already include adverse commission, spread and slippage. A
 read-only economic/stress decision layer follows the immutable OOF evidence;

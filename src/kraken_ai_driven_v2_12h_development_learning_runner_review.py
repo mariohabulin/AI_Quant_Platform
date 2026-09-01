@@ -32,8 +32,8 @@ except ImportError:  # pragma: no cover - package import compatibility
 
 
 SCHEMA_VERSION = 1
-STATUS = "KRAKEN_AI_V2_12H_DEVELOPMENT_LEARNING_RUNNER_RECOVERY_REVIEWED_ATTEMPT_2_AUTHORIZATION_REQUIRED"
-EXPECTED_PARENT_COMMIT = "cc8ae44c45d41182af3bc91ee21cf075e65011b5"
+STATUS = "KRAKEN_AI_V2_12H_DEVELOPMENT_LEARNING_RUNNER_RECOVERY_REVIEWED_ATTEMPT_3_AUTHORIZATION_REQUIRED"
+EXPECTED_PARENT_COMMIT = "203b4c5b81434be3edab7ec5372448cd12472288"
 EXPECTED_LEARNING_CORE_PROTOCOL_SHA256 = (
     "4a3dd7b00d52be5df3f60ce5dba0c8803462baa68d0f3eeb1f06f9d6fe64ea2c"
 )
@@ -41,13 +41,16 @@ EXPECTED_LEARNING_CORE_COMPONENT_SHA256 = (
     "467f2a1913371ef11c9a828770bb6a260708032a9ba2aec142d88cfe7ab79207"
 )
 EXPECTED_RUNNER_PROTOCOL_SHA256 = (
-    "88183f032e999288b3a8a6e0ad1fc51bf7b5af7d0d75fa31a43e0bd677832a9d"
+    "a1fb0e369adab2aba469567b74bef76ad5404007c62287dd232e98166fd486be"
 )
 EXPECTED_RUNNER_COMPONENT_SHA256 = (
-    "4adbc9196a372cb02a02ecc961440f5204f4d4e2ce795ad90e13278ceff3ad2e"
+    "8cbeb478b2d78bccbe33ebb96ab8a1e2838492b10f52e7e42b363c1c9e545082"
 )
 EXPECTED_ATTEMPT_1_INCIDENT_SHA256 = (
     "c35b9dadbae7ab1055963231584ca3206be788d43035181706e796caf9a4f8e2"
+)
+EXPECTED_ATTEMPT_2_INCIDENT_SHA256 = (
+    "cae9a5274690ba3e73c32251bfa8c3c4871b9c8964522c935361310a3ddbc246"
 )
 
 
@@ -68,6 +71,8 @@ def review_12h_development_learning_runner(root=None):
         / "kraken_ai_driven_v2_12h_development_learning_runner.py",
         "attempt_1_incident": root
         / "KRAKEN_AI_DRIVEN_V2_12H_DEVELOPMENT_LEARNING_ATTEMPT_1_INCIDENT.md",
+        "attempt_2_incident": root
+        / "KRAKEN_AI_DRIVEN_V2_12H_DEVELOPMENT_LEARNING_ATTEMPT_2_INCIDENT.md",
     }
     observed = {name: _sha256(path) for name, path in paths.items()}
     expected = {
@@ -76,6 +81,7 @@ def review_12h_development_learning_runner(root=None):
         "runner_protocol": EXPECTED_RUNNER_PROTOCOL_SHA256,
         "runner_component": EXPECTED_RUNNER_COMPONENT_SHA256,
         "attempt_1_incident": EXPECTED_ATTEMPT_1_INCIDENT_SHA256,
+        "attempt_2_incident": EXPECTED_ATTEMPT_2_INCIDENT_SHA256,
     }
     for name in expected:
         if observed[name] != expected[name]:
@@ -92,6 +98,13 @@ def review_12h_development_learning_runner(root=None):
         raise RuntimeError("12h learning asset order mismatch.")
     if declaration["model_order"] != list(MODEL_SPECS):
         raise RuntimeError("12h learning model order mismatch.")
+    if (
+        declaration["recovery_attempt"] != 3
+        or declaration["prior_attempt_staging_count_required"] != 2
+        or declaration["boundary_missing_bucket_validation_implemented"] is not True
+        or declaration["mandatory_endpoint_presence_assumption_active"] is not False
+    ):
+        raise RuntimeError("12h learning Attempt 3 recovery boundary mismatch.")
     required_false = (
         "authorization_phrase_active",
         "source_archive_opened",
@@ -117,13 +130,19 @@ def review_12h_development_learning_runner(root=None):
         "protocol_id": PROTOCOL_ID,
         "run_id": RUN_ID,
         "parent_commit": PARENT_COMMIT,
-        "recovery_attempt": 2,
-        "attempt_1_execution_commit": EXPECTED_PARENT_COMMIT,
+        "recovery_attempt": 3,
+        "attempt_1_execution_commit": "cc8ae44c45d41182af3bc91ee21cf075e65011b5",
         "attempt_1_final_evidence_exists": False,
         "attempt_1_staging_evidence_exists": True,
         "attempt_1_authorization_consumed": True,
         "attempt_1_incident_sha256": observed["attempt_1_incident"],
         "attempt_1_incident_sha256_match": True,
+        "attempt_2_execution_commit": EXPECTED_PARENT_COMMIT,
+        "attempt_2_final_evidence_exists": False,
+        "attempt_2_staging_evidence_exists": True,
+        "attempt_2_authorization_consumed": True,
+        "attempt_2_incident_sha256": observed["attempt_2_incident"],
+        "attempt_2_incident_sha256_match": True,
         "source_row_column_count": 7,
         "source_row_schema": [
             "Unix time",
@@ -136,7 +155,10 @@ def review_12h_development_learning_runner(root=None):
         ],
         "development_trade_count_validation_implemented": True,
         "eight_column_assumption_active": False,
-        "prior_attempt_staging_required": True,
+        "prior_attempt_staging_count_required": 2,
+        "boundary_missing_bucket_validation_implemented": True,
+        "missing_development_timestamps_recorded": True,
+        "mandatory_endpoint_presence_assumption_active": False,
         "active_resolution": "12h",
         "partition": "DEVELOPMENT",
         "asset_order": list(ASSET_ORDER),
@@ -171,7 +193,7 @@ def review_12h_development_learning_runner(root=None):
         "cloud_execution_authorized": False,
         "real_orders_submitted": False,
         "live_execution_authorized": False,
-        "next_stage": "SEPARATE_OPERATOR_DECISION_FOR_ONE_SHOT_12H_DEVELOPMENT_LEARNING_RECOVERY_ATTEMPT_2",
+        "next_stage": "SEPARATE_OPERATOR_DECISION_FOR_ONE_SHOT_12H_DEVELOPMENT_LEARNING_RECOVERY_ATTEMPT_3",
     }
 
 

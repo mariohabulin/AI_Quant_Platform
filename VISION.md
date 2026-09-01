@@ -46,12 +46,15 @@ The Learning Core now implements:
 The hash-bound real 12h Development Learning Runner is implemented. Attempt 1
 failed closed before learning because its new synthetic fixture assumed an
 eighth VWAP field that the frozen seven-column Kraken archive does not contain.
-The archive and Learning Core were not at fault. Recovery now awaits
-independent review plus a new separate one-shot operator authorization. A
-successful authorized recovery will create six real fold-model artifacts and exact
-out-of-fold probabilities; insufficient fold class support will instead close
-atomically as `HOLD_CASH`. Another open-ended rule-discovery round is not part
-of the active roadmap.
+Attempt 2 corrected that defect but failed before learning because the fixture
+did not reproduce BTC's known missing edge bucket: the reader accepted the
+frozen missing count and then incorrectly required that endpoint. The archive
+and Learning Core were not at fault in either incident. Recovery now validates
+the full grid and records missing timestamps without weakening archive hashes
+or counts. It awaits independent review and a separate Attempt 3 authorization.
+A successful recovery will create six real fold-model artifacts and exact OOF
+probabilities; insufficient class support will close atomically as `HOLD_CASH`.
+Another open-ended rule-discovery round is not part of the active roadmap.
 
 ## Permanent safety boundary
 

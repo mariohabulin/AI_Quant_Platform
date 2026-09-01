@@ -79,8 +79,16 @@ fold support, OOF predictions, metrics and learned model files.
 The native adapter accepts exactly the frozen seven source fields `Unix time,
 Open, High, Low, Close, Volume, Trades`. Attempt 1 at `cc8ae44` exposed an
 eight-column synthetic-fixture defect before any OHLCV value, label or model
-was produced. Recovery requires the preserved empty Attempt 1 staging marker,
-a new Attempt 2 evidence root and a new authorization phrase.
+was produced. Attempt 2 at `203b4c5` parsed BTC correctly but exposed a second
+fixture gap: the adapter accepted the frozen 3,833-row count and one missing BTC
+bucket, then contradicted that contract by requiring the final bucket to exist.
+It stopped before returning frames or generating labels.
+
+The corrected reader validates the entire aligned Development grid, records
+each absent timestamp and retains exact archive SHA-256, row counts and missing
+counts. It does not require a known-missing edge timestamp to be present.
+Recovery requires both preserved empty prior staging markers, a new Attempt 3
+evidence root and a new authorization phrase.
 
 Every completed training branch contains exactly six `.pkl` artifacts: two
 models fitted independently in each of three folds. The lock hashes them

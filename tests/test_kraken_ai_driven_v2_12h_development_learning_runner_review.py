@@ -9,6 +9,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "s
 
 from kraken_ai_driven_v2_12h_development_learning_runner_review import (
     EXPECTED_ATTEMPT_1_INCIDENT_SHA256,
+    EXPECTED_ATTEMPT_2_INCIDENT_SHA256,
     EXPECTED_LEARNING_CORE_COMPONENT_SHA256,
     EXPECTED_LEARNING_CORE_PROTOCOL_SHA256,
     EXPECTED_RUNNER_COMPONENT_SHA256,
@@ -25,9 +26,11 @@ def test_review_binds_parent_core_runner_protocol_and_component():
     review = review_12h_development_learning_runner(ROOT)
 
     assert review["status"] == STATUS
-    assert review["parent_commit"] == "cc8ae44c45d41182af3bc91ee21cf075e65011b5"
+    assert review["parent_commit"] == "203b4c5b81434be3edab7ec5372448cd12472288"
     assert review["attempt_1_incident_sha256"] == EXPECTED_ATTEMPT_1_INCIDENT_SHA256
     assert review["attempt_1_incident_sha256_match"] is True
+    assert review["attempt_2_incident_sha256"] == EXPECTED_ATTEMPT_2_INCIDENT_SHA256
+    assert review["attempt_2_incident_sha256_match"] is True
     assert review["learning_core_protocol_sha256"] == EXPECTED_LEARNING_CORE_PROTOCOL_SHA256
     assert review["learning_core_component_sha256"] == EXPECTED_LEARNING_CORE_COMPONENT_SHA256
     assert review["runner_protocol_sha256"] == EXPECTED_RUNNER_PROTOCOL_SHA256
@@ -43,10 +46,13 @@ def test_review_confirms_inert_real_learning_runner_boundary():
 
     assert review["active_resolution"] == "12h"
     assert review["partition"] == "DEVELOPMENT"
-    assert review["recovery_attempt"] == 2
+    assert review["recovery_attempt"] == 3
     assert review["attempt_1_final_evidence_exists"] is False
     assert review["attempt_1_staging_evidence_exists"] is True
     assert review["attempt_1_authorization_consumed"] is True
+    assert review["attempt_2_final_evidence_exists"] is False
+    assert review["attempt_2_staging_evidence_exists"] is True
+    assert review["attempt_2_authorization_consumed"] is True
     assert review["source_row_column_count"] == 7
     assert review["source_row_schema"] == [
         "Unix time",
@@ -59,7 +65,10 @@ def test_review_confirms_inert_real_learning_runner_boundary():
     ]
     assert review["development_trade_count_validation_implemented"] is True
     assert review["eight_column_assumption_active"] is False
-    assert review["prior_attempt_staging_required"] is True
+    assert review["prior_attempt_staging_count_required"] == 2
+    assert review["boundary_missing_bucket_validation_implemented"] is True
+    assert review["missing_development_timestamps_recorded"] is True
+    assert review["mandatory_endpoint_presence_assumption_active"] is False
     assert review["runner_implemented"] is True
     assert review["real_model_artifact_persistence_implemented"] is True
     assert review["out_of_fold_prediction_artifact_implemented"] is True
@@ -83,6 +92,7 @@ def test_review_fails_closed_if_runner_component_changes(tmp_path):
         "KRAKEN_BTC_ETH_XRP_AI_DRIVEN_V2_LEARNING_CORE_PROTOCOL_V1.md",
         "KRAKEN_BTC_ETH_XRP_AI_DRIVEN_V2_12H_DEVELOPMENT_LEARNING_RUNNER_PROTOCOL_V1.md",
         "KRAKEN_AI_DRIVEN_V2_12H_DEVELOPMENT_LEARNING_ATTEMPT_1_INCIDENT.md",
+        "KRAKEN_AI_DRIVEN_V2_12H_DEVELOPMENT_LEARNING_ATTEMPT_2_INCIDENT.md",
         "src/kraken_ai_driven_v2_learning_core.py",
         "src/kraken_ai_driven_v2_12h_development_learning_runner.py",
     )
@@ -118,7 +128,7 @@ def test_protocol_and_active_documents_describe_the_real_runner_without_authoriz
         assert len(text.splitlines()) < 220
     mission = (ROOT / "CURRENT_MISSION.md").read_text(encoding="utf-8")
     assert (
-        "EXECUTE_KRAKEN_AI_V2_12H_DEVELOPMENT_LEARNING_RECOVERY_ATTEMPT_2_ONCE"
+        "EXECUTE_KRAKEN_AI_V2_12H_DEVELOPMENT_LEARNING_RECOVERY_ATTEMPT_3_ONCE"
         in mission
     )
     assert "real Development model has yet been fitted" in mission

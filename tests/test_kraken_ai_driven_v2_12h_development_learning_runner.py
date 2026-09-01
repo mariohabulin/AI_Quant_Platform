@@ -21,6 +21,7 @@ from kraken_ai_driven_v2_12h_development_learning_runner import (
     CLASS_ORDER,
     EVIDENCE_DIRECTORY_NAME,
     EXPECTED_DEVELOPMENT_ROWS,
+    EXPECTED_MISSING_BUCKETS,
     FEATURE_COLUMNS,
     FOLD_PLAN,
     INSUFFICIENT_SUPPORT_STATUS,
@@ -51,7 +52,8 @@ def _write_complete_12h_archive(path, *, include_vwap=False):
     stems = {"BTC-USD": "XBTUSD", "ETH-USD": "ETHUSD", "XRP-USD": "XRPUSD"}
     full = _complete_timestamps()
     removed = {
-        "BTC-USD": {1000},
+        # The locked source's single BTC omission is at the right Development edge.
+        "BTC-USD": {len(full) - 1},
         "ETH-USD": set(),
         "XRP-USD": {1000, 1001, 1002, 1003},
     }
@@ -175,6 +177,11 @@ def _patch_synthetic_run(monkeypatch, table, training_result=None):
                 {
                     "asset": asset,
                     "development_rows": EXPECTED_DEVELOPMENT_ROWS[asset],
+                    "missing_calendar_buckets": EXPECTED_MISSING_BUCKETS[asset],
+                    "missing_development_timestamps_utc": [
+                        f"synthetic-missing-{number}"
+                        for number in range(EXPECTED_MISSING_BUCKETS[asset])
+                    ],
                     "development_trade_counts_validated": True,
                     "nondevelopment_ohlcvt_values_parsed": False,
                 }
@@ -195,10 +202,13 @@ def _patch_synthetic_run(monkeypatch, table, training_result=None):
         )
 
 
-def _prior_attempt_staging(tmp_path):
-    path = tmp_path / "attempt_1" / STAGING_DIRECTORY_NAME
-    path.mkdir(parents=True)
-    return path
+def _prior_attempt_stagings(tmp_path):
+    paths = []
+    for attempt in (1, 2):
+        path = tmp_path / f"attempt_{attempt}" / STAGING_DIRECTORY_NAME
+        path.mkdir(parents=True)
+        paths.append(path)
+    return tuple(paths)
 
 
 def test_runner_declaration_is_inert_and_does_not_select_a_model():
@@ -206,9 +216,11 @@ def test_runner_declaration_is_inert_and_does_not_select_a_model():
 
     assert declaration["protocol_id"] == PROTOCOL_ID
     assert declaration["run_id"] == RUN_ID
-    assert declaration["parent_commit"] == "cc8ae44c45d41182af3bc91ee21cf075e65011b5"
-    assert declaration["recovery_attempt"] == 2
-    assert declaration["prior_attempt_staging_required"] is True
+    assert declaration["parent_commit"] == "203b4c5b81434be3edab7ec5372448cd12472288"
+    assert declaration["recovery_attempt"] == 3
+    assert declaration["prior_attempt_staging_count_required"] == 2
+    assert declaration["boundary_missing_bucket_validation_implemented"] is True
+    assert declaration["mandatory_endpoint_presence_assumption_active"] is False
     assert declaration["active_resolution"] == "12h"
     assert declaration["partition"] == "DEVELOPMENT"
     assert declaration["model_artifact_count_if_supported"] == 6
@@ -231,7 +243,12 @@ def test_reader_opens_only_development_values_and_hashes_whole_members(tmp_path)
 
     assert {asset: len(frame) for asset, frame in frames.items()} == EXPECTED_DEVELOPMENT_ROWS
     assert all(frame.index.min() == pd.Timestamp("2019-01-01T00:00:00Z") for frame in frames.values())
-    assert all(frame.index.max() == pd.Timestamp("2024-03-31T12:00:00Z") for frame in frames.values())
+    assert frames["BTC-USD"].index.max() == pd.Timestamp("2024-03-31T00:00:00Z")
+    assert frames["ETH-USD"].index.max() == pd.Timestamp("2024-03-31T12:00:00Z")
+    assert frames["XRP-USD"].index.max() == pd.Timestamp("2024-03-31T12:00:00Z")
+    btc = next(item for item in evidence if item["asset"] == "BTC-USD")
+    assert btc["missing_calendar_buckets"] == 1
+    assert btc["missing_development_timestamps_utc"] == ["2024-03-31T12:00:00Z"]
     assert all(item["nondevelopment_ohlcvt_values_parsed"] is False for item in evidence)
     assert all(item["development_trade_counts_validated"] is True for item in evidence)
     assert all(len(item["member_uncompressed_sha256"]) == 64 for item in evidence)
@@ -275,7 +292,8 @@ def test_wrong_authorization_cannot_open_source_or_create_evidence(tmp_path):
         KrakenAIDrivenV212hDevelopmentLearningRunner().run(
             tmp_path / "missing.zip",
             tmp_path / "evidence",
-            tmp_path / "missing-prior-staging",
+            tmp_path / "missing-attempt-1-staging",
+            tmp_path / "missing-attempt-2-staging",
             "WRONG",
         )
     assert not (tmp_path / "evidence").exists()
@@ -287,19 +305,41 @@ def test_recovery_requires_the_preserved_empty_attempt_one_staging_marker(tmp_pa
     runner = KrakenAIDrivenV212hDevelopmentLearningRunner()
 
     with pytest.raises(FileNotFoundError, match="Attempt 1 staging marker"):
-        runner._validate_prior_attempt_staging(marker, evidence_root)
+        runner._validate_prior_attempt_staging(
+            marker,
+            evidence_root,
+            attempt=1,
+            execution_commit="cc8ae44c45d41182af3bc91ee21cf075e65011b5",
+        )
 
     marker.mkdir(parents=True)
     (marker / "unexpected.txt").write_text("not empty", encoding="utf-8")
     with pytest.raises(RuntimeError, match="not the preserved empty incident marker"):
-        runner._validate_prior_attempt_staging(marker, evidence_root)
+        runner._validate_prior_attempt_staging(
+            marker,
+            evidence_root,
+            attempt=1,
+            execution_commit="cc8ae44c45d41182af3bc91ee21cf075e65011b5",
+        )
+
+
+def test_recovery_requires_two_distinct_prior_attempt_markers(tmp_path):
+    marker = tmp_path / "attempt" / STAGING_DIRECTORY_NAME
+    marker.mkdir(parents=True)
+
+    with pytest.raises(ValueError, match="must be distinct"):
+        KrakenAIDrivenV212hDevelopmentLearningRunner._validate_prior_attempt_stagings(
+            marker,
+            marker,
+            tmp_path / "attempt_3",
+        )
 
 
 def test_authorized_failure_leaves_staging_and_blocks_silent_retry(tmp_path, monkeypatch):
     archive_path = tmp_path / "Kraken_OHLCVT.zip"
     archive_path.write_bytes(b"wrong-source")
     evidence_root = tmp_path / "evidence"
-    prior_attempt_staging = _prior_attempt_staging(tmp_path)
+    attempt_1_staging, attempt_2_staging = _prior_attempt_stagings(tmp_path)
     monkeypatch.setattr(
         KrakenAIDrivenV212hDevelopmentLearningRunner,
         "_validate_archive",
@@ -308,12 +348,20 @@ def test_authorized_failure_leaves_staging_and_blocks_silent_retry(tmp_path, mon
 
     with pytest.raises(RuntimeError, match="source failure"):
         KrakenAIDrivenV212hDevelopmentLearningRunner().run(
-            archive_path, evidence_root, prior_attempt_staging, AUTHORIZATION_PHRASE
+            archive_path,
+            evidence_root,
+            attempt_1_staging,
+            attempt_2_staging,
+            AUTHORIZATION_PHRASE,
         )
     assert (evidence_root / STAGING_DIRECTORY_NAME).is_dir()
     with pytest.raises(FileExistsError, match="staging evidence"):
         KrakenAIDrivenV212hDevelopmentLearningRunner().run(
-            archive_path, evidence_root, prior_attempt_staging, AUTHORIZATION_PHRASE
+            archive_path,
+            evidence_root,
+            attempt_1_staging,
+            attempt_2_staging,
+            AUTHORIZATION_PHRASE,
         )
 
 
@@ -323,10 +371,14 @@ def test_successful_run_atomically_records_six_models_and_oof_predictions(tmp_pa
     archive_path = tmp_path / "Kraken_OHLCVT.zip"
     archive_path.write_bytes(b"opaque-test-source")
     evidence_root = tmp_path / "evidence"
-    prior_attempt_staging = _prior_attempt_staging(tmp_path)
+    attempt_1_staging, attempt_2_staging = _prior_attempt_stagings(tmp_path)
 
     recorded = KrakenAIDrivenV212hDevelopmentLearningRunner().run(
-        archive_path, evidence_root, prior_attempt_staging, AUTHORIZATION_PHRASE
+        archive_path,
+        evidence_root,
+        attempt_1_staging,
+        attempt_2_staging,
+        AUTHORIZATION_PHRASE,
     )
     final = evidence_root / EVIDENCE_DIRECTORY_NAME
     locked = KrakenAIDrivenV212hLearningEvidenceLock().lock(final)
@@ -342,7 +394,11 @@ def test_successful_run_atomically_records_six_models_and_oof_predictions(tmp_pa
 
     with pytest.raises(FileExistsError, match="refusing repeat"):
         KrakenAIDrivenV212hDevelopmentLearningRunner().run(
-            archive_path, evidence_root, prior_attempt_staging, AUTHORIZATION_PHRASE
+            archive_path,
+            evidence_root,
+            attempt_1_staging,
+            attempt_2_staging,
+            AUTHORIZATION_PHRASE,
         )
 
 
@@ -352,10 +408,14 @@ def test_insufficient_class_support_records_hold_cash_without_model_files(tmp_pa
     archive_path = tmp_path / "Kraken_OHLCVT.zip"
     archive_path.write_bytes(b"opaque-test-source")
     evidence_root = tmp_path / "evidence"
-    prior_attempt_staging = _prior_attempt_staging(tmp_path)
+    attempt_1_staging, attempt_2_staging = _prior_attempt_stagings(tmp_path)
 
     recorded = KrakenAIDrivenV212hDevelopmentLearningRunner().run(
-        archive_path, evidence_root, prior_attempt_staging, AUTHORIZATION_PHRASE
+        archive_path,
+        evidence_root,
+        attempt_1_staging,
+        attempt_2_staging,
+        AUTHORIZATION_PHRASE,
     )
     locked = KrakenAIDrivenV212hLearningEvidenceLock().lock(
         evidence_root / EVIDENCE_DIRECTORY_NAME
@@ -375,9 +435,13 @@ def test_evidence_lock_detects_model_tampering(tmp_path, monkeypatch):
     archive_path = tmp_path / "Kraken_OHLCVT.zip"
     archive_path.write_bytes(b"opaque-test-source")
     evidence_root = tmp_path / "evidence"
-    prior_attempt_staging = _prior_attempt_staging(tmp_path)
+    attempt_1_staging, attempt_2_staging = _prior_attempt_stagings(tmp_path)
     KrakenAIDrivenV212hDevelopmentLearningRunner().run(
-        archive_path, evidence_root, prior_attempt_staging, AUTHORIZATION_PHRASE
+        archive_path,
+        evidence_root,
+        attempt_1_staging,
+        attempt_2_staging,
+        AUTHORIZATION_PHRASE,
     )
     final = evidence_root / EVIDENCE_DIRECTORY_NAME
     report = json.loads((final / REPORT_FILENAME).read_text(encoding="utf-8"))

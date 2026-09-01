@@ -74,6 +74,23 @@ protocol/evidence files.
   evidence root and a new one-shot recovery phrase. Attempt 1 authorization is
   consumed.
 
+## 2026-09-01 — Learning Attempt 2 incident and recovery
+
+- Attempt 2 ran from `203b4c5`, validated the full archive and parsed BTC
+  Development rows with the corrected seven-column schema.
+- It failed before returning frames because the reader accepted the frozen
+  3,833 BTC rows and one missing bucket but also required both interval
+  endpoints to exist.
+- Final evidence remained absent and Attempt 2 staging remained present. No
+  feature, label, fold result, model, OOF prediction or conclusion was created.
+- Root cause was a synthetic fixture that placed BTC's missing bucket inside
+  the period instead of at the edge recorded by Stage 2.
+- Replaced mandatory endpoint presence with full aligned-calendar subtraction,
+  exact missing-timestamp evidence and unchanged archive/count validation.
+- Attempt 3 requires both prior empty staging markers, a new evidence root and
+  a new one-shot authorization. Attempts 1 and 2 are consumed and may not be
+  rerun.
+
 ## Compact historical milestone index
 
 - Provider and Historical Availability Audit v1 established Venue-Bound Crypto
