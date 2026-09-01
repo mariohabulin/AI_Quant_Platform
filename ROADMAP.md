@@ -2,8 +2,8 @@
 
 ## Current objective
 
-Build and evaluate one genuine shared BTC/ETH/XRP probabilistic learner before
-adding another strategy family, resolution search or deployment feature.
+Complete one frozen six-variant BTC/ETH/XRP Development lab and accept its
+result without changing the process afterward.
 
 ## Active sequence
 
@@ -56,7 +56,7 @@ it is not allowed to refit or automatically select a model.
 
 This stage ends with a real learned result, not another protocol-only loop.
 
-### 3. Read-only Development economic evidence review — IN IMPLEMENTATION
+### 3. Read-only Development economic evidence review — COMPLETED `HOLD_CASH`
 
 - [x] Freeze one payoff-derived eligibility rule before opening economic OOF
   outcomes: `3 * P(target) - P(stop) > 0`.
@@ -66,22 +66,39 @@ This stage ends with a real learned result, not another protocol-only loop.
   gates.
 - [x] Implement strict prediction-schema, probability and chronology checks.
 - [x] Add synthetic positive, `HOLD_CASH`, overlap and tamper tests.
-- [ ] Reproduce focused and complete Windows regression.
-- [ ] Commit/push the reviewed economic-review component.
-- [ ] Run it read-only against exact Attempt 3 evidence and prove evidence
+- [x] Reproduce focused and complete Windows regression.
+- [x] Commit/push the reviewed economic-review component at `dd7735f`.
+- [x] Run it read-only against exact Attempt 3 evidence and prove evidence
   unchanged.
+- [x] Record zero positive folds/assets for both families and retain
+  `HOLD_CASH`.
 
-### 4. Development decision
+### 4. Frozen Alpha Research Lab V1 — IN IMPLEMENTATION
 
-Exactly one of these branches follows the real run:
+- [x] Freeze 12h, the existing feature/label/cost boundary and three outer folds.
+- [x] Freeze exactly six variants: three calibrated classifiers and three direct
+  expected-net-R regressors.
+- [x] Freeze chronological 75/25 inner fit/calibration without leakage.
+- [x] Freeze zero eligibility threshold, support, all-fold, asset-breadth and
+  overall-net-R gates.
+- [x] Implement deterministic ranking among gate passers only.
+- [x] Implement an executable Development runner with one atomic result.
+- [x] Add synthetic leakage, six-variant, economic-gate and `HOLD_CASH` tests.
+- [ ] Reproduce focused and complete Windows regression.
+- [ ] Commit and push the reviewed lab.
+- [ ] Execute all six variants once on real Development data.
+- [ ] Review the frozen result without adding a seventh variant.
 
-- stable evidence: freeze one reviewed Development candidate;
-- weak evidence: allow one versioned feature/label/source correction; or
-- no useful evidence: close the hypothesis and retain `HOLD_CASH`.
+Exactly one branch follows:
 
-No automatic Round 3 or unbounded search exists.
+- stable evidence: freeze the deterministic Development winner before a
+  separate Calibration decision;
+- no stable evidence: close the 12h OHLCV hypothesis and retain `HOLD_CASH`.
 
-### 5. Later gates
+No automatic Round 3, resolution change, seventh variant or unbounded search
+exists.
+
+### 5. Later gates — ONLY AFTER A LAB WINNER
 
 - [ ] one-time Calibration of a frozen Development candidate;
 - [ ] untouched Evaluation only after Calibration passes;
@@ -133,6 +150,7 @@ models. They are the closed Rule Discovery Foundation.
 - `kraken-btc-eth-xrp-ai-driven-v2-true-learning-contract-v1`
 - `kraken-btc-eth-xrp-ai-driven-v2-learning-core-v1`
 - `kraken-btc-eth-xrp-ai-driven-v2-12h-development-learning-runner-v1`
+- `kraken-btc-eth-xrp-ai-driven-v2-alpha-research-lab-v1`
 - `kraken-btc-eth-xrp-ai-driven-v2-12h-development-economic-evidence-review-v1`
 
 Evidence hashes:

@@ -58,12 +58,19 @@ SHA-256 is
 No model was automatically selected and Calibration and Evaluation remained
 unopened.
 
-The active next step is a pre-registered read-only economic review. It uses one
-payoff-derived rule, no threshold sweep, and both raw and non-overlapping event
-views. Stable positive evidence in all three folds can request operator review;
-it still cannot promote Candidate v2. Weak or unstable evidence closes this 12h
-V1 hypothesis with `HOLD_CASH`.
-Another open-ended rule-discovery round is not part of the active roadmap.
+The read-only V1 economic review is complete. Neither learned family produced
+positive net R in any outer fold or on any asset. Logistic regression selected
+659 non-overlapping events for `-378.32 R`; histogram boosting selected 240 for
+`-82.93 R`. V1 is therefore frozen as
+`KRAKEN_AI_V2_12H_DEVELOPMENT_ECONOMIC_REVIEW_HOLD_CASH`.
+
+The final allowed Development correction is the Alpha Research Lab V1. It does
+not invent indicator strategies. It runs exactly six pre-registered learners
+on the same 12h features, labels, costs and outer folds: three natural-frequency
+calibrated classifiers and three direct expected-net-R regressors. The nested
+training/calibration split and economic gates are frozen before the real run.
+If no variant is stable and positive across folds and assets, the 12h OHLCV
+hypothesis closes. There is no seventh variant or automatic process change.
 
 ## Permanent safety boundary
 
@@ -119,6 +126,8 @@ Detailed append-only history remains recoverable in Git through parent commit
   `kraken-btc-eth-xrp-ai-driven-v2-12h-development-learning-runner-v1`.
 - 12h Development economic review:
   `kraken-btc-eth-xrp-ai-driven-v2-12h-development-economic-evidence-review-v1`.
+- frozen Alpha Research Lab:
+  `kraken-btc-eth-xrp-ai-driven-v2-alpha-research-lab-v1`.
 
 Immutable hashes retained for traceability:
 

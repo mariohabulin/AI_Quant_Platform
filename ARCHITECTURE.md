@@ -75,19 +75,10 @@ native Kraken 12h members inside Development, hashed the archive and complete
 member bytes, called the Learning Core and atomically recorded label
 diagnostics, fold support, OOF predictions, metrics and learned model files.
 
-The native adapter accepts exactly the frozen seven source fields `Unix time,
-Open, High, Low, Close, Volume, Trades`. Attempt 1 at `cc8ae44` exposed an
-eight-column synthetic-fixture defect before any OHLCV value, label or model
-was produced. Attempt 2 at `203b4c5` parsed BTC correctly but exposed a second
-fixture gap: the adapter accepted the frozen 3,833-row count and one missing BTC
-bucket, then contradicted that contract by requiring the final bucket to exist.
-It stopped before returning frames or generating labels.
-
-The corrected reader validates the entire aligned Development grid, records
-each absent timestamp and retains exact archive SHA-256, row counts and missing
-counts. It does not require a known-missing edge timestamp to be present.
-Recovery requires both preserved empty prior staging markers, a new Attempt 3
-evidence root and a new authorization phrase.
+The native adapter accepts the frozen seven source fields `Unix time, Open,
+High, Low, Close, Volume, Trades`. Attempts 1 and 2 exposed fixture assumptions
+before any learning result. The corrected reader validates the full aligned
+grid, records missing timestamps and retains archive hash, row and gap counts.
 
 Every completed training branch contains exactly six `.pkl` artifacts: two
 models fitted independently in each of three folds. The lock hashes them
@@ -112,17 +103,39 @@ chronological view with at most one overlapping event per asset. Development
 interest requires support, positive net R in all three folds, positive breadth
 across at least two assets and positive target PR-AUC lift in every fold. A pass
 requires operator review; it cannot select a family or authorize Candidate v2.
-A failure returns `HOLD_CASH`.
+A failure returns `HOLD_CASH`. The completed review found zero positive folds
+and assets for both V1 families: logistic produced 659 non-overlapping events
+and `-378.32 R`; histogram boosting produced 240 and `-82.93 R`.
 
 This is not a portfolio simulation. Capital allocation, cross-asset concurrency,
 drawdown and stress execution remain later work only if evidence warrants it.
 
+### Frozen Alpha Research Lab
+
+`kraken_ai_driven_v2_alpha_research_lab.py` is the sole active Development
+experimentation loop. It reuses the same archive reader, 12h causal features,
+cost-aware labels and three outer folds. Its registry contains exactly six
+variants: natural logistic, histogram boosting and extra trees for calibrated
+three-class utility, plus ridge, histogram boosting and extra trees for direct
+expected-net-R learning.
+
+Within each outer training window, the earlier 75% of decision timestamps fits
+the base learner and the later purged 25% fits a probability or net-R calibrator.
+Outer validation fits nothing. All six variants execute before comparison.
+Eligibility stays at predicted utility/net R above zero; there is no threshold
+or hyperparameter sweep.
+
+Viability requires fixed support, positive non-overlapping net R in every fold,
+positive cumulative net R for at least two assets and positive overall net R.
+Only gate passers can be ranked, first by worst-fold mean net R, then overall
+mean, then frozen registry order. A selected result is only a Development
+winner. Calibration, Evaluation and Candidate v2 remain sealed.
+
 ## Runtime and risk boundary
 
-An approved runtime may load one immutable artifact for inference. It cannot
-fit, mutate, rank or promote a model. The existing AI-Driven v2 Risk and
-Synthetic Execution Layer remains the safety boundary for later simulation and
-PAPER. No research component can submit a real order.
+An approved runtime may load one immutable artifact but cannot fit, mutate,
+rank, promote or submit orders. The AI-Driven v2 Risk and Synthetic Execution
+Layer remains the boundary for any later simulation or PAPER stage.
 
 ## Failure behavior
 
@@ -140,27 +153,9 @@ strategy search.
 
 ## Historical architecture retained outside the active path
 
-Git history through `8c51695` and the versioned protocol files preserve these
-completed boundaries:
-
-- Provider and Historical Availability Boundary v1;
-- Kraken Bounded Blinded Replay Review Boundary v1;
-- Supervised Blinded Replay Execution Boundary v1;
-- AI-Driven v2 Layer Boundary;
-- AI-Driven v2 Signal-State Layer;
-- AI-Driven v2 Risk and Synthetic Execution Layer;
-- AI-Driven v2 Partition Boundary;
-- Development-Only Evidence Runner;
-- Round 1 Causal Signals, Round 1 Family Execution, Round 1 Discovery Runner
-  and Round 1 Closure;
-- Round 2 Causal Signals, Round 2 Family Execution, Round 2 Discovery Runner
-  and Round 2 Closure; and
-- Rule Discovery Foundation and True Learning Engine scope correction.
-
-Reference A used four deterministic paths and closed with 13 rejected entries,
-zero approved entries and `HOLD_CASH`; this was not a break-even strategy result.
-Round 1 evaluated 12 routes, while Round 2 evaluated 7 routes and three exact
-families. These are historical rule tests, not learned model artifacts.
+Git through `8c51695` preserves Provider and Historical Availability Boundary v1; Kraken Bounded Blinded Replay Review Boundary v1; Supervised Blinded Replay Execution Boundary v1; AI-Driven v2 Layer Boundary; AI-Driven v2 Signal-State Layer; AI-Driven v2 Risk and Synthetic Execution Layer; AI-Driven v2 Partition Boundary; and Development-Only Evidence Runner.
+It also preserves Round 1 Causal Signals with four paths, Round 1 Family Execution, Round 1 Discovery Runner and Round 1 Closure; Round 2 Causal Signals, Round 2 Family Execution, Round 2 Discovery Runner and Round 2 Closure; and the Rule Discovery Foundation and True Learning Engine scope correction.
+These are historical rule tests, not learned model artifacts.
 
 ## Immutable lineage index
 
@@ -176,6 +171,7 @@ families. These are historical rule tests, not learned model artifacts.
 - `kraken-btc-eth-xrp-ai-driven-v2-learning-core-v1`
 - `kraken-btc-eth-xrp-ai-driven-v2-12h-development-learning-runner-v1`
 - `kraken-btc-eth-xrp-ai-driven-v2-12h-development-economic-evidence-review-v1`
+- `kraken-btc-eth-xrp-ai-driven-v2-alpha-research-lab-v1`
 - BTC episode `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`
 - Round 1 `3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`
 - Round 2 `5f9acde53d0e2cf35cd1010d0002222182670d7255bdf44e18715f4902c85a01`
@@ -192,8 +188,7 @@ Reference A closure status is
 `KRAKEN_AI_V2_DEVELOPMENT_REFERENCE_A_CLOSED_NO_TRADE_HOLD_CASH`. Exact legacy
 partition boundaries are `2024-04-01T00:00:00Z`, `2025-04-01T00:00:00Z` and
 `2026-04-01T00:00:00Z`. True Learning Contract V1 defines a three-class learner.
-
-Historical compatibility terms: Kraken daily, no model training, Round 1
-Discovery Runner, Round 2 Family Execution and True Learning Engine.
+Historical compatibility terms: Kraken daily, no model training, Round 1 Discovery
+Runner, Round 2 Family Execution and True Learning Engine.
 Legacy exact marker: resolution remains unselected.
 Candidate v2, Calibration, Evaluation, PAPER, cloud and live remain unauthorized.

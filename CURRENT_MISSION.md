@@ -2,21 +2,20 @@
 
 ## Mission
 
-Perform one deterministic, read-only economic review of the immutable 12h
-Development out-of-fold evidence created by successful Learning Recovery
-Attempt 3. Do not retrain, tune a decision threshold, choose a model or promote
-Candidate v2.
+Implement, reproduce and then execute one frozen six-variant Alpha Research Lab
+on Kraken native 12h Development data. This is the single active experimentation
+loop. Do not add a seventh model, change the label/feature/cost boundary, open
+Calibration or Evaluation, or promote Candidate v2.
 
 Status:
-`KRAKEN_AI_V2_12H_DEVELOPMENT_ECONOMIC_REVIEW_IMPLEMENTATION_IN_REVIEW`
+`KRAKEN_AI_V2_ALPHA_RESEARCH_LAB_IMPLEMENTED_REPRODUCTION_REQUIRED`
 
-Parent milestone: `9c1156e`
+Parent milestone: `dd7735f`
 
 Parent evidence SHA-256:
 `30d020bd9c30306f3e8931b47c0958fea7e11a33bff3795c3473806ddcaa09cf`
 
-Active protocol:
-`kraken-btc-eth-xrp-ai-driven-v2-12h-development-economic-evidence-review-v1`
+Active protocol: `kraken-btc-eth-xrp-ai-driven-v2-alpha-research-lab-v1`
 
 ## Completed real learning milestone
 
@@ -38,50 +37,59 @@ Attempt 1 and Attempt 2 remain preserved fail-closed incidents. Their empty
 staging markers are not deleted or reused. Attempt 3 final evidence is complete
 and independently hash-locked.
 
-## Current implementation
+## Completed V1 economic conclusion
 
-The economic review:
+The read-only review of Attempt 3 passed its evidence lock and changed no parent
+evidence. Both V1 learners failed every economic stability branch:
 
-1. locks the exact Attempt 3 evidence directory;
-2. reads only canonical OOF prediction JSON and the parent report;
-3. never opens the Kraken archive or unpickles a learned model;
-4. applies the sole frozen rule
-   `3 * P(TARGET_3R_FIRST) - P(STOP_1R_FIRST) > 0`;
-5. reports raw eligible observations and a chronological non-overlapping view
-   with at most one open event per asset;
-6. requires sufficient support, positive net R in every fold, breadth across
-   at least two assets and positive target PR-AUC lift in every fold; and
-7. returns either operator review of Development interest or `HOLD_CASH`.
+- logistic: 659 non-overlapping selections, `-378.32 R`, mean `-0.574 R`;
+- histogram boosting: 240 selections, `-82.93 R`, mean `-0.346 R`;
+- positive folds: zero; positive assets: zero; action: `HOLD_CASH`.
 
-There is no threshold sweep, top-k search, Calibration access, Evaluation
-access, automatic winner or Candidate authorization. The result is not yet a
-portfolio backtest because cross-asset capital, simultaneous portfolio risk and
-mark-to-market drawdown are not modeled in this review.
+This result is immutable. It is not reinterpreted, rerun or hidden.
+
+## Frozen Alpha Research Lab
+
+Exactly six variants use the same 16 causal features plus asset identity, 12h
+Development rows, cost-aware triple-barrier outcomes and three outer folds:
+
+1. natural multinomial logistic classifier;
+2. histogram gradient-boosted classifier;
+3. extra-trees classifier;
+4. ridge direct-net-R regressor;
+5. histogram gradient-boosted direct-net-R regressor; and
+6. extra-trees direct-net-R regressor.
+
+Every outer training window has an earlier 75% base-fit region and later 25%
+calibration region. Classifiers learn natural-frequency calibrated probabilities;
+regressors learn expected net R directly. No validation event fits a model or
+calibrator that predicts it.
+
+All six always execute. Fixed viability requires per-fold support, positive
+non-overlapping net R in all three folds, positive breadth across at least two
+assets and positive overall net R. Ranking is deterministic only among variants
+passing every gate. A winner is a Development research result, not Candidate v2.
 
 ## Completion gate
 
-1. focused economic-review tests pass;
+1. focused Alpha Research Lab tests pass;
 2. complete regression passes;
-3. parent runner, new protocol and new component hashes match;
-4. Windows reproduces tests and the inert static review;
-5. commit/push occurs from a reviewed worktree;
-6. a read-only command is run on the locked Attempt 3 evidence; and
-7. the evidence directory is proven byte-for-byte unchanged afterward.
-
-The read-only evidence review needs no model-training authorization. It does not
-write a new evidence package. Any later Candidate freeze remains a separate
-operator decision.
+3. Windows reproduces the frozen protocol and executable module;
+4. reviewed files are committed and pushed from a content-clean worktree;
+5. one real Development run executes all six variants and writes one result;
+6. Calibration and Evaluation remain unopened; and
+7. the result is reviewed against only the frozen gates.
 
 ## Possible terminal branches
 
-- no model passes every frozen gate: close 12h V1 with `HOLD_CASH`;
-- one or both model families pass: inspect the named family evidence without
-  automatically selecting it, then separately decide whether a frozen
-  Development candidate specification is justified.
+- no variant passes every frozen gate: close the 12h OHLCV hypothesis with
+  `HOLD_CASH`;
+- one variant wins deterministically: freeze it before a separate decision on
+  one-time Calibration.
 
 ## Permanent nonauthorization
 
-- new model training: false;
+- model training outside the six-variant Development lab: false;
 - threshold or parameter search: false;
 - automatic model selection: false;
 - Calibration data access: false;
