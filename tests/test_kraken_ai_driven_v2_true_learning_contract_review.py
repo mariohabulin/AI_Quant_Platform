@@ -128,4 +128,3 @@ def test_core_project_sources_record_stage_one_and_next_boundary():
         assert "three-class" in text
         assert "resolution remains unselected" in text
         assert "Candidate v2" in text
-
