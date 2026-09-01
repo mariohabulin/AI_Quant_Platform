@@ -43,9 +43,12 @@ The Learning Core now implements:
 5. one constrained histogram-gradient-boosting challenger; and
 6. immutable probability, metric and model-hash evidence.
 
-The next deliverable is one hash-bound real 12h Development Learning Runner.
-It must train actual parameters. Another open-ended rule-discovery round is not
-part of the active roadmap.
+The hash-bound real 12h Development Learning Runner is now implemented and
+awaits independent review plus a separate one-shot operator authorization. A
+successful authorized run will create six real fold-model artifacts and exact
+out-of-fold probabilities; insufficient fold class support will instead close
+atomically as `HOLD_CASH`. Another open-ended rule-discovery round is not part
+of the active roadmap.
 
 ## Permanent safety boundary
 
@@ -97,6 +100,8 @@ Detailed append-only history remains recoverable in Git through parent commit
 - True Learning Contract V1: `kraken-btc-eth-xrp-ai-driven-v2-true-learning-contract-v1` at `70e7bca` and `796c8de`;
 - Stage 2 compared 1d, 12h and 4h with a timestamp-only reader and no model training;
 - Learning Core: `kraken-btc-eth-xrp-ai-driven-v2-learning-core-v1`.
+- 12h Development learner:
+  `kraken-btc-eth-xrp-ai-driven-v2-12h-development-learning-runner-v1`.
 
 Immutable hashes retained for traceability:
 

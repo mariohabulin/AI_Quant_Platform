@@ -68,11 +68,19 @@ V1 contains exactly:
 There is no automatic winner. The output is probabilities, metrics and model
 artifact hashes for operator review.
 
-### Development Learning Runner — next
+### Development Learning Runner
 
-The next component will read only locked 12h Development market values, call
-the Learning Core and atomically record labels, fold support, predictions,
-metrics and learned artifacts. It will require a separate one-shot authorization.
+`kraken_ai_driven_v2_12h_development_learning_runner.py` is now implemented but
+inert. After a separate exact one-shot authorization it can read only the three
+native Kraken 12h members inside Development, hash the archive and complete
+member bytes, call the Learning Core and atomically record label diagnostics,
+fold support, OOF predictions, metrics and learned model files.
+
+Every completed training branch contains exactly six `.pkl` artifacts: two
+models fitted independently in each of three folds. The lock hashes them
+without unpickling. If a fold lacks all three classes, fitting does not begin
+and immutable evidence closes with `HOLD_CASH`. The runner never selects a
+winner or promotes a Candidate.
 
 ## Runtime and risk boundary
 
@@ -131,6 +139,7 @@ families. These are historical rule tests, not learned model artifacts.
 - `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-2-v1`
 - `kraken-btc-eth-xrp-ai-driven-v2-true-learning-contract-v1`
 - `kraken-btc-eth-xrp-ai-driven-v2-learning-core-v1`
+- `kraken-btc-eth-xrp-ai-driven-v2-12h-development-learning-runner-v1`
 - BTC episode `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`
 - Round 1 `3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`
 - Round 2 `5f9acde53d0e2cf35cd1010d0002222182670d7255bdf44e18715f4902c85a01`

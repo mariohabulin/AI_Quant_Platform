@@ -7,7 +7,7 @@ adding another strategy family, resolution search or deployment feature.
 
 ## Active sequence
 
-### 1. V2 Learning Core — IMPLEMENTED LOCALLY
+### 1. V2 Learning Core — COMMITTED AT `2a09363`
 
 - [x] Freeze the active 12h Development-feasibility path.
 - [x] Implement causal multi-asset features.
@@ -16,19 +16,26 @@ adding another strategy family, resolution search or deployment feature.
 - [x] Implement one logistic baseline and one constrained tree challenger.
 - [x] Prohibit automatic model selection and Candidate promotion.
 - [x] Add deterministic synthetic learning and leakage tests.
-- [ ] Reproduce focused and full Windows tests.
-- [ ] Commit and push the exact Learning Core milestone.
+- [x] Reproduce focused and full Windows tests.
+- [x] Commit and push the exact Learning Core milestone.
 
-### 2. Hash-Bound 12h Development Learning Runner — NEXT
+### 2. Hash-Bound 12h Development Learning Runner — IMPLEMENTED, REVIEW REQUIRED
 
-- [ ] Read only official Kraken 12h Development OHLCV after separate authorization.
-- [ ] Lock exact source-member hashes and row identities.
-- [ ] Generate real causal features and triple-barrier labels once.
-- [ ] Report censoring and per-fold/per-class support before fitting.
-- [ ] Fit both models inside all three folds.
-- [ ] Record out-of-fold probabilities, metrics and learned model hashes.
-- [ ] Run baseline and stress cost decisions with `HOLD_CASH` available.
-- [ ] Produce one immutable Development evidence package.
+- [x] Implement Development-only reader for exact official native 12h members.
+- [x] Implement archive, member-byte and timestamp-identity hashes.
+- [x] Implement one-shot label generation and censoring diagnostics.
+- [x] Implement pre-fit fold/class support report and `HOLD_CASH` branch.
+- [x] Persist both models from all three folds as six verifiable artifacts.
+- [x] Persist canonical OOF probabilities and predictive metrics.
+- [x] Implement atomic evidence package and independent lock.
+- [ ] Reproduce focused/full Windows tests and static review.
+- [ ] Commit/push the reviewed runner.
+- [ ] Run clean preflight; then request a separate one-shot operator decision.
+- [ ] Execute exactly one authorized real Development run.
+
+Baseline labels already include adverse commission, spread and slippage. A
+read-only economic/stress decision layer follows the immutable OOF evidence;
+it is not allowed to refit or automatically select a model.
 
 This stage ends with a real learned result, not another protocol-only loop.
 
@@ -93,6 +100,7 @@ models. They are the closed Rule Discovery Foundation.
 - `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-2-v1`
 - `kraken-btc-eth-xrp-ai-driven-v2-true-learning-contract-v1`
 - `kraken-btc-eth-xrp-ai-driven-v2-learning-core-v1`
+- `kraken-btc-eth-xrp-ai-driven-v2-12h-development-learning-runner-v1`
 
 Evidence hashes:
 

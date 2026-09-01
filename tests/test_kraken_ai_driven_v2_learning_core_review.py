@@ -83,7 +83,7 @@ def test_active_project_documents_are_concise_and_point_to_real_learning():
         assert "Candidate v2" in text
         assert len(text.splitlines()) < 200
 
-    assert "Hash-Bound 12h Development Learning Runner — NEXT" in (
+    assert "Hash-Bound 12h Development Learning Runner — IMPLEMENTED, REVIEW REQUIRED" in (
         ROOT / "ROADMAP.md"
     ).read_text(encoding="utf-8")
     assert "real model training executed: `false`" in (

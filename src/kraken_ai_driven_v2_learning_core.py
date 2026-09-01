@@ -184,12 +184,19 @@ class WalkForwardLearningResult:
     predictions: pd.DataFrame
     metrics: dict
     model_artifact_sha256: dict
+    model_artifact_bytes: dict
     trained_model_count: int
     parameters_learned_from_labels: bool
     automatic_model_selected: bool = False
     calibration_data_opened: bool = False
     evaluation_data_opened: bool = False
     candidate_v2_authorized: bool = False
+
+
+@dataclass(frozen=True)
+class LabeledLearningData:
+    table: pd.DataFrame
+    diagnostics: dict
 
 
 def _positive(value, label):
@@ -467,13 +474,23 @@ def triple_barrier_label(
     )
 
 
-def build_labeled_learning_table(frames):
+def build_labeled_learning_data(frames):
     validated = validate_development_frames(frames)
     features = build_causal_feature_table(validated)
     rows = []
+    diagnostics = {
+        asset: {
+            "feature_rows": 0,
+            "labeled_rows": 0,
+            "invalid_reason_counts": {},
+            "label_counts": {label: 0 for label in CLASS_ORDER},
+        }
+        for asset in ASSET_ORDER
+    }
     positions = {asset: {timestamp: number for number, timestamp in enumerate(frame.index)} for asset, frame in validated.items()}
     for feature_row in features.to_dict("records"):
         asset = feature_row["asset"]
+        diagnostics[asset]["feature_rows"] += 1
         decision_timestamp = feature_row["decision_timestamp"]
         outcome = triple_barrier_label(
             validated[asset],
@@ -481,7 +498,11 @@ def build_labeled_learning_table(frames):
             signal_atr=feature_row["signal_atr_14"],
         )
         if not outcome.valid:
+            counts = diagnostics[asset]["invalid_reason_counts"]
+            counts[outcome.invalid_reason] = counts.get(outcome.invalid_reason, 0) + 1
             continue
+        diagnostics[asset]["labeled_rows"] += 1
+        diagnostics[asset]["label_counts"][outcome.label] += 1
         row = {key: feature_row[key] for key in ("asset", "decision_timestamp", *FEATURE_COLUMNS)}
         row.update(
             {
@@ -495,7 +516,12 @@ def build_labeled_learning_table(frames):
     result = pd.DataFrame(rows)
     if result.empty:
         raise ValueError("No valid labeled Development examples were produced.")
-    return result.sort_values(["decision_timestamp", "asset"], kind="stable").reset_index(drop=True)
+    result = result.sort_values(["decision_timestamp", "asset"], kind="stable").reset_index(drop=True)
+    return LabeledLearningData(table=result, diagnostics=diagnostics)
+
+
+def build_labeled_learning_table(frames):
+    return build_labeled_learning_data(frames).table
 
 
 def _model(model_id):
@@ -617,6 +643,7 @@ def train_walk_forward(
     prediction_frames = []
     metrics = {}
     artifact_hashes = {}
+    artifact_bytes = {}
     for fold in FOLD_PLAN:
         fold_id = fold["fold_id"]
         training_end = _utc(fold["training_end_exclusive_utc"], "Training end")
@@ -661,6 +688,7 @@ def train_walk_forward(
             }
             model_bytes = pickle.dumps(estimator, protocol=5)
             artifact_hashes[key] = hashlib.sha256(model_bytes).hexdigest()
+            artifact_bytes[key] = model_bytes
             prediction_frames.append(
                 pd.DataFrame(
                     {
@@ -687,6 +715,7 @@ def train_walk_forward(
         predictions=predictions,
         metrics=metrics,
         model_artifact_sha256=artifact_hashes,
+        model_artifact_bytes=artifact_bytes,
         trained_model_count=len(artifact_hashes),
         parameters_learned_from_labels=True,
     )

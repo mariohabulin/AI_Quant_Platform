@@ -1,3 +1,4 @@
+import hashlib
 import math
 import os
 import sys
@@ -18,6 +19,7 @@ from kraken_ai_driven_v2_learning_core import (
     MODEL_SPECS,
     ZERO_COST_PROFILE,
     build_causal_feature_table,
+    build_labeled_learning_data,
     build_labeled_learning_table,
     learning_core_declaration,
     train_walk_forward,
@@ -222,6 +224,23 @@ def test_learning_table_contains_features_and_outcomes_but_no_future_raw_columns
     assert (table["event_end_timestamp"] > table["decision_timestamp"]).all()
 
 
+def test_labeled_learning_data_reports_censoring_and_class_counts():
+    result = build_labeled_learning_data(_frames(500))
+
+    assert result.table.equals(build_labeled_learning_table(_frames(500)))
+    for asset in ASSET_ORDER:
+        observed = result.table.loc[result.table["asset"] == asset, "label"].value_counts()
+        diagnostics = result.diagnostics[asset]
+        assert diagnostics["labeled_rows"] == int(observed.sum())
+        assert diagnostics["feature_rows"] >= diagnostics["labeled_rows"]
+        assert diagnostics["label_counts"] == {
+            label: int(observed.get(label, 0)) for label in CLASS_ORDER
+        }
+        assert sum(diagnostics["invalid_reason_counts"].values()) == (
+            diagnostics["feature_rows"] - diagnostics["labeled_rows"]
+        )
+
+
 def test_walk_forward_fits_real_parameters_and_only_predicts_unseen_rows():
     result = train_walk_forward(
         _learning_table(),
@@ -242,6 +261,11 @@ def test_walk_forward_fits_real_parameters_and_only_predicts_unseen_rows():
     assert (result.predictions["decision_timestamp"] > result.predictions["training_end_timestamp"]).all()
     assert len(result.model_artifact_sha256) == result.trained_model_count
     assert all(len(value) == 64 for value in result.model_artifact_sha256.values())
+    assert set(result.model_artifact_bytes) == set(result.model_artifact_sha256)
+    assert {
+        key: hashlib.sha256(value).hexdigest()
+        for key, value in result.model_artifact_bytes.items()
+    } == result.model_artifact_sha256
 
 
 def test_walk_forward_is_deterministic_and_reports_predictive_metrics():
@@ -261,6 +285,7 @@ def test_walk_forward_is_deterministic_and_reports_predictive_metrics():
 
     pd.testing.assert_frame_equal(first.predictions, second.predictions)
     assert first.model_artifact_sha256 == second.model_artifact_sha256
+    assert first.model_artifact_bytes == second.model_artifact_bytes
     assert set(first.metrics) == {
         "FOLD_1|LOGISTIC_BASELINE",
         "FOLD_2|LOGISTIC_BASELINE",

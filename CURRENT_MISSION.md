@@ -2,17 +2,17 @@
 
 ## Mission
 
-Integrate the executable Kraken BTC/ETH/XRP AI-Driven V2 Learning Core, then
-build one hash-bound runner that performs the first real 12h Development model
-training.
+Review, reproduce and commit the hash-bound Kraken BTC/ETH/XRP 12h Development
+Learning Runner, then prepare a clean preflight for one separately authorized
+real Development training attempt.
 
 Status:
-`KRAKEN_AI_V2_LEARNING_CORE_IMPLEMENTED_REAL_DEVELOPMENT_RUN_REQUIRED`
+`KRAKEN_AI_V2_12H_DEVELOPMENT_LEARNING_RUNNER_IMPLEMENTED_REVIEW_REQUIRED`
 
-Parent milestone: `8c51695`
+Parent milestone: `2a09363`
 
 Active protocol:
-`kraken-btc-eth-xrp-ai-driven-v2-learning-core-v1`
+`kraken-btc-eth-xrp-ai-driven-v2-12h-development-learning-runner-v1`
 
 ## What is implemented now
 
@@ -28,8 +28,12 @@ Active protocol:
 - deterministic learned-model SHA-256 artifacts; and
 - no automatic ranking or promotion.
 
-Synthetic tests train actual parameters. No real Kraken OHLCV has been opened by
-this milestone and no real Development model has yet been fitted.
+The runner additionally persists real estimator bytes, canonical OOF
+predictions, label/censor diagnostics and exact source/artifact hashes. It has a
+noncrashing `HOLD_CASH` evidence branch if a fold lacks class support.
+
+Synthetic tests train actual parameters. No real Kraken OHLCV has been opened
+by this milestone and no real Development model has yet been fitted.
 
 ## Why 12h is active
 
@@ -49,14 +53,16 @@ two-model learning design.
 
 ## Completion gate for this milestone
 
-1. focused Learning Core tests pass;
+1. focused Learning Core and runner tests pass;
 2. complete regression passes;
-3. independent source hashes match;
+3. independent Core, protocol and runner hashes match;
 4. Windows reproduces the results;
 5. commit/push occurs from a clean reviewed worktree.
 
-Only then do we implement the real-data runner. A real run will require a new,
-separate authorization phrase and absent final/staging evidence.
+Only then do we run a clean source/evidence preflight. Opening the archive and
+training real models requires the new separate phrase
+`EXECUTE_KRAKEN_AI_V2_12H_DEVELOPMENT_LEARNING_ONCE`, absent final/staging
+evidence and an explicit operator decision.
 
 ## Nonauthorization
 

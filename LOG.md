@@ -43,6 +43,22 @@ protocol/evidence files.
 - Automatic selection, Candidate promotion and runtime learning remain false.
 - Real Development archive access and real model training remain unauthorized.
 
+## 2026-09-01 — 12h Development Learning Runner
+
+- Added the hash-bound Development-only reader for exact native Kraken
+  `XBTUSD_720`, `ETHUSD_720` and `XRPUSD_720` members.
+- Bound the complete archive, opaque decompressed member bytes, timestamp
+  identities, expected rows and missing buckets.
+- Extended Learning Core results so actual fitted estimator bytes, not only
+  their hashes, can be persisted and independently checked.
+- Added atomic canonical report, OOF prediction and six-model evidence output.
+- Added pre-fit fold/class support measurement and a terminal insufficient-
+  support `HOLD_CASH` package that performs no model fitting.
+- Preserved no-selection, no-Calibration, no-Evaluation, no-Candidate and
+  no-live boundaries.
+- The runner remains inert pending Windows reproduction, commit and a later
+  separate one-shot operator authorization.
+
 ## Compact historical milestone index
 
 - Provider and Historical Availability Audit v1 established Venue-Bound Crypto
@@ -81,6 +97,7 @@ protocol/evidence files.
 - `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-2-v1`
 - `kraken-btc-eth-xrp-ai-driven-v2-true-learning-contract-v1`
 - `kraken-btc-eth-xrp-ai-driven-v2-learning-core-v1`
+- `kraken-btc-eth-xrp-ai-driven-v2-12h-development-learning-runner-v1`
 - `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`
 - `f537410d2a237be207951b638518d80e861289dafa7db9b5c2322ffa32d4e594`
 
