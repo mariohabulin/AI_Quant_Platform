@@ -76,6 +76,12 @@ native Kraken 12h members inside Development, hash the archive and complete
 member bytes, call the Learning Core and atomically record label diagnostics,
 fold support, OOF predictions, metrics and learned model files.
 
+The native adapter accepts exactly the frozen seven source fields `Unix time,
+Open, High, Low, Close, Volume, Trades`. Attempt 1 at `cc8ae44` exposed an
+eight-column synthetic-fixture defect before any OHLCV value, label or model
+was produced. Recovery requires the preserved empty Attempt 1 staging marker,
+a new Attempt 2 evidence root and a new authorization phrase.
+
 Every completed training branch contains exactly six `.pkl` artifacts: two
 models fitted independently in each of three folds. The lock hashes them
 without unpickling. If a fold lacks all three classes, fitting does not begin

@@ -19,7 +19,7 @@ adding another strategy family, resolution search or deployment feature.
 - [x] Reproduce focused and full Windows tests.
 - [x] Commit and push the exact Learning Core milestone.
 
-### 2. Hash-Bound 12h Development Learning Runner — IMPLEMENTED, REVIEW REQUIRED
+### 2. Hash-Bound 12h Development Learning Runner — ATTEMPT 1 FAILED CLOSED
 
 - [x] Implement Development-only reader for exact official native 12h members.
 - [x] Implement archive, member-byte and timestamp-identity hashes.
@@ -28,10 +28,16 @@ adding another strategy family, resolution search or deployment feature.
 - [x] Persist both models from all three folds as six verifiable artifacts.
 - [x] Persist canonical OOF probabilities and predictive metrics.
 - [x] Implement atomic evidence package and independent lock.
-- [ ] Reproduce focused/full Windows tests and static review.
-- [ ] Commit/push the reviewed runner.
-- [ ] Run clean preflight; then request a separate one-shot operator decision.
-- [ ] Execute exactly one authorized real Development run.
+- [x] Reproduce focused/full Windows tests and static review.
+- [x] Commit/push the reviewed runner at `cc8ae44`.
+- [x] Run clean Attempt 1 preflight and receive separate authorization.
+- [x] Preserve fail-closed Attempt 1 staging after the eight-column adapter error.
+- [x] Record the incident and correct to the frozen seven-column Kraken schema.
+- [x] Require the untouched Attempt 1 marker and a new recovery authorization.
+- [ ] Reproduce focused/full Windows recovery tests and static review.
+- [ ] Commit/push the reviewed recovery.
+- [ ] Run clean Attempt 2 preflight and request a separate recovery decision.
+- [ ] Execute at most one authorized real Recovery Attempt 2.
 
 Baseline labels already include adverse commission, spread and slippage. A
 read-only economic/stress decision layer follows the immutable OOF evidence;

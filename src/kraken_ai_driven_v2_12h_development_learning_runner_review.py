@@ -32,8 +32,8 @@ except ImportError:  # pragma: no cover - package import compatibility
 
 
 SCHEMA_VERSION = 1
-STATUS = "KRAKEN_AI_V2_12H_DEVELOPMENT_LEARNING_RUNNER_REVIEWED_EXECUTION_AUTHORIZATION_REQUIRED"
-EXPECTED_PARENT_COMMIT = "2a09363"
+STATUS = "KRAKEN_AI_V2_12H_DEVELOPMENT_LEARNING_RUNNER_RECOVERY_REVIEWED_ATTEMPT_2_AUTHORIZATION_REQUIRED"
+EXPECTED_PARENT_COMMIT = "cc8ae44c45d41182af3bc91ee21cf075e65011b5"
 EXPECTED_LEARNING_CORE_PROTOCOL_SHA256 = (
     "4a3dd7b00d52be5df3f60ce5dba0c8803462baa68d0f3eeb1f06f9d6fe64ea2c"
 )
@@ -41,10 +41,13 @@ EXPECTED_LEARNING_CORE_COMPONENT_SHA256 = (
     "467f2a1913371ef11c9a828770bb6a260708032a9ba2aec142d88cfe7ab79207"
 )
 EXPECTED_RUNNER_PROTOCOL_SHA256 = (
-    "b2016c17b100f6a4e231ddd614a9a93bb8eb0d6aa558e8ed2e8dd1b9fdfa0503"
+    "88183f032e999288b3a8a6e0ad1fc51bf7b5af7d0d75fa31a43e0bd677832a9d"
 )
 EXPECTED_RUNNER_COMPONENT_SHA256 = (
-    "cd1149dd2f87f2ae6c3982ae536247e0f8581e151eb89d5820379f5ef57ea693"
+    "4adbc9196a372cb02a02ecc961440f5204f4d4e2ce795ad90e13278ceff3ad2e"
+)
+EXPECTED_ATTEMPT_1_INCIDENT_SHA256 = (
+    "c35b9dadbae7ab1055963231584ca3206be788d43035181706e796caf9a4f8e2"
 )
 
 
@@ -63,6 +66,8 @@ def review_12h_development_learning_runner(root=None):
         "runner_component": root
         / "src"
         / "kraken_ai_driven_v2_12h_development_learning_runner.py",
+        "attempt_1_incident": root
+        / "KRAKEN_AI_DRIVEN_V2_12H_DEVELOPMENT_LEARNING_ATTEMPT_1_INCIDENT.md",
     }
     observed = {name: _sha256(path) for name, path in paths.items()}
     expected = {
@@ -70,6 +75,7 @@ def review_12h_development_learning_runner(root=None):
         "learning_core_component": EXPECTED_LEARNING_CORE_COMPONENT_SHA256,
         "runner_protocol": EXPECTED_RUNNER_PROTOCOL_SHA256,
         "runner_component": EXPECTED_RUNNER_COMPONENT_SHA256,
+        "attempt_1_incident": EXPECTED_ATTEMPT_1_INCIDENT_SHA256,
     }
     for name in expected:
         if observed[name] != expected[name]:
@@ -111,6 +117,26 @@ def review_12h_development_learning_runner(root=None):
         "protocol_id": PROTOCOL_ID,
         "run_id": RUN_ID,
         "parent_commit": PARENT_COMMIT,
+        "recovery_attempt": 2,
+        "attempt_1_execution_commit": EXPECTED_PARENT_COMMIT,
+        "attempt_1_final_evidence_exists": False,
+        "attempt_1_staging_evidence_exists": True,
+        "attempt_1_authorization_consumed": True,
+        "attempt_1_incident_sha256": observed["attempt_1_incident"],
+        "attempt_1_incident_sha256_match": True,
+        "source_row_column_count": 7,
+        "source_row_schema": [
+            "Unix time",
+            "Open",
+            "High",
+            "Low",
+            "Close",
+            "Volume",
+            "Trades",
+        ],
+        "development_trade_count_validation_implemented": True,
+        "eight_column_assumption_active": False,
+        "prior_attempt_staging_required": True,
         "active_resolution": "12h",
         "partition": "DEVELOPMENT",
         "asset_order": list(ASSET_ORDER),
@@ -145,7 +171,7 @@ def review_12h_development_learning_runner(root=None):
         "cloud_execution_authorized": False,
         "real_orders_submitted": False,
         "live_execution_authorized": False,
-        "next_stage": "SEPARATE_OPERATOR_DECISION_FOR_ONE_SHOT_12H_DEVELOPMENT_LEARNING_RUN",
+        "next_stage": "SEPARATE_OPERATOR_DECISION_FOR_ONE_SHOT_12H_DEVELOPMENT_LEARNING_RECOVERY_ATTEMPT_2",
     }
 
 

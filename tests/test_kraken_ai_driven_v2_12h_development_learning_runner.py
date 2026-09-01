@@ -47,7 +47,7 @@ def _complete_timestamps():
     )
 
 
-def _write_complete_12h_archive(path):
+def _write_complete_12h_archive(path, *, include_vwap=False):
     stems = {"BTC-USD": "XBTUSD", "ETH-USD": "ETHUSD", "XRP-USD": "XRPUSD"}
     full = _complete_timestamps()
     removed = {
@@ -63,13 +63,20 @@ def _write_complete_12h_archive(path):
                 if number in removed[asset]:
                     continue
                 open_ = 100.0 + number * 0.01
-                lines.append(
-                    f"{int(timestamp.timestamp())},{open_},{open_ + 1},{open_ - 1},"
-                    f"{open_ + 0.2},{open_ + 0.1},1000,10\n"
-                )
+                values = [
+                    int(timestamp.timestamp()),
+                    open_,
+                    open_ + 1,
+                    open_ - 1,
+                    open_ + 0.2,
+                ]
+                if include_vwap:
+                    values.append(open_ + 0.1)
+                values.extend((1000, 10))
+                lines.append(",".join(str(value) for value in values) + "\n")
             # These values are intentionally invalid.  Only their timestamps may be read.
-            lines.append(f"{boundary},NOT_PARSED,NOT_PARSED,NOT_PARSED,NOT_PARSED,x,x,x\n")
-            lines.append(f"{boundary + 43200},STILL_NOT_PARSED,x,x,x,x,x,x\n")
+            lines.append(f"{boundary},NOT_PARSED,NOT_PARSED,NOT_PARSED,NOT_PARSED,x,x\n")
+            lines.append(f"{boundary + 43200},STILL_NOT_PARSED,x,x,x,x,x\n")
             archive.writestr(f"nested/{stems[asset]}_720.csv", "".join(lines))
     return path
 
@@ -168,6 +175,7 @@ def _patch_synthetic_run(monkeypatch, table, training_result=None):
                 {
                     "asset": asset,
                     "development_rows": EXPECTED_DEVELOPMENT_ROWS[asset],
+                    "development_trade_counts_validated": True,
                     "nondevelopment_ohlcvt_values_parsed": False,
                 }
                 for asset in ASSET_ORDER
@@ -187,12 +195,20 @@ def _patch_synthetic_run(monkeypatch, table, training_result=None):
         )
 
 
+def _prior_attempt_staging(tmp_path):
+    path = tmp_path / "attempt_1" / STAGING_DIRECTORY_NAME
+    path.mkdir(parents=True)
+    return path
+
+
 def test_runner_declaration_is_inert_and_does_not_select_a_model():
     declaration = runner_declaration()
 
     assert declaration["protocol_id"] == PROTOCOL_ID
     assert declaration["run_id"] == RUN_ID
-    assert declaration["parent_commit"] == "2a09363"
+    assert declaration["parent_commit"] == "cc8ae44c45d41182af3bc91ee21cf075e65011b5"
+    assert declaration["recovery_attempt"] == 2
+    assert declaration["prior_attempt_staging_required"] is True
     assert declaration["active_resolution"] == "12h"
     assert declaration["partition"] == "DEVELOPMENT"
     assert declaration["model_artifact_count_if_supported"] == 6
@@ -217,13 +233,23 @@ def test_reader_opens_only_development_values_and_hashes_whole_members(tmp_path)
     assert all(frame.index.min() == pd.Timestamp("2019-01-01T00:00:00Z") for frame in frames.values())
     assert all(frame.index.max() == pd.Timestamp("2024-03-31T12:00:00Z") for frame in frames.values())
     assert all(item["nondevelopment_ohlcvt_values_parsed"] is False for item in evidence)
+    assert all(item["development_trade_counts_validated"] is True for item in evidence)
     assert all(len(item["member_uncompressed_sha256"]) == 64 for item in evidence)
+
+
+def test_reader_rejects_the_attempt_one_eight_column_assumption(tmp_path):
+    archive_path = _write_complete_12h_archive(
+        tmp_path / "wrong-eight-column-source.zip", include_vwap=True
+    )
+
+    with pytest.raises(RuntimeError, match="seven columns"):
+        KrakenAIDrivenV212hDevelopmentLearningRunner()._load_frames(archive_path)
 
 
 def test_reader_rejects_an_unexpected_development_row_count(tmp_path):
     archive_path = _write_complete_12h_archive(tmp_path / "source.zip")
     with zipfile.ZipFile(archive_path, "a") as archive:
-        archive.writestr("nested/XBTUSD_720_DUPLICATE.csv", "1,1,1,1,1,1,1,1\n")
+        archive.writestr("nested/XBTUSD_720_DUPLICATE.csv", "1,1,1,1,1,1,1\n")
 
     # The duplicate has a different basename and is ignored; mutate the expected count instead.
     monkey = dict(EXPECTED_DEVELOPMENT_ROWS)
@@ -247,15 +273,33 @@ def test_fold_support_is_measured_before_training():
 def test_wrong_authorization_cannot_open_source_or_create_evidence(tmp_path):
     with pytest.raises(PermissionError, match="authorization phrase"):
         KrakenAIDrivenV212hDevelopmentLearningRunner().run(
-            tmp_path / "missing.zip", tmp_path / "evidence", "WRONG"
+            tmp_path / "missing.zip",
+            tmp_path / "evidence",
+            tmp_path / "missing-prior-staging",
+            "WRONG",
         )
     assert not (tmp_path / "evidence").exists()
+
+
+def test_recovery_requires_the_preserved_empty_attempt_one_staging_marker(tmp_path):
+    evidence_root = tmp_path / "attempt_2"
+    marker = tmp_path / "attempt_1" / STAGING_DIRECTORY_NAME
+    runner = KrakenAIDrivenV212hDevelopmentLearningRunner()
+
+    with pytest.raises(FileNotFoundError, match="Attempt 1 staging marker"):
+        runner._validate_prior_attempt_staging(marker, evidence_root)
+
+    marker.mkdir(parents=True)
+    (marker / "unexpected.txt").write_text("not empty", encoding="utf-8")
+    with pytest.raises(RuntimeError, match="not the preserved empty incident marker"):
+        runner._validate_prior_attempt_staging(marker, evidence_root)
 
 
 def test_authorized_failure_leaves_staging_and_blocks_silent_retry(tmp_path, monkeypatch):
     archive_path = tmp_path / "Kraken_OHLCVT.zip"
     archive_path.write_bytes(b"wrong-source")
     evidence_root = tmp_path / "evidence"
+    prior_attempt_staging = _prior_attempt_staging(tmp_path)
     monkeypatch.setattr(
         KrakenAIDrivenV212hDevelopmentLearningRunner,
         "_validate_archive",
@@ -264,12 +308,12 @@ def test_authorized_failure_leaves_staging_and_blocks_silent_retry(tmp_path, mon
 
     with pytest.raises(RuntimeError, match="source failure"):
         KrakenAIDrivenV212hDevelopmentLearningRunner().run(
-            archive_path, evidence_root, AUTHORIZATION_PHRASE
+            archive_path, evidence_root, prior_attempt_staging, AUTHORIZATION_PHRASE
         )
     assert (evidence_root / STAGING_DIRECTORY_NAME).is_dir()
     with pytest.raises(FileExistsError, match="staging evidence"):
         KrakenAIDrivenV212hDevelopmentLearningRunner().run(
-            archive_path, evidence_root, AUTHORIZATION_PHRASE
+            archive_path, evidence_root, prior_attempt_staging, AUTHORIZATION_PHRASE
         )
 
 
@@ -279,9 +323,10 @@ def test_successful_run_atomically_records_six_models_and_oof_predictions(tmp_pa
     archive_path = tmp_path / "Kraken_OHLCVT.zip"
     archive_path.write_bytes(b"opaque-test-source")
     evidence_root = tmp_path / "evidence"
+    prior_attempt_staging = _prior_attempt_staging(tmp_path)
 
     recorded = KrakenAIDrivenV212hDevelopmentLearningRunner().run(
-        archive_path, evidence_root, AUTHORIZATION_PHRASE
+        archive_path, evidence_root, prior_attempt_staging, AUTHORIZATION_PHRASE
     )
     final = evidence_root / EVIDENCE_DIRECTORY_NAME
     locked = KrakenAIDrivenV212hLearningEvidenceLock().lock(final)
@@ -297,7 +342,7 @@ def test_successful_run_atomically_records_six_models_and_oof_predictions(tmp_pa
 
     with pytest.raises(FileExistsError, match="refusing repeat"):
         KrakenAIDrivenV212hDevelopmentLearningRunner().run(
-            archive_path, evidence_root, AUTHORIZATION_PHRASE
+            archive_path, evidence_root, prior_attempt_staging, AUTHORIZATION_PHRASE
         )
 
 
@@ -307,9 +352,10 @@ def test_insufficient_class_support_records_hold_cash_without_model_files(tmp_pa
     archive_path = tmp_path / "Kraken_OHLCVT.zip"
     archive_path.write_bytes(b"opaque-test-source")
     evidence_root = tmp_path / "evidence"
+    prior_attempt_staging = _prior_attempt_staging(tmp_path)
 
     recorded = KrakenAIDrivenV212hDevelopmentLearningRunner().run(
-        archive_path, evidence_root, AUTHORIZATION_PHRASE
+        archive_path, evidence_root, prior_attempt_staging, AUTHORIZATION_PHRASE
     )
     locked = KrakenAIDrivenV212hLearningEvidenceLock().lock(
         evidence_root / EVIDENCE_DIRECTORY_NAME
@@ -329,8 +375,9 @@ def test_evidence_lock_detects_model_tampering(tmp_path, monkeypatch):
     archive_path = tmp_path / "Kraken_OHLCVT.zip"
     archive_path.write_bytes(b"opaque-test-source")
     evidence_root = tmp_path / "evidence"
+    prior_attempt_staging = _prior_attempt_staging(tmp_path)
     KrakenAIDrivenV212hDevelopmentLearningRunner().run(
-        archive_path, evidence_root, AUTHORIZATION_PHRASE
+        archive_path, evidence_root, prior_attempt_staging, AUTHORIZATION_PHRASE
     )
     final = evidence_root / EVIDENCE_DIRECTORY_NAME
     report = json.loads((final / REPORT_FILENAME).read_text(encoding="utf-8"))

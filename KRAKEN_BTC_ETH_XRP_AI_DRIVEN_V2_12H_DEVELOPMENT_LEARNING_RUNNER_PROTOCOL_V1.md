@@ -6,7 +6,12 @@ Protocol ID:
 Run ID:
 `kraken-ai-v2-12h-development-learning-v1`
 
-Parent implementation commit: `2a09363`.
+Recovery parent commit:
+`cc8ae44c45d41182af3bc91ee21cf075e65011b5`.
+
+Attempt 1 failed closed at that commit because the new adapter expected an
+eight-column source row. The immutable incident record is
+`KRAKEN_AI_DRIVEN_V2_12H_DEVELOPMENT_LEARNING_ATTEMPT_1_INCIDENT.md`.
 
 ## Purpose
 
@@ -18,7 +23,7 @@ model code from Learning Core V1.
 The implemented component is inert. A run requires a separate exact operator
 authorization:
 
-`EXECUTE_KRAKEN_AI_V2_12H_DEVELOPMENT_LEARNING_ONCE`
+`EXECUTE_KRAKEN_AI_V2_12H_DEVELOPMENT_LEARNING_RECOVERY_ATTEMPT_2_ONCE`
 
 Reviewing, testing, committing or downloading this component does not activate
 that phrase.
@@ -42,6 +47,14 @@ Only rows in Development
 Rows outside that interval may have their timestamp token read to verify member
 ordering and to hash opaque member bytes; their market-value columns remain
 unparsed.
+
+Every source row must contain the already frozen official seven-column schema:
+
+`Unix time, Open, High, Low, Close, Volume, Trades`
+
+There is no VWAP field. Every Development row validates finite OHLCV, positive
+prices, nonnegative volume and a positive integer trade count. Trades remain
+source-integrity evidence and are not promoted into the learning feature table.
 
 Expected Development rows are 3,833 BTC, 3,834 ETH and 3,830 XRP. The reader
 does not fill the one BTC or four XRP missing 12h buckets. Frame validation
@@ -96,6 +109,11 @@ All content is written under staging and renamed to final only after complete
 serialization. Existing final or staging evidence blocks a repeat. The
 independent lock rehashes every file, validates the exact file manifest and
 does not unpickle learned artifacts.
+
+Recovery Attempt 2 additionally requires the original empty Attempt 1 staging
+directory as a read-only incident marker and a new external Attempt 2 evidence
+root. The recovery runner verifies but never deletes, renames or writes into
+the Attempt 1 marker.
 
 ## Deliberate nonselection
 

@@ -59,6 +59,21 @@ protocol/evidence files.
 - The runner remains inert pending Windows reproduction, commit and a later
   separate one-shot operator authorization.
 
+## 2026-09-01 — Learning Attempt 1 incident and recovery
+
+- Attempt 1 ran from `cc8ae44`, validated the complete archive hash and failed
+  on row 1 of `master_q4/XBTUSD_720.csv` before parsing OHLCV values.
+- Final evidence remained absent; the empty staging marker remained present and
+  correctly blocked a retry. No labels, models or predictions were created.
+- Root cause was an eight-column VWAP assumption in the new runner and its
+  synthetic fixture. The existing reviewed Kraken parser and protocol already
+  froze seven fields: timestamp, OHLC, Volume and Trades.
+- Corrected the adapter and fixture to exactly seven fields, added positive
+  integer trade-count validation and an eight-column rejection regression.
+- Recovery now requires the preserved Attempt 1 staging marker, a new Attempt 2
+  evidence root and a new one-shot recovery phrase. Attempt 1 authorization is
+  consumed.
+
 ## Compact historical milestone index
 
 - Provider and Historical Availability Audit v1 established Venue-Bound Crypto

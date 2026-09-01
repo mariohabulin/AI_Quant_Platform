@@ -68,15 +68,17 @@ PROTOCOL_ID = (
     "kraken-btc-eth-xrp-ai-driven-v2-12h-development-learning-runner-v1"
 )
 RUN_ID = "kraken-ai-v2-12h-development-learning-v1"
-PARENT_COMMIT = "2a09363"
-STATUS = "KRAKEN_AI_V2_12H_DEVELOPMENT_LEARNING_RUNNER_IMPLEMENTED_NO_RUN_AUTHORIZATION"
+PARENT_COMMIT = "cc8ae44c45d41182af3bc91ee21cf075e65011b5"
+STATUS = "KRAKEN_AI_V2_12H_DEVELOPMENT_LEARNING_RUNNER_RECOVERY_IMPLEMENTED_NO_RUN_AUTHORIZATION"
 REVIEW_REQUIRED_STATUS = (
     "KRAKEN_AI_V2_12H_DEVELOPMENT_LEARNING_COMPLETED_REVIEW_REQUIRED"
 )
 INSUFFICIENT_SUPPORT_STATUS = (
     "KRAKEN_AI_V2_12H_DEVELOPMENT_CLASS_SUPPORT_INSUFFICIENT_HOLD_CASH"
 )
-AUTHORIZATION_PHRASE = "EXECUTE_KRAKEN_AI_V2_12H_DEVELOPMENT_LEARNING_ONCE"
+AUTHORIZATION_PHRASE = (
+    "EXECUTE_KRAKEN_AI_V2_12H_DEVELOPMENT_LEARNING_RECOVERY_ATTEMPT_2_ONCE"
+)
 EVIDENCE_DIRECTORY_NAME = "v2_12h_development_learning_v1"
 STAGING_DIRECTORY_NAME = ".v2_12h_development_learning_v1.staging"
 REPORT_FILENAME = "kraken_ai_v2_12h_development_learning_report.json"
@@ -279,6 +281,7 @@ class RecordedLearningEvidence:
     def as_dict(self):
         return {
             "status": "KRAKEN_AI_V2_12H_DEVELOPMENT_LEARNING_EVIDENCE_RECORDED",
+            "recovery_attempt": 2,
             "learning_status": self.learning_status,
             "report_path": str(self.report_path),
             "checksum_path": str(self.checksum_path),
@@ -332,6 +335,16 @@ class KrakenAIDrivenV212hLearningEvidenceLock:
         )
         if any(payload.get(field) is not False for field in required_false):
             raise RuntimeError("12h learning evidence safety boundary mismatch.")
+        incident = payload.get("prior_attempt_incident", {})
+        if incident != {
+            "attempt": 1,
+            "execution_commit": "cc8ae44c45d41182af3bc91ee21cf075e65011b5",
+            "final_evidence_exists": False,
+            "staging_directory_name": STAGING_DIRECTORY_NAME,
+            "staging_entry_count": 0,
+            "staging_preserved": True,
+        }:
+            raise RuntimeError("12h learning recovery incident binding mismatch.")
         source = payload.get("source_archive", {})
         if source != FROZEN_COMPLETE_ARCHIVE_SPEC:
             raise RuntimeError("12h learning source binding mismatch.")
@@ -342,6 +355,7 @@ class KrakenAIDrivenV212hLearningEvidenceLock:
             asset = item["asset"]
             if (
                 item.get("development_rows") != EXPECTED_DEVELOPMENT_ROWS[asset]
+                or item.get("development_trade_counts_validated") is not True
                 or item.get("nondevelopment_ohlcvt_values_parsed") is not False
             ):
                 raise RuntimeError("12h learning source member boundary mismatch.")
@@ -447,6 +461,28 @@ class KrakenAIDrivenV212hDevelopmentLearningRunner:
         return archive, evidence
 
     @staticmethod
+    def _validate_prior_attempt_staging(prior_attempt_staging, evidence_root):
+        project_root = Path(__file__).resolve().parents[1]
+        prior = Path(prior_attempt_staging).resolve()
+        if prior == project_root or prior.is_relative_to(project_root):
+            raise ValueError("Attempt 1 staging marker must remain outside the repository.")
+        if not prior.is_dir() or prior.name != STAGING_DIRECTORY_NAME:
+            raise FileNotFoundError("Exact Attempt 1 staging marker is required for recovery.")
+        if prior == evidence_root or prior.is_relative_to(evidence_root) or evidence_root.is_relative_to(prior):
+            raise ValueError("Attempt 1 marker and Attempt 2 evidence must not overlap.")
+        entries = list(prior.iterdir())
+        if entries:
+            raise RuntimeError("Attempt 1 staging marker is not the preserved empty incident marker.")
+        return {
+            "attempt": 1,
+            "execution_commit": "cc8ae44c45d41182af3bc91ee21cf075e65011b5",
+            "final_evidence_exists": False,
+            "staging_directory_name": STAGING_DIRECTORY_NAME,
+            "staging_entry_count": 0,
+            "staging_preserved": True,
+        }
+
+    @staticmethod
     def _assert_one_shot(evidence_root):
         final = evidence_root / EVIDENCE_DIRECTORY_NAME
         staging = evidence_root / STAGING_DIRECTORY_NAME
@@ -485,6 +521,20 @@ class KrakenAIDrivenV212hDevelopmentLearningRunner:
             )
         return value
 
+    @staticmethod
+    def _parse_trade_count(raw_value, member_name, row_number):
+        try:
+            value = int(raw_value)
+        except (TypeError, ValueError, OverflowError) as exc:
+            raise RuntimeError(
+                f"Invalid Trades in Development row {member_name}:{row_number}."
+            ) from exc
+        if value <= 0:
+            raise RuntimeError(
+                f"Nonpositive Trades in Development row {member_name}:{row_number}."
+            )
+        return value
+
     @classmethod
     def _read_development_member(cls, archive, info, asset):
         start = int(_utc(DEVELOPMENT_START_UTC).timestamp())
@@ -501,9 +551,9 @@ class KrakenAIDrivenV212hDevelopmentLearningRunner:
                 if not stripped:
                     continue
                 fields = stripped.split(b",")
-                if len(fields) != 8:
+                if len(fields) != 7:
                     raise RuntimeError(
-                        f"12h source row must contain eight columns: {info.filename}:{row_number}."
+                        f"12h source row must contain seven columns: {info.filename}:{row_number}."
                     )
                 try:
                     timestamp = int(fields[0])
@@ -524,7 +574,8 @@ class KrakenAIDrivenV212hDevelopmentLearningRunner:
                         (1, 2, 3, 4), ("Open", "High", "Low", "Close"), strict=True
                     )
                 )
-                volume = cls._parse_market_value(fields[6], info.filename, row_number, "Volume")
+                volume = cls._parse_market_value(fields[5], info.filename, row_number, "Volume")
+                cls._parse_trade_count(fields[6], info.filename, row_number)
                 timestamps.append(timestamp)
                 rows.append((open_, high, low, close, volume))
         if len(timestamps) != EXPECTED_DEVELOPMENT_ROWS[asset]:
@@ -554,6 +605,7 @@ class KrakenAIDrivenV212hDevelopmentLearningRunner:
             "missing_calendar_buckets": missing,
             "first_development_timestamp": _iso(frame.index[0]),
             "last_development_timestamp": _iso(frame.index[-1]),
+            "development_trade_counts_validated": True,
             "nondevelopment_ohlcvt_values_parsed": False,
         }
 
@@ -590,11 +642,20 @@ class KrakenAIDrivenV212hDevelopmentLearningRunner:
     def _core_component_sha256():
         return _file_sha256(Path(__file__).with_name("kraken_ai_driven_v2_learning_core.py"))
 
-    def run(self, archive_path, evidence_root, authorization_phrase):
+    def run(
+        self,
+        archive_path,
+        evidence_root,
+        prior_attempt_staging,
+        authorization_phrase,
+    ):
         if authorization_phrase != AUTHORIZATION_PHRASE:
             raise PermissionError("Exact one-shot 12h learning authorization phrase is required.")
         archive_path, evidence_root = self._external_paths(archive_path, evidence_root)
         final, staging = self._assert_one_shot(evidence_root)
+        prior_attempt_incident = self._validate_prior_attempt_staging(
+            prior_attempt_staging, evidence_root
+        )
         evidence_root.mkdir(parents=True, exist_ok=True)
         staging.mkdir(exist_ok=False)
         archive_evidence = self._validate_archive(archive_path)
@@ -645,6 +706,8 @@ class KrakenAIDrivenV212hDevelopmentLearningRunner:
             "protocol_id": PROTOCOL_ID,
             "run_id": RUN_ID,
             "implementation_parent_commit": PARENT_COMMIT,
+            "recovery_attempt": 2,
+            "prior_attempt_incident": prior_attempt_incident,
             "learning_status": learning_status,
             "partition": "DEVELOPMENT",
             "resolution": "12h",
@@ -728,6 +791,8 @@ def runner_declaration():
         "protocol_id": PROTOCOL_ID,
         "run_id": RUN_ID,
         "parent_commit": PARENT_COMMIT,
+        "recovery_attempt": 2,
+        "prior_attempt_staging_required": True,
         "authorization_phrase": AUTHORIZATION_PHRASE,
         "authorization_phrase_active": False,
         "active_resolution": "12h",
@@ -753,7 +818,7 @@ def runner_declaration():
         "cloud_execution_authorized": False,
         "real_orders_submitted": False,
         "live_execution_authorized": False,
-        "next_stage": "SEPARATE_OPERATOR_DECISION_FOR_ONE_SHOT_12H_DEVELOPMENT_LEARNING_RUN",
+        "next_stage": "SEPARATE_OPERATOR_DECISION_FOR_ONE_SHOT_12H_DEVELOPMENT_LEARNING_RECOVERY_ATTEMPT_2",
     }
 
 
@@ -763,11 +828,13 @@ def main(argv=None):
     )
     parser.add_argument("--complete-archive", required=True)
     parser.add_argument("--evidence-root", required=True)
+    parser.add_argument("--prior-attempt-staging", required=True)
     parser.add_argument("--authorization-phrase", required=True)
     args = parser.parse_args(argv)
     recorded = KrakenAIDrivenV212hDevelopmentLearningRunner().run(
         args.complete_archive,
         args.evidence_root,
+        args.prior_attempt_staging,
         args.authorization_phrase,
     )
     print(json.dumps(recorded.as_dict(), indent=2, sort_keys=True))

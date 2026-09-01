@@ -43,9 +43,12 @@ The Learning Core now implements:
 5. one constrained histogram-gradient-boosting challenger; and
 6. immutable probability, metric and model-hash evidence.
 
-The hash-bound real 12h Development Learning Runner is now implemented and
-awaits independent review plus a separate one-shot operator authorization. A
-successful authorized run will create six real fold-model artifacts and exact
+The hash-bound real 12h Development Learning Runner is implemented. Attempt 1
+failed closed before learning because its new synthetic fixture assumed an
+eighth VWAP field that the frozen seven-column Kraken archive does not contain.
+The archive and Learning Core were not at fault. Recovery now awaits
+independent review plus a new separate one-shot operator authorization. A
+successful authorized recovery will create six real fold-model artifacts and exact
 out-of-fold probabilities; insufficient fold class support will instead close
 atomically as `HOLD_CASH`. Another open-ended rule-discovery round is not part
 of the active roadmap.
