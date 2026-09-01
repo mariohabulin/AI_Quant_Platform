@@ -91,6 +91,33 @@ protocol/evidence files.
   a new one-shot authorization. Attempts 1 and 2 are consumed and may not be
   rerun.
 
+## 2026-09-01 — Learning Recovery Attempt 3 completed
+
+- Attempt 3 passed archive, seven-column schema, full-grid missing-timestamp,
+  partition and evidence-root checks.
+- Generated 10,712 real Development labels.
+- Fitted two real model families independently across three folds, producing
+  six learned artifacts.
+- Recorded 11,856 OOF probability rows and report SHA-256
+  `30d020bd9c30306f3e8931b47c0958fea7e11a33bff3795c3473806ddcaa09cf`.
+- Independent evidence lock passed; Attempt 1 and Attempt 2 empty staging
+  markers remained unchanged.
+- No Calibration, Evaluation, Candidate, PAPER, cloud, real-order or live
+  boundary was opened.
+
+## 2026-09-01 — Development economic-review contract
+
+- Added a read-only consumer of exact Attempt 3 OOF evidence.
+- Froze one untuned interest rule:
+  `3 * P(TARGET_3R_FIRST) - P(STOP_1R_FIRST) > 0`.
+- Added raw and chronological non-overlapping views; the latter permits at most
+  one active event per asset.
+- Froze minimum support, all-three-fold positive net R, two-asset breadth and
+  all-fold positive target PR-AUC-lift gates.
+- Prohibited threshold search, model refit, artifact unpickling, automatic
+  model selection and Candidate promotion.
+- A pass requests operator review only; otherwise the action is `HOLD_CASH`.
+
 ## Compact historical milestone index
 
 - Provider and Historical Availability Audit v1 established Venue-Bound Crypto
@@ -130,8 +157,10 @@ protocol/evidence files.
 - `kraken-btc-eth-xrp-ai-driven-v2-true-learning-contract-v1`
 - `kraken-btc-eth-xrp-ai-driven-v2-learning-core-v1`
 - `kraken-btc-eth-xrp-ai-driven-v2-12h-development-learning-runner-v1`
+- `kraken-btc-eth-xrp-ai-driven-v2-12h-development-economic-evidence-review-v1`
 - `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`
 - `f537410d2a237be207951b638518d80e861289dafa7db9b5c2322ffa32d4e594`
+- `30d020bd9c30306f3e8931b47c0958fea7e11a33bff3795c3473806ddcaa09cf`
 
 Reference A closure status:
 `KRAKEN_AI_V2_DEVELOPMENT_REFERENCE_A_CLOSED_NO_TRADE_HOLD_CASH`.

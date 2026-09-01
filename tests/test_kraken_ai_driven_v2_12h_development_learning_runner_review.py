@@ -127,8 +127,7 @@ def test_protocol_and_active_documents_describe_the_real_runner_without_authoriz
         assert "Development Learning Runner" in " ".join(text.split())
         assert len(text.splitlines()) < 220
     mission = (ROOT / "CURRENT_MISSION.md").read_text(encoding="utf-8")
-    assert (
-        "EXECUTE_KRAKEN_AI_V2_12H_DEVELOPMENT_LEARNING_RECOVERY_ATTEMPT_3_ONCE"
-        in mission
-    )
-    assert "real Development model has yet been fitted" in mission
+    assert "10,712" in mission
+    assert "11,856" in mission
+    assert "30d020bd9c30306f3e8931b47c0958fea7e11a33bff3795c3473806ddcaa09cf" in mission
+    assert "automatic model selection: false" in mission

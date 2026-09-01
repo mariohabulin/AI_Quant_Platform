@@ -2,140 +2,144 @@
 
 ## Mission
 
-Recover the fail-closed 12h Development Learning Attempt 2, remove the
-contradictory endpoint assertion while retaining exact hash/grid/count checks,
-and review a new one-shot Attempt 3 boundary. The corrected Development
-Learning Runner remains inert during this review.
+Perform one deterministic, read-only economic review of the immutable 12h
+Development out-of-fold evidence created by successful Learning Recovery
+Attempt 3. Do not retrain, tune a decision threshold, choose a model or promote
+Candidate v2.
 
 Status:
-`KRAKEN_AI_V2_12H_DEVELOPMENT_LEARNING_ATTEMPT_2_FAILED_RECOVERY_REVIEW_REQUIRED`
+`KRAKEN_AI_V2_12H_DEVELOPMENT_ECONOMIC_REVIEW_IMPLEMENTATION_IN_REVIEW`
 
-Recovery parent milestone: `203b4c5`
+Parent milestone: `9c1156e`
+
+Parent evidence SHA-256:
+`30d020bd9c30306f3e8931b47c0958fea7e11a33bff3795c3473806ddcaa09cf`
 
 Active protocol:
-`kraken-btc-eth-xrp-ai-driven-v2-12h-development-learning-runner-v1`
+`kraken-btc-eth-xrp-ai-driven-v2-12h-development-economic-evidence-review-v1`
 
-## What is implemented now
+## Completed real learning milestone
 
-- strict Development-only 12h frame validation;
-- 16 causal market-context features plus asset identity;
-- next-open, adverse-cost, `3R/-1R/30-day` triple-barrier labels;
-- stop-first same-bar handling and provider-gap censoring;
-- three fixed expanding walk-forward folds;
-- fold-local preprocessing;
-- real multinomial logistic-regression fitting;
-- real histogram-gradient-boosting fitting;
-- out-of-fold probabilities and predictive metrics;
-- deterministic learned-model SHA-256 artifacts; and
-- no automatic ranking or promotion.
+The Development Learning Runner Recovery Attempt 3 completed successfully on
+locked Kraken native 12h Development data:
 
-The runner additionally persists real estimator bytes, canonical OOF
-predictions, label/censor diagnostics and exact source/artifact hashes. It has a
-noncrashing `HOLD_CASH` evidence branch if a fold lacks class support.
+- Development interval: 2019-01-01 through 2024-04-01 exclusive;
+- labeled rows: 10,712;
+- trained artifacts: six, comprising two model families across three folds;
+- OOF predictions: 11,856;
+- model families: `LOGISTIC_BASELINE` and `HIST_GBT_CHALLENGER`;
+- Calibration data opened: false;
+- Evaluation data opened: false;
+- automatic model selection: false;
+- Candidate v2 authorized: false;
+- real orders submitted: false.
 
-Synthetic tests train actual parameters. Attempt 1 failed on an incorrect
-eight-column assumption before parsing OHLCV. Attempt 2 corrected that schema,
-validated the full archive and parsed BTC Development rows, then failed before
-returning any frame because the reader simultaneously accepted one missing BTC
-bucket and required the final bucket to exist. Neither attempt generated a
-feature, label, model, prediction or conclusion. Both staging markers are
-preserved and both authorizations are consumed. No real Development model has yet been fitted.
+Attempt 1 and Attempt 2 remain preserved fail-closed incidents. Their empty
+staging markers are not deleted or reused. Attempt 3 final evidence is complete
+and independently hash-locked.
 
-## Why 12h is active
+## Current implementation
 
-Stage 2 report
-`ca86d49f1dde1d1a8a1e61f07f4c1e98080ab942ab5c32f89880b387edd867d1`
-found approximately 3,348 to 3,593 valid 12h examples per asset over the full
-Development interval. That is enough to attempt one bounded shared low-
-complexity feasibility learner; it is not a profitability guarantee.
+The economic review:
 
-The timestamp-only forensic scan confirmed that native 4h covers only
-`2024-01-01T00:00:00Z` through the end of the archive. The reader was correctly
-ordered and did not omit hidden 2019-2023 rows.
+1. locks the exact Attempt 3 evidence directory;
+2. reads only canonical OOF prediction JSON and the parent report;
+3. never opens the Kraken archive or unpickles a learned model;
+4. applies the sole frozen rule
+   `3 * P(TARGET_3R_FIRST) - P(STOP_1R_FIRST) > 0`;
+5. reports raw eligible observations and a chronological non-overlapping view
+   with at most one open event per asset;
+6. requires sufficient support, positive net R in every fold, breadth across
+   at least two assets and positive target PR-AUC lift in every fold; and
+7. returns either operator review of Development interest or `HOLD_CASH`.
 
-The old Stage 2 per-asset thresholds remain historical evidence but are retired
-from the active process because they were not derived from the implemented
-two-model learning design.
+There is no threshold sweep, top-k search, Calibration access, Evaluation
+access, automatic winner or Candidate authorization. The result is not yet a
+portfolio backtest because cross-asset capital, simultaneous portfolio risk and
+mark-to-market drawdown are not modeled in this review.
 
-## Completion gate for this milestone
+## Completion gate
 
-1. focused Learning Core and runner tests pass;
+1. focused economic-review tests pass;
 2. complete regression passes;
-3. independent Core, protocol and runner hashes match;
-4. Windows reproduces the results;
-5. commit/push occurs from a clean reviewed worktree.
+3. parent runner, new protocol and new component hashes match;
+4. Windows reproduces tests and the inert static review;
+5. commit/push occurs from a reviewed worktree;
+6. a read-only command is run on the locked Attempt 3 evidence; and
+7. the evidence directory is proven byte-for-byte unchanged afterward.
 
-Only then do we run a clean Attempt 3 source/evidence preflight. Recovery
-requires both preserved prior staging markers, a new Attempt 3 evidence root
-and the new separate phrase
-`EXECUTE_KRAKEN_AI_V2_12H_DEVELOPMENT_LEARNING_RECOVERY_ATTEMPT_3_ONCE`.
+The read-only evidence review needs no model-training authorization. It does not
+write a new evidence package. Any later Candidate freeze remains a separate
+operator decision.
 
-## Nonauthorization
+## Possible terminal branches
 
-- source archive opened during failed Attempt 2: `true`;
-- BTC Development source values parsed during failed Attempt 2: `true`;
-- complete Development frames returned to Learning Core: `false`;
-- real labels generated: `false`;
-- real model training executed: `false`;
-- Calibration data opened: `false`;
-- Evaluation data opened: `false`;
-- Candidate v2 authorized: `false`;
-- PAPER, cloud, real orders and live execution authorized: `false`.
+- no model passes every frozen gate: close 12h V1 with `HOLD_CASH`;
+- one or both model families pass: inspect the named family evidence without
+  automatically selecting it, then separately decide whether a frozen
+  Development candidate specification is justified.
 
-## Historical state, no longer the active mission
+## Permanent nonauthorization
 
-The following exact markers are preserved for regression traceability:
+- new model training: false;
+- threshold or parameter search: false;
+- automatic model selection: false;
+- Calibration data access: false;
+- Evaluation data access: false;
+- Candidate v2 authorization: false;
+- PAPER, cloud, real orders and live execution: false.
 
+## Historical state
+
+Git history through `8c51695` preserves Provider, Partition, Reference A, Round
+1, Round 2, scope correction and Stage 2 work. Manual strategy-family discovery
+is retired. Learning Core committed at `2a09363`; the first Development Learning
+Runner at `cc8ae44`; recoveries at `203b4c5` and `9c1156e`.
+
+Exact historical compatibility markers retained for regression:
+
+- fail-closed Kraken daily acquisition;
+- `SEALED PREFLIGHT PASS` and `SUPERVISED REPLAY PREPARATION`;
 - `AI-DRIVEN V2 CAUSAL FEATURE CONTRACT`;
 - `STATE MACHINE IMPLEMENTED`;
 - `RISK AND EXECUTION ADAPTER IMPLEMENTED`;
 - `PARTITION PROTOCOL FROZEN`;
 - `DEVELOPMENT RUNNER IMPLEMENTED`;
-- `SEALED PREFLIGHT PASS` and `SUPERVISED REPLAY PREPARATION`;
-- Reference A closed after 13 rejected entries with `HOLD_CASH`;
-- Round 1 used four paths and 12 routes;
-- Round 2 used three paths and 7 routes;
-- Rule Discovery Foundation is closed; True Learning Engine work is now active.
+- Round 1 Causal Signals, Round 1 Family Execution, Round 1 Discovery Runner
+  and Round 1 Closure used four paths and 12 routes;
+- Round 2 Causal Signals, Round 2 Family Execution, Round 2 Discovery Runner
+  and Round 2 Closure used three paths and 7 routes; and
+- Rule Discovery Foundation and True Learning Engine.
 
-Historical component IDs:
+Historical protocol identifiers:
 
-- `kraken-btc-eth-xrp-ai-driven-v2-causal-feature-contract-v1`
-- `kraken-ai-v2-ccvr-reference-a-v1`
-- `kraken-ai-v2-risk-execution-reference-a-v1`
-- `kraken-btc-eth-xrp-ai-driven-v2-partition-v1`
-- `kraken-btc-eth-xrp-ai-driven-v2-development-runner-v1`
-- `kraken-btc-eth-xrp-ai-driven-v2-hybrid-strategy-discovery-learning-v1`
-- `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-1-v1`
-- `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-2-v1`
-- `kraken-btc-eth-xrp-ai-driven-v2-true-learning-contract-v1`
+- `kraken-btc-eth-xrp-ai-driven-v2-causal-feature-contract-v1`;
+- `kraken-ai-v2-ccvr-reference-a-v1`;
+- `kraken-ai-v2-risk-execution-reference-a-v1`;
+- `kraken-btc-eth-xrp-ai-driven-v2-partition-v1`;
+- `kraken-btc-eth-xrp-ai-driven-v2-development-runner-v1`;
+- `kraken-btc-eth-xrp-ai-driven-v2-hybrid-strategy-discovery-learning-v1`;
+- `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-1-v1`;
+- `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-2-v1`; and
+- `kraken-btc-eth-xrp-ai-driven-v2-true-learning-contract-v1`.
 
-Historical hashes:
+Historical evidence and partition values:
 
-- `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`
-- `f537410d2a237be207951b638518d80e861289dafa7db9b5c2322ffa32d4e594`
-- `3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`
-- `5f9acde53d0e2cf35cd1010d0002222182670d7255bdf44e18715f4902c85a01`
+- BTC episode `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`;
+- Reference A `f537410d2a237be207951b638518d80e861289dafa7db9b5c2322ffa32d4e594`;
+- Round 1 report `3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`;
+- Round 2 report `5f9acde53d0e2cf35cd1010d0002222182670d7255bdf44e18715f4902c85a01`;
+- Development, Calibration and Evaluation boundaries:
+  `2024-04-01T00:00:00Z`, `2025-04-01T00:00:00Z`, `2026-04-01T00:00:00Z`.
 
-Reference A closure status:
+Reference A closure status is
 `KRAKEN_AI_V2_DEVELOPMENT_REFERENCE_A_CLOSED_NO_TRADE_HOLD_CASH`.
-Historical provider work used fail-closed Kraken daily acquisition. Exact
-partition boundaries are `2024-04-01T00:00:00Z`,
-`2025-04-01T00:00:00Z` and `2026-04-01T00:00:00Z`.
+Reference A, Round 1 and Round 2 remain historical `HOLD_CASH` evidence, not
+learned model candidates.
 
-True Learning Contract V1 was defined at `70e7bca` and integrated at `796c8de`.
-Its historical statement that the resolution remains unselected preceded the
-Stage 2 comparison of 1d, 12h and 4h with timestamp-only access and no model
-training. The active feasibility resolution is now 12h.
-
-Historical names retained: AI-Driven v2 State Machine, AI-Driven v2 Risk and
-Execution, AI-Driven v2 Development/Evaluation Partition, AI-Driven v2
-Development Runner, Round 1 Causal Signals, Round 1 Family Execution, Round 1
-Discovery Runner, Round 1 Closure, Round 2 Causal Signals, Round 2 Family
-Execution, Round 2 Discovery Runner and Round 2 Closure.
-
-Historical compatibility terms: Kraken daily, three-class, no model training,
-Round 1 Discovery Runner, Round 2 Family Execution, True Learning Engine and
-the former statement that the resolution remains unselected.
+True Learning Contract V1 began at `70e7bca` and was integrated at `796c8de`.
+Stage 2 compared 1d, 12h and 4h with timestamp-only access and no model training.
+It defined the three-class boundary.
 Legacy exact marker: resolution remains unselected.
 
 Candidate v2 and live execution remain unauthorized.

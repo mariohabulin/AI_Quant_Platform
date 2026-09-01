@@ -19,7 +19,7 @@ adding another strategy family, resolution search or deployment feature.
 - [x] Reproduce focused and full Windows tests.
 - [x] Commit and push the exact Learning Core milestone.
 
-### 2. Hash-Bound 12h Development Learning Runner — ATTEMPTS 1–2 FAILED CLOSED
+### 2. Hash-Bound 12h Development Learning Runner — ATTEMPT 3 COMPLETED
 
 - [x] Implement Development-only reader for exact official native 12h members.
 - [x] Implement archive, member-byte and timestamp-identity hashes.
@@ -42,10 +42,13 @@ adding another strategy family, resolution search or deployment feature.
 - [x] Replace endpoint presence with full-grid missing-timestamp validation while
   retaining exact archive hash, row counts and missing counts.
 - [x] Require both untouched prior markers and a new Attempt 3 authorization.
-- [ ] Reproduce focused/full Windows Attempt 3 recovery tests and static review.
-- [ ] Commit/push the reviewed Attempt 3 recovery.
-- [ ] Run clean Attempt 3 preflight and request a separate recovery decision.
-- [ ] Execute at most one authorized real Recovery Attempt 3.
+- [x] Reproduce focused/full Windows Attempt 3 recovery tests and static review.
+- [x] Commit/push the reviewed Attempt 3 recovery at `9c1156e`.
+- [x] Run clean Attempt 3 preflight and receive separate recovery authorization.
+- [x] Execute exactly one authorized real Recovery Attempt 3.
+- [x] Record 10,712 labels, six trained artifacts and 11,856 OOF predictions.
+- [x] Lock report SHA-256
+  `30d020bd9c30306f3e8931b47c0958fea7e11a33bff3795c3473806ddcaa09cf`.
 
 Baseline labels already include adverse commission, spread and slippage. A
 read-only economic/stress decision layer follows the immutable OOF evidence;
@@ -53,7 +56,22 @@ it is not allowed to refit or automatically select a model.
 
 This stage ends with a real learned result, not another protocol-only loop.
 
-### 3. Development decision
+### 3. Read-only Development economic evidence review — IN IMPLEMENTATION
+
+- [x] Freeze one payoff-derived eligibility rule before opening economic OOF
+  outcomes: `3 * P(target) - P(stop) > 0`.
+- [x] Prohibit threshold sweep, top-k tuning and automatic model selection.
+- [x] Implement raw and per-asset non-overlapping event views.
+- [x] Freeze fold support, all-fold stability, asset breadth and PR-AUC-lift
+  gates.
+- [x] Implement strict prediction-schema, probability and chronology checks.
+- [x] Add synthetic positive, `HOLD_CASH`, overlap and tamper tests.
+- [ ] Reproduce focused and complete Windows regression.
+- [ ] Commit/push the reviewed economic-review component.
+- [ ] Run it read-only against exact Attempt 3 evidence and prove evidence
+  unchanged.
+
+### 4. Development decision
 
 Exactly one of these branches follows the real run:
 
@@ -63,7 +81,7 @@ Exactly one of these branches follows the real run:
 
 No automatic Round 3 or unbounded search exists.
 
-### 4. Later gates
+### 5. Later gates
 
 - [ ] one-time Calibration of a frozen Development candidate;
 - [ ] untouched Evaluation only after Calibration passes;
@@ -115,6 +133,7 @@ models. They are the closed Rule Discovery Foundation.
 - `kraken-btc-eth-xrp-ai-driven-v2-true-learning-contract-v1`
 - `kraken-btc-eth-xrp-ai-driven-v2-learning-core-v1`
 - `kraken-btc-eth-xrp-ai-driven-v2-12h-development-learning-runner-v1`
+- `kraken-btc-eth-xrp-ai-driven-v2-12h-development-economic-evidence-review-v1`
 
 Evidence hashes:
 
@@ -123,6 +142,7 @@ Evidence hashes:
 - `3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`
 - `5f9acde53d0e2cf35cd1010d0002222182670d7255bdf44e18715f4902c85a01`
 - `ca86d49f1dde1d1a8a1e61f07f4c1e98080ab942ab5c32f89880b387edd867d1`
+- `30d020bd9c30306f3e8931b47c0958fea7e11a33bff3795c3473806ddcaa09cf`
 
 Historical milestones include Provider and Historical Availability Audit v1,
 Sealed Preflight Completed, Supervised Blinded Replay v1 and AI-Driven v2

@@ -68,13 +68,12 @@ V1 contains exactly:
 There is no automatic winner. The output is probabilities, metrics and model
 artifact hashes for operator review.
 
-### Development Learning Runner
+### Development Learning Runner and completed evidence
 
-`kraken_ai_driven_v2_12h_development_learning_runner.py` is now implemented but
-inert. After a separate exact one-shot authorization it can read only the three
-native Kraken 12h members inside Development, hash the archive and complete
-member bytes, call the Learning Core and atomically record label diagnostics,
-fold support, OOF predictions, metrics and learned model files.
+`kraken_ai_driven_v2_12h_development_learning_runner.py` read only the three
+native Kraken 12h members inside Development, hashed the archive and complete
+member bytes, called the Learning Core and atomically recorded label
+diagnostics, fold support, OOF predictions, metrics and learned model files.
 
 The native adapter accepts exactly the frozen seven source fields `Unix time,
 Open, High, Low, Close, Volume, Trades`. Attempt 1 at `cc8ae44` exposed an
@@ -95,6 +94,28 @@ models fitted independently in each of three folds. The lock hashes them
 without unpickling. If a fold lacks all three classes, fitting does not begin
 and immutable evidence closes with `HOLD_CASH`. The runner never selects a
 winner or promotes a Candidate.
+
+Recovery Attempt 3 completed with 10,712 labeled rows, six fold-model artifacts
+and 11,856 OOF predictions. Its immutable report SHA-256 is
+`30d020bd9c30306f3e8931b47c0958fea7e11a33bff3795c3473806ddcaa09cf`;
+Calibration and Evaluation remained unopened.
+
+### Development Economic Evidence Review
+
+`kraken_ai_driven_v2_12h_development_economic_review.py` is a deterministic
+read-only consumer of the locked Attempt 3 evidence. It does not open source
+OHLCV, generate labels, unpickle models or refit parameters.
+
+The sole entry-interest rule is the untuned payoff floor
+`3 * P(target) - P(stop) > 0`. It reports both every eligible OOF decision and a
+chronological view with at most one overlapping event per asset. Development
+interest requires support, positive net R in all three folds, positive breadth
+across at least two assets and positive target PR-AUC lift in every fold. A pass
+requires operator review; it cannot select a family or authorize Candidate v2.
+A failure returns `HOLD_CASH`.
+
+This is not a portfolio simulation. Capital allocation, cross-asset concurrency,
+drawdown and stress execution remain later work only if evidence warrants it.
 
 ## Runtime and risk boundary
 
@@ -154,10 +175,12 @@ families. These are historical rule tests, not learned model artifacts.
 - `kraken-btc-eth-xrp-ai-driven-v2-true-learning-contract-v1`
 - `kraken-btc-eth-xrp-ai-driven-v2-learning-core-v1`
 - `kraken-btc-eth-xrp-ai-driven-v2-12h-development-learning-runner-v1`
+- `kraken-btc-eth-xrp-ai-driven-v2-12h-development-economic-evidence-review-v1`
 - BTC episode `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`
 - Round 1 `3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`
 - Round 2 `5f9acde53d0e2cf35cd1010d0002222182670d7255bdf44e18715f4902c85a01`
 - Stage 2 `ca86d49f1dde1d1a8a1e61f07f4c1e98080ab942ab5c32f89880b387edd867d1`
+- 12h Learning Attempt 3 `30d020bd9c30306f3e8931b47c0958fea7e11a33bff3795c3473806ddcaa09cf`
 - Reference A `f537410d2a237be207951b638518d80e861289dafa7db9b5c2322ffa32d4e594`
 
 True Learning Contract V1 began at `70e7bca` and was integrated at `796c8de`.
@@ -171,8 +194,6 @@ partition boundaries are `2024-04-01T00:00:00Z`, `2025-04-01T00:00:00Z` and
 `2026-04-01T00:00:00Z`. True Learning Contract V1 defines a three-class learner.
 
 Historical compatibility terms: Kraken daily, no model training, Round 1
-Discovery Runner, Round 2 Family Execution, True Learning Engine and the former
-statement that the resolution remains unselected.
+Discovery Runner, Round 2 Family Execution and True Learning Engine.
 Legacy exact marker: resolution remains unselected.
-
 Candidate v2, Calibration, Evaluation, PAPER, cloud and live remain unauthorized.

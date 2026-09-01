@@ -51,9 +51,18 @@ did not reproduce BTC's known missing edge bucket: the reader accepted the
 frozen missing count and then incorrectly required that endpoint. The archive
 and Learning Core were not at fault in either incident. Recovery now validates
 the full grid and records missing timestamps without weakening archive hashes
-or counts. It awaits independent review and a separate Attempt 3 authorization.
-A successful recovery will create six real fold-model artifacts and exact OOF
-probabilities; insufficient class support will close atomically as `HOLD_CASH`.
+or counts. Recovery Attempt 3 then completed successfully with 10,712 labeled
+rows, six real fold-model artifacts and 11,856 exact OOF predictions. Its report
+SHA-256 is
+`30d020bd9c30306f3e8931b47c0958fea7e11a33bff3795c3473806ddcaa09cf`.
+No model was automatically selected and Calibration and Evaluation remained
+unopened.
+
+The active next step is a pre-registered read-only economic review. It uses one
+payoff-derived rule, no threshold sweep, and both raw and non-overlapping event
+views. Stable positive evidence in all three folds can request operator review;
+it still cannot promote Candidate v2. Weak or unstable evidence closes this 12h
+V1 hypothesis with `HOLD_CASH`.
 Another open-ended rule-discovery round is not part of the active roadmap.
 
 ## Permanent safety boundary
@@ -108,6 +117,8 @@ Detailed append-only history remains recoverable in Git through parent commit
 - Learning Core: `kraken-btc-eth-xrp-ai-driven-v2-learning-core-v1`.
 - 12h Development learner:
   `kraken-btc-eth-xrp-ai-driven-v2-12h-development-learning-runner-v1`.
+- 12h Development economic review:
+  `kraken-btc-eth-xrp-ai-driven-v2-12h-development-economic-evidence-review-v1`.
 
 Immutable hashes retained for traceability:
 
@@ -116,6 +127,8 @@ Immutable hashes retained for traceability:
 - Round 1 report: `3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`;
 - Round 2 report: `5f9acde53d0e2cf35cd1010d0002222182670d7255bdf44e18715f4902c85a01`;
 - Stage 2 report: `ca86d49f1dde1d1a8a1e61f07f4c1e98080ab942ab5c32f89880b387edd867d1`.
+- 12h Learning Attempt 3 report:
+  `30d020bd9c30306f3e8931b47c0958fea7e11a33bff3795c3473806ddcaa09cf`.
 
 Reference A closure status:
 `KRAKEN_AI_V2_DEVELOPMENT_REFERENCE_A_CLOSED_NO_TRADE_HOLD_CASH`.
