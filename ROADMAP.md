@@ -1,9 +1,10 @@
 # ROADMAP
 
 ## Current objective
-Keep the failed 12h spot-OHLCV hypothesis closed. The derivatives source audit
-passed, so freeze one matched causal context experiment before implementing its
-hash-bound dataset lock and reader. Do not train until that reader is reviewed.
+Keep the failed 12h spot-OHLCV hypothesis closed. The matched derivatives-
+context experiment is frozen at `af0af86`; implement and review its exact
+hash-bound dataset lock and reader. Do not train until a real lock is complete
+and independently reviewed.
 ## Active sequence
 
 ### 1. V2 Learning Core — COMMITTED AT `2a09363`
@@ -113,34 +114,35 @@ exists.
   `3c84fba6034790ae59761f3fba23affca80fca0c8b7d29b3e3f3762c789d8e29`;
 - [x] confirm 852 common days, 100% common coverage and zero duplicates.
 
-### 6. Derivatives-context learning hypothesis — PRE-REGISTERED
+### 6. Derivatives-context learning hypothesis — COMMITTED AT `af0af86`
 
 - [x] freeze nine causal funding, open-interest and basis features;
 - [x] freeze causal availability, no-fill rules and three 30-day-purged folds;
 - [x] freeze two matched pairs, identical rows and 12 maximum fold fits;
 - [x] freeze absolute and incremental gates with no sweeps/control promotion;
-- [ ] reproduce focused and complete Windows tests and static review;
-- [ ] commit and push the pre-registration milestone;
-- [ ] implement the hash-bound derivatives-context dataset lock and reader;
-- [ ] validate source schemas before a separate frozen learning runner.
+- [x] reproduce 20 focused and 1,974 complete Windows tests and static review;
+- [x] commit and push the pre-registration milestone at `af0af86`;
+- [x] implement the hash-bound derivatives-context dataset lock and reader;
+- [x] validate source schemas synthetically before any network execution.
 
-Calibration, Evaluation, Candidate v2, PAPER and live remain closed. A future
-run may execute only the frozen variants after independent reader review.
+### 7. Derivatives-context dataset lock and reader — IMPLEMENTED, RUN CLOSED
+- [x] freeze 2,808 exact Development objects and every official checksum;
+- [x] hash raw/member/normalized bytes and freeze all three source schemas;
+- [x] reject unsafe ZIPs, foreign periods, duplicates, inversions and bad grids;
+- [x] implement atomic manifest locking and an independent full-hash reader;
+- [x] keep labels, fitting and every later stage unauthorized;
+- [ ] reproduce focused/full Windows tests and static review;
+- [ ] commit and push the reviewed reader milestone;
+- [ ] preflight, separately authorize, execute and verify one real lock.
+
+Calibration, Evaluation, Candidate v2, PAPER and live remain closed.
 
 ## Retired active work
 
-The following work remains tested historical evidence but is no longer the
-active research loop:
-
-- AI-Driven Crypto Research v2 deterministic route discovery;
-- AI-Driven v2 State Machine;
-- AI-Driven v2 Risk and Execution;
-- AI-Driven v2 Development/Evaluation Partition;
-- AI-Driven v2 Development Runner;
-- Round 1 Causal Signals, Round 1 Family Execution, Round 1 Discovery Runner
-  and Round 1 Closure;
-- Round 2 Causal Signals, Round 2 Family Execution, Round 2 Discovery Runner
-  and Round 2 Closure.
+Tested but retired from the active loop: AI-Driven Crypto Research v2, State
+Machine, Risk and Execution, Development/Evaluation Partition and Development
+Runner; Round 1 Causal Signals/Family Execution/Discovery Runner/Closure; and
+Round 2 Causal Signals/Family Execution/Discovery Runner/Closure.
 
 Reference A, four Round 1 families and three Round 2 families are not candidate
 models. They are the closed Rule Discovery Foundation.
@@ -159,20 +161,9 @@ models. They are the closed Rule Discovery Foundation.
 - [x] Forensically confirm that native 4h begins on 2024-01-01.
 
 ## Immutable lineage
-
-- `kraken-btc-eth-xrp-ai-driven-v2-causal-feature-contract-v1`
-- `kraken-ai-v2-ccvr-reference-a-v1`
-- `kraken-ai-v2-risk-execution-reference-a-v1`
-- `kraken-btc-eth-xrp-ai-driven-v2-partition-v1`
-- `kraken-btc-eth-xrp-ai-driven-v2-development-runner-v1`
-- `kraken-btc-eth-xrp-ai-driven-v2-hybrid-strategy-discovery-learning-v1`
-- `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-1-v1`
-- `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-2-v1`
-- `kraken-btc-eth-xrp-ai-driven-v2-true-learning-contract-v1`
-- `kraken-btc-eth-xrp-ai-driven-v2-learning-core-v1`
-- `kraken-btc-eth-xrp-ai-driven-v2-12h-development-learning-runner-v1`
-- `kraken-btc-eth-xrp-ai-driven-v2-alpha-research-lab-v1`
-- `kraken-btc-eth-xrp-ai-driven-v2-12h-development-economic-evidence-review-v1`
+Preserved IDs cover causal feature, state, risk, partition, Development runner,
+hybrid/Round 1/Round 2, True Learning Contract, Learning Core, 12h learning and
+economic review, Alpha Research Lab and derivatives-context components.
 
 Evidence hashes include BTC episode `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`,
 Reference A `f537410d2a237be207951b638518d80e861289dafa7db9b5c2322ffa32d4e594`,
@@ -197,3 +188,4 @@ Legacy exact marker: resolution remains unselected.
 ## Authorization state
 Candidate v2 is false. Calibration/Evaluation are unopened; PAPER, cloud, real
 orders and live execution are unauthorized.
+Compatibility: AI-Driven v2 State Machine; AI-Driven v2 Risk and Execution; AI-Driven v2 Development/Evaluation Partition; AI-Driven v2 Development Runner; Round 1 Family Execution; Round 1 Closure; Round 2 Discovery Runner; Round 2 Closure; `kraken-ai-v2-ccvr-reference-a-v1`; `kraken-ai-v2-risk-execution-reference-a-v1`; `kraken-btc-eth-xrp-ai-driven-v2-partition-v1`; `kraken-btc-eth-xrp-ai-driven-v2-development-runner-v1`; `kraken-btc-eth-xrp-ai-driven-v2-hybrid-strategy-discovery-learning-v1`; `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-1-v1`; `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-2-v1`.

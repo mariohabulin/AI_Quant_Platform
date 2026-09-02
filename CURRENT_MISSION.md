@@ -2,21 +2,35 @@
 
 ## Mission
 
-Preserve the closed spot-OHLCV result and the successful derivatives-context
-source audit. Freeze one causal matched-ablation hypothesis before implementing
-the real data lock and reader. Do not open source values, generate labels, fit
-models, relax gates, open Calibration/Evaluation or promote Candidate v2.
+Preserve the closed spot-OHLCV result and the frozen derivatives-context
+hypothesis. Implement and review its exact hash-bound Development dataset lock
+and reader without executing acquisition. Do not open source values, generate
+labels, fit models, relax gates, open Calibration/Evaluation or promote
+Candidate v2.
 
 Status:
-`KRAKEN_AI_V2_DERIVATIVES_CONTEXT_HYPOTHESIS_REVIEWED_DATA_LOCK_READER_REQUIRED`
+`KRAKEN_AI_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_READER_REVIEWED_EXECUTION_AUTHORIZATION_REQUIRED`
 
-Parent execution milestone: `99f6242`
+Parent execution milestone: `af0af86`
 
 Feasibility evidence SHA-256:
 `3c84fba6034790ae59761f3fba23affca80fca0c8b7d29b3e3f3762c789d8e29`
 
 Active protocol:
-`kraken-btc-eth-xrp-ai-v2-derivatives-context-learning-hypothesis-v1`
+`kraken-btc-eth-xrp-ai-v2-derivatives-context-dataset-lock-reader-v1`
+
+## Implemented dataset lock and reader
+
+The component freezes exactly 2,808 official Binance USD-M archive objects:
+84 funding, 2,556 daily open-interest metrics, 84 native 12h mark-price and 84
+native 12h index-price ZIPs across BTCUSDT, ETHUSDT and XRPUSDT. Every object
+must match its official `.CHECKSUM` and exact schema before it can enter the
+lock.
+
+One authorized run will atomically retain raw bytes, twelve normalized files
+and a canonical manifest. The independent reader re-hashes the full lock before
+returning the funding, open-interest and mark/index frames. The implementation
+has not executed: no download, market-value access, label or model exists yet.
 
 ## Completed source audit and active hypothesis
 
@@ -95,15 +109,17 @@ mean `-0.2140 R`. Result SHA-256 is
 
 ## Completion gate
 
-The source audit passed 14 focused and 1,954 total Windows tests, commit/push,
-all four feasibility gates and an immutable external evidence lock. The new
-hypothesis component is synthetic-only pending Windows reproduction.
+The source audit passed 14 focused and 1,954 total Windows tests, all four
+feasibility gates and an immutable external evidence lock. The hypothesis
+passed 20 focused and 1,974 total Windows tests and was committed at `af0af86`.
+The dataset-lock reader component is synthetic-only pending Windows
+reproduction and commit.
 
 ## Next deterministic branches
 
-- current branch: implement and review the hash-bound context dataset lock and
-  reader without model training;
-- after a successful lock: separately implement the frozen four-variant
+- current branch: reproduce and commit the hash-bound context dataset lock and
+  reader, then stop for separate one-shot acquisition authorization;
+- after a successful independently reviewed lock: separately implement the frozen four-variant
   Development runner;
 - schema or causal-alignment failure: fail closed and repair the reader without
   changing the hypothesis.
@@ -173,3 +189,4 @@ It defined the three-class boundary.
 Legacy exact marker: resolution remains unselected.
 
 Candidate v2 and live execution remain unauthorized.
+Compatibility: AI-Driven v2 State Machine; AI-Driven v2 Risk and Execution; AI-Driven v2 Development/Evaluation Partition; AI-Driven v2 Development Runner.

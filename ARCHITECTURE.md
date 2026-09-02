@@ -134,7 +134,6 @@ closes this 12h spot-OHLCV architecture with `HOLD_CASH`. Calibration,
 Evaluation and Candidate v2 remain sealed.
 
 ### Derivatives Context Source Feasibility
-
 `kraken_ai_driven_v2_derivatives_context_feasibility.py` lists official archive
 object metadata for monthly funding, daily futures metrics and monthly native
 12h mark/index price files for BTCUSDT, ETHUSDT and XRPUSDT. Separate mark and
@@ -156,32 +155,34 @@ context variants on identical rows and three 30-day-purged folds. Only context
 variants can pass absolute and incremental gates. No values are opened or
 models fitted.
 
-## Runtime and risk boundary
+### Derivatives Context Dataset Lock and Reader
 
+`kraken_ai_driven_v2_derivatives_context_dataset.py` freezes 2,808 Binance
+USD-M Development objects: 84 funding, 2,556 daily open-interest metrics, 84
+native 12h mark and 84 native 12h index archives. Every ZIP must match its
+adjacent official checksum and one safe expected CSV member.
+The adapter validates exact schemas, finite values, symbol, chronology, object
+period and native 12h grid; duplicate timestamps, REST fallback, fill and
+partition crossing fail closed. An authorized run atomically retains verified
+raw objects, twelve normalized files and a canonical manifest. The independent
+reader re-hashes all of them before returning parent feature-engine frames.
+Static review opens nothing; the real lock cannot generate labels or fit.
+## Runtime and risk boundary
 An approved runtime may load an immutable artifact but cannot fit, mutate,
-rank, promote or submit orders; Risk and Synthetic Execution remains the later
-simulation/PAPER boundary.
+rank, promote or submit orders; Risk and Synthetic Execution remains later.
 
 ## Failure behavior
-
-The system fails closed for invalid data, boundary crossings, incomplete label
-support, changed hashes or unstable after-cost evidence; action is `HOLD_CASH`.
+Invalid data, boundary crossings, incomplete support, changed hashes or
+unstable after-cost evidence fail closed to `HOLD_CASH`.
 Historical markers: Provider and Historical Availability Boundary v1; Kraken Bounded Blinded Replay Review Boundary v1; Supervised Blinded Replay Execution Boundary v1; AI-Driven v2 Layer Boundary; AI-Driven v2 Signal-State Layer; AI-Driven v2 Risk and Synthetic Execution Layer; AI-Driven v2 Partition Boundary; Development-Only Evidence Runner.
 Round 1 Causal Signals, Round 1 Family Execution, Round 1 Discovery Runner and Round 1 Closure used four paths; Round 2 Causal Signals, Round 2 Family Execution, Round 2 Discovery Runner and Round 2 Closure used three paths.
 Git through `8c51695` preserves the Rule Discovery Foundation and True Learning Engine scope correction.
 
 ## Immutable lineage index
-
-Core IDs: `kraken-btc-eth-xrp-ai-driven-v2-causal-feature-contract-v1`,
-`kraken-ai-v2-ccvr-reference-a-v1`, `kraken-ai-v2-risk-execution-reference-a-v1`,
-`kraken-btc-eth-xrp-ai-driven-v2-partition-v1`, `kraken-btc-eth-xrp-ai-driven-v2-development-runner-v1`, `kraken-btc-eth-xrp-ai-driven-v2-hybrid-strategy-discovery-learning-v1`,
-`kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-1-v1`, `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-2-v1`, `kraken-btc-eth-xrp-ai-driven-v2-true-learning-contract-v1` at `70e7bca` and `796c8de`,
-Learning Core and `kraken-btc-eth-xrp-ai-driven-v2-12h-development-learning-runner-v1`,
-`kraken-btc-eth-xrp-ai-driven-v2-12h-development-economic-evidence-review-v1`,
-`kraken-btc-eth-xrp-ai-driven-v2-alpha-research-lab-v1` and
-`kraken-btc-eth-xrp-ai-v2-derivatives-context-feasibility-v1`, followed by
-`kraken-btc-eth-xrp-ai-v2-derivatives-context-learning-hypothesis-v1`.
-
+Core IDs include causal-feature, state, risk, partition, Development runner,
+hybrid/Round 1/Round 2, True Learning Contract (`70e7bca`, `796c8de`), Learning
+Core, 12h runner/economic review, Alpha Research Lab and the derivatives-
+context feasibility, hypothesis and dataset-lock protocols.
 Evidence: BTC episode `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`,
 Round 1 `3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`, Round 2
 `5f9acde53d0e2cf35cd1010d0002222182670d7255bdf44e18715f4902c85a01`; Stage 2 compared 1d, 12h and 4h timestamp-only with report
@@ -189,11 +190,10 @@ Round 1 `3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`, Roun
 Attempt 3 `30d020bd9c30306f3e8931b47c0958fea7e11a33bff3795c3473806ddcaa09cf`
 and Reference A `f537410d2a237be207951b638518d80e861289dafa7db9b5c2322ffa32d4e594`.
 
-Reference A closure status is
-`KRAKEN_AI_V2_DEVELOPMENT_REFERENCE_A_CLOSED_NO_TRADE_HOLD_CASH`. Exact legacy
-partition boundaries are `2024-04-01T00:00:00Z`, `2025-04-01T00:00:00Z` and
-`2026-04-01T00:00:00Z`. True Learning Contract V1 defines a three-class learner.
-Historical compatibility terms: Kraken daily, no model training, Round 1 Discovery
-Runner, Round 2 Family Execution and True Learning Engine.
+Reference A is `KRAKEN_AI_V2_DEVELOPMENT_REFERENCE_A_CLOSED_NO_TRADE_HOLD_CASH`.
+Legacy boundaries: `2024-04-01T00:00:00Z`, `2025-04-01T00:00:00Z`, `2026-04-01T00:00:00Z` exclusive.
+Compatibility: Kraken daily, no model training, Round 1 Discovery Runner, Round
+2 Family Execution, True Learning Engine and three-class Learning Core.
+Exact compatibility: AI-Driven v2 State Machine; AI-Driven v2 Risk and Execution; AI-Driven v2 Development/Evaluation Partition; AI-Driven v2 Development Runner; True Learning Contract V1; `kraken-ai-v2-ccvr-reference-a-v1`; `kraken-ai-v2-risk-execution-reference-a-v1`; `kraken-btc-eth-xrp-ai-driven-v2-partition-v1`; `kraken-btc-eth-xrp-ai-driven-v2-development-runner-v1`; `kraken-btc-eth-xrp-ai-driven-v2-hybrid-strategy-discovery-learning-v1`; `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-1-v1`; `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-2-v1`.
 Legacy exact marker: resolution remains unselected.
 Candidate v2, Calibration, Evaluation, PAPER, cloud and live remain unauthorized.

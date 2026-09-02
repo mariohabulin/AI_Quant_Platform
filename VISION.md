@@ -79,13 +79,18 @@ found 852 common calendar days from 2021-12-01 through 2024-04-01 exclusive,
 and both basis legs for all three assets. Report SHA-256 is
 `3c84fba6034790ae59761f3fba23affca80fca0c8b7d29b3e3f3762c789d8e29`.
 
-The next hypothesis is now pre-registered before any value access. It compares
+The next hypothesis was pre-registered at `af0af86` before any value access. It compares
 two matched spot-only controls with two otherwise identical models receiving
 nine causal derivatives-context features. Same-row ablation, three purged
 walk-forward folds and fixed absolute plus incremental economic gates must show
 that any improvement comes from new information rather than another learner or
-an easier sample. The next implementation is only the hash-bound context data
-lock and reader; model training is still closed.
+an easier sample.
+
+The hash-bound context lock and reader is now implemented but has not executed.
+It freezes 2,808 exact official objects, adjacent provider checksums, strict
+funding/metrics/kline schemas, raw and normalized hashes and atomic evidence.
+The next action is Windows reproduction and a separate one-shot decision to
+create the real Development lock. Model training remains closed.
 
 ## Permanent safety boundary
 
@@ -147,6 +152,8 @@ Detailed append-only history remains recoverable in Git through parent commit
   `kraken-btc-eth-xrp-ai-v2-derivatives-context-feasibility-v1`.
 - derivatives-context learning hypothesis:
   `kraken-btc-eth-xrp-ai-v2-derivatives-context-learning-hypothesis-v1`.
+- derivatives-context dataset lock and reader:
+  `kraken-btc-eth-xrp-ai-v2-derivatives-context-dataset-lock-reader-v1`.
 
 Immutable hashes retained for traceability:
 

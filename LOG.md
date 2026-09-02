@@ -4,6 +4,13 @@ This is the concise active decision log. Detailed historical implementation
 notes remain recoverable in Git through commit `8c51695` and in the immutable
 protocol/evidence files.
 
+## 2026-09-02 — Derivatives-context dataset lock and reader implemented
+- Bound parent `af0af86` and froze 2,808 exact Development objects.
+- Required official adjacent checksums plus raw/member/normalized hashes.
+- Added strict schema, symbol, period, chronology, uniqueness and grid checks.
+- Added atomic manifest locking and an independent no-fallback reader.
+- Kept the run, values, labels and models closed pending Windows review.
+
 ## 2026-09-02 — Derivatives-context hypothesis pre-registered
 
 - Recorded feasibility report SHA-256
@@ -164,7 +171,7 @@ protocol/evidence files.
 
 ## Compact historical milestone index
 Provider and Historical Availability Audit v1 established fail-closed Kraken acquisition; Sealed Preflight Completed and Supervised Blinded Replay v1 preserved hidden timestamps and no-live boundaries.
-AI-Driven v2 Causal Feature Contract preceded AI-Driven v2 State Machine, AI-Driven v2 Risk and Execution, AI-Driven v2 Partition Protocol and AI-Driven v2 Development Runner; Reference A closed 13 rejected entries with `HOLD_CASH`.
+AI-Driven v2 Causal Feature Contract preceded AI-Driven v2 State Machine, AI-Driven v2 Risk and Execution, AI-Driven v2 Development/Evaluation Partition, AI-Driven v2 Partition Protocol and AI-Driven v2 Development Runner; Reference A closed 13 rejected entries with `HOLD_CASH`.
 Hybrid foundation `kraken-btc-eth-xrp-ai-driven-v2-hybrid-strategy-discovery-learning-v1` preceded both rounds. Round 1 Causal Signals, Round 1 Family Execution, Round 1 Discovery Runner and Round 1 Closure (`kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-1-v1`) covered four paths/12 routes and retained
 `3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`;
 Round 2 Causal Signals, Round 2 Family Execution, Round 2 Discovery Runner and Round 2 Closure (`kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-2-v1`) covered three paths/7 routes and retained
@@ -174,20 +181,14 @@ Rule Discovery Foundation; Stage 2 compared 1d, 12h and 4h timestamp-only suppor
 model training. Legacy wording that the resolution remains unselected is kept.
 
 ## Immutable identifiers
-Core identifiers include `kraken-btc-eth-xrp-ai-driven-v2-causal-feature-contract-v1`,
-`kraken-ai-v2-ccvr-reference-a-v1`, `kraken-ai-v2-risk-execution-reference-a-v1`,
-`kraken-btc-eth-xrp-ai-driven-v2-partition-v1`, `kraken-btc-eth-xrp-ai-driven-v2-development-runner-v1`, hybrid/Round 1/Round 2, True Learning Contract,
-Learning Core, 12h Development Learning Runner and economic-review IDs.
-Evidence includes `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`,
+IDs cover causal feature, state, risk, partition, Development runner (`kraken-ai-v2-ccvr-reference-a-v1`, `kraken-ai-v2-risk-execution-reference-a-v1`, `kraken-btc-eth-xrp-ai-driven-v2-partition-v1`, `kraken-btc-eth-xrp-ai-driven-v2-development-runner-v1`),
+hybrid/Rounds, True Learning Contract, Learning Core and 12h learning/economic
+review. Evidence includes `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`,
 `f537410d2a237be207951b638518d80e861289dafa7db9b5c2322ffa32d4e594` and
 `30d020bd9c30306f3e8931b47c0958fea7e11a33bff3795c3473806ddcaa09cf`.
-
-Reference A closure status is
-`KRAKEN_AI_V2_DEVELOPMENT_REFERENCE_A_CLOSED_NO_TRADE_HOLD_CASH`.
-Historical fixed boundary terms: `FLAT -> ARMED -> LONG -> FLAT`, AI-Driven v2
-Layer Boundary, AI-Driven v2 Signal-State Layer, AI-Driven v2 Risk and Synthetic
-Execution Layer, AI-Driven v2 Partition Boundary, Kraken Bounded Blinded Replay
-Review Boundary v1 and Supervised Blinded Replay Execution Boundary v1.
+Reference A status is `KRAKEN_AI_V2_DEVELOPMENT_REFERENCE_A_CLOSED_NO_TRADE_HOLD_CASH`;
+fixed terms include `FLAT -> ARMED -> LONG -> FLAT`, Layer/Signal-State/Risk
+and Synthetic Execution/Partition boundaries and supervised blinded replay.
 
 Historical compatibility terms: Kraken daily, three-class, no model training,
 Round 1 Discovery Runner, Round 2 Family Execution, True Learning Engine and
