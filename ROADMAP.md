@@ -1,10 +1,10 @@
 # ROADMAP
 
 ## Current objective
-
-Complete one frozen six-variant BTC/ETH/XRP Development lab and accept its
-result without changing the process afterward.
-
+Keep the failed 12h spot-OHLCV hypothesis closed and perform one metadata-only
+feasibility audit for a materially new derivatives-context hypothesis. Do not
+train again until source history is known and a separate learning contract is
+frozen.
 ## Active sequence
 
 ### 1. V2 Learning Core — COMMITTED AT `2a09363`
@@ -98,12 +98,29 @@ Exactly one branch follows:
 No automatic Round 3, resolution change, seventh variant or unbounded search
 exists.
 
-### 5. New-information decision — NOT YET AUTHORIZED
+### 5. Derivatives-context source feasibility — IMPLEMENTED, AUDIT PENDING
 
-- [ ] either stop, or pre-register one hypothesis using materially new data;
-- [ ] prohibit reuse of the same 12h OHLCV representation as a disguised retry;
-- [ ] keep Calibration, Evaluation, PAPER and live closed unless a future
-  Development hypothesis independently earns advancement.
+- [x] preserve Alpha Research Lab Attempt 1 and its `HOLD_CASH` result;
+- [x] freeze funding, open-interest metrics and mark/index basis inputs as the
+  only first information bundle;
+- [x] implement official public-object listing without opening market values;
+- [x] freeze all-assets, 730-day, 98%-coverage and no-duplicate source gates;
+- [x] prohibit labels, fitting, tuning, Calibration, Evaluation and Candidate
+  promotion inside the audit;
+- [x] add deterministic pagination, coverage, missing-source and tamper tests;
+- [ ] reproduce focused and complete Windows tests;
+- [ ] commit and push the reviewed audit component;
+- [ ] run the read-only metadata audit and record its exact result.
+
+The result has only two branches:
+
+- `SOURCE_FEASIBLE`: separately pre-register the causal derivatives-context
+  feature and walk-forward learning hypothesis;
+- `DATA_EXTENSION_REQUIRED`: review another historical source or stop.
+
+Neither branch permits reuse of the same 12h OHLCV representation as a
+disguised retry. Calibration, Evaluation, PAPER and live remain closed unless a
+future Development hypothesis independently earns advancement.
 
 ## Retired active work
 
@@ -177,6 +194,5 @@ the former statement that the resolution remains unselected.
 Legacy exact marker: resolution remains unselected.
 
 ## Authorization state
-
-Candidate v2 is false. Calibration and Evaluation are unopened. PAPER, cloud,
-real orders and live execution are unauthorized.
+Candidate v2 is false. Calibration/Evaluation are unopened; PAPER, cloud, real
+orders and live execution are unauthorized.

@@ -2,20 +2,36 @@
 
 ## Mission
 
-Preserve the completed Alpha Research Lab result, close the failed 12h spot-
-OHLCV hypothesis and decide whether to pre-register one materially new
-information hypothesis or stop. Do not add a seventh model, relax the frozen
-gates, open Calibration/Evaluation or promote Candidate v2.
+Preserve the completed Alpha Research Lab result and determine whether official
+public archive metadata can support one materially new derivatives-context
+hypothesis. Inventory funding, open-interest metrics and the mark/index legs of
+basis for BTC, ETH and XRP without opening market values. Do not add a seventh
+model, relax the frozen gates, open Calibration/Evaluation or promote Candidate
+v2.
 
 Status:
-`KRAKEN_AI_V2_ALPHA_RESEARCH_LAB_NO_VIABLE_VARIANT_HOLD_CASH`
+`KRAKEN_AI_V2_DERIVATIVES_CONTEXT_FEASIBILITY_REVIEWED_METADATA_AUDIT_REQUIRED`
 
-Execution milestone: `3dcfb2e6a7b668ed5b85430676c3a0a3fc842090`
+Parent execution milestone: `cdb1ccc`
 
 Parent evidence SHA-256:
 `30d020bd9c30306f3e8931b47c0958fea7e11a33bff3795c3473806ddcaa09cf`
 
-Active protocol: `kraken-btc-eth-xrp-ai-driven-v2-alpha-research-lab-v1`
+Active protocol: `kraken-btc-eth-xrp-ai-v2-derivatives-context-feasibility-v1`
+
+## Active new-information feasibility audit
+
+The audit lists official public Binance USD-M archive object names for exactly
+four series across `BTCUSDT`, `ETHUSDT` and `XRPUSDT`: monthly funding rate,
+daily open-interest metrics, native 12h mark price and native 12h index price.
+It opens no CSV market values and makes no profitability claim.
+
+Feasibility requires all twelve source/asset identities, at least 730 common
+calendar days ending no later than the frozen Development boundary, at least
+98% period coverage and no duplicate period. A pass only permits a separately
+frozen causal feature/learning hypothesis. A failure requires a different or
+extended historical source; it does not authorize a shorter disguised OHLCV
+retry.
 
 ## Completed real learning milestone
 
@@ -83,15 +99,17 @@ All completion gates passed: 10 focused and 1,939 total tests, Windows
 reproduction, commit/push, six-variant real execution, closed partitions and
 review against only the frozen gates.
 
-## Possible terminal branches
+## Next deterministic branches
 
-- completed branch: no variant passed; close the 12h OHLCV hypothesis with
-  `HOLD_CASH`;
-- next decision: pre-register materially new information or stop.
+- parent branch is complete: no variant passed and 12h spot OHLCV remains
+  closed with `HOLD_CASH`;
+- metadata pass: pre-register one derivatives-context learning hypothesis;
+- metadata failure: review an alternative historical source or stop.
 
 ## Permanent nonauthorization
 
 - model training outside the six-variant Development lab: false;
+- derivatives market-value access during feasibility: false;
 - threshold or parameter search: false;
 - automatic model selection: false;
 - Calibration data access: false;

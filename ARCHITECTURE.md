@@ -2,18 +2,21 @@
 
 ## Active architecture
 
-AI-Driven V2 is an offline supervised-learning research pipeline with a later
-immutable inference runtime. The active path is intentionally short:
+AI-Driven V2 is an offline supervised-learning pipeline with a later immutable
+inference runtime. Its first real learned path used locked Kraken 12h OHLCV,
+causal features, cost-aware labels and purged walk-forward evidence; that
+hypothesis is permanently closed with `HOLD_CASH`.
 
-1. locked Kraken 12h Development OHLCV;
-2. causal feature construction;
-3. next-open cost-aware triple-barrier labeling;
-4. expanding purged walk-forward learning;
-5. out-of-fold predictive and economic evidence;
-6. an operator-reviewed frozen Candidate, if evidence warrants one;
-7. one-time Calibration, untouched Evaluation and bounded PAPER in that order.
+The next path is intentionally short:
 
-Manual strategy-family generation is not part of this path.
+1. inventory new public derivatives-context history without opening values;
+2. stop for insufficient history or freeze one causal information hypothesis;
+3. only then acquire and lock Development funding, open interest and basis;
+4. reuse proven label, walk-forward and economic-evidence boundaries;
+5. open later stages only after an independent Development pass.
+
+Manual strategy-family generation and another spot-OHLCV model search are not
+part of this path.
 
 ## Data and partition boundary
 
@@ -130,53 +133,54 @@ all-fold stability. Result SHA-256
 closes this 12h spot-OHLCV architecture with `HOLD_CASH`. Calibration,
 Evaluation and Candidate v2 remain sealed.
 
+### Derivatives Context Source Feasibility
+
+`kraken_ai_driven_v2_derivatives_context_feasibility.py` lists official archive
+object metadata for monthly funding, daily futures metrics and monthly native
+12h mark/index price files for BTCUSDT, ETHUSDT and XRPUSDT. Separate mark and
+index legs permit a later causal basis feature.
+
+It opens no values and records coverage across all twelve identities.
+Feasibility requires 730 common days, 98% period coverage and no duplicates.
+These source gates claim no alpha: pass means a separate learning protocol;
+failure means another source or stop, never relaxed economic gates.
+
 ## Runtime and risk boundary
 
-An approved runtime may load one immutable artifact but cannot fit, mutate,
-rank, promote or submit orders. The AI-Driven v2 Risk and Synthetic Execution
-Layer remains the boundary for any later simulation or PAPER stage.
+An approved runtime may load an immutable artifact but cannot fit, mutate,
+rank, promote or submit orders; Risk and Synthetic Execution remains the later
+simulation/PAPER boundary.
 
 ## Failure behavior
 
-The system fails closed when:
-
-- timestamps, OHLCV or feature values are invalid;
-- an event crosses a provider gap or Development boundary;
-- a fold lacks all three outcome classes;
-- a source, configuration, model or prediction hash changes;
-- Calibration or Evaluation appears in training input; or
-- no model produces stable later-period evidence after costs.
-
-The failure action is `HOLD_CASH`, not a relaxed gate or another automatic
-strategy search.
-
-## Historical architecture retained outside the active path
-
-Git through `8c51695` preserves Provider and Historical Availability Boundary v1; Kraken Bounded Blinded Replay Review Boundary v1; Supervised Blinded Replay Execution Boundary v1; AI-Driven v2 Layer Boundary; AI-Driven v2 Signal-State Layer; AI-Driven v2 Risk and Synthetic Execution Layer; AI-Driven v2 Partition Boundary; and Development-Only Evidence Runner.
-It also preserves Round 1 Causal Signals with four paths, Round 1 Family Execution, Round 1 Discovery Runner and Round 1 Closure; Round 2 Causal Signals, Round 2 Family Execution, Round 2 Discovery Runner and Round 2 Closure; and the Rule Discovery Foundation and True Learning Engine scope correction.
-These are historical rule tests, not learned model artifacts.
+The system fails closed for invalid data, boundary crossings, incomplete label
+support, changed hashes or unstable after-cost evidence; action is `HOLD_CASH`.
+Historical markers: Provider and Historical Availability Boundary v1; Kraken Bounded Blinded Replay Review Boundary v1; Supervised Blinded Replay Execution Boundary v1; AI-Driven v2 Layer Boundary; AI-Driven v2 Signal-State Layer; AI-Driven v2 Risk and Synthetic Execution Layer; AI-Driven v2 Partition Boundary; Development-Only Evidence Runner.
+Round 1 Causal Signals, Round 1 Family Execution, Round 1 Discovery Runner and Round 1 Closure used four paths; Round 2 Causal Signals, Round 2 Family Execution, Round 2 Discovery Runner and Round 2 Closure used three paths.
+Git through `8c51695` preserves the Rule Discovery Foundation and True Learning Engine scope correction.
 
 ## Immutable lineage index
 
-- `kraken-btc-eth-xrp-ai-driven-v2-causal-feature-contract-v1`
-- `kraken-ai-v2-ccvr-reference-a-v1`
-- `kraken-ai-v2-risk-execution-reference-a-v1`
-- `kraken-btc-eth-xrp-ai-driven-v2-partition-v1`
-- `kraken-btc-eth-xrp-ai-driven-v2-development-runner-v1`
-- `kraken-btc-eth-xrp-ai-driven-v2-hybrid-strategy-discovery-learning-v1`
-- `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-1-v1`
-- `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-2-v1`
-- `kraken-btc-eth-xrp-ai-driven-v2-true-learning-contract-v1`
-- `kraken-btc-eth-xrp-ai-driven-v2-learning-core-v1`
-- `kraken-btc-eth-xrp-ai-driven-v2-12h-development-learning-runner-v1`
-- `kraken-btc-eth-xrp-ai-driven-v2-12h-development-economic-evidence-review-v1`
-- `kraken-btc-eth-xrp-ai-driven-v2-alpha-research-lab-v1`
-- BTC episode `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`
-- Round 1 `3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`
-- Round 2 `5f9acde53d0e2cf35cd1010d0002222182670d7255bdf44e18715f4902c85a01`
-- Stage 2 `ca86d49f1dde1d1a8a1e61f07f4c1e98080ab942ab5c32f89880b387edd867d1`
-- 12h Learning Attempt 3 `30d020bd9c30306f3e8931b47c0958fea7e11a33bff3795c3473806ddcaa09cf`
-- Reference A `f537410d2a237be207951b638518d80e861289dafa7db9b5c2322ffa32d4e594`
+Core IDs: `kraken-btc-eth-xrp-ai-driven-v2-causal-feature-contract-v1`,
+`kraken-ai-v2-ccvr-reference-a-v1`, `kraken-ai-v2-risk-execution-reference-a-v1`,
+`kraken-btc-eth-xrp-ai-driven-v2-partition-v1`,
+`kraken-btc-eth-xrp-ai-driven-v2-development-runner-v1`,
+`kraken-btc-eth-xrp-ai-driven-v2-hybrid-strategy-discovery-learning-v1`,
+`kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-1-v1`,
+`kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-2-v1`,
+`kraken-btc-eth-xrp-ai-driven-v2-true-learning-contract-v1`,
+`kraken-btc-eth-xrp-ai-driven-v2-learning-core-v1`,
+`kraken-btc-eth-xrp-ai-driven-v2-12h-development-learning-runner-v1`,
+`kraken-btc-eth-xrp-ai-driven-v2-12h-development-economic-evidence-review-v1`,
+`kraken-btc-eth-xrp-ai-driven-v2-alpha-research-lab-v1` and
+`kraken-btc-eth-xrp-ai-v2-derivatives-context-feasibility-v1`.
+
+Evidence: BTC episode `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`,
+Round 1 `3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`, Round 2
+`5f9acde53d0e2cf35cd1010d0002222182670d7255bdf44e18715f4902c85a01`, Stage 2
+`ca86d49f1dde1d1a8a1e61f07f4c1e98080ab942ab5c32f89880b387edd867d1`, Learning
+Attempt 3 `30d020bd9c30306f3e8931b47c0958fea7e11a33bff3795c3473806ddcaa09cf`
+and Reference A `f537410d2a237be207951b638518d80e861289dafa7db9b5c2322ffa32d4e594`.
 
 True Learning Contract V1 began at `70e7bca` and was integrated at `796c8de`.
 Stage 2 compared 1d, 12h and 4h using a timestamp-only reader with no model

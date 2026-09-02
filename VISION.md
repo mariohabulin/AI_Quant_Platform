@@ -73,6 +73,14 @@ variant or automatic process change. Continuation requires a separately frozen
 hypothesis containing materially new information, not more fitting of the same
 representation.
 
+That continuation is now limited to one derivatives-context feasibility path.
+Before any new market values or labels are opened, the system inventories
+official public archive coverage for funding, open-interest metrics and the
+mark/index legs of basis across BTC, ETH and XRP. The audit is metadata-only and
+cannot train, rank or promote anything. If common source history is inadequate,
+the project changes the data source or stops; it does not shorten the test or
+return to another OHLCV learner.
+
 ## Permanent safety boundary
 
 - Development may train and validate.
@@ -129,6 +137,8 @@ Detailed append-only history remains recoverable in Git through parent commit
   `kraken-btc-eth-xrp-ai-driven-v2-12h-development-economic-evidence-review-v1`.
 - frozen Alpha Research Lab:
   `kraken-btc-eth-xrp-ai-driven-v2-alpha-research-lab-v1`.
+- derivatives-context source feasibility:
+  `kraken-btc-eth-xrp-ai-v2-derivatives-context-feasibility-v1`.
 
 Immutable hashes retained for traceability:
 
