@@ -73,7 +73,7 @@ This stage ends with a real learned result, not another protocol-only loop.
 - [x] Record zero positive folds/assets for both families and retain
   `HOLD_CASH`.
 
-### 4. Frozen Alpha Research Lab V1 — IN IMPLEMENTATION
+### 4. Frozen Alpha Research Lab V1 — COMPLETED `HOLD_CASH`
 
 - [x] Freeze 12h, the existing feature/label/cost boundary and three outer folds.
 - [x] Freeze exactly six variants: three calibrated classifiers and three direct
@@ -84,27 +84,26 @@ This stage ends with a real learned result, not another protocol-only loop.
 - [x] Implement deterministic ranking among gate passers only.
 - [x] Implement an executable Development runner with one atomic result.
 - [x] Add synthetic leakage, six-variant, economic-gate and `HOLD_CASH` tests.
-- [ ] Reproduce focused and complete Windows regression.
-- [ ] Commit and push the reviewed lab.
-- [ ] Execute all six variants once on real Development data.
-- [ ] Review the frozen result without adding a seventh variant.
+- [x] Reproduce 10 focused and 1,939 complete Windows tests.
+- [x] Commit and push the reviewed lab at `3dcfb2e`.
+- [x] Execute all six variants across three folds and 10,712 labels.
+- [x] Record result SHA-256
+  `d76bb013c2124672132868752a5bb350a782eb45ef7f062b78b5edcb6d3b3703`.
+- [x] Close all six as non-viable without adding a seventh variant.
 
 Exactly one branch follows:
 
-- stable evidence: freeze the deterministic Development winner before a
-  separate Calibration decision;
-- no stable evidence: close the 12h OHLCV hypothesis and retain `HOLD_CASH`.
+- observed branch: no stable evidence; 12h OHLCV closes with `HOLD_CASH`.
 
 No automatic Round 3, resolution change, seventh variant or unbounded search
 exists.
 
-### 5. Later gates — ONLY AFTER A LAB WINNER
+### 5. New-information decision — NOT YET AUTHORIZED
 
-- [ ] one-time Calibration of a frozen Development candidate;
-- [ ] untouched Evaluation only after Calibration passes;
-- [ ] bounded forward PAPER;
-- [ ] cloud inference with an immutable model;
-- [ ] live execution only under a new explicit project decision.
+- [ ] either stop, or pre-register one hypothesis using materially new data;
+- [ ] prohibit reuse of the same 12h OHLCV representation as a disguised retry;
+- [ ] keep Calibration, Evaluation, PAPER and live closed unless a future
+  Development hypothesis independently earns advancement.
 
 ## Retired active work
 

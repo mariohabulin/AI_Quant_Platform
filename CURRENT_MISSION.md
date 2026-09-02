@@ -2,15 +2,15 @@
 
 ## Mission
 
-Implement, reproduce and then execute one frozen six-variant Alpha Research Lab
-on Kraken native 12h Development data. This is the single active experimentation
-loop. Do not add a seventh model, change the label/feature/cost boundary, open
-Calibration or Evaluation, or promote Candidate v2.
+Preserve the completed Alpha Research Lab result, close the failed 12h spot-
+OHLCV hypothesis and decide whether to pre-register one materially new
+information hypothesis or stop. Do not add a seventh model, relax the frozen
+gates, open Calibration/Evaluation or promote Candidate v2.
 
 Status:
-`KRAKEN_AI_V2_ALPHA_RESEARCH_LAB_IMPLEMENTED_REPRODUCTION_REQUIRED`
+`KRAKEN_AI_V2_ALPHA_RESEARCH_LAB_NO_VIABLE_VARIANT_HOLD_CASH`
 
-Parent milestone: `dd7735f`
+Execution milestone: `3dcfb2e6a7b668ed5b85430676c3a0a3fc842090`
 
 Parent evidence SHA-256:
 `30d020bd9c30306f3e8931b47c0958fea7e11a33bff3795c3473806ddcaa09cf`
@@ -70,22 +70,24 @@ non-overlapping net R in all three folds, positive breadth across at least two
 assets and positive overall net R. Ranking is deterministic only among variants
 passing every gate. A winner is a Development research result, not Candidate v2.
 
+Attempt 1 executed all six variants across all three folds in 21.44 seconds.
+None passed: every overall mean net R was negative, every positive-asset count
+was zero and Fold 3 contained at most one losing eligible event. The least
+negative result, extra-trees classification, still returned `-34.4499 R` and
+mean `-0.2140 R`. Result SHA-256 is
+`d76bb013c2124672132868752a5bb350a782eb45ef7f062b78b5edcb6d3b3703`.
+
 ## Completion gate
 
-1. focused Alpha Research Lab tests pass;
-2. complete regression passes;
-3. Windows reproduces the frozen protocol and executable module;
-4. reviewed files are committed and pushed from a content-clean worktree;
-5. one real Development run executes all six variants and writes one result;
-6. Calibration and Evaluation remain unopened; and
-7. the result is reviewed against only the frozen gates.
+All completion gates passed: 10 focused and 1,939 total tests, Windows
+reproduction, commit/push, six-variant real execution, closed partitions and
+review against only the frozen gates.
 
 ## Possible terminal branches
 
-- no variant passes every frozen gate: close the 12h OHLCV hypothesis with
+- completed branch: no variant passed; close the 12h OHLCV hypothesis with
   `HOLD_CASH`;
-- one variant wins deterministically: freeze it before a separate decision on
-  one-time Calibration.
+- next decision: pre-register materially new information or stop.
 
 ## Permanent nonauthorization
 

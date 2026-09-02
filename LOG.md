@@ -118,22 +118,24 @@ protocol/evidence files.
   model selection and Candidate promotion.
 - A pass requests operator review only; otherwise the action is `HOLD_CASH`.
 
-## 2026-09-01 — V1 result and frozen final Development loop
+## 2026-09-01 — Alpha Research Lab completed `HOLD_CASH`
 
 - Completed the immutable V1 review: logistic selected 659 non-overlapping
   events for `-378.32 R`; histogram boosting selected 240 for `-82.93 R`.
 - Both families had zero positive folds and zero positive assets; V1 action is
   `KRAKEN_AI_V2_12H_DEVELOPMENT_ECONOMIC_REVIEW_HOLD_CASH`.
-- Froze `kraken-btc-eth-xrp-ai-driven-v2-alpha-research-lab-v1` as the only
-  remaining Development experiment.
-- Registered exactly six variants: three natural-frequency calibrated
-  classifiers and three direct expected-net-R regressors.
-- Froze 12h, the existing features, labels, costs, outer folds, inner 75/25
-  chronology, zero threshold and economic gates before real execution.
-- Prohibited a seventh variant, threshold/hyperparameter sweep, automatic
-  Candidate promotion and Calibration/Evaluation access.
-- Frozen exit: one Development winner for separate review, or terminal
-  `HOLD_CASH` for the 12h OHLCV hypothesis.
+- Executed all six frozen Alpha Research Lab variants across three folds and
+  10,712 labels from commit `3dcfb2e`.
+- All six produced negative cumulative and mean non-overlapping net R; every
+  positive-asset count was zero and none passed all-fold stability.
+- The least negative variant was extra-trees classification at `-34.4499 R`
+  cumulative and `-0.2140 R` mean.
+- Recorded result SHA-256
+  `d76bb013c2124672132868752a5bb350a782eb45ef7f062b78b5edcb6d3b3703`.
+- Closed the 12h spot-OHLCV hypothesis with `HOLD_CASH`; there is no seventh
+  variant, threshold relaxation or Calibration/Evaluation access.
+- Any continuation requires a separately frozen materially new-information
+  hypothesis or a stop decision.
 
 ## Compact historical milestone index
 

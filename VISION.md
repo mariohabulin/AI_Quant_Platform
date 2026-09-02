@@ -64,13 +64,14 @@ positive net R in any outer fold or on any asset. Logistic regression selected
 `-82.93 R`. V1 is therefore frozen as
 `KRAKEN_AI_V2_12H_DEVELOPMENT_ECONOMIC_REVIEW_HOLD_CASH`.
 
-The final allowed Development correction is the Alpha Research Lab V1. It does
-not invent indicator strategies. It runs exactly six pre-registered learners
-on the same 12h features, labels, costs and outer folds: three natural-frequency
-calibrated classifiers and three direct expected-net-R regressors. The nested
-training/calibration split and economic gates are frozen before the real run.
-If no variant is stable and positive across folds and assets, the 12h OHLCV
-hypothesis closes. There is no seventh variant or automatic process change.
+Alpha Research Lab Attempt 1 then executed all six frozen learners across three
+folds and 10,712 labels. Every variant lost net R, every asset breadth count was
+zero and the latest fold produced at most one losing eligible event. Result SHA
+`d76bb013c2124672132868752a5bb350a782eb45ef7f062b78b5edcb6d3b3703`
+closes the 12h spot-OHLCV hypothesis with `HOLD_CASH`. There is no seventh
+variant or automatic process change. Continuation requires a separately frozen
+hypothesis containing materially new information, not more fitting of the same
+representation.
 
 ## Permanent safety boundary
 

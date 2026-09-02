@@ -112,24 +112,23 @@ drawdown and stress execution remain later work only if evidence warrants it.
 
 ### Frozen Alpha Research Lab
 
-`kraken_ai_driven_v2_alpha_research_lab.py` is the sole active Development
-experimentation loop. It reuses the same archive reader, 12h causal features,
-cost-aware labels and three outer folds. Its registry contains exactly six
-variants: natural logistic, histogram boosting and extra trees for calibrated
-three-class utility, plus ridge, histogram boosting and extra trees for direct
-expected-net-R learning.
+`kraken_ai_driven_v2_alpha_research_lab.py` reused the archive reader, 12h
+causal features, cost-aware labels and three outer folds. Its exact six-variant
+registry covered natural logistic, histogram boosting and extra trees for both
+calibrated class utility and direct expected-net-R learning.
 
-Within each outer training window, the earlier 75% of decision timestamps fits
-the base learner and the later purged 25% fits a probability or net-R calibrator.
-Outer validation fits nothing. All six variants execute before comparison.
-Eligibility stays at predicted utility/net R above zero; there is no threshold
-or hyperparameter sweep.
+The earlier 75% of each outer training window fit the learner and its later
+purged 25% fit the calibrator. Outer validation fit nothing. All six executed
+before comparison with zero threshold and no hyperparameter sweep.
 
 Viability requires fixed support, positive non-overlapping net R in every fold,
 positive cumulative net R for at least two assets and positive overall net R.
-Only gate passers can be ranked, first by worst-fold mean net R, then overall
-mean, then frozen registry order. A selected result is only a Development
-winner. Calibration, Evaluation and Candidate v2 remain sealed.
+Only gate passers could be ranked. Attempt 1 produced no passer: all six had
+negative overall mean and cumulative net R, zero positive assets and no
+all-fold stability. Result SHA-256
+`d76bb013c2124672132868752a5bb350a782eb45ef7f062b78b5edcb6d3b3703`
+closes this 12h spot-OHLCV architecture with `HOLD_CASH`. Calibration,
+Evaluation and Candidate v2 remain sealed.
 
 ## Runtime and risk boundary
 

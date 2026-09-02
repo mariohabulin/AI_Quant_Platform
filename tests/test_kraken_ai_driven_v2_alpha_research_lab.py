@@ -253,3 +253,20 @@ def test_output_contract_contains_only_finite_json_values():
 
     assert parsed["experiment_budget"] == 6
     assert b"NaN" not in payload
+
+
+def test_attempt_1_result_closes_the_frozen_12h_ohlcv_hypothesis():
+    result_record = (
+        Path(__file__).resolve().parents[1]
+        / "KRAKEN_AI_DRIVEN_V2_ALPHA_RESEARCH_LAB_ATTEMPT_1_RESULT.md"
+    ).read_text(encoding="utf-8")
+
+    for marker in (
+        "d76bb013c2124672132868752a5bb350a782eb45ef7f062b78b5edcb6d3b3703",
+        "KRAKEN_AI_V2_ALPHA_RESEARCH_LAB_NO_VIABLE_VARIANT_HOLD_CASH",
+        "There is no seventh variant",
+        "Selected Development variant: none",
+        "Calibration and Evaluation remained unopened",
+        "materially different information",
+    ):
+        assert marker in result_record
