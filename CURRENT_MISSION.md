@@ -2,36 +2,34 @@
 
 ## Mission
 
-Preserve the completed Alpha Research Lab result and determine whether official
-public archive metadata can support one materially new derivatives-context
-hypothesis. Inventory funding, open-interest metrics and the mark/index legs of
-basis for BTC, ETH and XRP without opening market values. Do not add a seventh
-model, relax the frozen gates, open Calibration/Evaluation or promote Candidate
-v2.
+Preserve the closed spot-OHLCV result and the successful derivatives-context
+source audit. Freeze one causal matched-ablation hypothesis before implementing
+the real data lock and reader. Do not open source values, generate labels, fit
+models, relax gates, open Calibration/Evaluation or promote Candidate v2.
 
 Status:
-`KRAKEN_AI_V2_DERIVATIVES_CONTEXT_FEASIBILITY_REVIEWED_METADATA_AUDIT_REQUIRED`
+`KRAKEN_AI_V2_DERIVATIVES_CONTEXT_HYPOTHESIS_REVIEWED_DATA_LOCK_READER_REQUIRED`
 
-Parent execution milestone: `cdb1ccc`
+Parent execution milestone: `99f6242`
 
-Parent evidence SHA-256:
-`30d020bd9c30306f3e8931b47c0958fea7e11a33bff3795c3473806ddcaa09cf`
+Feasibility evidence SHA-256:
+`3c84fba6034790ae59761f3fba23affca80fca0c8b7d29b3e3f3762c789d8e29`
 
-Active protocol: `kraken-btc-eth-xrp-ai-v2-derivatives-context-feasibility-v1`
+Active protocol:
+`kraken-btc-eth-xrp-ai-v2-derivatives-context-learning-hypothesis-v1`
 
-## Active new-information feasibility audit
+## Completed source audit and active hypothesis
 
-The audit lists official public Binance USD-M archive object names for exactly
-four series across `BTCUSDT`, `ETHUSDT` and `XRPUSDT`: monthly funding rate,
-daily open-interest metrics, native 12h mark price and native 12h index price.
-It opens no CSV market values and makes no profitability claim.
+The metadata-only audit found all twelve source/asset identities, 852 common
+days from 2021-12-01 through 2024-04-01, 100% common period coverage and no
+duplicates. It opened no market value and made no profitability claim.
 
-Feasibility requires all twelve source/asset identities, at least 730 common
-calendar days ending no later than the frozen Development boundary, at least
-98% period coverage and no duplicate period. A pass only permits a separately
-frozen causal feature/learning hypothesis. A failure requires a different or
-extended historical source; it does not authorize a shorter disguised OHLCV
-retry.
+The pre-registered experiment adds exactly nine funding, open-interest and
+basis features to the unchanged 16 spot features. Two spot-only controls are
+paired with two otherwise identical context models across three purged folds.
+All variants use identical context-complete rows. A context variant must pass
+the existing support, all-fold, asset-breadth and overall-net-R gates and also
+beat its matched control. Controls can never become candidates.
 
 ## Completed real learning milestone
 
@@ -42,6 +40,8 @@ locked Kraken native 12h Development data:
 - labeled rows: 10,712;
 - trained artifacts: six, comprising two model families across three folds;
 - OOF predictions: 11,856;
+- immutable Learning Attempt 3 report SHA-256:
+  `30d020bd9c30306f3e8931b47c0958fea7e11a33bff3795c3473806ddcaa09cf`;
 - model families: `LOGISTIC_BASELINE` and `HIST_GBT_CHALLENGER`;
 - Calibration data opened: false;
 - Evaluation data opened: false;
@@ -95,21 +95,23 @@ mean `-0.2140 R`. Result SHA-256 is
 
 ## Completion gate
 
-All completion gates passed: 10 focused and 1,939 total tests, Windows
-reproduction, commit/push, six-variant real execution, closed partitions and
-review against only the frozen gates.
+The source audit passed 14 focused and 1,954 total Windows tests, commit/push,
+all four feasibility gates and an immutable external evidence lock. The new
+hypothesis component is synthetic-only pending Windows reproduction.
 
 ## Next deterministic branches
 
-- parent branch is complete: no variant passed and 12h spot OHLCV remains
-  closed with `HOLD_CASH`;
-- metadata pass: pre-register one derivatives-context learning hypothesis;
-- metadata failure: review an alternative historical source or stop.
+- current branch: implement and review the hash-bound context dataset lock and
+  reader without model training;
+- after a successful lock: separately implement the frozen four-variant
+  Development runner;
+- schema or causal-alignment failure: fail closed and repair the reader without
+  changing the hypothesis.
 
 ## Permanent nonauthorization
 
 - model training outside the six-variant Development lab: false;
-- derivatives market-value access during feasibility: false;
+- derivatives market-value access in this pre-registration: false;
 - threshold or parameter search: false;
 - automatic model selection: false;
 - Calibration data access: false;

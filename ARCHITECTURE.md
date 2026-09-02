@@ -145,6 +145,17 @@ Feasibility requires 730 common days, 98% period coverage and no duplicates.
 These source gates claim no alpha: pass means a separate learning protocol;
 failure means another source or stop, never relaxed economic gates.
 
+### Frozen Derivatives Context Hypothesis
+
+The audit passed with 852 shared days, 100% coverage and no duplicates; report
+SHA-256 is `3c84fba6034790ae59761f3fba23affca80fca0c8b7d29b3e3f3762c789d8e29`.
+The synthetic-only hypothesis implements nine causal context features with
+bounded backward-as-of joins, exact completed-bar basis and no fill. Two
+spot-only histogram-GBT controls are matched to classification and net-R
+context variants on identical rows and three 30-day-purged folds. Only context
+variants can pass absolute and incremental gates. No values are opened or
+models fitted.
+
 ## Runtime and risk boundary
 
 An approved runtime may load an immutable artifact but cannot fit, mutate,
@@ -163,29 +174,20 @@ Git through `8c51695` preserves the Rule Discovery Foundation and True Learning 
 
 Core IDs: `kraken-btc-eth-xrp-ai-driven-v2-causal-feature-contract-v1`,
 `kraken-ai-v2-ccvr-reference-a-v1`, `kraken-ai-v2-risk-execution-reference-a-v1`,
-`kraken-btc-eth-xrp-ai-driven-v2-partition-v1`,
-`kraken-btc-eth-xrp-ai-driven-v2-development-runner-v1`,
-`kraken-btc-eth-xrp-ai-driven-v2-hybrid-strategy-discovery-learning-v1`,
-`kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-1-v1`,
-`kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-2-v1`,
-`kraken-btc-eth-xrp-ai-driven-v2-true-learning-contract-v1`,
-`kraken-btc-eth-xrp-ai-driven-v2-learning-core-v1`,
-`kraken-btc-eth-xrp-ai-driven-v2-12h-development-learning-runner-v1`,
+`kraken-btc-eth-xrp-ai-driven-v2-partition-v1`, `kraken-btc-eth-xrp-ai-driven-v2-development-runner-v1`, `kraken-btc-eth-xrp-ai-driven-v2-hybrid-strategy-discovery-learning-v1`,
+`kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-1-v1`, `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-2-v1`, `kraken-btc-eth-xrp-ai-driven-v2-true-learning-contract-v1` at `70e7bca` and `796c8de`,
+Learning Core and `kraken-btc-eth-xrp-ai-driven-v2-12h-development-learning-runner-v1`,
 `kraken-btc-eth-xrp-ai-driven-v2-12h-development-economic-evidence-review-v1`,
 `kraken-btc-eth-xrp-ai-driven-v2-alpha-research-lab-v1` and
-`kraken-btc-eth-xrp-ai-v2-derivatives-context-feasibility-v1`.
+`kraken-btc-eth-xrp-ai-v2-derivatives-context-feasibility-v1`, followed by
+`kraken-btc-eth-xrp-ai-v2-derivatives-context-learning-hypothesis-v1`.
 
 Evidence: BTC episode `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`,
 Round 1 `3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`, Round 2
-`5f9acde53d0e2cf35cd1010d0002222182670d7255bdf44e18715f4902c85a01`, Stage 2
+`5f9acde53d0e2cf35cd1010d0002222182670d7255bdf44e18715f4902c85a01`; Stage 2 compared 1d, 12h and 4h timestamp-only with report
 `ca86d49f1dde1d1a8a1e61f07f4c1e98080ab942ab5c32f89880b387edd867d1`, Learning
 Attempt 3 `30d020bd9c30306f3e8931b47c0958fea7e11a33bff3795c3473806ddcaa09cf`
 and Reference A `f537410d2a237be207951b638518d80e861289dafa7db9b5c2322ffa32d4e594`.
-
-True Learning Contract V1 began at `70e7bca` and was integrated at `796c8de`.
-Stage 2 compared 1d, 12h and 4h using a timestamp-only reader with no model
-training. The old statement that the resolution remains unselected is retained
-only as historical Stage 1 state; the active feasibility resolution is 12h.
 
 Reference A closure status is
 `KRAKEN_AI_V2_DEVELOPMENT_REFERENCE_A_CLOSED_NO_TRADE_HOLD_CASH`. Exact legacy

@@ -1,10 +1,9 @@
 # ROADMAP
 
 ## Current objective
-Keep the failed 12h spot-OHLCV hypothesis closed and perform one metadata-only
-feasibility audit for a materially new derivatives-context hypothesis. Do not
-train again until source history is known and a separate learning contract is
-frozen.
+Keep the failed 12h spot-OHLCV hypothesis closed. The derivatives source audit
+passed, so freeze one matched causal context experiment before implementing its
+hash-bound dataset lock and reader. Do not train until that reader is reviewed.
 ## Active sequence
 
 ### 1. V2 Learning Core — COMMITTED AT `2a09363`
@@ -98,7 +97,7 @@ Exactly one branch follows:
 No automatic Round 3, resolution change, seventh variant or unbounded search
 exists.
 
-### 5. Derivatives-context source feasibility — IMPLEMENTED, AUDIT PENDING
+### 5. Derivatives-context source feasibility — COMPLETED `SOURCE_FEASIBLE`
 
 - [x] preserve Alpha Research Lab Attempt 1 and its `HOLD_CASH` result;
 - [x] freeze funding, open-interest metrics and mark/index basis inputs as the
@@ -108,19 +107,25 @@ exists.
 - [x] prohibit labels, fitting, tuning, Calibration, Evaluation and Candidate
   promotion inside the audit;
 - [x] add deterministic pagination, coverage, missing-source and tamper tests;
-- [ ] reproduce focused and complete Windows tests;
-- [ ] commit and push the reviewed audit component;
-- [ ] run the read-only metadata audit and record its exact result.
+- [x] reproduce 14 focused and 1,954 complete Windows tests;
+- [x] commit and push the reviewed audit component at `99f6242`;
+- [x] run the read-only metadata audit and record report SHA-256
+  `3c84fba6034790ae59761f3fba23affca80fca0c8b7d29b3e3f3762c789d8e29`;
+- [x] confirm 852 common days, 100% common coverage and zero duplicates.
 
-The result has only two branches:
+### 6. Derivatives-context learning hypothesis — PRE-REGISTERED
 
-- `SOURCE_FEASIBLE`: separately pre-register the causal derivatives-context
-  feature and walk-forward learning hypothesis;
-- `DATA_EXTENSION_REQUIRED`: review another historical source or stop.
+- [x] freeze nine causal funding, open-interest and basis features;
+- [x] freeze causal availability, no-fill rules and three 30-day-purged folds;
+- [x] freeze two matched pairs, identical rows and 12 maximum fold fits;
+- [x] freeze absolute and incremental gates with no sweeps/control promotion;
+- [ ] reproduce focused and complete Windows tests and static review;
+- [ ] commit and push the pre-registration milestone;
+- [ ] implement the hash-bound derivatives-context dataset lock and reader;
+- [ ] validate source schemas before a separate frozen learning runner.
 
-Neither branch permits reuse of the same 12h OHLCV representation as a
-disguised retry. Calibration, Evaluation, PAPER and live remain closed unless a
-future Development hypothesis independently earns advancement.
+Calibration, Evaluation, Candidate v2, PAPER and live remain closed. A future
+run may execute only the frozen variants after independent reader review.
 
 ## Retired active work
 
@@ -169,14 +174,10 @@ models. They are the closed Rule Discovery Foundation.
 - `kraken-btc-eth-xrp-ai-driven-v2-alpha-research-lab-v1`
 - `kraken-btc-eth-xrp-ai-driven-v2-12h-development-economic-evidence-review-v1`
 
-Evidence hashes:
-
-- `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`
-- `f537410d2a237be207951b638518d80e861289dafa7db9b5c2322ffa32d4e594`
-- `3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`
-- `5f9acde53d0e2cf35cd1010d0002222182670d7255bdf44e18715f4902c85a01`
-- `ca86d49f1dde1d1a8a1e61f07f4c1e98080ab942ab5c32f89880b387edd867d1`
-- `30d020bd9c30306f3e8931b47c0958fea7e11a33bff3795c3473806ddcaa09cf`
+Evidence hashes include BTC episode `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`,
+Reference A `f537410d2a237be207951b638518d80e861289dafa7db9b5c2322ffa32d4e594`,
+Round 1 `3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`, Round 2 `5f9acde53d0e2cf35cd1010d0002222182670d7255bdf44e18715f4902c85a01`, Stage 2 and Learning Attempt 3
+`30d020bd9c30306f3e8931b47c0958fea7e11a33bff3795c3473806ddcaa09cf`.
 
 Historical milestones include Provider and Historical Availability Audit v1,
 Sealed Preflight Completed, Supervised Blinded Replay v1 and AI-Driven v2

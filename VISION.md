@@ -73,13 +73,19 @@ variant or automatic process change. Continuation requires a separately frozen
 hypothesis containing materially new information, not more fitting of the same
 representation.
 
-That continuation is now limited to one derivatives-context feasibility path.
-Before any new market values or labels are opened, the system inventories
-official public archive coverage for funding, open-interest metrics and the
-mark/index legs of basis across BTC, ETH and XRP. The audit is metadata-only and
-cannot train, rank or promote anything. If common source history is inadequate,
-the project changes the data source or stops; it does not shorten the test or
-return to another OHLCV learner.
+The derivatives-context feasibility audit passed all four source gates. It
+found 852 common calendar days from 2021-12-01 through 2024-04-01 exclusive,
+100% expected period coverage and no duplicates across funding, open interest
+and both basis legs for all three assets. Report SHA-256 is
+`3c84fba6034790ae59761f3fba23affca80fca0c8b7d29b3e3f3762c789d8e29`.
+
+The next hypothesis is now pre-registered before any value access. It compares
+two matched spot-only controls with two otherwise identical models receiving
+nine causal derivatives-context features. Same-row ablation, three purged
+walk-forward folds and fixed absolute plus incremental economic gates must show
+that any improvement comes from new information rather than another learner or
+an easier sample. The next implementation is only the hash-bound context data
+lock and reader; model training is still closed.
 
 ## Permanent safety boundary
 
@@ -139,6 +145,8 @@ Detailed append-only history remains recoverable in Git through parent commit
   `kraken-btc-eth-xrp-ai-driven-v2-alpha-research-lab-v1`.
 - derivatives-context source feasibility:
   `kraken-btc-eth-xrp-ai-v2-derivatives-context-feasibility-v1`.
+- derivatives-context learning hypothesis:
+  `kraken-btc-eth-xrp-ai-v2-derivatives-context-learning-hypothesis-v1`.
 
 Immutable hashes retained for traceability:
 

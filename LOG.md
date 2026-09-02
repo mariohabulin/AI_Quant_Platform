@@ -4,6 +4,18 @@ This is the concise active decision log. Detailed historical implementation
 notes remain recoverable in Git through commit `8c51695` and in the immutable
 protocol/evidence files.
 
+## 2026-09-02 — Derivatives-context hypothesis pre-registered
+
+- Recorded feasibility report SHA-256
+  `3c84fba6034790ae59761f3fba23affca80fca0c8b7d29b3e3f3762c789d8e29`.
+- Confirmed 12 identities, 852 shared days, 100% coverage and no duplicates.
+- Froze nine causal features, bounded availability, exact 12h basis, 60-bar
+  warmup and no interpolation/backfill.
+- Froze two matched control/context pairs on identical rows, three purged folds
+  and absolute plus incremental gates.
+- Kept values, fitting, later partitions and execution closed; next is the
+  hash-bound source lock and reader.
+
 ## 2026-09-02 — Derivatives-context source feasibility frozen
 
 - Preserved Alpha Research Lab Attempt 1 result SHA-256
@@ -145,17 +157,12 @@ protocol/evidence files.
   10,712 labels from commit `3dcfb2e`.
 - All six produced negative cumulative and mean non-overlapping net R; every
   positive-asset count was zero and none passed all-fold stability.
-- The least negative variant was extra-trees classification at `-34.4499 R`
-  cumulative and `-0.2140 R` mean.
 - Recorded result SHA-256
   `d76bb013c2124672132868752a5bb350a782eb45ef7f062b78b5edcb6d3b3703`.
 - Closed the 12h spot-OHLCV hypothesis with `HOLD_CASH`; there is no seventh
   variant, threshold relaxation or Calibration/Evaluation access.
-- Any continuation requires a separately frozen materially new-information
-  hypothesis or a stop decision.
 
 ## Compact historical milestone index
-
 Provider and Historical Availability Audit v1 established fail-closed Kraken acquisition; Sealed Preflight Completed and Supervised Blinded Replay v1 preserved hidden timestamps and no-live boundaries.
 AI-Driven v2 Causal Feature Contract preceded AI-Driven v2 State Machine, AI-Driven v2 Risk and Execution, AI-Driven v2 Partition Protocol and AI-Driven v2 Development Runner; Reference A closed 13 rejected entries with `HOLD_CASH`.
 Hybrid foundation `kraken-btc-eth-xrp-ai-driven-v2-hybrid-strategy-discovery-learning-v1` preceded both rounds. Round 1 Causal Signals, Round 1 Family Execution, Round 1 Discovery Runner and Round 1 Closure (`kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-1-v1`) covered four paths/12 routes and retained
@@ -167,7 +174,6 @@ Rule Discovery Foundation; Stage 2 compared 1d, 12h and 4h timestamp-only suppor
 model training. Legacy wording that the resolution remains unselected is kept.
 
 ## Immutable identifiers
-
 Core identifiers include `kraken-btc-eth-xrp-ai-driven-v2-causal-feature-contract-v1`,
 `kraken-ai-v2-ccvr-reference-a-v1`, `kraken-ai-v2-risk-execution-reference-a-v1`,
 `kraken-btc-eth-xrp-ai-driven-v2-partition-v1`, `kraken-btc-eth-xrp-ai-driven-v2-development-runner-v1`, hybrid/Round 1/Round 2, True Learning Contract,
@@ -176,9 +182,8 @@ Evidence includes `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367f
 `f537410d2a237be207951b638518d80e861289dafa7db9b5c2322ffa32d4e594` and
 `30d020bd9c30306f3e8931b47c0958fea7e11a33bff3795c3473806ddcaa09cf`.
 
-Reference A closure status:
+Reference A closure status is
 `KRAKEN_AI_V2_DEVELOPMENT_REFERENCE_A_CLOSED_NO_TRADE_HOLD_CASH`.
-
 Historical fixed boundary terms: `FLAT -> ARMED -> LONG -> FLAT`, AI-Driven v2
 Layer Boundary, AI-Driven v2 Signal-State Layer, AI-Driven v2 Risk and Synthetic
 Execution Layer, AI-Driven v2 Partition Boundary, Kraken Bounded Blinded Replay
@@ -188,7 +193,6 @@ Historical compatibility terms: Kraken daily, three-class, no model training,
 Round 1 Discovery Runner, Round 2 Family Execution, True Learning Engine and
 the former statement that the resolution remains unselected.
 Legacy exact marker: resolution remains unselected.
-
-Development ends at `2024-04-01T00:00:00Z`, Calibration ends at
-`2025-04-01T00:00:00Z`, and Evaluation ends at `2026-04-01T00:00:00Z`.
+Development/Calibration/Evaluation end at `2024-04-01T00:00:00Z`,
+`2025-04-01T00:00:00Z` and `2026-04-01T00:00:00Z`.
 Candidate v2, PAPER, cloud, real orders and live execution remain unauthorized.
