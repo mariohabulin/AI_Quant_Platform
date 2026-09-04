@@ -11,6 +11,7 @@ try:
     from kraken_ai_driven_v2_derivatives_context_dataset import (
         ASSET_SYMBOLS,
         ATTEMPT_1_INCIDENT_SHA256,
+        ATTEMPT_2_INCIDENT_SHA256,
         AUTHORIZATION_PHRASE,
         COMPONENT_ID,
         DATASET_ID,
@@ -18,6 +19,7 @@ try:
         PARENT_FEASIBILITY_REPORT_SHA256,
         PARENT_PROTOCOL_ID,
         PROTOCOL_ID,
+        OPEN_INTEREST_ZERO_SENTINEL_TIMESTAMP_SHA256,
         RECOVERY_PARENT_COMMIT,
         SOURCE_SPECS,
         dataset_lock_declaration,
@@ -27,6 +29,7 @@ except ImportError:  # pragma: no cover
     from .kraken_ai_driven_v2_derivatives_context_dataset import (
         ASSET_SYMBOLS,
         ATTEMPT_1_INCIDENT_SHA256,
+        ATTEMPT_2_INCIDENT_SHA256,
         AUTHORIZATION_PHRASE,
         COMPONENT_ID,
         DATASET_ID,
@@ -34,6 +37,7 @@ except ImportError:  # pragma: no cover
         PARENT_FEASIBILITY_REPORT_SHA256,
         PARENT_PROTOCOL_ID,
         PROTOCOL_ID,
+        OPEN_INTEREST_ZERO_SENTINEL_TIMESTAMP_SHA256,
         RECOVERY_PARENT_COMMIT,
         SOURCE_SPECS,
         dataset_lock_declaration,
@@ -43,10 +47,10 @@ except ImportError:  # pragma: no cover
 
 SCHEMA_VERSION = 1
 STATUS = (
-    "KRAKEN_AI_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_RECOVERY_REVIEWED_ATTEMPT_2_AUTHORIZATION_REQUIRED"
+    "KRAKEN_AI_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_RECOVERY_REVIEWED_ATTEMPT_3_AUTHORIZATION_REQUIRED"
 )
 EXPECTED_PARENT_COMMIT = "af0af86"
-EXPECTED_RECOVERY_PARENT_COMMIT = "970ce17"
+EXPECTED_RECOVERY_PARENT_COMMIT = "8181d05"
 EXPECTED_PARENT_PROTOCOL_ID = (
     "kraken-btc-eth-xrp-ai-v2-derivatives-context-learning-hypothesis-v1"
 )
@@ -65,11 +69,14 @@ EXPECTED_PARENT_REVIEW_SHA256 = (
 EXPECTED_ATTEMPT_1_INCIDENT_SHA256 = (
     "3abae269bc80b13b975e77afb4bbfc7e7f442856ab4510fd5ad9023221aebca8"
 )
+EXPECTED_ATTEMPT_2_INCIDENT_SHA256 = (
+    "76ce94fc848d888c489ea6466044a094443775f329bfcc51a3117bac5497a39f"
+)
 EXPECTED_PROTOCOL_SHA256 = (
-    "9f9b7d752c8d145a4a8ad76113ff80dedcea341feca7cb31be1f8cf93fd71e13"
+    "c981d9d373ebb609d7f3019ed20e1eb261077177df144c57adb17543b169b144"
 )
 EXPECTED_COMPONENT_SHA256 = (
-    "3efb44d3a886ebe82e74c4593f678fb4ec9ab5b506ddf73ec0775d02ac9a18b1"
+    "caacbb891970eae43c5ea7ab0aa9093a6f3ed6b73f929e3ef11ebd85016b73ea"
 )
 
 
@@ -95,6 +102,8 @@ def review_derivatives_context_dataset_lock(root=None):
         / "kraken_ai_driven_v2_derivatives_context_dataset.py",
         "attempt_1_incident": root
         / "KRAKEN_AI_DRIVEN_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_ATTEMPT_1_INCIDENT.md",
+        "attempt_2_incident": root
+        / "KRAKEN_AI_DRIVEN_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_ATTEMPT_2_INCIDENT.md",
     }
     expected = {
         "parent_protocol": EXPECTED_PARENT_PROTOCOL_SHA256,
@@ -103,6 +112,7 @@ def review_derivatives_context_dataset_lock(root=None):
         "protocol": EXPECTED_PROTOCOL_SHA256,
         "component": EXPECTED_COMPONENT_SHA256,
         "attempt_1_incident": EXPECTED_ATTEMPT_1_INCIDENT_SHA256,
+        "attempt_2_incident": EXPECTED_ATTEMPT_2_INCIDENT_SHA256,
     }
     observed = {name: _sha256(path) for name, path in paths.items()}
     for name, digest in expected.items():
@@ -117,6 +127,8 @@ def review_derivatives_context_dataset_lock(root=None):
         raise RuntimeError("Derivatives-context recovery parent commit mismatch.")
     if ATTEMPT_1_INCIDENT_SHA256 != EXPECTED_ATTEMPT_1_INCIDENT_SHA256:
         raise RuntimeError("Derivatives-context Attempt 1 incident mismatch.")
+    if ATTEMPT_2_INCIDENT_SHA256 != EXPECTED_ATTEMPT_2_INCIDENT_SHA256:
+        raise RuntimeError("Derivatives-context Attempt 2 incident mismatch.")
     if PARENT_PROTOCOL_ID != EXPECTED_PARENT_PROTOCOL_ID:
         raise RuntimeError("Derivatives-context dataset parent protocol mismatch.")
     if PARENT_FEASIBILITY_REPORT_SHA256 != EXPECTED_PARENT_FEASIBILITY_REPORT_SHA256:
@@ -147,6 +159,7 @@ def review_derivatives_context_dataset_lock(root=None):
         "independent_reader_implemented",
         "optional_metrics_blank_policy_implemented",
         "optional_metrics_blank_counts_recorded",
+        "open_interest_zero_sentinel_policy_implemented",
     )
     if any(declaration[field] is not True for field in required_true):
         raise RuntimeError("Derivatives-context dataset integrity boundary mismatch.")
@@ -176,8 +189,21 @@ def review_derivatives_context_dataset_lock(root=None):
         raise RuntimeError("Derivatives-context Attempt 1 final-state mismatch.")
     if declaration["attempt_1_staging_required"] is not True:
         raise RuntimeError("Derivatives-context Attempt 1 staging mismatch.")
-    if declaration["recovery_attempt"] != 2:
+    if declaration["attempt_2_authorization_consumed"] is not True:
+        raise RuntimeError("Derivatives-context Attempt 2 consumption mismatch.")
+    if declaration["attempt_2_final_dataset_exists"] is not False:
+        raise RuntimeError("Derivatives-context Attempt 2 final-state mismatch.")
+    if declaration["attempt_2_staging_required"] is not True:
+        raise RuntimeError("Derivatives-context Attempt 2 staging mismatch.")
+    if declaration["recovery_attempt"] != 3:
         raise RuntimeError("Derivatives-context recovery attempt mismatch.")
+    if (
+        declaration["open_interest_zero_sentinel_count"] != 399
+        or declaration["open_interest_zero_sentinel_count_per_asset"] != 133
+        or declaration["open_interest_zero_sentinel_timestamp_sha256"]
+        != OPEN_INTEREST_ZERO_SENTINEL_TIMESTAMP_SHA256
+    ):
+        raise RuntimeError("Derivatives-context zero-sentinel evidence mismatch.")
 
     return {
         **declaration,
@@ -196,9 +222,11 @@ def review_derivatives_context_dataset_lock(root=None):
         "causal_timestamp_validation_implemented": True,
         "raw_and_normalized_lock_implemented": True,
         "attempt_1_incident_sha256_match": True,
+        "attempt_2_incident_sha256_match": True,
+        "complete_metrics_forensic_scan_recorded": True,
         "recovery_new_root_required": True,
         "prior_staging_inventory_implemented": True,
-        "next_stage": "SEPARATE_OPERATOR_DECISION_FOR_ONE_SHOT_DERIVATIVES_CONTEXT_DATASET_LOCK_RECOVERY_ATTEMPT_2",
+        "next_stage": "SEPARATE_OPERATOR_DECISION_FOR_ONE_SHOT_DERIVATIVES_CONTEXT_DATASET_LOCK_RECOVERY_ATTEMPT_3",
     }
 
 

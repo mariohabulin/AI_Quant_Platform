@@ -4,6 +4,16 @@ This is the concise active decision log. Detailed historical implementation
 notes remain recoverable in Git through commit `8c51695` and in the immutable
 protocol/evidence files.
 
+## 2026-09-04 — Dataset Lock Attempt 2 incident and bounded recovery
+- Attempt 2 at `8181d05` failed at object 181 on paired `0E-8` open-interest
+  fields; no final lock, label or model exists and authorization is consumed.
+- Both prior staging directories remain preserved and may not be reused. A
+  full content scan of all 2,556 metrics ZIPs found 399 sentinels: the same
+  133 timestamps for BTC, ETH and XRP, with no other invalid open interest.
+- Attempt 3 accepts only the hash-bound timestamp list plus exact paired
+  literal, records and omits it without fill, and rejects every other zero.
+- Attempt 3 needs Windows review, commit, preflight and separate authorization.
+
 ## 2026-09-02 — Derivatives-context Dataset Lock Attempt 1 incident
 - Attempt 1 at `970ce17` failed before object 114; no final lock exists and staging is preserved.
 - Official BTC metrics retain positive open interest but contain exact blanks in four unused ratio fields.
@@ -52,14 +62,8 @@ protocol/evidence files.
   feasibility run; this is not a profitability or Candidate claim.
 
 ## 2026-09-01 — Timestamp forensic conclusion
-
-- Completed the separately authorized read-only scan of XBTUSD, ETHUSD and
-  XRPUSD native 4h timestamp columns.
-- Each file contained 4,383 timestamp rows from 2024-01-01 through 2025-12-31.
-- Each contained only 545 Development rows, no ordering inversion, no duplicate
-  and no hidden Development row after the first partition boundary.
-- Concluded that native 4h source history is short; no audit reader bug was
-  found and Stage 2 Attempt 1 was not rerun or modified.
+- The authorized timestamp-only scan found 4,383 native 4h rows per asset but
+  only 545 Development rows; no reader defect or hidden earlier history existed.
 
 ## 2026-09-01 — AI-Driven V2 Learning Core
 
@@ -187,8 +191,7 @@ Reference A status is `KRAKEN_AI_V2_DEVELOPMENT_REFERENCE_A_CLOSED_NO_TRADE_HOLD
 fixed terms include `FLAT -> ARMED -> LONG -> FLAT`, Layer/Signal-State/Risk
 and Synthetic Execution/Partition boundaries and supervised blinded replay.
 
-Historical compatibility terms: Kraken daily, three-class, no model training,
-Round 1 Discovery Runner, Round 2 Family Execution, True Learning Engine and
+Historical compatibility terms: Kraken daily, three-class, no model training, Round 1 Discovery Runner, Round 2 Family Execution, True Learning Engine and
 the former statement that the resolution remains unselected.
 Legacy exact marker: resolution remains unselected.
 Development/Calibration/Evaluation end at `2024-04-01T00:00:00Z`,

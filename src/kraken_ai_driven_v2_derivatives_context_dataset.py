@@ -31,12 +31,15 @@ PARENT_PROTOCOL_ID = (
 PARENT_FEASIBILITY_REPORT_SHA256 = (
     "3c84fba6034790ae59761f3fba23affca80fca0c8b7d29b3e3f3762c789d8e29"
 )
-RECOVERY_PARENT_COMMIT = "970ce17"
+RECOVERY_PARENT_COMMIT = "8181d05"
 ATTEMPT_1_INCIDENT_SHA256 = (
     "3abae269bc80b13b975e77afb4bbfc7e7f442856ab4510fd5ad9023221aebca8"
 )
+ATTEMPT_2_INCIDENT_SHA256 = (
+    "76ce94fc848d888c489ea6466044a094443775f329bfcc51a3117bac5497a39f"
+)
 AUTHORIZATION_PHRASE = (
-    "EXECUTE_KRAKEN_AI_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_RECOVERY_ATTEMPT_2_ONCE"
+    "EXECUTE_KRAKEN_AI_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_RECOVERY_ATTEMPT_3_ONCE"
 )
 BASE_URL = "https://data.binance.vision/"
 COMMON_START_UTC = "2021-12-01T00:00:00Z"
@@ -94,6 +97,36 @@ METRICS_HEADER = (
     "sum_taker_long_short_vol_ratio",
 )
 OPTIONAL_METRICS_COLUMNS = METRICS_HEADER[4:]
+OPEN_INTEREST_ZERO_SENTINEL_LITERAL = "0E-8"
+OPEN_INTEREST_ZERO_SENTINEL_TIMESTAMP_SHA256 = (
+    "791ddfb1d1b584abbbd551bbcce77baef2de51b23f9c3f2668f4e6d6d41d5cbb"
+)
+_OPEN_INTEREST_ZERO_SENTINEL_BLOCKS = (
+    ("2022-03-07T15:30:00Z", 102),
+    ("2022-03-08T00:00:00Z", 14),
+    ("2022-03-08T07:10:00Z", 1),
+    ("2023-06-06T11:20:00Z", 4),
+    ("2023-08-09T02:35:00Z", 1),
+    ("2023-11-11T22:00:00Z", 1),
+    ("2023-11-20T09:20:00Z", 6),
+    ("2023-11-23T03:55:00Z", 2),
+    ("2023-11-26T00:50:00Z", 2),
+)
+
+
+def _expand_open_interest_zero_sentinel_timestamps():
+    return tuple(
+        (pd.Timestamp(start) + offset * pd.Timedelta(minutes=5))
+        .isoformat()
+        .replace("+00:00", "Z")
+        for start, count in _OPEN_INTEREST_ZERO_SENTINEL_BLOCKS
+        for offset in range(count)
+    )
+
+
+OPEN_INTEREST_ZERO_SENTINEL_TIMESTAMPS = (
+    _expand_open_interest_zero_sentinel_timestamps()
+)
 KLINE_HEADER = (
     "open_time",
     "open",
@@ -185,6 +218,11 @@ def expected_object_registry():
 
 
 def dataset_lock_declaration():
+    observed_zero_timestamp_sha256 = _sha256(
+        canonical_json_bytes(list(OPEN_INTEREST_ZERO_SENTINEL_TIMESTAMPS))
+    )
+    if observed_zero_timestamp_sha256 != OPEN_INTEREST_ZERO_SENTINEL_TIMESTAMP_SHA256:
+        raise RuntimeError("Frozen open-interest zero-sentinel list hash mismatch.")
     registry = expected_object_registry()
     source_counts = {
         source_id: sum(item["source_id"] == source_id for item in registry)
@@ -203,7 +241,11 @@ def dataset_lock_declaration():
         "attempt_1_final_dataset_exists": False,
         "attempt_1_staging_required": True,
         "attempt_1_incident_sha256": ATTEMPT_1_INCIDENT_SHA256,
-        "recovery_attempt": 2,
+        "attempt_2_authorization_consumed": True,
+        "attempt_2_final_dataset_exists": False,
+        "attempt_2_staging_required": True,
+        "attempt_2_incident_sha256": ATTEMPT_2_INCIDENT_SHA256,
+        "recovery_attempt": 3,
         "authorization_phrase": AUTHORIZATION_PHRASE,
         "authorization_phrase_active": False,
         "asset_order": list(ASSET_SYMBOLS),
@@ -220,6 +262,12 @@ def dataset_lock_declaration():
         "independent_reader_implemented": True,
         "optional_metrics_blank_policy_implemented": True,
         "optional_metrics_blank_counts_recorded": True,
+        "open_interest_zero_sentinel_policy_implemented": True,
+        "open_interest_zero_sentinel_count": 399,
+        "open_interest_zero_sentinel_count_per_asset": 133,
+        "open_interest_zero_sentinel_timestamp_sha256": (
+            OPEN_INTEREST_ZERO_SENTINEL_TIMESTAMP_SHA256
+        ),
         "source_objects_downloaded": False,
         "market_values_opened": False,
         "development_data_opened": False,
@@ -235,8 +283,8 @@ def dataset_lock_declaration():
         "cloud_execution_authorized": False,
         "real_orders_submitted": False,
         "live_execution_authorized": False,
-        "status": "KRAKEN_AI_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_RECOVERY_IMPLEMENTED_NO_ATTEMPT_2_AUTHORIZATION",
-        "next_stage": "SEPARATE_OPERATOR_DECISION_FOR_ONE_SHOT_DERIVATIVES_CONTEXT_DATASET_LOCK_RECOVERY_ATTEMPT_2",
+        "status": "KRAKEN_AI_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_RECOVERY_IMPLEMENTED_NO_ATTEMPT_3_AUTHORIZATION",
+        "next_stage": "SEPARATE_OPERATOR_DECISION_FOR_ONE_SHOT_DERIVATIVES_CONTEXT_DATASET_LOCK_RECOVERY_ATTEMPT_3",
     }
 
 
@@ -371,25 +419,39 @@ def _parse_metrics(rows, spec):
     normalized = []
     timestamps = []
     optional_blank_counts = {name: 0 for name in OPTIONAL_METRICS_COLUMNS}
+    zero_sentinel_timestamps = []
+    allowed_zero_timestamps = set(OPEN_INTEREST_ZERO_SENTINEL_TIMESTAMPS)
     for number, row in enumerate(rows[1:], start=2):
         if len(row) != len(METRICS_HEADER):
             raise ValueError(f"Metrics row {number} column-count mismatch.")
         if row[1] != spec["symbol"]:
             raise ValueError("Open-interest metrics symbol mismatch.")
         timestamp = _timestamp(row[0], "Open-interest metrics")
-        open_interest = _decimal_text(
-            row[2], "Open-interest metrics value", positive=True
-        )
-        _decimal_text(row[3], METRICS_HEADER[3])
+        timestamp_text = _iso(timestamp)
+        open_interest = _decimal_text(row[2], "Open-interest metrics value")
+        open_interest_value = _decimal_text(row[3], METRICS_HEADER[3])
+        parsed_open_interest = Decimal(open_interest)
+        is_zero_sentinel = parsed_open_interest == 0
+        if parsed_open_interest < 0:
+            raise ValueError("Open-interest metrics value must be a positive decimal.")
+        if is_zero_sentinel:
+            if (
+                row[2] != OPEN_INTEREST_ZERO_SENTINEL_LITERAL
+                or row[3] != OPEN_INTEREST_ZERO_SENTINEL_LITERAL
+                or timestamp_text not in allowed_zero_timestamps
+            ):
+                raise ValueError("Open-interest zero sentinel is not frozen or paired.")
+            zero_sentinel_timestamps.append(timestamp_text)
         for column, name in zip(row[4:], OPTIONAL_METRICS_COLUMNS):
             if column == "":
                 optional_blank_counts[name] += 1
             else:
                 _decimal_text(column, name)
         timestamps.append(timestamp)
-        normalized.append((_iso(timestamp), open_interest))
+        if not is_zero_sentinel:
+            normalized.append((timestamp_text, open_interest))
     _validate_chronology(timestamps, spec)
-    return normalized, timestamps, optional_blank_counts
+    return normalized, timestamps, optional_blank_counts, zero_sentinel_timestamps
 
 
 def _parse_kline(rows, spec):
@@ -468,7 +530,12 @@ def validate_source_archive(spec, zip_bytes, checksum_bytes):
     if source_id == "FUNDING_RATE":
         normalized_rows, timestamps = _parse_funding(rows, spec)
     elif source_id == "OPEN_INTEREST_METRICS":
-        normalized_rows, timestamps, optional_blank_counts = _parse_metrics(rows, spec)
+        (
+            normalized_rows,
+            timestamps,
+            optional_blank_counts,
+            zero_sentinel_timestamps,
+        ) = _parse_metrics(rows, spec)
     else:
         normalized_rows, timestamps = _parse_kline(rows, spec)
     normalized = _normalized_csv(
@@ -489,13 +556,15 @@ def validate_source_archive(spec, zip_bytes, checksum_bytes):
         "csv_member_name": expected_member,
         "csv_member_bytes": len(member_bytes),
         "csv_member_sha256": _sha256(member_bytes),
-        "row_count": len(normalized_rows),
+        "row_count": len(timestamps),
+        "normalized_row_count": len(normalized_rows),
         "first_timestamp_utc": _iso(timestamps[0]),
         "last_timestamp_utc": _iso(timestamps[-1]),
         "normalized_bytes": normalized,
     }
     if optional_blank_counts is not None:
         result["optional_blank_counts"] = optional_blank_counts
+        result["open_interest_zero_sentinel_timestamps"] = zero_sentinel_timestamps
     return result
 
 
@@ -541,27 +610,54 @@ def _directory_inventory(root):
     }
 
 
+def _expected_zero_sentinel_timestamps_by_asset(registry):
+    expected = {asset: [] for asset in ASSET_SYMBOLS}
+    for spec in registry:
+        if spec["source_id"] != "OPEN_INTEREST_METRICS":
+            continue
+        expected[spec["asset"]].extend(
+            timestamp
+            for timestamp in OPEN_INTEREST_ZERO_SENTINEL_TIMESTAMPS
+            if timestamp[:10] == spec["period"]
+        )
+    return expected
+
+
 class DerivativesContextDatasetLocker:
     def __init__(self, fetch_bytes=None):
         self.fetch_bytes = _default_fetch_bytes if fetch_bytes is None else fetch_bytes
 
-    def run(self, output_root, authorization_phrase, prior_attempt_staging=None):
+    def run(
+        self,
+        output_root,
+        authorization_phrase,
+        prior_attempt_1_staging=None,
+        prior_attempt_2_staging=None,
+    ):
         if authorization_phrase != AUTHORIZATION_PHRASE:
             raise PermissionError(
-                "Exact one-shot recovery Attempt 2 authorization is required."
+                "Exact one-shot recovery Attempt 3 authorization is required."
             )
-        if prior_attempt_staging is None:
-            raise PermissionError("Preserved Attempt 1 staging is required.")
-        prior_attempt_staging = Path(prior_attempt_staging).resolve()
-        prior_inventory = _directory_inventory(prior_attempt_staging)
-        if prior_inventory["file_count"] == 0:
-            raise RuntimeError("Preserved Attempt 1 staging must be non-empty.")
+        if prior_attempt_1_staging is None or prior_attempt_2_staging is None:
+            raise PermissionError("Preserved Attempt 1 and Attempt 2 staging are required.")
+        prior_attempt_1_staging = Path(prior_attempt_1_staging).resolve()
+        prior_attempt_2_staging = Path(prior_attempt_2_staging).resolve()
+        if prior_attempt_1_staging == prior_attempt_2_staging:
+            raise ValueError("Prior-attempt staging directories must be distinct.")
+        attempt_1_inventory = _directory_inventory(prior_attempt_1_staging)
+        attempt_2_inventory = _directory_inventory(prior_attempt_2_staging)
+        if (
+            attempt_1_inventory["file_count"] == 0
+            or attempt_2_inventory["file_count"] == 0
+        ):
+            raise RuntimeError("Preserved prior-attempt staging must be non-empty.")
         output_root = Path(output_root).resolve()
         if output_root.exists():
             raise FileExistsError(f"Final dataset lock already exists: {output_root}.")
         staging = output_root.with_name(f".{output_root.name}.staging")
-        if staging == prior_attempt_staging or output_root == prior_attempt_staging:
-            raise ValueError("Recovery output must not reuse Attempt 1 staging.")
+        prior_paths = {prior_attempt_1_staging, prior_attempt_2_staging}
+        if staging in prior_paths or output_root in prior_paths:
+            raise ValueError("Recovery output must not reuse prior-attempt staging.")
         if staging.exists():
             raise FileExistsError(f"Dataset-lock staging already exists: {staging}.")
         staging.mkdir(parents=True)
@@ -570,6 +666,7 @@ class DerivativesContextDatasetLocker:
         aggregate_optional_blank_counts = {
             name: 0 for name in OPTIONAL_METRICS_COLUMNS
         }
+        aggregate_zero_sentinel_timestamps = {asset: [] for asset in ASSET_SYMBOLS}
         normalized_chunks = {
             (source_id, asset): []
             for source_id in SOURCE_SPECS
@@ -591,6 +688,9 @@ class DerivativesContextDatasetLocker:
             validated = validate_source_archive(spec, zip_bytes, checksum_bytes)
             for name, count in validated.get("optional_blank_counts", {}).items():
                 aggregate_optional_blank_counts[name] += count
+            aggregate_zero_sentinel_timestamps[spec["asset"]].extend(
+                validated.get("open_interest_zero_sentinel_timestamps", [])
+            )
             raw_relative = _safe_raw_relative(spec)
             _write_bytes(staging / raw_relative, zip_bytes)
             _write_bytes(staging / (str(raw_relative) + ".CHECKSUM"), checksum_bytes)
@@ -610,6 +710,12 @@ class DerivativesContextDatasetLocker:
             validated["raw_relative_path"] = raw_relative.as_posix()
             validated["checksum_relative_path"] = raw_relative.as_posix() + ".CHECKSUM"
             object_records.append(validated)
+
+        expected_zero_sentinel_timestamps = (
+            _expected_zero_sentinel_timestamps_by_asset(registry)
+        )
+        if aggregate_zero_sentinel_timestamps != expected_zero_sentinel_timestamps:
+            raise RuntimeError("Frozen open-interest zero-sentinel registry mismatch.")
 
         normalized_records = []
         for source_id in SOURCE_SPECS:
@@ -635,8 +741,10 @@ class DerivativesContextDatasetLocker:
                     }
                 )
 
-        if _directory_inventory(prior_attempt_staging) != prior_inventory:
+        if _directory_inventory(prior_attempt_1_staging) != attempt_1_inventory:
             raise RuntimeError("Attempt 1 staging changed during recovery.")
+        if _directory_inventory(prior_attempt_2_staging) != attempt_2_inventory:
+            raise RuntimeError("Attempt 2 staging changed during recovery.")
 
         manifest = {
             "schema_version": SCHEMA_VERSION,
@@ -647,8 +755,10 @@ class DerivativesContextDatasetLocker:
             "hypothesis_parent_commit": PARENT_COMMIT,
             "parent_feasibility_report_sha256": PARENT_FEASIBILITY_REPORT_SHA256,
             "attempt_1_incident_sha256": ATTEMPT_1_INCIDENT_SHA256,
-            "attempt_1_staging_inventory": prior_inventory,
-            "recovery_attempt": 2,
+            "attempt_2_incident_sha256": ATTEMPT_2_INCIDENT_SHA256,
+            "attempt_1_staging_inventory": attempt_1_inventory,
+            "attempt_2_staging_inventory": attempt_2_inventory,
+            "recovery_attempt": 3,
             "common_start_utc": COMMON_START_UTC,
             "common_end_exclusive_utc": COMMON_END_EXCLUSIVE_UTC,
             "asset_order": list(ASSET_SYMBOLS),
@@ -657,6 +767,21 @@ class DerivativesContextDatasetLocker:
             "normalized_file_count": len(normalized_records),
             "optional_metrics_blank_counts": aggregate_optional_blank_counts,
             "optional_metrics_blank_policy": "EXACT_BLANK_RECORDED_NO_FILL_UNUSED_RATIO_FIELDS",
+            "open_interest_zero_sentinel_literal": (
+                OPEN_INTEREST_ZERO_SENTINEL_LITERAL
+            ),
+            "open_interest_zero_sentinel_timestamp_sha256": (
+                OPEN_INTEREST_ZERO_SENTINEL_TIMESTAMP_SHA256
+            ),
+            "open_interest_zero_sentinel_timestamps_by_asset": (
+                aggregate_zero_sentinel_timestamps
+            ),
+            "open_interest_zero_sentinel_count": sum(
+                len(values) for values in aggregate_zero_sentinel_timestamps.values()
+            ),
+            "open_interest_zero_sentinel_policy": (
+                "FROZEN_EXACT_PAIRED_ZERO_OMITTED_NO_FILL"
+            ),
             "objects": object_records,
             "normalized_files": normalized_records,
             "source_objects_downloaded": True,
@@ -687,10 +812,16 @@ class DerivativesContextDatasetLocker:
             "object_count": len(object_records),
             "normalized_file_count": len(normalized_records),
             "optional_metrics_blank_counts": aggregate_optional_blank_counts,
-            "attempt_1_staging_inventory_sha256": prior_inventory[
+            "attempt_1_staging_inventory_sha256": attempt_1_inventory[
                 "inventory_sha256"
             ],
-            "recovery_attempt": 2,
+            "attempt_2_staging_inventory_sha256": attempt_2_inventory[
+                "inventory_sha256"
+            ],
+            "open_interest_zero_sentinel_count": sum(
+                len(values) for values in aggregate_zero_sentinel_timestamps.values()
+            ),
+            "recovery_attempt": 3,
             "market_values_opened": True,
             "labels_generated": False,
             "model_training_executed": False,
@@ -741,32 +872,46 @@ def read_locked_derivatives_context_dataset(
         raise RuntimeError("Locked derivatives-context object count mismatch.")
     if manifest.get("normalized_file_count") != 12:
         raise RuntimeError("Locked derivatives-context normalized registry mismatch.")
-    if manifest.get("recovery_attempt") != 2:
+    if manifest.get("recovery_attempt") != 3:
         raise RuntimeError("Locked derivatives-context recovery identity mismatch.")
     if manifest.get("execution_parent_commit") != RECOVERY_PARENT_COMMIT:
         raise RuntimeError("Locked derivatives-context execution binding mismatch.")
     if manifest.get("attempt_1_incident_sha256") != ATTEMPT_1_INCIDENT_SHA256:
         raise RuntimeError("Locked derivatives-context incident binding mismatch.")
-    prior_inventory = manifest.get("attempt_1_staging_inventory")
-    if not isinstance(prior_inventory, dict) or set(prior_inventory) != {
-        "file_count",
-        "total_bytes",
-        "inventory_sha256",
-    }:
-        raise RuntimeError("Locked prior-staging inventory schema mismatch.")
-    if (
-        not isinstance(prior_inventory["file_count"], int)
-        or prior_inventory["file_count"] <= 0
-        or not isinstance(prior_inventory["total_bytes"], int)
-        or prior_inventory["total_bytes"] <= 0
-        or re.fullmatch(r"[0-9a-f]{64}", prior_inventory["inventory_sha256"])
-        is None
-    ):
-        raise RuntimeError("Locked prior-staging inventory value mismatch.")
+    if manifest.get("attempt_2_incident_sha256") != ATTEMPT_2_INCIDENT_SHA256:
+        raise RuntimeError("Locked Attempt 2 incident binding mismatch.")
+    for attempt in (1, 2):
+        prior_inventory = manifest.get(f"attempt_{attempt}_staging_inventory")
+        if not isinstance(prior_inventory, dict) or set(prior_inventory) != {
+            "file_count",
+            "total_bytes",
+            "inventory_sha256",
+        }:
+            raise RuntimeError("Locked prior-staging inventory schema mismatch.")
+        if (
+            not isinstance(prior_inventory["file_count"], int)
+            or prior_inventory["file_count"] <= 0
+            or not isinstance(prior_inventory["total_bytes"], int)
+            or prior_inventory["total_bytes"] <= 0
+            or re.fullmatch(r"[0-9a-f]{64}", prior_inventory["inventory_sha256"])
+            is None
+        ):
+            raise RuntimeError("Locked prior-staging inventory value mismatch.")
     if manifest.get("optional_metrics_blank_policy") != (
         "EXACT_BLANK_RECORDED_NO_FILL_UNUSED_RATIO_FIELDS"
     ):
         raise RuntimeError("Locked optional-metrics blank policy mismatch.")
+    if manifest.get("open_interest_zero_sentinel_policy") != (
+        "FROZEN_EXACT_PAIRED_ZERO_OMITTED_NO_FILL"
+    ):
+        raise RuntimeError("Locked open-interest zero-sentinel policy mismatch.")
+    if (
+        manifest.get("open_interest_zero_sentinel_literal")
+        != OPEN_INTEREST_ZERO_SENTINEL_LITERAL
+        or manifest.get("open_interest_zero_sentinel_timestamp_sha256")
+        != OPEN_INTEREST_ZERO_SENTINEL_TIMESTAMP_SHA256
+    ):
+        raise RuntimeError("Locked open-interest zero-sentinel identity mismatch.")
     expected_identities = [
         (item["source_id"], item["asset"], item["period"], item["key"], item["filename"])
         for item in expected_object_registry()
@@ -786,6 +931,7 @@ def read_locked_derivatives_context_dataset(
     aggregate_optional_blank_counts = {
         name: 0 for name in OPTIONAL_METRICS_COLUMNS
     }
+    aggregate_zero_sentinel_timestamps = {asset: [] for asset in ASSET_SYMBOLS}
     for record in manifest["objects"]:
         counts = record.get("optional_blank_counts")
         if record["source_id"] == "OPEN_INTEREST_METRICS":
@@ -795,12 +941,29 @@ def read_locked_derivatives_context_dataset(
                 raise RuntimeError("Locked optional-metrics missingness count mismatch.")
             for name, count in counts.items():
                 aggregate_optional_blank_counts[name] += count
+            zero_timestamps = record.get("open_interest_zero_sentinel_timestamps")
+            if not isinstance(zero_timestamps, list):
+                raise RuntimeError("Locked zero-sentinel timestamp schema mismatch.")
+            aggregate_zero_sentinel_timestamps[record["asset"]].extend(
+                zero_timestamps
+            )
         elif counts is not None:
             raise RuntimeError("Unexpected optional-metrics evidence on another source.")
     if manifest.get("optional_metrics_blank_counts") != aggregate_optional_blank_counts:
         raise RuntimeError("Locked optional-metrics aggregate mismatch.")
+    expected_zero_sentinel_timestamps = _expected_zero_sentinel_timestamps_by_asset(
+        expected_object_registry()
+    )
+    if (
+        aggregate_zero_sentinel_timestamps != expected_zero_sentinel_timestamps
+        or manifest.get("open_interest_zero_sentinel_timestamps_by_asset")
+        != expected_zero_sentinel_timestamps
+        or manifest.get("open_interest_zero_sentinel_count")
+        != sum(len(values) for values in expected_zero_sentinel_timestamps.values())
+    ):
+        raise RuntimeError("Locked open-interest zero-sentinel registry mismatch.")
     if verify_raw:
-        for record in manifest["objects"]:
+        for spec, record in zip(expected_object_registry(), manifest["objects"]):
             zip_payload = _verify_file(
                 root, record, "raw_relative_path", "zip_sha256", "zip_bytes"
             )
@@ -818,6 +981,13 @@ def read_locked_derivatives_context_dataset(
                 raise RuntimeError(
                     f"Locked official checksum mismatch: {record['raw_relative_path']}."
                 )
+            revalidated = validate_source_archive(spec, zip_payload, checksum_payload)
+            revalidated.pop("normalized_bytes")
+            for field, value in revalidated.items():
+                if record.get(field) != value:
+                    raise RuntimeError(
+                        f"Locked raw validation evidence mismatch: {record['filename']}."
+                    )
 
     normalized = {}
     for record in manifest["normalized_files"]:
@@ -847,6 +1017,8 @@ def read_locked_derivatives_context_dataset(
         open_interest["open_interest"] = pd.to_numeric(
             open_interest["open_interest"], errors="raise"
         )
+        if (open_interest["open_interest"] <= 0).any():
+            raise RuntimeError(f"Locked open interest is not positive for {asset}.")
 
         mark = normalized[("MARK_PRICE_12H", asset)].copy()
         index = normalized[("INDEX_PRICE_12H", asset)].copy()
@@ -889,7 +1061,8 @@ def main(argv=None):
     parser.add_argument("--declaration-only", action="store_true")
     parser.add_argument("--output-root", type=Path)
     parser.add_argument("--authorization-phrase")
-    parser.add_argument("--prior-attempt-staging", type=Path)
+    parser.add_argument("--prior-attempt-1-staging", type=Path)
+    parser.add_argument("--prior-attempt-2-staging", type=Path)
     parser.add_argument("--read-summary", type=Path)
     parser.add_argument("--expected-manifest-sha256")
     args = parser.parse_args(argv)
@@ -897,7 +1070,8 @@ def main(argv=None):
         result = DerivativesContextDatasetLocker().run(
             args.output_root,
             args.authorization_phrase,
-            args.prior_attempt_staging,
+            args.prior_attempt_1_staging,
+            args.prior_attempt_2_staging,
         )
     elif args.read_summary is not None:
         sources, manifest, digest = read_locked_derivatives_context_dataset(
@@ -912,6 +1086,9 @@ def main(argv=None):
             "source_series_order": list(SOURCE_SPECS),
             "object_count": manifest["object_count"],
             "recovery_attempt": manifest["recovery_attempt"],
+            "open_interest_zero_sentinel_count": manifest[
+                "open_interest_zero_sentinel_count"
+            ],
             "optional_metrics_blank_counts": manifest[
                 "optional_metrics_blank_counts"
             ],

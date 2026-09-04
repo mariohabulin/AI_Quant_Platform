@@ -14,11 +14,12 @@ official checksums, validate their schemas and timestamps, and create one
 immutable external dataset lock that a later learning runner can read.
 
 Implementation and static review open no source object. Attempt 1 consumed its
-one-shot authorization at commit `970ce17` and failed closed on an incorrect
-all-columns-finite assumption. Its final lock is absent and its staging is
-preserved. Recovery Attempt 2 requires the exact phrase
-`EXECUTE_KRAKEN_AI_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_RECOVERY_ATTEMPT_2_ONCE`
-after an independent clean preflight and may write only to a new Attempt 2
+authorization at commit `970ce17` and failed on optional blank ratio cells.
+Attempt 2 consumed its authorization at commit `8181d05` and failed on Binance
+zero open-interest sentinels. Both final locks are absent and both staging
+directories are preserved. Recovery Attempt 3 requires the exact phrase
+`EXECUTE_KRAKEN_AI_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_RECOVERY_ATTEMPT_3_ONCE`
+after an independent clean preflight and may write only to a new Attempt 3
 root.
 
 ## Exact source registry
@@ -59,13 +60,29 @@ Futures metrics requires exactly `create_time`, `symbol`,
 match the object identity. The normalized output retains `source_timestamp`
 and positive `open_interest` from `sum_open_interest`.
 
-`create_time`, `symbol`, positive finite `sum_open_interest` and finite
+`create_time`, `symbol`, usable positive finite `sum_open_interest` and finite
 `sum_open_interest_value` remain mandatory. Binance's official archives may
 leave the four ancillary ratio columns blank. Each such cell is optional only
 because none is retained by this frozen dataset or hypothesis. An exact blank
 is recorded as missing; a finite decimal is validated; every other sentinel
 fails closed. A blank is never converted to zero, filled, interpolated or used
 to discard an otherwise valid open-interest observation.
+
+A complete read-only forensic scan covered all 2,556 metrics objects and found
+no fetch, ZIP, schema, symbol, chronology or period error. It found 735,323
+positive open-interest rows and exactly 399 paired `0E-8` source sentinels at a
+frozen list of 133 timestamps per asset. The canonical timestamp-list SHA-256
+is `791ddfb1d1b584abbbd551bbcce77baef2de51b23f9c3f2668f4e6d6d41d5cbb`.
+No negative, blank, non-finite or nonnumeric open-interest value exists.
+
+Only an exact `0E-8` `sum_open_interest` paired with exact `0E-8`
+`sum_open_interest_value` at that asset's frozen timestamp is a recognized
+missing-value sentinel. Its raw row remains locked but it is omitted from the
+normalized series and counted in the manifest. There must be exactly 133 such
+rows per asset and 399 total. Any extra timestamp, alternative zero literal,
+unpaired zero or other invalid required value fails closed. No zero is passed
+to a logarithm, converted, filled, interpolated, backfilled or copied across
+assets.
 
 Mark and index native 12h klines require the official twelve-field kline
 schema. Headerless official files and the exact documented header are accepted.
@@ -89,11 +106,12 @@ produce a final lock. The final directory contains:
 - one canonical `manifest.json`; and
 - one matching `manifest.sha256` sidecar.
 
-Attempt 1 staging is incident evidence. Recovery fingerprints every file in
-that directory before work, confirms the fingerprint again before publishing
-Attempt 2, and records it in the new manifest. Recovery never reads source
-values from or reuses Attempt 1 staging. The final manifest also records
-optional metrics blank counts per field and per source object.
+Attempt 1 and Attempt 2 staging are incident evidence. Recovery fingerprints
+every file in both directories before work, confirms both fingerprints again
+before publishing Attempt 3, and records them in the new manifest. Recovery
+never reads source values from or reuses either prior staging directory. The
+manifest records optional blank counts and zero-sentinel timestamps per source
+object and in exact aggregate.
 
 The manifest records object identity, byte sizes, four hashes, row counts and
 first/last timestamps. The independent reader verifies the manifest sidecar,
@@ -104,8 +122,9 @@ engine. It never downloads missing data while reading a lock.
 ## Safety boundary
 
 This recovery implementation does not execute acquisition, open values,
-generate labels or fit a model. A later authorized recovery lock run may open
-only Development source values and may not generate labels or train.
+generate labels or fit a model. Attempt 2 authorization is consumed. A later
+authorized Attempt 3 lock run may open only Development source values and may
+not generate labels or train.
 
 Calibration, Evaluation, threshold or hyperparameter search, automatic model
 selection, Candidate v2, PAPER, cloud, real orders and live execution remain

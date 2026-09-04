@@ -24,6 +24,9 @@ from kraken_ai_driven_v2_derivatives_context_dataset import (
     KLINE_HEADER,
     KLINE_DOCUMENTED_HEADER,
     METRICS_HEADER,
+    OPEN_INTEREST_ZERO_SENTINEL_LITERAL,
+    OPEN_INTEREST_ZERO_SENTINEL_TIMESTAMPS,
+    OPEN_INTEREST_ZERO_SENTINEL_TIMESTAMP_SHA256,
     SOURCE_SPECS,
     dataset_lock_declaration,
     expected_object_registry,
@@ -67,10 +70,30 @@ def _funding_payload(spec, *, interval="8", rate="0.00010000"):
     )
 
 
-def _metrics_payload(spec, *, symbol=None, open_interest="10000.50"):
+def _metrics_payload(
+    spec,
+    *,
+    symbol=None,
+    open_interest="10000.50",
+    open_interest_value="1000000",
+    timestamp=None,
+):
     symbol = spec["symbol"] if symbol is None else symbol
-    timestamp = pd.Timestamp(spec["period"], tz="UTC").strftime("%Y-%m-%d %H:%M:%S")
-    row = [timestamp, symbol, open_interest, "1000000", "1", "1", "1", "1"]
+    timestamp = (
+        pd.Timestamp(spec["period"], tz="UTC").strftime("%Y-%m-%d %H:%M:%S")
+        if timestamp is None
+        else timestamp
+    )
+    row = [
+        timestamp,
+        symbol,
+        open_interest,
+        open_interest_value,
+        "1",
+        "1",
+        "1",
+        "1",
+    ]
     return _zip_payload(spec, _csv_bytes([METRICS_HEADER, row]))
 
 
@@ -109,10 +132,10 @@ def _payload_for_spec(spec):
     return _kline_payload(spec, close=close)
 
 
-def _prior_staging(tmp_path):
-    prior = tmp_path / ".context_lock_attempt_1.staging"
+def _prior_staging(tmp_path, attempt):
+    prior = tmp_path / f".context_lock_attempt_{attempt}.staging"
     prior.mkdir()
-    (prior / "preserved.bin").write_bytes(b"attempt-1-preserved")
+    (prior / "preserved.bin").write_bytes(f"attempt-{attempt}-preserved".encode())
     return prior
 
 
@@ -130,15 +153,36 @@ def test_declaration_freezes_exact_registry_and_keeps_run_inert():
         "MARK_PRICE_12H": 84,
         "INDEX_PRICE_12H": 84,
     }
-    assert declaration["recovery_parent_commit"] == "970ce17"
+    assert declaration["recovery_parent_commit"] == "8181d05"
     assert declaration["attempt_1_authorization_consumed"] is True
     assert declaration["attempt_1_final_dataset_exists"] is False
     assert declaration["attempt_1_staging_required"] is True
-    assert declaration["recovery_attempt"] == 2
+    assert declaration["attempt_2_authorization_consumed"] is True
+    assert declaration["attempt_2_final_dataset_exists"] is False
+    assert declaration["attempt_2_staging_required"] is True
+    assert declaration["recovery_attempt"] == 3
+    assert declaration["open_interest_zero_sentinel_count"] == 399
+    assert declaration["open_interest_zero_sentinel_count_per_asset"] == 133
+    assert len(OPEN_INTEREST_ZERO_SENTINEL_TIMESTAMPS) == 133
+    assert (
+        declaration["open_interest_zero_sentinel_timestamp_sha256"]
+        == OPEN_INTEREST_ZERO_SENTINEL_TIMESTAMP_SHA256
+    )
     assert declaration["authorization_phrase_active"] is False
     assert declaration["source_objects_downloaded"] is False
     assert declaration["market_values_opened"] is False
     assert declaration["model_training_executed"] is False
+
+
+def test_frozen_zero_sentinel_list_matches_its_canonical_hash():
+    payload = dataset.canonical_json_bytes(
+        list(OPEN_INTEREST_ZERO_SENTINEL_TIMESTAMPS)
+    )
+
+    assert hashlib.sha256(payload).hexdigest() == (
+        OPEN_INTEREST_ZERO_SENTINEL_TIMESTAMP_SHA256
+    )
+    assert len(set(OPEN_INTEREST_ZERO_SENTINEL_TIMESTAMPS)) == 133
 
 
 def test_registry_is_deterministic_complete_and_development_only():
@@ -176,7 +220,7 @@ def test_funding_archive_validates_exact_schema_and_normalizes_decimal_text():
     assert b",0.00010000\n" in result["normalized_bytes"]
 
 
-def test_open_interest_archive_requires_exact_symbol_and_positive_value():
+def test_open_interest_archive_requires_exact_symbol_and_usable_positive_value():
     spec = _spec("OPEN_INTEREST_METRICS", period="2021-12-01")
     payload, checksum = _metrics_payload(spec)
     result = validate_source_archive(spec, payload, checksum)
@@ -187,7 +231,50 @@ def test_open_interest_archive_requires_exact_symbol_and_positive_value():
     with pytest.raises(ValueError, match="symbol"):
         validate_source_archive(spec, payload, checksum)
     payload, checksum = _metrics_payload(spec, open_interest="0")
-    with pytest.raises(ValueError, match="positive"):
+    with pytest.raises(ValueError, match="zero sentinel"):
+        validate_source_archive(spec, payload, checksum)
+
+
+def test_exact_frozen_paired_zero_sentinel_is_recorded_and_not_normalized():
+    spec = _spec("OPEN_INTEREST_METRICS", period="2022-03-07")
+    timestamp = "2022-03-07 15:30:00"
+    payload, checksum = _metrics_payload(
+        spec,
+        open_interest=OPEN_INTEREST_ZERO_SENTINEL_LITERAL,
+        open_interest_value=OPEN_INTEREST_ZERO_SENTINEL_LITERAL,
+        timestamp=timestamp,
+    )
+
+    result = validate_source_archive(spec, payload, checksum)
+
+    assert result["row_count"] == 1
+    assert result["normalized_row_count"] == 0
+    assert result["open_interest_zero_sentinel_timestamps"] == [
+        "2022-03-07T15:30:00Z"
+    ]
+    assert result["normalized_bytes"] == b"source_timestamp,open_interest\n"
+
+
+@pytest.mark.parametrize(
+    ("open_interest", "open_interest_value", "timestamp"),
+    [
+        ("0", "0E-8", "2022-03-07 15:30:00"),
+        ("0E-8", "1", "2022-03-07 15:30:00"),
+        ("0E-8", "0E-8", "2022-03-07 15:25:00"),
+    ],
+)
+def test_unfrozen_unpaired_or_alternative_zero_sentinel_fails_closed(
+    open_interest, open_interest_value, timestamp
+):
+    spec = _spec("OPEN_INTEREST_METRICS", period="2022-03-07")
+    payload, checksum = _metrics_payload(
+        spec,
+        open_interest=open_interest,
+        open_interest_value=open_interest_value,
+        timestamp=timestamp,
+    )
+
+    with pytest.raises(ValueError, match="zero sentinel"):
         validate_source_archive(spec, payload, checksum)
 
 
@@ -301,22 +388,26 @@ def test_locker_is_one_shot_atomic_and_reader_reconstructs_exact_parent_frames(
         return payloads[url]
 
     final = tmp_path / "context_lock"
-    prior = _prior_staging(tmp_path)
-    prior_payload = (prior / "preserved.bin").read_bytes()
+    prior_1 = _prior_staging(tmp_path, 1)
+    prior_2 = _prior_staging(tmp_path, 2)
+    prior_1_payload = (prior_1 / "preserved.bin").read_bytes()
+    prior_2_payload = (prior_2 / "preserved.bin").read_bytes()
     with pytest.raises(PermissionError):
         DerivativesContextDatasetLocker(fetch).run(final, "wrong")
     summary = DerivativesContextDatasetLocker(fetch).run(
-        final, AUTHORIZATION_PHRASE, prior
+        final, AUTHORIZATION_PHRASE, prior_1, prior_2
     )
 
     assert summary["object_count"] == 12
     assert summary["normalized_file_count"] == 12
     assert summary["model_training_executed"] is False
-    assert summary["recovery_attempt"] == 2
+    assert summary["recovery_attempt"] == 3
+    assert summary["open_interest_zero_sentinel_count"] == 0
     assert len(calls) == 24
     assert final.is_dir()
     assert not (tmp_path / ".context_lock.staging").exists()
-    assert (prior / "preserved.bin").read_bytes() == prior_payload
+    assert (prior_1 / "preserved.bin").read_bytes() == prior_1_payload
+    assert (prior_2 / "preserved.bin").read_bytes() == prior_2_payload
 
     sources, manifest, digest = read_locked_derivatives_context_dataset(
         final, expected_manifest_sha256=summary["manifest_sha256"]
@@ -339,7 +430,9 @@ def test_locker_is_one_shot_atomic_and_reader_reconstructs_exact_parent_frames(
             "index_close",
         ]
     with pytest.raises(FileExistsError):
-        DerivativesContextDatasetLocker(fetch).run(final, AUTHORIZATION_PHRASE, prior)
+        DerivativesContextDatasetLocker(fetch).run(
+            final, AUTHORIZATION_PHRASE, prior_1, prior_2
+        )
 
 
 def test_reader_rejects_manifest_identity_or_normalized_tamper(tmp_path, monkeypatch):
@@ -355,9 +448,10 @@ def test_reader_rejects_manifest_identity_or_normalized_tamper(tmp_path, monkeyp
         payloads[spec["url"]] = payload
         payloads[spec["checksum_url"]] = checksum
     final = tmp_path / "lock"
-    prior = _prior_staging(tmp_path)
+    prior_1 = _prior_staging(tmp_path, 1)
+    prior_2 = _prior_staging(tmp_path, 2)
     summary = DerivativesContextDatasetLocker(payloads.__getitem__).run(
-        final, AUTHORIZATION_PHRASE, prior
+        final, AUTHORIZATION_PHRASE, prior_1, prior_2
     )
 
     with pytest.raises(RuntimeError, match="manifest identity"):
@@ -380,22 +474,59 @@ def test_failed_acquisition_preserves_staging_and_never_creates_final(
         raise OSError("transport stopped")
 
     final = tmp_path / "failed"
-    prior = _prior_staging(tmp_path)
+    prior_1 = _prior_staging(tmp_path, 1)
+    prior_2 = _prior_staging(tmp_path, 2)
     with pytest.raises(OSError, match="transport stopped"):
-        DerivativesContextDatasetLocker(fail).run(final, AUTHORIZATION_PHRASE, prior)
+        DerivativesContextDatasetLocker(fail).run(
+            final, AUTHORIZATION_PHRASE, prior_1, prior_2
+        )
     assert not final.exists()
     assert (tmp_path / ".failed.staging").is_dir()
 
 
-def test_recovery_requires_nonempty_prior_staging_and_never_reuses_it(tmp_path):
+def test_locker_rejects_an_incomplete_frozen_zero_sentinel_registry(
+    tmp_path, monkeypatch
+):
+    spec = _spec("OPEN_INTEREST_METRICS", period="2022-03-07")
+    monkeypatch.setattr(dataset, "expected_object_registry", lambda: [spec])
+    payload, checksum = _metrics_payload(
+        spec,
+        open_interest=OPEN_INTEREST_ZERO_SENTINEL_LITERAL,
+        open_interest_value=OPEN_INTEREST_ZERO_SENTINEL_LITERAL,
+        timestamp="2022-03-07 15:30:00",
+    )
+    payloads = {spec["url"]: payload, spec["checksum_url"]: checksum}
+    final = tmp_path / "incomplete_sentinel_lock"
+
+    with pytest.raises(RuntimeError, match="zero-sentinel registry"):
+        DerivativesContextDatasetLocker(payloads.__getitem__).run(
+            final,
+            AUTHORIZATION_PHRASE,
+            _prior_staging(tmp_path, 1),
+            _prior_staging(tmp_path, 2),
+        )
+
+    assert not final.exists()
+    assert (tmp_path / ".incomplete_sentinel_lock.staging").is_dir()
+
+
+def test_recovery_requires_both_nonempty_prior_staging_directories(tmp_path):
     final = tmp_path / "recovery"
-    with pytest.raises(PermissionError, match="Attempt 1 staging"):
+    with pytest.raises(PermissionError, match="Attempt 1 and Attempt 2"):
         DerivativesContextDatasetLocker().run(final, AUTHORIZATION_PHRASE)
 
-    empty = tmp_path / ".attempt_1.staging"
-    empty.mkdir()
+    prior_1 = _prior_staging(tmp_path, 1)
+    empty_2 = tmp_path / ".attempt_2.staging"
+    empty_2.mkdir()
     with pytest.raises(RuntimeError, match="non-empty"):
-        DerivativesContextDatasetLocker().run(final, AUTHORIZATION_PHRASE, empty)
+        DerivativesContextDatasetLocker().run(
+            final, AUTHORIZATION_PHRASE, prior_1, empty_2
+        )
+
+    with pytest.raises(ValueError, match="distinct"):
+        DerivativesContextDatasetLocker().run(
+            final, AUTHORIZATION_PHRASE, prior_1, prior_1
+        )
 
 
 def test_protocol_freezes_no_fallback_no_fill_and_no_learning():
@@ -407,6 +538,8 @@ def test_protocol_freezes_no_fallback_no_fill_and_no_learning():
     assert "No REST fallback" in protocol
     assert "No duplicate, ordering inversion" in protocol
     assert "exact blank" in protocol
-    assert "Attempt 1 staging" in protocol
+    assert "Attempt 1 and Attempt 2 staging" in protocol
+    assert "399" in protocol
+    assert "0E-8" in protocol
     assert "does not execute acquisition" in protocol
     assert "Calibration, Evaluation" in protocol

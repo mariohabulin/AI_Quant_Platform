@@ -86,14 +86,19 @@ walk-forward folds and fixed absolute plus incremental economic gates must show
 that any improvement comes from new information rather than another learner or
 an easier sample.
 
-The hash-bound context lock and reader was committed at `970ce17`. Authorized
-Attempt 1 failed closed during acquisition because the validator treated blank
-values in four unused Binance metrics-ratio columns as invalid even though the
-retained positive open-interest value was present. No final lock, label or model
-was created, and Attempt 1 staging is preserved. Recovery does not fabricate or
-fill those cells: it records exact optional blanks, retains strict validation of
-all learned values, fingerprints prior staging and requires a new Attempt 2
-root and authorization. Model training remains closed.
+The hash-bound context lock and reader was committed at `970ce17`. Attempt 1
+failed on exact blanks in unused Binance ratio columns. Attempt 2, committed at
+`8181d05`, accepted those blanks but failed at object 181 on an official paired
+`0E-8` open-interest sentinel. No final lock, label or model was created, and
+both staging directories are preserved.
+
+A complete content scan of all 2,556 metrics archives found exactly 399 paired
+sentinels at the same 133 timestamps for each asset, with no negative, blank,
+non-finite or alternate invalid open-interest values. Attempt 3 is therefore a
+bounded source-adapter correction, not a looser research gate: only that frozen
+timestamp set and exact paired literal may be omitted, without interpolation,
+fill or backfill. Every other nonpositive value fails closed. Model training
+remains closed pending a complete, independently reviewed lock.
 
 ## Permanent safety boundary
 

@@ -125,7 +125,7 @@ exists.
 - [x] implement the hash-bound derivatives-context dataset lock and reader;
 - [x] validate source schemas synthetically before any network execution.
 
-### 7. Derivatives-context dataset lock and reader — ATTEMPT 1 FAILED CLOSED
+### 7. Derivatives-context dataset lock and reader — ATTEMPTS 1–2 FAILED CLOSED
 - [x] freeze 2,808 exact Development objects and every official checksum;
 - [x] hash raw/member/normalized bytes and freeze all three source schemas;
 - [x] reject unsafe ZIPs, foreign periods, duplicates, inversions and bad grids;
@@ -136,23 +136,26 @@ exists.
 - [x] preflight and separately authorize real Dataset Lock Attempt 1;
 - [x] preserve fail-closed Attempt 1 staging after the unused-ratio blank error;
 - [x] identify official object 114 and freeze the incident evidence;
-- [x] keep required open interest strict while recording exact optional blanks;
-- [x] implement a new-root recovery that fingerprints Attempt 1 staging;
-- [ ] reproduce focused/full Windows recovery tests and static review;
-- [ ] commit and push the reviewed Attempt 2 recovery;
-- [ ] separately preflight and authorize Recovery Attempt 2.
+- [x] record exact optional blanks without fill and fingerprint Attempt 1 staging;
+- [x] reproduce 41 focused and 1,995 complete Windows recovery tests;
+- [x] commit/push Attempt 2 recovery at `8181d05` and separately authorize it;
+- [x] preserve Attempt 2 staging after object 181 exposed paired `0E-8` rows;
+- [x] scan all 2,556 metrics archives and freeze exactly 399 sentinel rows at
+  the same 133 timestamps for BTC, ETH and XRP;
+- [x] implement exact allowlist validation, omission without fill, and reject
+  every other nonpositive value;
+- [x] require both untouched staging inventories and a new Attempt 3 root;
+- [ ] reproduce focused/full Windows Attempt 3 tests and static review;
+- [ ] commit and push the reviewed Attempt 3 recovery;
+- [ ] separately preflight and authorize Recovery Attempt 3.
 
 Calibration, Evaluation, Candidate v2, PAPER and live remain closed.
 
 ## Retired active work
 
-Tested but retired from the active loop: AI-Driven Crypto Research v2, State
-Machine, Risk and Execution, Development/Evaluation Partition and Development
-Runner; Round 1 Causal Signals/Family Execution/Discovery Runner/Closure; and
-Round 2 Causal Signals/Family Execution/Discovery Runner/Closure.
-
-Reference A, four Round 1 families and three Round 2 families are not candidate
-models. They are the closed Rule Discovery Foundation.
+AI-Driven Crypto Research v2, State Machine, Risk and Execution,
+Development/Evaluation Partition and Development Runner; both rule-discovery
+rounds; and Reference A are the closed Rule Discovery Foundation, not candidates.
 
 ## Completed evidence controls
 
@@ -168,8 +171,7 @@ models. They are the closed Rule Discovery Foundation.
 - [x] Forensically confirm that native 4h begins on 2024-01-01.
 
 ## Immutable lineage
-Preserved IDs cover causal feature, state, risk, partition, Development runner,
-hybrid/Round 1/Round 2, True Learning Contract, Learning Core, 12h learning and
+Preserved IDs cover causal feature, state, risk, partition, Development runner, hybrid/Round 1/Round 2, True Learning Contract, Learning Core, 12h learning and
 economic review, Alpha Research Lab and derivatives-context components.
 
 Evidence hashes include BTC episode `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`,
@@ -187,12 +189,11 @@ Reference A closure status:
 Exact partition boundaries: `2024-04-01T00:00:00Z`,
 `2025-04-01T00:00:00Z`, `2026-04-01T00:00:00Z`.
 
-Historical compatibility terms: Kraken daily, three-class, no model training,
-Round 1 Discovery Runner, Round 2 Family Execution, True Learning Engine and
+Historical compatibility terms: Kraken daily, three-class, no model training, Round 1 Discovery Runner, Round 2 Family Execution, True Learning Engine and
 the former statement that the resolution remains unselected.
 Legacy exact marker: resolution remains unselected.
 
 ## Authorization state
 Candidate v2 is false. Calibration/Evaluation are unopened; PAPER, cloud, real
 orders and live execution are unauthorized.
-Compatibility: AI-Driven v2 State Machine; AI-Driven v2 Risk and Execution; AI-Driven v2 Development/Evaluation Partition; AI-Driven v2 Development Runner; Round 1 Family Execution; Round 1 Closure; Round 2 Discovery Runner; Round 2 Closure; `kraken-ai-v2-ccvr-reference-a-v1`; `kraken-ai-v2-risk-execution-reference-a-v1`; `kraken-btc-eth-xrp-ai-driven-v2-partition-v1`; `kraken-btc-eth-xrp-ai-driven-v2-development-runner-v1`; `kraken-btc-eth-xrp-ai-driven-v2-hybrid-strategy-discovery-learning-v1`; `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-1-v1`; `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-2-v1`.
+Compatibility: AI-Driven v2 State Machine; AI-Driven v2 Risk and Execution; AI-Driven v2 Development/Evaluation Partition; AI-Driven v2 Development Runner; Round 1 Causal Signals; Round 1 Family Execution; four paths; Round 1 Closure; Round 2 Causal Signals; Round 2 Discovery Runner; Round 2 Closure; `kraken-ai-v2-ccvr-reference-a-v1`; `kraken-ai-v2-risk-execution-reference-a-v1`; `kraken-btc-eth-xrp-ai-driven-v2-partition-v1`; `kraken-btc-eth-xrp-ai-driven-v2-development-runner-v1`; `kraken-btc-eth-xrp-ai-driven-v2-hybrid-strategy-discovery-learning-v1`; `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-1-v1`; `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-2-v1`.

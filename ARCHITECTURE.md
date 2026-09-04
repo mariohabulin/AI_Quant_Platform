@@ -163,9 +163,17 @@ native 12h mark and 84 native 12h index archives. Every ZIP must match its
 adjacent official checksum and one safe expected CSV member.
 The adapter validates exact schemas, mandatory finite learning values, symbol,
 chronology, period and 12h grid; fallback and fill fail closed. Exact blanks are
-allowed only in four unused ratio columns and counted; `sum_open_interest` stays
-positive. Attempt 1 exposed the old all-columns-finite assumption. Attempt 2
-uses a new root, fingerprints prior staging and atomically locks hashed inputs.
+allowed only in four unused ratio columns and counted. Attempt 1 exposed the
+old all-columns-finite assumption. Attempt 2 exposed paired official `0E-8`
+sentinels at object 181; both staging directories remain immutable incidents.
+
+A complete scan of all 2,556 metrics archives found exactly 399 such rows: 133
+identical timestamps per asset and no other invalid open interest. Attempt 3
+accepts only that hash-bound timestamp set when both source fields are exactly
+`0E-8`, records the raw row, omits it from normalized open interest and never
+fills it. Every unfrozen, unpaired, alternate-literal or negative value fails
+closed. The independent reader reparses every locked raw ZIP and revalidates
+the same rule before exposing normalized values.
 ## Runtime and risk boundary
 An approved runtime may load an immutable artifact but cannot fit, mutate,
 rank, promote or submit orders; Risk and Synthetic Execution remains later.
@@ -173,26 +181,19 @@ rank, promote or submit orders; Risk and Synthetic Execution remains later.
 ## Failure behavior
 Invalid data, boundary crossings, incomplete support, changed hashes or
 unstable after-cost evidence fail closed to `HOLD_CASH`.
-Historical markers: Provider and Historical Availability Boundary v1; Kraken Bounded Blinded Replay Review Boundary v1; Supervised Blinded Replay Execution Boundary v1; AI-Driven v2 Layer Boundary; AI-Driven v2 Signal-State Layer; AI-Driven v2 Risk and Synthetic Execution Layer; AI-Driven v2 Partition Boundary; Development-Only Evidence Runner.
-Round 1 Causal Signals, Round 1 Family Execution, Round 1 Discovery Runner and Round 1 Closure used four paths; Round 2 Causal Signals, Round 2 Family Execution, Round 2 Discovery Runner and Round 2 Closure used three paths.
+Historical markers: Provider and Historical Availability Boundary v1; Kraken Bounded Blinded Replay Review Boundary v1; Supervised Blinded Replay Execution Boundary v1; AI-Driven v2 Layer Boundary; AI-Driven v2 Signal-State Layer; AI-Driven v2 Risk and Synthetic Execution Layer; AI-Driven v2 Partition Boundary; Development-Only Evidence Runner. Round 1 Causal Signals, Round 1 Family Execution, Round 1 Discovery Runner and Round 1 Closure used four paths; Round 2 Causal Signals, Round 2 Family Execution, Round 2 Discovery Runner and Round 2 Closure used three paths.
 Git through `8c51695` preserves the Rule Discovery Foundation and True Learning Engine scope correction.
 
 ## Immutable lineage index
 Core IDs include causal-feature, state, risk, partition, Development runner,
-hybrid/Round 1/Round 2, True Learning Contract (`70e7bca`, `796c8de`), Learning
-Core, 12h runner/economic review, Alpha Research Lab and the derivatives-
-context feasibility, hypothesis and dataset-lock protocols.
-Evidence: BTC episode `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`,
-Round 1 `3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`, Round 2
-`5f9acde53d0e2cf35cd1010d0002222182670d7255bdf44e18715f4902c85a01`; Stage 2 compared 1d, 12h and 4h timestamp-only with report
-`ca86d49f1dde1d1a8a1e61f07f4c1e98080ab942ab5c32f89880b387edd867d1`, Learning
-Attempt 3 `30d020bd9c30306f3e8931b47c0958fea7e11a33bff3795c3473806ddcaa09cf`
-and Reference A `f537410d2a237be207951b638518d80e861289dafa7db9b5c2322ffa32d4e594`.
+hybrid/Rounds, True Learning Contract, Learning Core, 12h research and the
+derivatives-context protocols.
+Evidence: BTC episode `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`, Round 1 `3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`, Round 2 `5f9acde53d0e2cf35cd1010d0002222182670d7255bdf44e18715f4902c85a01`, Stage 2 timestamp-only (1d, 12h and 4h) `ca86d49f1dde1d1a8a1e61f07f4c1e98080ab942ab5c32f89880b387edd867d1`, Learning Attempt 3 `30d020bd9c30306f3e8931b47c0958fea7e11a33bff3795c3473806ddcaa09cf` and Reference A `f537410d2a237be207951b638518d80e861289dafa7db9b5c2322ffa32d4e594`.
 
 Reference A is `KRAKEN_AI_V2_DEVELOPMENT_REFERENCE_A_CLOSED_NO_TRADE_HOLD_CASH`.
 Legacy boundaries: `2024-04-01T00:00:00Z`, `2025-04-01T00:00:00Z`, `2026-04-01T00:00:00Z` exclusive.
 Compatibility: Kraken daily, no model training, Round 1 Discovery Runner, Round
 2 Family Execution, True Learning Engine and three-class Learning Core.
-Exact compatibility: AI-Driven v2 State Machine; AI-Driven v2 Risk and Execution; AI-Driven v2 Development/Evaluation Partition; AI-Driven v2 Development Runner; True Learning Contract V1; `kraken-ai-v2-ccvr-reference-a-v1`; `kraken-ai-v2-risk-execution-reference-a-v1`; `kraken-btc-eth-xrp-ai-driven-v2-partition-v1`; `kraken-btc-eth-xrp-ai-driven-v2-development-runner-v1`; `kraken-btc-eth-xrp-ai-driven-v2-hybrid-strategy-discovery-learning-v1`; `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-1-v1`; `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-2-v1`.
+Exact compatibility: AI-Driven v2 State Machine; AI-Driven v2 Risk and Execution; AI-Driven v2 Development/Evaluation Partition; AI-Driven v2 Development Runner; True Learning Contract V1 (`70e7bca`, `796c8de`); `kraken-ai-v2-ccvr-reference-a-v1`; `kraken-ai-v2-risk-execution-reference-a-v1`; `kraken-btc-eth-xrp-ai-driven-v2-partition-v1`; `kraken-btc-eth-xrp-ai-driven-v2-development-runner-v1`; `kraken-btc-eth-xrp-ai-driven-v2-hybrid-strategy-discovery-learning-v1`; `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-1-v1`; `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-2-v1`.
 Legacy exact marker: resolution remains unselected.
 Candidate v2, Calibration, Evaluation, PAPER, cloud and live remain unauthorized.

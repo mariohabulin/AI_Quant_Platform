@@ -3,15 +3,16 @@
 ## Mission
 
 Preserve the closed spot-OHLCV result, frozen derivatives-context hypothesis
-and fail-closed Dataset Lock Attempt 1. Review a bounded recovery that accepts
-only official blank cells in unused metrics-ratio columns, records them without
-fill and keeps mandatory open interest strict. Do not execute recovery, generate
-labels, fit models, open Calibration/Evaluation or promote Candidate v2.
+and both fail-closed Dataset Lock attempts. Review a bounded Attempt 3 recovery
+that recognizes only the fully enumerated Binance `0E-8` open-interest sentinel,
+omits that unavailable observation without fill and rejects every non-frozen
+zero. Do not execute recovery, generate labels, fit models, open
+Calibration/Evaluation or promote Candidate v2.
 
 Status:
-`KRAKEN_AI_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_RECOVERY_ATTEMPT_2_IMPLEMENTATION_REVIEW_REQUIRED`
+`KRAKEN_AI_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_RECOVERY_ATTEMPT_3_IMPLEMENTATION_REVIEW_REQUIRED`
 
-Recovery parent execution milestone: `970ce17`
+Recovery parent execution milestone: `8181d05`
 
 Hypothesis parent milestone: `af0af86`
 
@@ -29,12 +30,19 @@ native 12h index-price ZIPs across BTCUSDT, ETHUSDT and XRPUSDT. Every object
 must match its official `.CHECKSUM` and exact schema before it can enter the
 lock.
 
-Attempt 1 consumed its authorization and failed before object 114 could enter
-the lock because the reader required values in four unused ratio fields that
-the official archive leaves blank. No final lock exists; non-final Attempt 1
-staging is preserved. Recovery Attempt 2 will use a new root, fingerprint the
-prior staging, count exact optional blanks without fill and keep positive
-`sum_open_interest` mandatory. No label or model was produced.
+Attempt 1 exposed exact blanks in unused ratio fields. Attempt 2 then reached
+object 181 and exposed an official paired `0E-8` open-interest sentinel. Neither
+attempt created a final lock, label or model; both non-final staging directories
+remain preserved. A complete scan of all 2,556 metrics ZIPs found exactly 399
+sentinel rows: the same 133 timestamps for each asset and no negative, blank,
+non-finite or other invalid open-interest value.
+
+Attempt 3 uses a new root and fingerprints both prior staging directories. It
+accepts only the frozen timestamp list when both open-interest fields are
+exactly `0E-8`, records and omits those observations, and performs no fill,
+interpolation or backfill. Positive open interest remains mandatory everywhere
+else. The later 30-minute backward-as-of feature join naturally invalidates a
+row when no sufficiently recent observation exists.
 
 ## Completed source audit and active hypothesis
 
@@ -116,16 +124,15 @@ mean `-0.2140 R`. Result SHA-256 is
 The source audit passed 14 focused and 1,954 total Windows tests, all four
 feasibility gates and an immutable external evidence lock. The hypothesis
 passed 20 focused and 1,974 total Windows tests and was committed at `af0af86`.
-The dataset-lock reader component is synthetic-only pending Windows
-reproduction and commit.
+The Attempt 3 recovery component is synthetic-only pending Windows
+reproduction, static review and commit.
 
 ## Next deterministic branches
 
-- current branch: reproduce and commit the hash-bound context dataset lock and
-  reader, then stop for separate one-shot acquisition authorization;
+- current branch: reproduce and commit the hash-bound Attempt 3 recovery, then
+  stop for a separate one-shot acquisition authorization;
 - after a successful independently reviewed lock: separately implement the frozen four-variant
   Development runner;
-- active branch: reproduce, review and commit the bounded Attempt 2 recovery;
 - schema or causal-alignment failure: fail closed and repair the reader without
   changing the hypothesis.
 
@@ -174,14 +181,7 @@ Historical protocol identifiers:
 - `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-2-v1`; and
 - `kraken-btc-eth-xrp-ai-driven-v2-true-learning-contract-v1`.
 
-Historical evidence and partition values:
-
-- BTC episode `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`;
-- Reference A `f537410d2a237be207951b638518d80e861289dafa7db9b5c2322ffa32d4e594`;
-- Round 1 report `3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`;
-- Round 2 report `5f9acde53d0e2cf35cd1010d0002222182670d7255bdf44e18715f4902c85a01`;
-- Development, Calibration and Evaluation boundaries:
-  `2024-04-01T00:00:00Z`, `2025-04-01T00:00:00Z`, `2026-04-01T00:00:00Z`.
+Historical evidence: BTC episode `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`; Reference A `f537410d2a237be207951b638518d80e861289dafa7db9b5c2322ffa32d4e594`; Round 1 `3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`; Round 2 `5f9acde53d0e2cf35cd1010d0002222182670d7255bdf44e18715f4902c85a01`. Partition boundaries: `2024-04-01T00:00:00Z`, `2025-04-01T00:00:00Z`, `2026-04-01T00:00:00Z`.
 
 Reference A closure status is
 `KRAKEN_AI_V2_DEVELOPMENT_REFERENCE_A_CLOSED_NO_TRADE_HOLD_CASH`.
