@@ -13,14 +13,17 @@ step: acquire the exact public Binance USD-M Development objects, verify their
 official checksums, validate their schemas and timestamps, and create one
 immutable external dataset lock that a later learning runner can read.
 
-Implementation and static review open no source object. Attempt 1 consumed its
-authorization at commit `970ce17` and failed on optional blank ratio cells.
-Attempt 2 consumed its authorization at commit `8181d05` and failed on Binance
-zero open-interest sentinels. Both final locks are absent and both staging
-directories are preserved. Recovery Attempt 3 requires the exact phrase
-`EXECUTE_KRAKEN_AI_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_RECOVERY_ATTEMPT_3_ONCE`
-after an independent clean preflight and may write only to a new Attempt 3
-root.
+Implementation and static review open no source object. Attempts 1 and 2
+consumed their authorizations and exposed two real source-schema conditions:
+optional blank ratio cells and frozen paired `0E-8` open-interest sentinels.
+Attempt 3 passed those corrections, then stopped on a transient DNS failure
+after locking 695 complete object pairs. No attempt produced a final lock; all
+three staging directories remain incident evidence.
+
+Recovery Attempt 4 requires the exact phrase
+`EXECUTE_KRAKEN_AI_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_RECOVERY_ATTEMPT_4_ONCE`
+after an independent clean preflight. It may write only to a new Attempt 4
+root. Earlier authorizations cannot be reused.
 
 ## Exact source registry
 
@@ -106,12 +109,27 @@ produce a final lock. The final directory contains:
 - one canonical `manifest.json`; and
 - one matching `manifest.sha256` sidecar.
 
-Attempt 1 and Attempt 2 staging are incident evidence. Recovery fingerprints
-every file in both directories before work, confirms both fingerprints again
-before publishing Attempt 3, and records them in the new manifest. Recovery
-never reads source values from or reuses either prior staging directory. The
-manifest records optional blank counts and zero-sentinel timestamps per source
-object and in exact aggregate.
+Attempts 1, 2 and 3 staging are incident evidence. Recovery fingerprints every
+file in all three directories before work and verifies the same inventories
+again before publication. Attempt 4 requires Attempt 3 to match exactly 1,390
+files, 7,317,431 bytes and inventory SHA-256
+`8de82f8905358c79f3e0cb609f8b8ecd782e32e02497e9ef784e85b528aa63dd`.
+Its file set must be the complete ZIP/checksum pairs for the contiguous first
+695 objects in the frozen registry, with no partial or additional file.
+
+Each of those 695 cached pairs is read only from Attempt 3 staging and must pass
+the same official checksum, safe-member, schema, chronology, period and value
+validation as a network object before it is copied to Attempt 4 staging. No
+cached validation result is trusted. Objects 696 through 2,808 are downloaded
+from their exact frozen public URLs. The manifest records the acquisition
+origin of every object, all three prior inventories, 695 verified-resume
+objects and 2,113 public-download objects.
+
+Every public fetch has at most twelve attempts. Transient transport failures
+use bounded exponential backoff of 1, 2, 4, 8, 16, 32 and then at most 60
+seconds between later tries. The retry budget never changes the object registry
+or any data rule. Exhaustion fails closed, leaves Attempt 4 staging for an
+incident review and never publishes a final lock.
 
 The manifest records object identity, byte sizes, four hashes, row counts and
 first/last timestamps. The independent reader verifies the manifest sidecar,
@@ -122,8 +140,8 @@ engine. It never downloads missing data while reading a lock.
 ## Safety boundary
 
 This recovery implementation does not execute acquisition, open values,
-generate labels or fit a model. Attempt 2 authorization is consumed. A later
-authorized Attempt 3 lock run may open only Development source values and may
+generate labels or fit a model. Attempt 3 authorization is consumed. A later
+authorized Attempt 4 lock run may open only Development source values and may
 not generate labels or train.
 
 Calibration, Evaluation, threshold or hyperparameter search, automatic model

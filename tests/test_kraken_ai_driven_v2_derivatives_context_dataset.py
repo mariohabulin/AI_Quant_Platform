@@ -15,6 +15,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "s
 import kraken_ai_driven_v2_derivatives_context_dataset as dataset
 from kraken_ai_driven_v2_derivatives_context_dataset import (
     ASSET_SYMBOLS,
+    ATTEMPT_3_RESUME_OBJECT_COUNT,
     AUTHORIZATION_PHRASE,
     COMMON_END_EXCLUSIVE_UTC,
     COMMON_START_UTC,
@@ -23,6 +24,7 @@ from kraken_ai_driven_v2_derivatives_context_dataset import (
     FUNDING_HEADER,
     KLINE_HEADER,
     KLINE_DOCUMENTED_HEADER,
+    MAXIMUM_TRANSPORT_ATTEMPTS,
     METRICS_HEADER,
     OPEN_INTEREST_ZERO_SENTINEL_LITERAL,
     OPEN_INTEREST_ZERO_SENTINEL_TIMESTAMPS,
@@ -139,6 +141,25 @@ def _prior_staging(tmp_path, attempt):
     return prior
 
 
+def _attempt_3_resume_staging(tmp_path, monkeypatch, registry, payloads, count):
+    prior = tmp_path / ".context_lock_attempt_3.staging"
+    for spec in registry[:count]:
+        raw = prior / dataset._safe_raw_relative(spec)
+        raw.parent.mkdir(parents=True, exist_ok=True)
+        raw.write_bytes(payloads[spec["url"]])
+        Path(str(raw) + ".CHECKSUM").write_bytes(payloads[spec["checksum_url"]])
+    inventory = dataset._directory_inventory(prior)
+    monkeypatch.setattr(dataset, "ATTEMPT_3_RESUME_OBJECT_COUNT", count)
+    monkeypatch.setattr(dataset, "ATTEMPT_3_STAGING_FILE_COUNT", inventory["file_count"])
+    monkeypatch.setattr(dataset, "ATTEMPT_3_STAGING_TOTAL_BYTES", inventory["total_bytes"])
+    monkeypatch.setattr(
+        dataset,
+        "ATTEMPT_3_STAGING_INVENTORY_SHA256",
+        inventory["inventory_sha256"],
+    )
+    return prior, inventory
+
+
 def test_declaration_freezes_exact_registry_and_keeps_run_inert():
     declaration = dataset_lock_declaration()
 
@@ -153,14 +174,20 @@ def test_declaration_freezes_exact_registry_and_keeps_run_inert():
         "MARK_PRICE_12H": 84,
         "INDEX_PRICE_12H": 84,
     }
-    assert declaration["recovery_parent_commit"] == "8181d05"
+    assert declaration["recovery_parent_commit"] == "25d55b6"
     assert declaration["attempt_1_authorization_consumed"] is True
     assert declaration["attempt_1_final_dataset_exists"] is False
     assert declaration["attempt_1_staging_required"] is True
     assert declaration["attempt_2_authorization_consumed"] is True
     assert declaration["attempt_2_final_dataset_exists"] is False
     assert declaration["attempt_2_staging_required"] is True
-    assert declaration["recovery_attempt"] == 3
+    assert declaration["attempt_3_authorization_consumed"] is True
+    assert declaration["attempt_3_final_dataset_exists"] is False
+    assert declaration["attempt_3_staging_required"] is True
+    assert declaration["verified_resume_object_count"] == ATTEMPT_3_RESUME_OBJECT_COUNT
+    assert declaration["public_download_object_count"] == 2113
+    assert declaration["maximum_transport_attempts_per_fetch"] == 12
+    assert declaration["recovery_attempt"] == 4
     assert declaration["open_interest_zero_sentinel_count"] == 399
     assert declaration["open_interest_zero_sentinel_count_per_asset"] == 133
     assert len(OPEN_INTEREST_ZERO_SENTINEL_TIMESTAMPS) == 133
@@ -390,30 +417,45 @@ def test_locker_is_one_shot_atomic_and_reader_reconstructs_exact_parent_frames(
     final = tmp_path / "context_lock"
     prior_1 = _prior_staging(tmp_path, 1)
     prior_2 = _prior_staging(tmp_path, 2)
+    prior_3, prior_3_inventory = _attempt_3_resume_staging(
+        tmp_path, monkeypatch, tiny_registry, payloads, 4
+    )
     prior_1_payload = (prior_1 / "preserved.bin").read_bytes()
     prior_2_payload = (prior_2 / "preserved.bin").read_bytes()
     with pytest.raises(PermissionError):
         DerivativesContextDatasetLocker(fetch).run(final, "wrong")
     summary = DerivativesContextDatasetLocker(fetch).run(
-        final, AUTHORIZATION_PHRASE, prior_1, prior_2
+        final, AUTHORIZATION_PHRASE, prior_1, prior_2, prior_3
     )
 
     assert summary["object_count"] == 12
     assert summary["normalized_file_count"] == 12
     assert summary["model_training_executed"] is False
-    assert summary["recovery_attempt"] == 3
+    assert summary["recovery_attempt"] == 4
+    assert summary["verified_resume_object_count"] == 4
+    assert summary["public_download_object_count"] == 8
+    assert summary["attempt_3_staging_inventory_sha256"] == (
+        prior_3_inventory["inventory_sha256"]
+    )
     assert summary["open_interest_zero_sentinel_count"] == 0
-    assert len(calls) == 24
+    assert len(calls) == 16
     assert final.is_dir()
     assert not (tmp_path / ".context_lock.staging").exists()
     assert (prior_1 / "preserved.bin").read_bytes() == prior_1_payload
     assert (prior_2 / "preserved.bin").read_bytes() == prior_2_payload
+    assert dataset._directory_inventory(prior_3) == prior_3_inventory
 
     sources, manifest, digest = read_locked_derivatives_context_dataset(
         final, expected_manifest_sha256=summary["manifest_sha256"]
     )
     assert digest == summary["manifest_sha256"]
     assert manifest["dataset_id"] == DATASET_ID
+    assert [record["acquisition_origin"] for record in manifest["objects"][:4]] == [
+        "VERIFIED_ATTEMPT_3_STAGING"
+    ] * 4
+    assert [record["acquisition_origin"] for record in manifest["objects"][4:]] == [
+        "PUBLIC_SOURCE_ATTEMPT_4"
+    ] * 8
     assert manifest["optional_metrics_blank_counts"] == {
         "count_toptrader_long_short_ratio": 0,
         "sum_toptrader_long_short_ratio": 0,
@@ -431,7 +473,7 @@ def test_locker_is_one_shot_atomic_and_reader_reconstructs_exact_parent_frames(
         ]
     with pytest.raises(FileExistsError):
         DerivativesContextDatasetLocker(fetch).run(
-            final, AUTHORIZATION_PHRASE, prior_1, prior_2
+            final, AUTHORIZATION_PHRASE, prior_1, prior_2, prior_3
         )
 
 
@@ -450,8 +492,11 @@ def test_reader_rejects_manifest_identity_or_normalized_tamper(tmp_path, monkeyp
     final = tmp_path / "lock"
     prior_1 = _prior_staging(tmp_path, 1)
     prior_2 = _prior_staging(tmp_path, 2)
+    prior_3, _ = _attempt_3_resume_staging(
+        tmp_path, monkeypatch, tiny_registry, payloads, 4
+    )
     summary = DerivativesContextDatasetLocker(payloads.__getitem__).run(
-        final, AUTHORIZATION_PHRASE, prior_1, prior_2
+        final, AUTHORIZATION_PHRASE, prior_1, prior_2, prior_3
     )
 
     with pytest.raises(RuntimeError, match="manifest identity"):
@@ -467,8 +512,12 @@ def test_reader_rejects_manifest_identity_or_normalized_tamper(tmp_path, monkeyp
 def test_failed_acquisition_preserves_staging_and_never_creates_final(
     tmp_path, monkeypatch
 ):
-    spec = _spec("FUNDING_RATE")
-    monkeypatch.setattr(dataset, "expected_object_registry", lambda: [spec])
+    first = _spec("FUNDING_RATE")
+    second = _spec("FUNDING_RATE", asset="ETH-USD")
+    registry = [first, second]
+    monkeypatch.setattr(dataset, "expected_object_registry", lambda: registry)
+    payload, checksum = _payload_for_spec(first)
+    payloads = {first["url"]: payload, first["checksum_url"]: checksum}
 
     def fail(_url):
         raise OSError("transport stopped")
@@ -476,12 +525,71 @@ def test_failed_acquisition_preserves_staging_and_never_creates_final(
     final = tmp_path / "failed"
     prior_1 = _prior_staging(tmp_path, 1)
     prior_2 = _prior_staging(tmp_path, 2)
+    prior_3, _ = _attempt_3_resume_staging(
+        tmp_path, monkeypatch, registry, payloads, 1
+    )
     with pytest.raises(OSError, match="transport stopped"):
         DerivativesContextDatasetLocker(fail).run(
-            final, AUTHORIZATION_PHRASE, prior_1, prior_2
+            final, AUTHORIZATION_PHRASE, prior_1, prior_2, prior_3
         )
     assert not final.exists()
     assert (tmp_path / ".failed.staging").is_dir()
+
+
+def test_transport_retries_use_frozen_bounded_exponential_backoff(monkeypatch):
+    attempts = []
+    sleeps = []
+
+    class Response:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args):
+            return False
+
+        def read(self):
+            return b"verified"
+
+    def open_after_three_failures(_request, timeout):
+        assert timeout == 120
+        attempts.append(1)
+        if len(attempts) <= 3:
+            raise OSError("temporary DNS failure")
+        return Response()
+
+    monkeypatch.setattr(dataset, "urlopen", open_after_three_failures)
+    monkeypatch.setattr(dataset.time, "sleep", sleeps.append)
+
+    assert dataset._default_fetch_bytes("https://example.test/object") == b"verified"
+    assert len(attempts) == 4
+    assert sleeps == [1, 2, 4]
+    assert MAXIMUM_TRANSPORT_ATTEMPTS == 12
+
+
+def test_attempt_3_resume_requires_exact_inventory_and_contiguous_file_set(
+    tmp_path, monkeypatch
+):
+    registry = [_spec("FUNDING_RATE"), _spec("FUNDING_RATE", asset="ETH-USD")]
+    monkeypatch.setattr(dataset, "expected_object_registry", lambda: registry)
+    payloads = {}
+    for spec in registry:
+        payload, checksum = _payload_for_spec(spec)
+        payloads[spec["url"]] = payload
+        payloads[spec["checksum_url"]] = checksum
+    prior_3, _ = _attempt_3_resume_staging(
+        tmp_path, monkeypatch, registry, payloads, 1
+    )
+    extra = prior_3 / "unexpected.bin"
+    extra.write_bytes(b"unexpected")
+
+    with pytest.raises(RuntimeError, match="inventory mismatch"):
+        DerivativesContextDatasetLocker(payloads.__getitem__).run(
+            tmp_path / "lock",
+            AUTHORIZATION_PHRASE,
+            _prior_staging(tmp_path, 1),
+            _prior_staging(tmp_path, 2),
+            prior_3,
+        )
 
 
 def test_locker_rejects_an_incomplete_frozen_zero_sentinel_registry(
@@ -497,6 +605,9 @@ def test_locker_rejects_an_incomplete_frozen_zero_sentinel_registry(
     )
     payloads = {spec["url"]: payload, spec["checksum_url"]: checksum}
     final = tmp_path / "incomplete_sentinel_lock"
+    prior_3, _ = _attempt_3_resume_staging(
+        tmp_path, monkeypatch, [spec], payloads, 1
+    )
 
     with pytest.raises(RuntimeError, match="zero-sentinel registry"):
         DerivativesContextDatasetLocker(payloads.__getitem__).run(
@@ -504,28 +615,30 @@ def test_locker_rejects_an_incomplete_frozen_zero_sentinel_registry(
             AUTHORIZATION_PHRASE,
             _prior_staging(tmp_path, 1),
             _prior_staging(tmp_path, 2),
+            prior_3,
         )
 
     assert not final.exists()
     assert (tmp_path / ".incomplete_sentinel_lock.staging").is_dir()
 
 
-def test_recovery_requires_both_nonempty_prior_staging_directories(tmp_path):
+def test_recovery_requires_three_distinct_nonempty_prior_staging_directories(tmp_path):
     final = tmp_path / "recovery"
-    with pytest.raises(PermissionError, match="Attempt 1 and Attempt 2"):
+    with pytest.raises(PermissionError, match="Attempt 1, Attempt 2 and Attempt 3"):
         DerivativesContextDatasetLocker().run(final, AUTHORIZATION_PHRASE)
 
     prior_1 = _prior_staging(tmp_path, 1)
+    prior_2 = _prior_staging(tmp_path, 2)
     empty_2 = tmp_path / ".attempt_2.staging"
     empty_2.mkdir()
     with pytest.raises(RuntimeError, match="non-empty"):
         DerivativesContextDatasetLocker().run(
-            final, AUTHORIZATION_PHRASE, prior_1, empty_2
+            final, AUTHORIZATION_PHRASE, prior_1, prior_2, empty_2
         )
 
     with pytest.raises(ValueError, match="distinct"):
         DerivativesContextDatasetLocker().run(
-            final, AUTHORIZATION_PHRASE, prior_1, prior_1
+            final, AUTHORIZATION_PHRASE, prior_1, prior_2, prior_2
         )
 
 
@@ -538,7 +651,9 @@ def test_protocol_freezes_no_fallback_no_fill_and_no_learning():
     assert "No REST fallback" in protocol
     assert "No duplicate, ordering inversion" in protocol
     assert "exact blank" in protocol
-    assert "Attempt 1 and Attempt 2 staging" in protocol
+    assert "Attempts 1, 2 and 3 staging" in protocol
+    assert "695 verified-resume" in protocol
+    assert "twelve attempts" in protocol
     assert "399" in protocol
     assert "0E-8" in protocol
     assert "does not execute acquisition" in protocol

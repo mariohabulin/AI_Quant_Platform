@@ -14,6 +14,7 @@ from pathlib import Path, PurePosixPath
 import re
 import tempfile
 import time
+from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 import zipfile
 
@@ -31,22 +32,32 @@ PARENT_PROTOCOL_ID = (
 PARENT_FEASIBILITY_REPORT_SHA256 = (
     "3c84fba6034790ae59761f3fba23affca80fca0c8b7d29b3e3f3762c789d8e29"
 )
-RECOVERY_PARENT_COMMIT = "8181d05"
+RECOVERY_PARENT_COMMIT = "25d55b6"
 ATTEMPT_1_INCIDENT_SHA256 = (
     "3abae269bc80b13b975e77afb4bbfc7e7f442856ab4510fd5ad9023221aebca8"
 )
 ATTEMPT_2_INCIDENT_SHA256 = (
     "76ce94fc848d888c489ea6466044a094443775f329bfcc51a3117bac5497a39f"
 )
+ATTEMPT_3_INCIDENT_SHA256 = (
+    "ce08144f2e27788a17b23bb0fbbfdf0728854b6332b82c98378e79b09e201cc6"
+)
+ATTEMPT_3_STAGING_FILE_COUNT = 1390
+ATTEMPT_3_STAGING_TOTAL_BYTES = 7317431
+ATTEMPT_3_STAGING_INVENTORY_SHA256 = (
+    "8de82f8905358c79f3e0cb609f8b8ecd782e32e02497e9ef784e85b528aa63dd"
+)
+ATTEMPT_3_RESUME_OBJECT_COUNT = 695
 AUTHORIZATION_PHRASE = (
-    "EXECUTE_KRAKEN_AI_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_RECOVERY_ATTEMPT_3_ONCE"
+    "EXECUTE_KRAKEN_AI_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_RECOVERY_ATTEMPT_4_ONCE"
 )
 BASE_URL = "https://data.binance.vision/"
 COMMON_START_UTC = "2021-12-01T00:00:00Z"
 COMMON_END_EXCLUSIVE_UTC = "2024-04-01T00:00:00Z"
 MAXIMUM_ZIP_BYTES = 128 * 1024 * 1024
 MAXIMUM_MEMBER_BYTES = 512 * 1024 * 1024
-MAXIMUM_TRANSPORT_ATTEMPTS = 3
+MAXIMUM_TRANSPORT_ATTEMPTS = 12
+MAXIMUM_TRANSPORT_BACKOFF_SECONDS = 60
 
 ASSET_SYMBOLS = {
     "BTC-USD": "BTCUSDT",
@@ -245,7 +256,21 @@ def dataset_lock_declaration():
         "attempt_2_final_dataset_exists": False,
         "attempt_2_staging_required": True,
         "attempt_2_incident_sha256": ATTEMPT_2_INCIDENT_SHA256,
-        "recovery_attempt": 3,
+        "attempt_3_authorization_consumed": True,
+        "attempt_3_final_dataset_exists": False,
+        "attempt_3_staging_required": True,
+        "attempt_3_incident_sha256": ATTEMPT_3_INCIDENT_SHA256,
+        "attempt_3_staging_file_count": ATTEMPT_3_STAGING_FILE_COUNT,
+        "attempt_3_staging_total_bytes": ATTEMPT_3_STAGING_TOTAL_BYTES,
+        "attempt_3_staging_inventory_sha256": (
+            ATTEMPT_3_STAGING_INVENTORY_SHA256
+        ),
+        "verified_resume_object_count": ATTEMPT_3_RESUME_OBJECT_COUNT,
+        "public_download_object_count": len(registry)
+        - ATTEMPT_3_RESUME_OBJECT_COUNT,
+        "maximum_transport_attempts_per_fetch": MAXIMUM_TRANSPORT_ATTEMPTS,
+        "maximum_transport_backoff_seconds": MAXIMUM_TRANSPORT_BACKOFF_SECONDS,
+        "recovery_attempt": 4,
         "authorization_phrase": AUTHORIZATION_PHRASE,
         "authorization_phrase_active": False,
         "asset_order": list(ASSET_SYMBOLS),
@@ -283,8 +308,8 @@ def dataset_lock_declaration():
         "cloud_execution_authorized": False,
         "real_orders_submitted": False,
         "live_execution_authorized": False,
-        "status": "KRAKEN_AI_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_RECOVERY_IMPLEMENTED_NO_ATTEMPT_3_AUTHORIZATION",
-        "next_stage": "SEPARATE_OPERATOR_DECISION_FOR_ONE_SHOT_DERIVATIVES_CONTEXT_DATASET_LOCK_RECOVERY_ATTEMPT_3",
+        "status": "KRAKEN_AI_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_RECOVERY_IMPLEMENTED_NO_ATTEMPT_4_AUTHORIZATION",
+        "next_stage": "SEPARATE_OPERATOR_DECISION_FOR_ONE_SHOT_DERIVATIVES_CONTEXT_DATASET_LOCK_RECOVERY_ATTEMPT_4",
     }
 
 
@@ -295,10 +320,22 @@ def _default_fetch_bytes(url):
         try:
             with urlopen(request, timeout=120) as response:
                 return response.read()
+        except HTTPError as exc:  # pragma: no cover - depends on remote server
+            if 400 <= exc.code < 500 and exc.code not in (408, 429):
+                raise RuntimeError(
+                    f"Frozen source object returned permanent HTTP {exc.code}: {url}."
+                ) from exc
+            last_error = exc
         except OSError as exc:  # pragma: no cover - depends on transport
             last_error = exc
-            if attempt + 1 < MAXIMUM_TRANSPORT_ATTEMPTS:
-                time.sleep(0.5 * (attempt + 1))
+        if attempt + 1 < MAXIMUM_TRANSPORT_ATTEMPTS:
+            delay = min(2**attempt, MAXIMUM_TRANSPORT_BACKOFF_SECONDS)
+            print(
+                f"TRANSPORT_RETRY={attempt + 2}/{MAXIMUM_TRANSPORT_ATTEMPTS}|"
+                f"DELAY_SECONDS={delay}|URL={url}",
+                flush=True,
+            )
+            time.sleep(delay)
     raise RuntimeError(f"Unable to download frozen source object: {url}.") from last_error
 
 
@@ -623,6 +660,24 @@ def _expected_zero_sentinel_timestamps_by_asset(registry):
     return expected
 
 
+def _validate_attempt_3_resume_staging(root, registry):
+    if len(registry) < ATTEMPT_3_RESUME_OBJECT_COUNT:
+        raise RuntimeError("Frozen registry is shorter than the resume prefix.")
+    expected_paths = []
+    for spec in registry[:ATTEMPT_3_RESUME_OBJECT_COUNT]:
+        raw_relative = _safe_raw_relative(spec)
+        expected_paths.extend(
+            (raw_relative.as_posix(), raw_relative.as_posix() + ".CHECKSUM")
+        )
+    observed_paths = sorted(
+        path.relative_to(root).as_posix()
+        for path in Path(root).rglob("*")
+        if path.is_file()
+    )
+    if observed_paths != sorted(expected_paths):
+        raise RuntimeError("Attempt 3 staging is not the frozen contiguous prefix.")
+
+
 class DerivativesContextDatasetLocker:
     def __init__(self, fetch_bytes=None):
         self.fetch_bytes = _default_fetch_bytes if fetch_bytes is None else fetch_bytes
@@ -633,29 +688,53 @@ class DerivativesContextDatasetLocker:
         authorization_phrase,
         prior_attempt_1_staging=None,
         prior_attempt_2_staging=None,
+        prior_attempt_3_staging=None,
     ):
         if authorization_phrase != AUTHORIZATION_PHRASE:
             raise PermissionError(
-                "Exact one-shot recovery Attempt 3 authorization is required."
+                "Exact one-shot recovery Attempt 4 authorization is required."
             )
-        if prior_attempt_1_staging is None or prior_attempt_2_staging is None:
-            raise PermissionError("Preserved Attempt 1 and Attempt 2 staging are required.")
+        if any(
+            path is None
+            for path in (
+                prior_attempt_1_staging,
+                prior_attempt_2_staging,
+                prior_attempt_3_staging,
+            )
+        ):
+            raise PermissionError(
+                "Preserved Attempt 1, Attempt 2 and Attempt 3 staging are required."
+            )
         prior_attempt_1_staging = Path(prior_attempt_1_staging).resolve()
         prior_attempt_2_staging = Path(prior_attempt_2_staging).resolve()
-        if prior_attempt_1_staging == prior_attempt_2_staging:
+        prior_attempt_3_staging = Path(prior_attempt_3_staging).resolve()
+        prior_paths = {
+            prior_attempt_1_staging,
+            prior_attempt_2_staging,
+            prior_attempt_3_staging,
+        }
+        if len(prior_paths) != 3:
             raise ValueError("Prior-attempt staging directories must be distinct.")
         attempt_1_inventory = _directory_inventory(prior_attempt_1_staging)
         attempt_2_inventory = _directory_inventory(prior_attempt_2_staging)
+        attempt_3_inventory = _directory_inventory(prior_attempt_3_staging)
         if (
             attempt_1_inventory["file_count"] == 0
             or attempt_2_inventory["file_count"] == 0
+            or attempt_3_inventory["file_count"] == 0
         ):
             raise RuntimeError("Preserved prior-attempt staging must be non-empty.")
+        expected_attempt_3_inventory = {
+            "file_count": ATTEMPT_3_STAGING_FILE_COUNT,
+            "total_bytes": ATTEMPT_3_STAGING_TOTAL_BYTES,
+            "inventory_sha256": ATTEMPT_3_STAGING_INVENTORY_SHA256,
+        }
+        if attempt_3_inventory != expected_attempt_3_inventory:
+            raise RuntimeError("Attempt 3 staging inventory mismatch.")
         output_root = Path(output_root).resolve()
         if output_root.exists():
             raise FileExistsError(f"Final dataset lock already exists: {output_root}.")
         staging = output_root.with_name(f".{output_root.name}.staging")
-        prior_paths = {prior_attempt_1_staging, prior_attempt_2_staging}
         if staging in prior_paths or output_root in prior_paths:
             raise ValueError("Recovery output must not reuse prior-attempt staging.")
         if staging.exists():
@@ -676,16 +755,29 @@ class DerivativesContextDatasetLocker:
             identity: set() for identity in normalized_chunks
         }
         registry = expected_object_registry()
+        _validate_attempt_3_resume_staging(prior_attempt_3_staging, registry)
         for object_number, spec in enumerate(registry, start=1):
-            if object_number == 1 or object_number % 25 == 0 or object_number == len(registry):
+            if (
+                object_number == 1
+                or object_number % 25 == 0
+                or object_number == len(registry)
+            ):
                 print(
                     f"DATASET_LOCK_PROGRESS={object_number}/{len(registry)}|"
                     f"{spec['source_id']}|{spec['asset']}|{spec['period']}",
                     flush=True,
                 )
-            zip_bytes = self.fetch_bytes(spec["url"])
-            checksum_bytes = self.fetch_bytes(spec["checksum_url"])
+            if object_number <= ATTEMPT_3_RESUME_OBJECT_COUNT:
+                prior_raw = prior_attempt_3_staging / _safe_raw_relative(spec)
+                zip_bytes = prior_raw.read_bytes()
+                checksum_bytes = Path(str(prior_raw) + ".CHECKSUM").read_bytes()
+                acquisition_origin = "VERIFIED_ATTEMPT_3_STAGING"
+            else:
+                zip_bytes = self.fetch_bytes(spec["url"])
+                checksum_bytes = self.fetch_bytes(spec["checksum_url"])
+                acquisition_origin = "PUBLIC_SOURCE_ATTEMPT_4"
             validated = validate_source_archive(spec, zip_bytes, checksum_bytes)
+            validated["acquisition_origin"] = acquisition_origin
             for name, count in validated.get("optional_blank_counts", {}).items():
                 aggregate_optional_blank_counts[name] += count
             aggregate_zero_sentinel_timestamps[spec["asset"]].extend(
@@ -745,6 +837,8 @@ class DerivativesContextDatasetLocker:
             raise RuntimeError("Attempt 1 staging changed during recovery.")
         if _directory_inventory(prior_attempt_2_staging) != attempt_2_inventory:
             raise RuntimeError("Attempt 2 staging changed during recovery.")
+        if _directory_inventory(prior_attempt_3_staging) != attempt_3_inventory:
+            raise RuntimeError("Attempt 3 staging changed during recovery.")
 
         manifest = {
             "schema_version": SCHEMA_VERSION,
@@ -756,9 +850,18 @@ class DerivativesContextDatasetLocker:
             "parent_feasibility_report_sha256": PARENT_FEASIBILITY_REPORT_SHA256,
             "attempt_1_incident_sha256": ATTEMPT_1_INCIDENT_SHA256,
             "attempt_2_incident_sha256": ATTEMPT_2_INCIDENT_SHA256,
+            "attempt_3_incident_sha256": ATTEMPT_3_INCIDENT_SHA256,
             "attempt_1_staging_inventory": attempt_1_inventory,
             "attempt_2_staging_inventory": attempt_2_inventory,
-            "recovery_attempt": 3,
+            "attempt_3_staging_inventory": attempt_3_inventory,
+            "recovery_attempt": 4,
+            "verified_resume_object_count": ATTEMPT_3_RESUME_OBJECT_COUNT,
+            "public_download_object_count": len(registry)
+            - ATTEMPT_3_RESUME_OBJECT_COUNT,
+            "maximum_transport_attempts_per_fetch": MAXIMUM_TRANSPORT_ATTEMPTS,
+            "maximum_transport_backoff_seconds": (
+                MAXIMUM_TRANSPORT_BACKOFF_SECONDS
+            ),
             "common_start_utc": COMMON_START_UTC,
             "common_end_exclusive_utc": COMMON_END_EXCLUSIVE_UTC,
             "asset_order": list(ASSET_SYMBOLS),
@@ -818,10 +921,16 @@ class DerivativesContextDatasetLocker:
             "attempt_2_staging_inventory_sha256": attempt_2_inventory[
                 "inventory_sha256"
             ],
+            "attempt_3_staging_inventory_sha256": attempt_3_inventory[
+                "inventory_sha256"
+            ],
+            "verified_resume_object_count": ATTEMPT_3_RESUME_OBJECT_COUNT,
+            "public_download_object_count": len(registry)
+            - ATTEMPT_3_RESUME_OBJECT_COUNT,
             "open_interest_zero_sentinel_count": sum(
                 len(values) for values in aggregate_zero_sentinel_timestamps.values()
             ),
-            "recovery_attempt": 3,
+            "recovery_attempt": 4,
             "market_values_opened": True,
             "labels_generated": False,
             "model_training_executed": False,
@@ -872,7 +981,7 @@ def read_locked_derivatives_context_dataset(
         raise RuntimeError("Locked derivatives-context object count mismatch.")
     if manifest.get("normalized_file_count") != 12:
         raise RuntimeError("Locked derivatives-context normalized registry mismatch.")
-    if manifest.get("recovery_attempt") != 3:
+    if manifest.get("recovery_attempt") != 4:
         raise RuntimeError("Locked derivatives-context recovery identity mismatch.")
     if manifest.get("execution_parent_commit") != RECOVERY_PARENT_COMMIT:
         raise RuntimeError("Locked derivatives-context execution binding mismatch.")
@@ -880,7 +989,9 @@ def read_locked_derivatives_context_dataset(
         raise RuntimeError("Locked derivatives-context incident binding mismatch.")
     if manifest.get("attempt_2_incident_sha256") != ATTEMPT_2_INCIDENT_SHA256:
         raise RuntimeError("Locked Attempt 2 incident binding mismatch.")
-    for attempt in (1, 2):
+    if manifest.get("attempt_3_incident_sha256") != ATTEMPT_3_INCIDENT_SHA256:
+        raise RuntimeError("Locked Attempt 3 incident binding mismatch.")
+    for attempt in (1, 2, 3):
         prior_inventory = manifest.get(f"attempt_{attempt}_staging_inventory")
         if not isinstance(prior_inventory, dict) or set(prior_inventory) != {
             "file_count",
@@ -897,6 +1008,23 @@ def read_locked_derivatives_context_dataset(
             is None
         ):
             raise RuntimeError("Locked prior-staging inventory value mismatch.")
+    if manifest["attempt_3_staging_inventory"] != {
+        "file_count": ATTEMPT_3_STAGING_FILE_COUNT,
+        "total_bytes": ATTEMPT_3_STAGING_TOTAL_BYTES,
+        "inventory_sha256": ATTEMPT_3_STAGING_INVENTORY_SHA256,
+    }:
+        raise RuntimeError("Locked Attempt 3 staging inventory mismatch.")
+    if (
+        manifest.get("verified_resume_object_count")
+        != ATTEMPT_3_RESUME_OBJECT_COUNT
+        or manifest.get("public_download_object_count")
+        != len(expected_object_registry()) - ATTEMPT_3_RESUME_OBJECT_COUNT
+        or manifest.get("maximum_transport_attempts_per_fetch")
+        != MAXIMUM_TRANSPORT_ATTEMPTS
+        or manifest.get("maximum_transport_backoff_seconds")
+        != MAXIMUM_TRANSPORT_BACKOFF_SECONDS
+    ):
+        raise RuntimeError("Locked recovery transport evidence mismatch.")
     if manifest.get("optional_metrics_blank_policy") != (
         "EXACT_BLANK_RECORDED_NO_FILL_UNUSED_RATIO_FIELDS"
     ):
@@ -928,6 +1056,16 @@ def read_locked_derivatives_context_dataset(
     ]
     if observed_identities != expected_identities:
         raise RuntimeError("Locked derivatives-context object identity registry mismatch.")
+    expected_origins = [
+        "VERIFIED_ATTEMPT_3_STAGING"
+        if number <= ATTEMPT_3_RESUME_OBJECT_COUNT
+        else "PUBLIC_SOURCE_ATTEMPT_4"
+        for number in range(1, len(expected_identities) + 1)
+    ]
+    if [item.get("acquisition_origin") for item in manifest["objects"]] != (
+        expected_origins
+    ):
+        raise RuntimeError("Locked recovery acquisition-origin registry mismatch.")
     aggregate_optional_blank_counts = {
         name: 0 for name in OPTIONAL_METRICS_COLUMNS
     }
@@ -1063,6 +1201,7 @@ def main(argv=None):
     parser.add_argument("--authorization-phrase")
     parser.add_argument("--prior-attempt-1-staging", type=Path)
     parser.add_argument("--prior-attempt-2-staging", type=Path)
+    parser.add_argument("--prior-attempt-3-staging", type=Path)
     parser.add_argument("--read-summary", type=Path)
     parser.add_argument("--expected-manifest-sha256")
     args = parser.parse_args(argv)
@@ -1072,6 +1211,7 @@ def main(argv=None):
             args.authorization_phrase,
             args.prior_attempt_1_staging,
             args.prior_attempt_2_staging,
+            args.prior_attempt_3_staging,
         )
     elif args.read_summary is not None:
         sources, manifest, digest = read_locked_derivatives_context_dataset(
@@ -1086,6 +1226,12 @@ def main(argv=None):
             "source_series_order": list(SOURCE_SPECS),
             "object_count": manifest["object_count"],
             "recovery_attempt": manifest["recovery_attempt"],
+            "verified_resume_object_count": manifest[
+                "verified_resume_object_count"
+            ],
+            "public_download_object_count": manifest[
+                "public_download_object_count"
+            ],
             "open_interest_zero_sentinel_count": manifest[
                 "open_interest_zero_sentinel_count"
             ],

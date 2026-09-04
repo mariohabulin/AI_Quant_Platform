@@ -4,15 +4,15 @@ This is the concise active decision log. Detailed historical implementation
 notes remain recoverable in Git through commit `8c51695` and in the immutable
 protocol/evidence files.
 
-## 2026-09-04 — Dataset Lock Attempt 2 incident and bounded recovery
-- Attempt 2 at `8181d05` failed at object 181 on paired `0E-8` open-interest
-  fields; no final lock, label or model exists and authorization is consumed.
-- Both prior staging directories remain preserved and may not be reused. A
-  full content scan of all 2,556 metrics ZIPs found 399 sentinels: the same
-  133 timestamps for BTC, ETH and XRP, with no other invalid open interest.
-- Attempt 3 accepts only the hash-bound timestamp list plus exact paired
-  literal, records and omits it without fill, and rejects every other zero.
-- Attempt 3 needs Windows review, commit, preflight and separate authorization.
+## 2026-09-04 — Dataset Lock Attempt 3 transport incident
+- Attempt 3 at `25d55b6` passed both source-schema corrections, then DNS failed
+  while fetching object 696. No final lock, label or model exists.
+- Its immutable staging holds a contiguous prefix of 695 complete ZIP/checksum
+  pairs: 1,390 files, 7,317,431 bytes, inventory SHA-256
+  `8de82f8905358c79f3e0cb609f8b8ecd782e32e02497e9ef784e85b528aa63dd`.
+- Attempt 4 must preserve all three prior stagings, fully revalidate and copy
+  those 695 pairs, fetch only the remaining 2,113, and use twelve-attempt
+  bounded exponential transport retry. It needs review, commit and preflight.
 
 ## 2026-09-02 — Derivatives-context Dataset Lock Attempt 1 incident
 - Attempt 1 at `970ce17` failed before object 114; no final lock exists and staging is preserved.

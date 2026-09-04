@@ -94,11 +94,15 @@ both staging directories are preserved.
 
 A complete content scan of all 2,556 metrics archives found exactly 399 paired
 sentinels at the same 133 timestamps for each asset, with no negative, blank,
-non-finite or alternate invalid open-interest values. Attempt 3 is therefore a
-bounded source-adapter correction, not a looser research gate: only that frozen
-timestamp set and exact paired literal may be omitted, without interpolation,
-fill or backfill. Every other nonpositive value fails closed. Model training
-remains closed pending a complete, independently reviewed lock.
+non-finite or alternate invalid open-interest values. Attempt 3 passed this
+bounded correction, then a DNS outage stopped acquisition at object 696. Its
+695 complete pairs are preserved, but no final lock exists.
+
+Attempt 4 does not restart blindly: it requires the exact Attempt 3 inventory,
+fully revalidates and copies those 695 pairs to a new root, then downloads the
+remaining 2,113 with bounded exponential retry. Every source and causal gate
+is unchanged; all three earlier staging directories remain immutable. Model
+training remains closed pending a complete, independently reviewed lock.
 
 ## Permanent safety boundary
 

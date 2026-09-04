@@ -3,16 +3,17 @@
 ## Mission
 
 Preserve the closed spot-OHLCV result, frozen derivatives-context hypothesis
-and both fail-closed Dataset Lock attempts. Review a bounded Attempt 3 recovery
-that recognizes only the fully enumerated Binance `0E-8` open-interest sentinel,
-omits that unavailable observation without fill and rejects every non-frozen
-zero. Do not execute recovery, generate labels, fit models, open
-Calibration/Evaluation or promote Candidate v2.
+and three fail-closed Dataset Lock attempts. Review a bounded Attempt 4
+recovery that revalidates and resumes the exact 695-object prefix preserved by
+Attempt 3, downloads only the remaining 2,113 objects and tolerates transient
+transport outages without weakening any data rule. Do not execute recovery,
+generate labels, fit models, open Calibration/Evaluation or promote Candidate
+v2.
 
 Status:
-`KRAKEN_AI_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_RECOVERY_ATTEMPT_3_IMPLEMENTATION_REVIEW_REQUIRED`
+`KRAKEN_AI_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_RECOVERY_ATTEMPT_4_IMPLEMENTATION_REVIEW_REQUIRED`
 
-Recovery parent execution milestone: `8181d05`
+Recovery parent execution milestone: `25d55b6`
 
 Hypothesis parent milestone: `af0af86`
 
@@ -37,12 +38,13 @@ remain preserved. A complete scan of all 2,556 metrics ZIPs found exactly 399
 sentinel rows: the same 133 timestamps for each asset and no negative, blank,
 non-finite or other invalid open-interest value.
 
-Attempt 3 uses a new root and fingerprints both prior staging directories. It
-accepts only the frozen timestamp list when both open-interest fields are
-exactly `0E-8`, records and omits those observations, and performs no fill,
-interpolation or backfill. Positive open interest remains mandatory everywhere
-else. The later 30-minute backward-as-of feature join naturally invalidates a
-row when no sufficiently recent observation exists.
+Attempt 3 passed the source-schema corrections, then DNS failed after 695
+complete pairs; no final lock exists. Its exact 1,390-file inventory is frozen.
+Attempt 4 uses a new root, preserves all three prior staging directories,
+revalidates every cached pair against its official checksum and full schema,
+and fetches objects 696–2,808 with bounded exponential retry. The manifest
+records each object's acquisition origin. Positive open interest, exact `0E-8`
+allowlisting, no fill and every causal rule remain unchanged.
 
 ## Completed source audit and active hypothesis
 
@@ -124,12 +126,12 @@ mean `-0.2140 R`. Result SHA-256 is
 The source audit passed 14 focused and 1,954 total Windows tests, all four
 feasibility gates and an immutable external evidence lock. The hypothesis
 passed 20 focused and 1,974 total Windows tests and was committed at `af0af86`.
-The Attempt 3 recovery component is synthetic-only pending Windows
+The Attempt 4 recovery component is synthetic-only pending Windows
 reproduction, static review and commit.
 
 ## Next deterministic branches
 
-- current branch: reproduce and commit the hash-bound Attempt 3 recovery, then
+- current branch: reproduce and commit the resumable Attempt 4 recovery, then
   stop for a separate one-shot acquisition authorization;
 - after a successful independently reviewed lock: separately implement the frozen four-variant
   Development runner;

@@ -6,7 +6,6 @@ context experiment is frozen at `af0af86`; implement and review its exact
 hash-bound dataset lock and reader. Do not train until a real lock is complete
 and independently reviewed.
 ## Active sequence
-
 ### 1. V2 Learning Core — COMMITTED AT `2a09363`
 
 - [x] Freeze the active 12h Development-feasibility path.
@@ -124,8 +123,7 @@ exists.
 - [x] commit and push the pre-registration milestone at `af0af86`;
 - [x] implement the hash-bound derivatives-context dataset lock and reader;
 - [x] validate source schemas synthetically before any network execution.
-
-### 7. Derivatives-context dataset lock and reader — ATTEMPTS 1–2 FAILED CLOSED
+### 7. Derivatives-context dataset lock and reader — ATTEMPTS 1–3 FAILED CLOSED
 - [x] freeze 2,808 exact Development objects and every official checksum;
 - [x] hash raw/member/normalized bytes and freeze all three source schemas;
 - [x] reject unsafe ZIPs, foreign periods, duplicates, inversions and bad grids;
@@ -145,14 +143,16 @@ exists.
 - [x] implement exact allowlist validation, omission without fill, and reject
   every other nonpositive value;
 - [x] require both untouched staging inventories and a new Attempt 3 root;
-- [ ] reproduce focused/full Windows Attempt 3 tests and static review;
-- [ ] commit and push the reviewed Attempt 3 recovery;
-- [ ] separately preflight and authorize Recovery Attempt 3.
+- [x] reproduce, commit and separately authorize Recovery Attempt 3;
+- [x] preserve its 695-object prefix after transient DNS failure at object 696;
+- [x] bind 1,390 files, 7,317,431 bytes and the exact staging inventory hash;
+- [x] implement full revalidation and reuse of only that contiguous prefix;
+- [x] fetch only the remaining 2,113 objects with bounded exponential retry;
+- [ ] reproduce focused/full Windows Attempt 4 tests and static review;
+- [ ] commit/push, preflight and separately authorize Recovery Attempt 4.
 
 Calibration, Evaluation, Candidate v2, PAPER and live remain closed.
-
 ## Retired active work
-
 AI-Driven Crypto Research v2, State Machine, Risk and Execution,
 Development/Evaluation Partition and Development Runner; both rule-discovery
 rounds; and Reference A are the closed Rule Discovery Foundation, not candidates.

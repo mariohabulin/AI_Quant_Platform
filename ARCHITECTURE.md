@@ -145,7 +145,6 @@ These source gates claim no alpha: pass means a separate learning protocol;
 failure means another source or stop, never relaxed economic gates.
 
 ### Frozen Derivatives Context Hypothesis
-
 The audit passed with 852 shared days, 100% coverage and no duplicates; report
 SHA-256 is `3c84fba6034790ae59761f3fba23affca80fca0c8b7d29b3e3f3762c789d8e29`.
 The synthetic-only hypothesis implements nine causal context features with
@@ -154,9 +153,7 @@ spot-only histogram-GBT controls are matched to classification and net-R
 context variants on identical rows and three 30-day-purged folds. Only context
 variants can pass absolute and incremental gates. No values are opened or
 models fitted.
-
 ### Derivatives Context Dataset Lock and Reader
-
 `kraken_ai_driven_v2_derivatives_context_dataset.py` freezes 2,808 Binance
 USD-M Development objects: 84 funding, 2,556 daily open-interest metrics, 84
 native 12h mark and 84 native 12h index archives. Every ZIP must match its
@@ -166,14 +163,17 @@ chronology, period and 12h grid; fallback and fill fail closed. Exact blanks are
 allowed only in four unused ratio columns and counted. Attempt 1 exposed the
 old all-columns-finite assumption. Attempt 2 exposed paired official `0E-8`
 sentinels at object 181; both staging directories remain immutable incidents.
-
 A complete scan of all 2,556 metrics archives found exactly 399 such rows: 133
 identical timestamps per asset and no other invalid open interest. Attempt 3
-accepts only that hash-bound timestamp set when both source fields are exactly
-`0E-8`, records the raw row, omits it from normalized open interest and never
-fills it. Every unfrozen, unpaired, alternate-literal or negative value fails
-closed. The independent reader reparses every locked raw ZIP and revalidates
-the same rule before exposing normalized values.
+passed that correction but stopped on transient DNS after 695 complete pairs;
+its final lock is absent and exact staging inventory remains immutable.
+
+Attempt 4 revalidates that contiguous 695-object prefix using every original
+checksum, ZIP, schema, chronology, period and value rule before copying it to a
+new staging root. It downloads only objects 696–2,808 with at most twelve
+transport attempts and bounded exponential backoff. The manifest records each
+origin and all three prior inventories. Any inventory change, invalid cache,
+continued outage or source defect fails closed; no prior staging is modified.
 ## Runtime and risk boundary
 An approved runtime may load an immutable artifact but cannot fit, mutate,
 rank, promote or submit orders; Risk and Synthetic Execution remains later.

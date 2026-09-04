@@ -25,8 +25,8 @@ def test_review_binds_parent_hypothesis_and_new_lock_component():
 
     assert review["status"] == STATUS
     assert review["parent_commit"] == "af0af86"
-    assert review["recovery_parent_commit"] == "8181d05"
-    assert review["recovery_attempt"] == 3
+    assert review["recovery_parent_commit"] == "25d55b6"
+    assert review["recovery_attempt"] == 4
     assert review["parent_protocol_sha256"] == EXPECTED_PARENT_PROTOCOL_SHA256
     assert review["parent_protocol_sha256_match"] is True
     assert review["parent_component_sha256"] == EXPECTED_PARENT_COMPONENT_SHA256
@@ -66,6 +66,16 @@ def test_review_confirms_exact_2808_object_integrity_and_reader_boundary():
     assert review["attempt_2_final_dataset_exists"] is False
     assert review["attempt_2_staging_required"] is True
     assert review["attempt_2_incident_sha256_match"] is True
+    assert review["attempt_3_authorization_consumed"] is True
+    assert review["attempt_3_final_dataset_exists"] is False
+    assert review["attempt_3_staging_required"] is True
+    assert review["attempt_3_incident_sha256_match"] is True
+    assert review["verified_resume_object_count"] == 695
+    assert review["public_download_object_count"] == 2113
+    assert review["maximum_transport_attempts_per_fetch"] == 12
+    assert review["maximum_transport_backoff_seconds"] == 60
+    assert review["verified_resume_staging_binding_implemented"] is True
+    assert review["bounded_transport_retry_implemented"] is True
     assert review["complete_metrics_forensic_scan_recorded"] is True
     assert review["open_interest_zero_sentinel_policy_implemented"] is True
     assert review["open_interest_zero_sentinel_count"] == 399
@@ -106,6 +116,7 @@ def test_review_fails_closed_if_parent_or_new_component_changes(tmp_path):
         "src/kraken_ai_driven_v2_derivatives_context_dataset.py",
         "KRAKEN_AI_DRIVEN_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_ATTEMPT_1_INCIDENT.md",
         "KRAKEN_AI_DRIVEN_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_ATTEMPT_2_INCIDENT.md",
+        "KRAKEN_AI_DRIVEN_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_ATTEMPT_3_INCIDENT.md",
     )
     for relative in relatives:
         source = ROOT / relative
