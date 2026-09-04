@@ -125,15 +125,22 @@ exists.
 - [x] implement the hash-bound derivatives-context dataset lock and reader;
 - [x] validate source schemas synthetically before any network execution.
 
-### 7. Derivatives-context dataset lock and reader — IMPLEMENTED, RUN CLOSED
+### 7. Derivatives-context dataset lock and reader — ATTEMPT 1 FAILED CLOSED
 - [x] freeze 2,808 exact Development objects and every official checksum;
 - [x] hash raw/member/normalized bytes and freeze all three source schemas;
 - [x] reject unsafe ZIPs, foreign periods, duplicates, inversions and bad grids;
 - [x] implement atomic manifest locking and an independent full-hash reader;
 - [x] keep labels, fitting and every later stage unauthorized;
-- [ ] reproduce focused/full Windows tests and static review;
-- [ ] commit and push the reviewed reader milestone;
-- [ ] preflight, separately authorize, execute and verify one real lock.
+- [x] reproduce focused/full Windows tests and static review;
+- [x] commit and push the reviewed reader milestone at `970ce17`;
+- [x] preflight and separately authorize real Dataset Lock Attempt 1;
+- [x] preserve fail-closed Attempt 1 staging after the unused-ratio blank error;
+- [x] identify official object 114 and freeze the incident evidence;
+- [x] keep required open interest strict while recording exact optional blanks;
+- [x] implement a new-root recovery that fingerprints Attempt 1 staging;
+- [ ] reproduce focused/full Windows recovery tests and static review;
+- [ ] commit and push the reviewed Attempt 2 recovery;
+- [ ] separately preflight and authorize Recovery Attempt 2.
 
 Calibration, Evaluation, Candidate v2, PAPER and live remain closed.
 

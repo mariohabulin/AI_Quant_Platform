@@ -13,10 +13,13 @@ step: acquire the exact public Binance USD-M Development objects, verify their
 official checksums, validate their schemas and timestamps, and create one
 immutable external dataset lock that a later learning runner can read.
 
-Implementation and static review open no source object. A real acquisition is
-one-shot and requires the exact phrase
-`EXECUTE_KRAKEN_AI_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_ONCE` after an
-independent clean preflight.
+Implementation and static review open no source object. Attempt 1 consumed its
+one-shot authorization at commit `970ce17` and failed closed on an incorrect
+all-columns-finite assumption. Its final lock is absent and its staging is
+preserved. Recovery Attempt 2 requires the exact phrase
+`EXECUTE_KRAKEN_AI_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_RECOVERY_ATTEMPT_2_ONCE`
+after an independent clean preflight and may write only to a new Attempt 2
+root.
 
 ## Exact source registry
 
@@ -56,15 +59,24 @@ Futures metrics requires exactly `create_time`, `symbol`,
 match the object identity. The normalized output retains `source_timestamp`
 and positive `open_interest` from `sum_open_interest`.
 
+`create_time`, `symbol`, positive finite `sum_open_interest` and finite
+`sum_open_interest_value` remain mandatory. Binance's official archives may
+leave the four ancillary ratio columns blank. Each such cell is optional only
+because none is retained by this frozen dataset or hypothesis. An exact blank
+is recorded as missing; a finite decimal is validated; every other sentinel
+fails closed. A blank is never converted to zero, filled, interpolated or used
+to discard an otherwise valid open-interest observation.
+
 Mark and index native 12h klines require the official twelve-field kline
 schema. Headerless official files and the exact documented header are accepted.
 Open timestamps must be unique, increasing, UTC-aligned 12h buckets inside the
 object month; close timestamps must be later than their opens. Only
 `open_timestamp`, `close_timestamp` and positive `close` are normalized.
 
-All numeric values must be finite. No duplicate, ordering inversion, foreign
-period row, interpolation, backfill, cross-asset fill or schema alias is
-allowed. Raw decimal text is preserved in normalized CSV output.
+All retained numeric values and every present optional numeric value must be
+finite. No duplicate, ordering inversion, foreign period row, interpolation,
+backfill, cross-asset fill or schema alias is allowed. Raw decimal text is
+preserved in normalized CSV output.
 
 ## Immutable external lock
 
@@ -77,6 +89,12 @@ produce a final lock. The final directory contains:
 - one canonical `manifest.json`; and
 - one matching `manifest.sha256` sidecar.
 
+Attempt 1 staging is incident evidence. Recovery fingerprints every file in
+that directory before work, confirms the fingerprint again before publishing
+Attempt 2, and records it in the new manifest. Recovery never reads source
+values from or reuses Attempt 1 staging. The final manifest also records
+optional metrics blank counts per field and per source object.
+
 The manifest records object identity, byte sizes, four hashes, row counts and
 first/last timestamps. The independent reader verifies the manifest sidecar,
 every raw artifact and every normalized file before constructing the exact
@@ -85,9 +103,9 @@ engine. It never downloads missing data while reading a lock.
 
 ## Safety boundary
 
-This implementation does not execute acquisition, open values, generate
-labels or fit a model. A later authorized lock run may open only Development
-source values and may not generate labels or train.
+This recovery implementation does not execute acquisition, open values,
+generate labels or fit a model. A later authorized recovery lock run may open
+only Development source values and may not generate labels or train.
 
 Calibration, Evaluation, threshold or hyperparameter search, automatic model
 selection, Candidate v2, PAPER, cloud, real orders and live execution remain

@@ -161,12 +161,11 @@ models fitted.
 USD-M Development objects: 84 funding, 2,556 daily open-interest metrics, 84
 native 12h mark and 84 native 12h index archives. Every ZIP must match its
 adjacent official checksum and one safe expected CSV member.
-The adapter validates exact schemas, finite values, symbol, chronology, object
-period and native 12h grid; duplicate timestamps, REST fallback, fill and
-partition crossing fail closed. An authorized run atomically retains verified
-raw objects, twelve normalized files and a canonical manifest. The independent
-reader re-hashes all of them before returning parent feature-engine frames.
-Static review opens nothing; the real lock cannot generate labels or fit.
+The adapter validates exact schemas, mandatory finite learning values, symbol,
+chronology, period and 12h grid; fallback and fill fail closed. Exact blanks are
+allowed only in four unused ratio columns and counted; `sum_open_interest` stays
+positive. Attempt 1 exposed the old all-columns-finite assumption. Attempt 2
+uses a new root, fingerprints prior staging and atomically locks hashed inputs.
 ## Runtime and risk boundary
 An approved runtime may load an immutable artifact but cannot fit, mutate,
 rank, promote or submit orders; Risk and Synthetic Execution remains later.

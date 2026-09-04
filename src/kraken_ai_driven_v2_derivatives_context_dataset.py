@@ -31,8 +31,12 @@ PARENT_PROTOCOL_ID = (
 PARENT_FEASIBILITY_REPORT_SHA256 = (
     "3c84fba6034790ae59761f3fba23affca80fca0c8b7d29b3e3f3762c789d8e29"
 )
+RECOVERY_PARENT_COMMIT = "970ce17"
+ATTEMPT_1_INCIDENT_SHA256 = (
+    "3abae269bc80b13b975e77afb4bbfc7e7f442856ab4510fd5ad9023221aebca8"
+)
 AUTHORIZATION_PHRASE = (
-    "EXECUTE_KRAKEN_AI_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_ONCE"
+    "EXECUTE_KRAKEN_AI_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_RECOVERY_ATTEMPT_2_ONCE"
 )
 BASE_URL = "https://data.binance.vision/"
 COMMON_START_UTC = "2021-12-01T00:00:00Z"
@@ -89,6 +93,7 @@ METRICS_HEADER = (
     "count_long_short_ratio",
     "sum_taker_long_short_vol_ratio",
 )
+OPTIONAL_METRICS_COLUMNS = METRICS_HEADER[4:]
 KLINE_HEADER = (
     "open_time",
     "open",
@@ -191,8 +196,14 @@ def dataset_lock_declaration():
         "component_id": COMPONENT_ID,
         "dataset_id": DATASET_ID,
         "parent_commit": PARENT_COMMIT,
+        "recovery_parent_commit": RECOVERY_PARENT_COMMIT,
         "parent_protocol_id": PARENT_PROTOCOL_ID,
         "parent_feasibility_report_sha256": PARENT_FEASIBILITY_REPORT_SHA256,
+        "attempt_1_authorization_consumed": True,
+        "attempt_1_final_dataset_exists": False,
+        "attempt_1_staging_required": True,
+        "attempt_1_incident_sha256": ATTEMPT_1_INCIDENT_SHA256,
+        "recovery_attempt": 2,
         "authorization_phrase": AUTHORIZATION_PHRASE,
         "authorization_phrase_active": False,
         "asset_order": list(ASSET_SYMBOLS),
@@ -207,6 +218,8 @@ def dataset_lock_declaration():
         "normalized_file_hash_implemented": True,
         "atomic_dataset_lock_implemented": True,
         "independent_reader_implemented": True,
+        "optional_metrics_blank_policy_implemented": True,
+        "optional_metrics_blank_counts_recorded": True,
         "source_objects_downloaded": False,
         "market_values_opened": False,
         "development_data_opened": False,
@@ -222,8 +235,8 @@ def dataset_lock_declaration():
         "cloud_execution_authorized": False,
         "real_orders_submitted": False,
         "live_execution_authorized": False,
-        "status": "KRAKEN_AI_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_READER_IMPLEMENTED_NO_RUN_AUTHORIZATION",
-        "next_stage": "SEPARATE_OPERATOR_DECISION_FOR_ONE_SHOT_DERIVATIVES_CONTEXT_DATASET_LOCK",
+        "status": "KRAKEN_AI_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_RECOVERY_IMPLEMENTED_NO_ATTEMPT_2_AUTHORIZATION",
+        "next_stage": "SEPARATE_OPERATOR_DECISION_FOR_ONE_SHOT_DERIVATIVES_CONTEXT_DATASET_LOCK_RECOVERY_ATTEMPT_2",
     }
 
 
@@ -357,6 +370,7 @@ def _parse_metrics(rows, spec):
         raise ValueError("Open-interest metrics schema mismatch.")
     normalized = []
     timestamps = []
+    optional_blank_counts = {name: 0 for name in OPTIONAL_METRICS_COLUMNS}
     for number, row in enumerate(rows[1:], start=2):
         if len(row) != len(METRICS_HEADER):
             raise ValueError(f"Metrics row {number} column-count mismatch.")
@@ -366,12 +380,16 @@ def _parse_metrics(rows, spec):
         open_interest = _decimal_text(
             row[2], "Open-interest metrics value", positive=True
         )
-        for column, name in zip(row[3:], METRICS_HEADER[3:]):
-            _decimal_text(column, name)
+        _decimal_text(row[3], METRICS_HEADER[3])
+        for column, name in zip(row[4:], OPTIONAL_METRICS_COLUMNS):
+            if column == "":
+                optional_blank_counts[name] += 1
+            else:
+                _decimal_text(column, name)
         timestamps.append(timestamp)
         normalized.append((_iso(timestamp), open_interest))
     _validate_chronology(timestamps, spec)
-    return normalized, timestamps
+    return normalized, timestamps, optional_blank_counts
 
 
 def _parse_kline(rows, spec):
@@ -446,16 +464,17 @@ def validate_source_archive(spec, zip_bytes, checksum_bytes):
 
     rows = _csv_rows(member_bytes)
     source_id = spec["source_id"]
+    optional_blank_counts = None
     if source_id == "FUNDING_RATE":
         normalized_rows, timestamps = _parse_funding(rows, spec)
     elif source_id == "OPEN_INTEREST_METRICS":
-        normalized_rows, timestamps = _parse_metrics(rows, spec)
+        normalized_rows, timestamps, optional_blank_counts = _parse_metrics(rows, spec)
     else:
         normalized_rows, timestamps = _parse_kline(rows, spec)
     normalized = _normalized_csv(
         SOURCE_SPECS[source_id]["normalized_header"], normalized_rows
     )
-    return {
+    result = {
         "source_id": source_id,
         "asset": spec["asset"],
         "symbol": spec["symbol"],
@@ -475,6 +494,9 @@ def validate_source_archive(spec, zip_bytes, checksum_bytes):
         "last_timestamp_utc": _iso(timestamps[-1]),
         "normalized_bytes": normalized,
     }
+    if optional_blank_counts is not None:
+        result["optional_blank_counts"] = optional_blank_counts
+    return result
 
 
 def _safe_raw_relative(spec):
@@ -496,22 +518,58 @@ def _atomic_write(path, payload):
     os.replace(temporary, path)
 
 
+def _directory_inventory(root):
+    root = Path(root).resolve()
+    if not root.is_dir():
+        raise FileNotFoundError(f"Required prior-attempt staging is absent: {root}.")
+    records = []
+    total_bytes = 0
+    for path in sorted((item for item in root.rglob("*") if item.is_file())):
+        payload = path.read_bytes()
+        total_bytes += len(payload)
+        records.append(
+            {
+                "relative_path": path.relative_to(root).as_posix(),
+                "bytes": len(payload),
+                "sha256": _sha256(payload),
+            }
+        )
+    return {
+        "file_count": len(records),
+        "total_bytes": total_bytes,
+        "inventory_sha256": _sha256(canonical_json_bytes(records)),
+    }
+
+
 class DerivativesContextDatasetLocker:
     def __init__(self, fetch_bytes=None):
         self.fetch_bytes = _default_fetch_bytes if fetch_bytes is None else fetch_bytes
 
-    def run(self, output_root, authorization_phrase):
+    def run(self, output_root, authorization_phrase, prior_attempt_staging=None):
         if authorization_phrase != AUTHORIZATION_PHRASE:
-            raise PermissionError("Exact one-shot dataset-lock authorization is required.")
+            raise PermissionError(
+                "Exact one-shot recovery Attempt 2 authorization is required."
+            )
+        if prior_attempt_staging is None:
+            raise PermissionError("Preserved Attempt 1 staging is required.")
+        prior_attempt_staging = Path(prior_attempt_staging).resolve()
+        prior_inventory = _directory_inventory(prior_attempt_staging)
+        if prior_inventory["file_count"] == 0:
+            raise RuntimeError("Preserved Attempt 1 staging must be non-empty.")
         output_root = Path(output_root).resolve()
         if output_root.exists():
             raise FileExistsError(f"Final dataset lock already exists: {output_root}.")
         staging = output_root.with_name(f".{output_root.name}.staging")
+        if staging == prior_attempt_staging or output_root == prior_attempt_staging:
+            raise ValueError("Recovery output must not reuse Attempt 1 staging.")
         if staging.exists():
             raise FileExistsError(f"Dataset-lock staging already exists: {staging}.")
         staging.mkdir(parents=True)
 
         object_records = []
+        aggregate_optional_blank_counts = {
+            name: 0 for name in OPTIONAL_METRICS_COLUMNS
+        }
         normalized_chunks = {
             (source_id, asset): []
             for source_id in SOURCE_SPECS
@@ -522,7 +580,7 @@ class DerivativesContextDatasetLocker:
         }
         registry = expected_object_registry()
         for object_number, spec in enumerate(registry, start=1):
-            if object_number == 1 or object_number % 100 == 0 or object_number == len(registry):
+            if object_number == 1 or object_number % 25 == 0 or object_number == len(registry):
                 print(
                     f"DATASET_LOCK_PROGRESS={object_number}/{len(registry)}|"
                     f"{spec['source_id']}|{spec['asset']}|{spec['period']}",
@@ -531,6 +589,8 @@ class DerivativesContextDatasetLocker:
             zip_bytes = self.fetch_bytes(spec["url"])
             checksum_bytes = self.fetch_bytes(spec["checksum_url"])
             validated = validate_source_archive(spec, zip_bytes, checksum_bytes)
+            for name, count in validated.get("optional_blank_counts", {}).items():
+                aggregate_optional_blank_counts[name] += count
             raw_relative = _safe_raw_relative(spec)
             _write_bytes(staging / raw_relative, zip_bytes)
             _write_bytes(staging / (str(raw_relative) + ".CHECKSUM"), checksum_bytes)
@@ -575,19 +635,28 @@ class DerivativesContextDatasetLocker:
                     }
                 )
 
+        if _directory_inventory(prior_attempt_staging) != prior_inventory:
+            raise RuntimeError("Attempt 1 staging changed during recovery.")
+
         manifest = {
             "schema_version": SCHEMA_VERSION,
             "protocol_id": PROTOCOL_ID,
             "component_id": COMPONENT_ID,
             "dataset_id": DATASET_ID,
-            "execution_parent_commit": PARENT_COMMIT,
+            "execution_parent_commit": RECOVERY_PARENT_COMMIT,
+            "hypothesis_parent_commit": PARENT_COMMIT,
             "parent_feasibility_report_sha256": PARENT_FEASIBILITY_REPORT_SHA256,
+            "attempt_1_incident_sha256": ATTEMPT_1_INCIDENT_SHA256,
+            "attempt_1_staging_inventory": prior_inventory,
+            "recovery_attempt": 2,
             "common_start_utc": COMMON_START_UTC,
             "common_end_exclusive_utc": COMMON_END_EXCLUSIVE_UTC,
             "asset_order": list(ASSET_SYMBOLS),
             "source_series_order": list(SOURCE_SPECS),
             "object_count": len(object_records),
             "normalized_file_count": len(normalized_records),
+            "optional_metrics_blank_counts": aggregate_optional_blank_counts,
+            "optional_metrics_blank_policy": "EXACT_BLANK_RECORDED_NO_FILL_UNUSED_RATIO_FIELDS",
             "objects": object_records,
             "normalized_files": normalized_records,
             "source_objects_downloaded": True,
@@ -617,6 +686,11 @@ class DerivativesContextDatasetLocker:
             "manifest_sha256": digest,
             "object_count": len(object_records),
             "normalized_file_count": len(normalized_records),
+            "optional_metrics_blank_counts": aggregate_optional_blank_counts,
+            "attempt_1_staging_inventory_sha256": prior_inventory[
+                "inventory_sha256"
+            ],
+            "recovery_attempt": 2,
             "market_values_opened": True,
             "labels_generated": False,
             "model_training_executed": False,
@@ -667,6 +741,32 @@ def read_locked_derivatives_context_dataset(
         raise RuntimeError("Locked derivatives-context object count mismatch.")
     if manifest.get("normalized_file_count") != 12:
         raise RuntimeError("Locked derivatives-context normalized registry mismatch.")
+    if manifest.get("recovery_attempt") != 2:
+        raise RuntimeError("Locked derivatives-context recovery identity mismatch.")
+    if manifest.get("execution_parent_commit") != RECOVERY_PARENT_COMMIT:
+        raise RuntimeError("Locked derivatives-context execution binding mismatch.")
+    if manifest.get("attempt_1_incident_sha256") != ATTEMPT_1_INCIDENT_SHA256:
+        raise RuntimeError("Locked derivatives-context incident binding mismatch.")
+    prior_inventory = manifest.get("attempt_1_staging_inventory")
+    if not isinstance(prior_inventory, dict) or set(prior_inventory) != {
+        "file_count",
+        "total_bytes",
+        "inventory_sha256",
+    }:
+        raise RuntimeError("Locked prior-staging inventory schema mismatch.")
+    if (
+        not isinstance(prior_inventory["file_count"], int)
+        or prior_inventory["file_count"] <= 0
+        or not isinstance(prior_inventory["total_bytes"], int)
+        or prior_inventory["total_bytes"] <= 0
+        or re.fullmatch(r"[0-9a-f]{64}", prior_inventory["inventory_sha256"])
+        is None
+    ):
+        raise RuntimeError("Locked prior-staging inventory value mismatch.")
+    if manifest.get("optional_metrics_blank_policy") != (
+        "EXACT_BLANK_RECORDED_NO_FILL_UNUSED_RATIO_FIELDS"
+    ):
+        raise RuntimeError("Locked optional-metrics blank policy mismatch.")
     expected_identities = [
         (item["source_id"], item["asset"], item["period"], item["key"], item["filename"])
         for item in expected_object_registry()
@@ -683,6 +783,22 @@ def read_locked_derivatives_context_dataset(
     ]
     if observed_identities != expected_identities:
         raise RuntimeError("Locked derivatives-context object identity registry mismatch.")
+    aggregate_optional_blank_counts = {
+        name: 0 for name in OPTIONAL_METRICS_COLUMNS
+    }
+    for record in manifest["objects"]:
+        counts = record.get("optional_blank_counts")
+        if record["source_id"] == "OPEN_INTEREST_METRICS":
+            if not isinstance(counts, dict) or set(counts) != set(OPTIONAL_METRICS_COLUMNS):
+                raise RuntimeError("Locked optional-metrics missingness schema mismatch.")
+            if any(not isinstance(value, int) or value < 0 for value in counts.values()):
+                raise RuntimeError("Locked optional-metrics missingness count mismatch.")
+            for name, count in counts.items():
+                aggregate_optional_blank_counts[name] += count
+        elif counts is not None:
+            raise RuntimeError("Unexpected optional-metrics evidence on another source.")
+    if manifest.get("optional_metrics_blank_counts") != aggregate_optional_blank_counts:
+        raise RuntimeError("Locked optional-metrics aggregate mismatch.")
     if verify_raw:
         for record in manifest["objects"]:
             zip_payload = _verify_file(
@@ -773,12 +889,15 @@ def main(argv=None):
     parser.add_argument("--declaration-only", action="store_true")
     parser.add_argument("--output-root", type=Path)
     parser.add_argument("--authorization-phrase")
+    parser.add_argument("--prior-attempt-staging", type=Path)
     parser.add_argument("--read-summary", type=Path)
     parser.add_argument("--expected-manifest-sha256")
     args = parser.parse_args(argv)
     if args.output_root is not None:
         result = DerivativesContextDatasetLocker().run(
-            args.output_root, args.authorization_phrase
+            args.output_root,
+            args.authorization_phrase,
+            args.prior_attempt_staging,
         )
     elif args.read_summary is not None:
         sources, manifest, digest = read_locked_derivatives_context_dataset(
@@ -792,6 +911,10 @@ def main(argv=None):
             "asset_order": list(sources),
             "source_series_order": list(SOURCE_SPECS),
             "object_count": manifest["object_count"],
+            "recovery_attempt": manifest["recovery_attempt"],
+            "optional_metrics_blank_counts": manifest[
+                "optional_metrics_blank_counts"
+            ],
             "labels_generated": False,
             "model_training_executed": False,
             "candidate_v2_authorized": False,

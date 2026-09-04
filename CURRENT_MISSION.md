@@ -2,16 +2,18 @@
 
 ## Mission
 
-Preserve the closed spot-OHLCV result and the frozen derivatives-context
-hypothesis. Implement and review its exact hash-bound Development dataset lock
-and reader without executing acquisition. Do not open source values, generate
-labels, fit models, relax gates, open Calibration/Evaluation or promote
-Candidate v2.
+Preserve the closed spot-OHLCV result, frozen derivatives-context hypothesis
+and fail-closed Dataset Lock Attempt 1. Review a bounded recovery that accepts
+only official blank cells in unused metrics-ratio columns, records them without
+fill and keeps mandatory open interest strict. Do not execute recovery, generate
+labels, fit models, open Calibration/Evaluation or promote Candidate v2.
 
 Status:
-`KRAKEN_AI_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_READER_REVIEWED_EXECUTION_AUTHORIZATION_REQUIRED`
+`KRAKEN_AI_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_RECOVERY_ATTEMPT_2_IMPLEMENTATION_REVIEW_REQUIRED`
 
-Parent execution milestone: `af0af86`
+Recovery parent execution milestone: `970ce17`
+
+Hypothesis parent milestone: `af0af86`
 
 Feasibility evidence SHA-256:
 `3c84fba6034790ae59761f3fba23affca80fca0c8b7d29b3e3f3762c789d8e29`
@@ -27,10 +29,12 @@ native 12h index-price ZIPs across BTCUSDT, ETHUSDT and XRPUSDT. Every object
 must match its official `.CHECKSUM` and exact schema before it can enter the
 lock.
 
-One authorized run will atomically retain raw bytes, twelve normalized files
-and a canonical manifest. The independent reader re-hashes the full lock before
-returning the funding, open-interest and mark/index frames. The implementation
-has not executed: no download, market-value access, label or model exists yet.
+Attempt 1 consumed its authorization and failed before object 114 could enter
+the lock because the reader required values in four unused ratio fields that
+the official archive leaves blank. No final lock exists; non-final Attempt 1
+staging is preserved. Recovery Attempt 2 will use a new root, fingerprint the
+prior staging, count exact optional blanks without fill and keep positive
+`sum_open_interest` mandatory. No label or model was produced.
 
 ## Completed source audit and active hypothesis
 
@@ -121,6 +125,7 @@ reproduction and commit.
   reader, then stop for separate one-shot acquisition authorization;
 - after a successful independently reviewed lock: separately implement the frozen four-variant
   Development runner;
+- active branch: reproduce, review and commit the bounded Attempt 2 recovery;
 - schema or causal-alignment failure: fail closed and repair the reader without
   changing the hypothesis.
 

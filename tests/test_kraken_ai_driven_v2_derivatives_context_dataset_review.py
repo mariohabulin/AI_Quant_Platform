@@ -25,6 +25,8 @@ def test_review_binds_parent_hypothesis_and_new_lock_component():
 
     assert review["status"] == STATUS
     assert review["parent_commit"] == "af0af86"
+    assert review["recovery_parent_commit"] == "970ce17"
+    assert review["recovery_attempt"] == 2
     assert review["parent_protocol_sha256"] == EXPECTED_PARENT_PROTOCOL_SHA256
     assert review["parent_protocol_sha256_match"] is True
     assert review["parent_component_sha256"] == EXPECTED_PARENT_COMPONENT_SHA256
@@ -54,6 +56,14 @@ def test_review_confirms_exact_2808_object_integrity_and_reader_boundary():
     assert review["independent_reader_implemented"] is True
     assert review["source_schema_validation_implemented"] is True
     assert review["causal_timestamp_validation_implemented"] is True
+    assert review["optional_metrics_blank_policy_implemented"] is True
+    assert review["optional_metrics_blank_counts_recorded"] is True
+    assert review["attempt_1_authorization_consumed"] is True
+    assert review["attempt_1_final_dataset_exists"] is False
+    assert review["attempt_1_staging_required"] is True
+    assert review["attempt_1_incident_sha256_match"] is True
+    assert review["recovery_new_root_required"] is True
+    assert review["prior_staging_inventory_implemented"] is True
 
 
 def test_review_keeps_download_values_learning_and_later_stages_closed():
@@ -86,6 +96,7 @@ def test_review_fails_closed_if_parent_or_new_component_changes(tmp_path):
         "src/kraken_ai_driven_v2_derivatives_context_hypothesis.py",
         "src/kraken_ai_driven_v2_derivatives_context_hypothesis_review.py",
         "src/kraken_ai_driven_v2_derivatives_context_dataset.py",
+        "KRAKEN_AI_DRIVEN_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_ATTEMPT_1_INCIDENT.md",
     )
     for relative in relatives:
         source = ROOT / relative

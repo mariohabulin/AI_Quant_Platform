@@ -4,24 +4,21 @@ This is the concise active decision log. Detailed historical implementation
 notes remain recoverable in Git through commit `8c51695` and in the immutable
 protocol/evidence files.
 
+## 2026-09-02 — Derivatives-context Dataset Lock Attempt 1 incident
+- Attempt 1 at `970ce17` failed before object 114; no final lock exists and staging is preserved.
+- Official BTC metrics retain positive open interest but contain exact blanks in four unused ratio fields.
+- Attempt 2 records blanks without fill, keeps learned inputs strict, fingerprints prior staging and uses a new root. No learning or later partition opened.
+
 ## 2026-09-02 — Derivatives-context dataset lock and reader implemented
-- Bound parent `af0af86` and froze 2,808 exact Development objects.
-- Required official adjacent checksums plus raw/member/normalized hashes.
-- Added strict schema, symbol, period, chronology, uniqueness and grid checks.
-- Added atomic manifest locking and an independent no-fallback reader.
-- Kept the run, values, labels and models closed pending Windows review.
+- Bound `af0af86` and 2,808 Development objects to official checksums and raw/member/normalized hashes.
+- Added strict schema, chronology, period, grid, atomic manifest and independent no-fallback checks.
+- Kept acquisition, values, labels and models closed pending Windows review.
 
 ## 2026-09-02 — Derivatives-context hypothesis pre-registered
-
-- Recorded feasibility report SHA-256
-  `3c84fba6034790ae59761f3fba23affca80fca0c8b7d29b3e3f3762c789d8e29`.
-- Confirmed 12 identities, 852 shared days, 100% coverage and no duplicates.
-- Froze nine causal features, bounded availability, exact 12h basis, 60-bar
-  warmup and no interpolation/backfill.
-- Froze two matched control/context pairs on identical rows, three purged folds
-  and absolute plus incremental gates.
-- Kept values, fitting, later partitions and execution closed; next is the
-  hash-bound source lock and reader.
+- Feasibility SHA `3c84fba6034790ae59761f3fba23affca80fca0c8b7d29b3e3f3762c789d8e29` confirms 12 identities, 852 days, full coverage and no duplicates.
+- Froze nine causal features, bounded availability, exact 12h basis, warmup and no fill.
+- Froze matched control/context pairs, identical rows, three purged folds and fixed gates.
+- Kept values, fitting, later partitions and execution closed for the source lock.
 
 ## 2026-09-02 — Derivatives-context source feasibility frozen
 

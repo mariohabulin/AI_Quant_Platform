@@ -86,11 +86,14 @@ walk-forward folds and fixed absolute plus incremental economic gates must show
 that any improvement comes from new information rather than another learner or
 an easier sample.
 
-The hash-bound context lock and reader is now implemented but has not executed.
-It freezes 2,808 exact official objects, adjacent provider checksums, strict
-funding/metrics/kline schemas, raw and normalized hashes and atomic evidence.
-The next action is Windows reproduction and a separate one-shot decision to
-create the real Development lock. Model training remains closed.
+The hash-bound context lock and reader was committed at `970ce17`. Authorized
+Attempt 1 failed closed during acquisition because the validator treated blank
+values in four unused Binance metrics-ratio columns as invalid even though the
+retained positive open-interest value was present. No final lock, label or model
+was created, and Attempt 1 staging is preserved. Recovery does not fabricate or
+fill those cells: it records exact optional blanks, retains strict validation of
+all learned values, fingerprints prior staging and requires a new Attempt 2
+root and authorization. Model training remains closed.
 
 ## Permanent safety boundary
 

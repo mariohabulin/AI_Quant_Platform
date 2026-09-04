@@ -109,6 +109,13 @@ def _payload_for_spec(spec):
     return _kline_payload(spec, close=close)
 
 
+def _prior_staging(tmp_path):
+    prior = tmp_path / ".context_lock_attempt_1.staging"
+    prior.mkdir()
+    (prior / "preserved.bin").write_bytes(b"attempt-1-preserved")
+    return prior
+
+
 def test_declaration_freezes_exact_registry_and_keeps_run_inert():
     declaration = dataset_lock_declaration()
 
@@ -123,6 +130,11 @@ def test_declaration_freezes_exact_registry_and_keeps_run_inert():
         "MARK_PRICE_12H": 84,
         "INDEX_PRICE_12H": 84,
     }
+    assert declaration["recovery_parent_commit"] == "970ce17"
+    assert declaration["attempt_1_authorization_consumed"] is True
+    assert declaration["attempt_1_final_dataset_exists"] is False
+    assert declaration["attempt_1_staging_required"] is True
+    assert declaration["recovery_attempt"] == 2
     assert declaration["authorization_phrase_active"] is False
     assert declaration["source_objects_downloaded"] is False
     assert declaration["market_values_opened"] is False
@@ -176,6 +188,40 @@ def test_open_interest_archive_requires_exact_symbol_and_positive_value():
         validate_source_archive(spec, payload, checksum)
     payload, checksum = _metrics_payload(spec, open_interest="0")
     with pytest.raises(ValueError, match="positive"):
+        validate_source_archive(spec, payload, checksum)
+
+
+def test_open_interest_archive_records_exact_optional_blanks_without_fill():
+    spec = _spec("OPEN_INTEREST_METRICS", period="2021-12-30")
+    timestamp = "2021-12-30 14:35:00"
+    row = [timestamp, spec["symbol"], "72516.05400000", "3437120278.45524000"]
+    row.extend(["", "", "", ""])
+    payload, checksum = _zip_payload(spec, _csv_bytes([METRICS_HEADER, row]))
+
+    result = validate_source_archive(spec, payload, checksum)
+
+    assert result["optional_blank_counts"] == {
+        "count_toptrader_long_short_ratio": 1,
+        "sum_toptrader_long_short_ratio": 1,
+        "count_long_short_ratio": 1,
+        "sum_taker_long_short_vol_ratio": 1,
+    }
+    assert b",72516.05400000\n" in result["normalized_bytes"]
+    assert b"3437120278.45524000" not in result["normalized_bytes"]
+
+
+def test_open_interest_archive_rejects_nonblank_optional_sentinel_and_required_blank():
+    spec = _spec("OPEN_INTEREST_METRICS", period="2021-12-30")
+    timestamp = "2021-12-30 14:35:00"
+    row = [timestamp, spec["symbol"], "72516", "3437120278", "null", "", "", ""]
+    payload, checksum = _zip_payload(spec, _csv_bytes([METRICS_HEADER, row]))
+    with pytest.raises(ValueError, match="count_toptrader_long_short_ratio"):
+        validate_source_archive(spec, payload, checksum)
+
+    row[3] = ""
+    row[4] = ""
+    payload, checksum = _zip_payload(spec, _csv_bytes([METRICS_HEADER, row]))
+    with pytest.raises(ValueError, match="sum_open_interest_value"):
         validate_source_archive(spec, payload, checksum)
 
 
@@ -255,22 +301,34 @@ def test_locker_is_one_shot_atomic_and_reader_reconstructs_exact_parent_frames(
         return payloads[url]
 
     final = tmp_path / "context_lock"
+    prior = _prior_staging(tmp_path)
+    prior_payload = (prior / "preserved.bin").read_bytes()
     with pytest.raises(PermissionError):
         DerivativesContextDatasetLocker(fetch).run(final, "wrong")
-    summary = DerivativesContextDatasetLocker(fetch).run(final, AUTHORIZATION_PHRASE)
+    summary = DerivativesContextDatasetLocker(fetch).run(
+        final, AUTHORIZATION_PHRASE, prior
+    )
 
     assert summary["object_count"] == 12
     assert summary["normalized_file_count"] == 12
     assert summary["model_training_executed"] is False
+    assert summary["recovery_attempt"] == 2
     assert len(calls) == 24
     assert final.is_dir()
     assert not (tmp_path / ".context_lock.staging").exists()
+    assert (prior / "preserved.bin").read_bytes() == prior_payload
 
     sources, manifest, digest = read_locked_derivatives_context_dataset(
         final, expected_manifest_sha256=summary["manifest_sha256"]
     )
     assert digest == summary["manifest_sha256"]
     assert manifest["dataset_id"] == DATASET_ID
+    assert manifest["optional_metrics_blank_counts"] == {
+        "count_toptrader_long_short_ratio": 0,
+        "sum_toptrader_long_short_ratio": 0,
+        "count_long_short_ratio": 0,
+        "sum_taker_long_short_vol_ratio": 0,
+    }
     assert set(sources) == set(ASSET_SYMBOLS)
     for asset in ASSET_SYMBOLS:
         assert list(sources[asset]) == ["funding", "open_interest", "mark_index_12h"]
@@ -281,7 +339,7 @@ def test_locker_is_one_shot_atomic_and_reader_reconstructs_exact_parent_frames(
             "index_close",
         ]
     with pytest.raises(FileExistsError):
-        DerivativesContextDatasetLocker(fetch).run(final, AUTHORIZATION_PHRASE)
+        DerivativesContextDatasetLocker(fetch).run(final, AUTHORIZATION_PHRASE, prior)
 
 
 def test_reader_rejects_manifest_identity_or_normalized_tamper(tmp_path, monkeypatch):
@@ -297,8 +355,9 @@ def test_reader_rejects_manifest_identity_or_normalized_tamper(tmp_path, monkeyp
         payloads[spec["url"]] = payload
         payloads[spec["checksum_url"]] = checksum
     final = tmp_path / "lock"
+    prior = _prior_staging(tmp_path)
     summary = DerivativesContextDatasetLocker(payloads.__getitem__).run(
-        final, AUTHORIZATION_PHRASE
+        final, AUTHORIZATION_PHRASE, prior
     )
 
     with pytest.raises(RuntimeError, match="manifest identity"):
@@ -321,10 +380,22 @@ def test_failed_acquisition_preserves_staging_and_never_creates_final(
         raise OSError("transport stopped")
 
     final = tmp_path / "failed"
+    prior = _prior_staging(tmp_path)
     with pytest.raises(OSError, match="transport stopped"):
-        DerivativesContextDatasetLocker(fail).run(final, AUTHORIZATION_PHRASE)
+        DerivativesContextDatasetLocker(fail).run(final, AUTHORIZATION_PHRASE, prior)
     assert not final.exists()
     assert (tmp_path / ".failed.staging").is_dir()
+
+
+def test_recovery_requires_nonempty_prior_staging_and_never_reuses_it(tmp_path):
+    final = tmp_path / "recovery"
+    with pytest.raises(PermissionError, match="Attempt 1 staging"):
+        DerivativesContextDatasetLocker().run(final, AUTHORIZATION_PHRASE)
+
+    empty = tmp_path / ".attempt_1.staging"
+    empty.mkdir()
+    with pytest.raises(RuntimeError, match="non-empty"):
+        DerivativesContextDatasetLocker().run(final, AUTHORIZATION_PHRASE, empty)
 
 
 def test_protocol_freezes_no_fallback_no_fill_and_no_learning():
@@ -335,5 +406,7 @@ def test_protocol_freezes_no_fallback_no_fill_and_no_learning():
     assert "exactly one safe CSV member" in protocol
     assert "No REST fallback" in protocol
     assert "No duplicate, ordering inversion" in protocol
+    assert "exact blank" in protocol
+    assert "Attempt 1 staging" in protocol
     assert "does not execute acquisition" in protocol
     assert "Calibration, Evaluation" in protocol
