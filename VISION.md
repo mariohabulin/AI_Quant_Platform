@@ -7,9 +7,8 @@ learns when a cost-aware BTC, ETH or XRP trade has positive evidence and when
 the correct action is `HOLD_CASH`.
 
 The product is not a collection of manually written indicator strategies. Its
-core output is a versioned model that learns parameters from causal market
-context, produces probabilities on unseen later data and can be reproduced
-from locked inputs.
+versioned model learns from causal context, predicts unseen later data and is
+reproducible from locked inputs.
 
 ## What success means
 
@@ -24,9 +23,8 @@ A successful V2 system must:
 - preserve Calibration and Evaluation until their explicit later gates; and
 - create an immutable learned model artifact before runtime inference.
 
-No process can guarantee alpha. This system must determine honestly whether a
-bounded hypothesis contains repeatable evidence after costs. A negative result
-is useful when it stops capital from being deployed.
+No process can guarantee alpha. The system must test repeatable after-cost
+evidence honestly; a negative result prevents unjustified deployment.
 
 ## Active V2 path
 
@@ -106,9 +104,14 @@ all three earlier staging directories remain immutable.
 The first reader recovery made mixed-precision ISO-8601 UTC parsing explicit.
 The next review proved index timestamps are exact mark subsets: 18 BTC and two
 ETH/XRP mark-only bars, with no opposite, duplicate or close-time mismatch.
-Exact common-bar alignment leaves missing context missing; it never fills or
-approximates. Acquisition does not repeat and no locked data changes. Model
-training remains closed until the same final lock passes read-only review.
+Exact common-bar alignment leaves missing context missing. The final immutable
+read-only review passed at `9b23d05`; acquisition is closed.
+
+The active runner implements four variants; each context model matches a spot-only control
+on identical rows, parameters and folds. A context result must pass absolute
+after-cost stability and incremental attribution gates. The runner is inert:
+binary LF sidecars preserve exact hashes across operating systems, while data,
+labels and models remain unopened pending separate one-shot authorization.
 
 ## Permanent safety boundary
 
@@ -148,10 +151,9 @@ Detailed append-only history remains recoverable in Git through parent commit
 `8c51695`. The active documents keep only this compact immutable lineage:
 
 - provider dataset: `kraken-spot-btc-eth-xrp-native-1d-20190101-20260401-archive-only-v2`;
-- partition: `kraken-btc-eth-xrp-ai-driven-v2-partition-v1`;
-- causal features: `kraken-btc-eth-xrp-ai-driven-v2-causal-feature-contract-v1`;
-- state parameters: `kraken-ai-v2-ccvr-reference-a-v1`;
-- risk policy: `kraken-ai-v2-risk-execution-reference-a-v1`;
+- partition/features/state/risk: `kraken-btc-eth-xrp-ai-driven-v2-partition-v1`,
+  `kraken-btc-eth-xrp-ai-driven-v2-causal-feature-contract-v1`,
+  `kraken-ai-v2-ccvr-reference-a-v1`, `kraken-ai-v2-risk-execution-reference-a-v1`;
 - Development runner: `kraken-btc-eth-xrp-ai-driven-v2-development-runner-v1`;
 - hybrid foundation: `kraken-btc-eth-xrp-ai-driven-v2-hybrid-strategy-discovery-learning-v1`;
 - Round 1: `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-1-v1`;
@@ -159,10 +161,8 @@ Detailed append-only history remains recoverable in Git through parent commit
 - True Learning Contract V1: `kraken-btc-eth-xrp-ai-driven-v2-true-learning-contract-v1` at `70e7bca` and `796c8de`;
 - Stage 2 compared 1d, 12h and 4h with a timestamp-only reader and no model training;
 - Learning Core: `kraken-btc-eth-xrp-ai-driven-v2-learning-core-v1`.
-- 12h Development learner:
-  `kraken-btc-eth-xrp-ai-driven-v2-12h-development-learning-runner-v1`.
-- 12h Development economic review:
-  `kraken-btc-eth-xrp-ai-driven-v2-12h-development-economic-evidence-review-v1`.
+- 12h learner/economic review: `kraken-btc-eth-xrp-ai-driven-v2-12h-development-learning-runner-v1`
+  and `kraken-btc-eth-xrp-ai-driven-v2-12h-development-economic-evidence-review-v1`.
 - frozen Alpha Research Lab:
   `kraken-btc-eth-xrp-ai-driven-v2-alpha-research-lab-v1`.
 - derivatives-context source feasibility:

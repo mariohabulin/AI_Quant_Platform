@@ -1,10 +1,9 @@
 # LOG
 
-This is the concise active decision log. Detailed historical implementation
-notes remain recoverable in Git through commit `8c51695` and in the immutable
-protocol/evidence files.
+This concise decision log retains detailed history through Git commit
+`8c51695` and immutable protocol/evidence files.
 
-## 2026-09-05 — Dataset Lock complete; two reader defects bounded
+## 2026-09-05 — Dataset Lock passed; four-variant runner implemented
 - Attempt 4 at `40b5943` revalidated 695 cached pairs, downloaded 2,113 and
   atomically locked all 2,808 objects plus twelve normalized files in 728.63
   minutes. Manifest SHA-256 is
@@ -14,18 +13,21 @@ protocol/evidence files.
 - Second review proved index timestamps are exact mark subsets: BTC has 18
   mark-only bars, ETH/XRP two each, and no index-only, duplicate, ordering or
   common close-time mismatch. Exact inner alignment retains gaps without fill.
-- Acquisition is complete and must not repeat. Next is the same-lock read-only
-  review; labels, fitting, later partitions and execution remain closed.
+- Exact common-bar alignment was committed at `9b23d05`; the final same-lock
+  read-only review passed without network, dataset mutation or fitting.
+- Acquisition is complete and must not repeat.
+- Added the hash-bound runner for exactly four pre-registered variants. It enforces
+  identical rows, three nested purged folds, twelve artifacts and
+  fixed absolute plus incremental gates.
+- The first Windows focused run exposed CRLF sidecars from text-mode writes
+  before Git staging or data access. Binary ASCII sidecar writes now freeze LF;
+  real training remains unopened pending recovery reproduction and commit.
 
 ## 2026-09-02 — Derivatives-context Dataset Lock Attempt 1 incident
-- Attempt 1 at `970ce17` failed before object 114; no final lock exists and staging is preserved.
-- Official BTC metrics retain positive open interest but contain exact blanks in four unused ratio fields.
-- Attempt 2 records blanks without fill, keeps learned inputs strict, fingerprints prior staging and uses a new root. No learning or later partition opened.
-
-## 2026-09-02 — Derivatives-context dataset lock and reader implemented
-- Bound `af0af86` and 2,808 Development objects to official checksums and raw/member/normalized hashes.
-- Added strict schema, chronology, period, grid, atomic manifest and independent no-fallback checks.
-- Kept acquisition, values, labels and models closed pending Windows review.
+- Attempt 1 at `970ce17` failed on exact blanks in four unused ratio fields;
+  staging stayed preserved and no label or model was created. The bounded
+  reader records those blanks without fill and binds all 2,808 official objects
+  to raw, member, normalized and checksum hashes.
 
 ## 2026-09-02 — Derivatives-context hypothesis pre-registered
 - Feasibility SHA `3c84fba6034790ae59761f3fba23affca80fca0c8b7d29b3e3f3762c789d8e29` confirms 12 identities, 852 days, full coverage and no duplicates.
@@ -37,13 +39,11 @@ protocol/evidence files.
 - Preserved Alpha Research Lab Attempt 1 result SHA-256
   `d76bb013c2124672132868752a5bb350a782eb45ef7f062b78b5edcb6d3b3703`
   and the terminal 12h spot-OHLCV `HOLD_CASH` conclusion.
-- Froze exactly four candidate public archive series: funding rate,
-  open-interest metrics, native 12h mark price and native 12h index price.
+- Froze exactly four public series: funding, open interest and native 12h mark/index.
 - Limited the first audit to BTCUSDT, ETHUSDT and XRPUSDT object metadata.
 - Implemented paginated public-object inventory, common-history calculation,
   per-period gap reporting and atomic JSON evidence output.
-- Froze feasibility at all twelve identities, at least 730 common calendar
-  days, at least 98% coverage and no duplicate period.
+- Froze all twelve identities, 730 common days, 98% coverage and no duplicates.
 - Kept market values, labels, fitting, tuning, Calibration, Evaluation,
   Candidate v2, PAPER and live execution closed.
 - A pass permits only a separately pre-registered derivatives-context learning

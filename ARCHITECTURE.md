@@ -6,14 +6,11 @@ AI-Driven V2 is an offline supervised-learning pipeline with a later immutable
 inference runtime. Its first real learned path used locked Kraken 12h OHLCV,
 causal features, cost-aware labels and purged walk-forward evidence; that
 hypothesis is permanently closed with `HOLD_CASH`.
-The next path is intentionally short:
-1. inventory new public derivatives-context history without opening values;
-2. stop for insufficient history or freeze one causal information hypothesis;
-3. only then acquire and lock Development funding, open interest and basis;
-4. reuse proven label, walk-forward and economic-evidence boundaries;
-5. open later stages only after an independent Development pass.
-Manual strategy-family generation and another spot-OHLCV model search are not
-part of this path.
+The new-information path is now concrete. Its 2,808-object derivatives lock
+passed an independent immutable review. The active runner compares exactly two
+spot-only controls with their two otherwise identical spot-plus-context models
+on the same context-complete rows. Manual strategy-family generation, another
+spot-OHLCV search and moving gates after seeing results are not part of it.
 
 ## Data and partition boundary
 The research universe is `BTC-USD`, `ETH-USD`, `XRP-USD` in that order.
@@ -107,20 +104,10 @@ drawdown and stress execution remain later work only if evidence warrants it.
 
 ### Frozen Alpha Research Lab
 
-`kraken_ai_driven_v2_alpha_research_lab.py` reused the archive reader, 12h
-causal features, cost-aware labels and three outer folds. Its exact six-variant
-registry covered natural logistic, histogram boosting and extra trees for both
-calibrated class utility and direct expected-net-R learning.
-
-The earlier 75% of each outer training window fit the learner and its later
-purged 25% fit the calibrator. Outer validation fit nothing. All six executed
-before comparison with zero threshold and no hyperparameter sweep.
-
-Viability requires fixed support, positive non-overlapping net R in every fold,
-positive cumulative net R for at least two assets and positive overall net R.
-Only gate passers could be ranked. Attempt 1 produced no passer: all six had
-negative overall mean and cumulative net R, zero positive assets and no
-all-fold stability. Result SHA-256
+The frozen lab tested six classifier/regressor variants on the same 12h causal
+features, labels and three nested folds without a sweep. Attempt 1 produced no
+passer: all six had negative net R, zero positive assets and no all-fold
+stability. Result SHA-256
 `d76bb013c2124672132868752a5bb350a782eb45ef7f062b78b5edcb6d3b3703`
 closes this 12h spot-OHLCV architecture with `HOLD_CASH`. Calibration,
 Evaluation and Candidate v2 remain sealed.
@@ -172,8 +159,20 @@ mark-only bars; ETH/XRP have two each; common opens have identical closes and
 both sources are ordered and unique. The reader parses explicit ISO-8601 UTC,
 then inner-aligns only exact completed bars and records unmatched counts. It
 never fills or approximates. Reindexing onto decisions preserves gaps, so the
-60-consecutive-context rule remains active. Only a same-manifest read-only
-rerun follows; labels and fitting remain closed.
+60-consecutive-context rule remains active. The same-manifest read-only rerun
+passed at `9b23d05`; acquisition is closed.
+
+### Derivatives Context Development Learning Runner
+`kraken_ai_driven_v2_derivatives_context_development_learning_runner.py`
+implements the pre-registered four-variant experiment. It rebuilds unchanged
+Kraken labels, joins nine causal context features and forces each matched pair
+to use identical row identities. Three nested purged folds produce exactly
+twelve model/calibrator artifacts plus OOF predictions.
+Absolute gates test support, after-cost net R and asset breadth. Incremental
+gates require better overall and worst-fold mean net R plus a primary-metric
+win in at least two folds. Controls cannot pass as candidates. Windows SHA-256
+sidecars are binary ASCII with canonical LF. Implementation is inert until a
+separate one-shot Development authorization.
 ## Runtime and risk boundary
 An approved runtime may load an immutable artifact but cannot fit, mutate,
 rank, promote or submit orders; Risk and Synthetic Execution remains later.

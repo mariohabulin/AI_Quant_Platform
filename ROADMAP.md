@@ -1,10 +1,8 @@
 # ROADMAP
 
 ## Current objective
-Keep the failed 12h spot-OHLCV hypothesis closed. The matched derivatives-
-context experiment is frozen at `af0af86`; implement and review its exact
-hash-bound dataset lock and reader. Do not train until a real lock is complete
-and independently reviewed.
+Keep the failed 12h spot-OHLCV hypothesis closed. The context lock is reviewed;
+commit its four-variant runner before separate one-shot training authorization.
 ## Active sequence
 ### 1. V2 Learning Core — COMMITTED AT `2a09363`
 
@@ -124,23 +122,11 @@ exists.
 - [x] keep labels, fitting and every later stage unauthorized;
 - [x] reproduce focused/full Windows tests and static review;
 - [x] commit and push the reviewed reader milestone at `970ce17`;
-- [x] preflight and separately authorize real Dataset Lock Attempt 1;
-- [x] preserve fail-closed Attempt 1 staging after the unused-ratio blank error;
-- [x] identify official object 114 and freeze the incident evidence;
-- [x] record exact optional blanks without fill and fingerprint Attempt 1 staging;
-- [x] reproduce 41 focused and 1,995 complete Windows recovery tests;
-- [x] commit/push Attempt 2 recovery at `8181d05` and separately authorize it;
-- [x] preserve Attempt 2 staging after object 181 exposed paired `0E-8` rows;
-- [x] scan all 2,556 metrics archives and freeze exactly 399 sentinel rows at
-  the same 133 timestamps for BTC, ETH and XRP;
-- [x] implement exact allowlist validation, omission without fill, and reject
-  every other nonpositive value;
-- [x] require both untouched staging inventories and a new Attempt 3 root;
-- [x] reproduce, commit and separately authorize Recovery Attempt 3;
-- [x] preserve its 695-object prefix after transient DNS failure at object 696;
-- [x] bind 1,390 files, 7,317,431 bytes and the exact staging inventory hash;
-- [x] implement full revalidation and reuse of only that contiguous prefix;
-- [x] fetch only the remaining 2,113 objects with bounded exponential retry;
+- [x] preserve three fail-closed staging incidents without labels or models;
+- [x] record optional blanks without fill and exactly 399 paired `0E-8`
+  sentinels at the same 133 timestamps per asset;
+- [x] bind and revalidate Attempt 3's 695-object prefix after its DNS failure;
+- [x] fetch only the remaining 2,113 objects with bounded transport retry;
 - [x] reproduce focused/full Windows Attempt 4 tests and static review;
 - [x] commit/push, preflight and separately authorize Recovery Attempt 4;
 - [x] revalidate 695 cached pairs and download the remaining 2,113 objects;
@@ -149,8 +135,22 @@ exists.
   `db4dde045d9fce22bee1389fe8c7ad13d3e3ccc5e5c4ace7c433f5461ba11916`;
 - [x] isolate, test and commit explicit ISO-8601 UTC parsing at `245db6b`;
 - [x] prove exact index-subset alignment without duplicates or close mismatch;
-- [ ] review/commit exact common-bar alignment with no fill;
-- [ ] rerun only independent read-only review on the existing final lock.
+- [x] review/commit exact common-bar alignment with no fill at `9b23d05`;
+- [x] pass the independent same-manifest read-only review without network or
+  dataset modification.
+
+### 8. Derivatives-context Development learning — IMPLEMENTED, NOT EXECUTED
+- [x] bind hypothesis, reader, final manifest and independent pass hashes;
+- [x] rebuild unchanged Kraken labels and nine causal context features;
+- [x] enforce identical context-complete rows for every matched pair and
+  implement four variants, three nested purged folds and twelve artifacts;
+- [x] implement fixed absolute and incremental evidence gates;
+- [x] persist atomic report, OOF predictions and checked hashes while keeping
+  controls non-promotable and automatic selection disabled;
+- [x] correct Windows text-mode CRLF sidecars to binary canonical LF writes;
+- [ ] reproduce focused/full Windows tests and static review, then commit/push;
+- [ ] preflight inputs, request separate authorization, execute once and then
+  independently review immutable evidence.
 
 Calibration, Evaluation, Candidate v2, PAPER and live remain closed.
 ## Retired active work

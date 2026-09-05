@@ -2,15 +2,13 @@
 
 ## Mission
 
-Preserve the closed spot-OHLCV result, frozen derivatives-context hypothesis,
-three fail-closed attempts and the completed Attempt 4 dataset lock. Correct
-the independent reader's mixed-precision ISO-8601 parsing defect, then rerun
-only read-only verification against the existing manifest. Do not reacquire
-data, generate labels, fit models, open Calibration/Evaluation or promote
-Candidate v2.
+Preserve the closed spot-OHLCV result and the independently verified Attempt 4
+derivatives-context lock. Implement and review the exact pre-registered
+four-variant Development runner. Do not reacquire data or execute training;
+Calibration, Evaluation and Candidate v2 remain closed.
 
 Status:
-`KRAKEN_AI_V2_DERIVATIVES_CONTEXT_MARK_INDEX_ALIGNMENT_RECOVERY_IMPLEMENTATION_REVIEW_REQUIRED`
+`KRAKEN_AI_V2_DERIVATIVES_CONTEXT_DEVELOPMENT_LEARNING_RUNNER_REVIEWED_EXECUTION_AUTHORIZATION_REQUIRED`
 Attempt 4 execution milestone: `40b5943`
 Final manifest SHA-256:
 `db4dde045d9fce22bee1389fe8c7ad13d3e3ccc5e5c4ace7c433f5461ba11916`
@@ -40,13 +38,11 @@ exists, staging does not, the prior staging inventories are unchanged and the
 399 exact `0E-8` sentinels remain recorded without fill.
 
 The first reader correction made mixed-precision ISO-8601 parsing explicit.
-The next read-only review reached a real mark/index alignment gate. A
-timestamp-only scan proved index is an exact subset of mark: BTC has 1,680
-common and 18 mark-only rows; ETH and XRP each have 1,698 common and two
-mark-only rows. All sources are ordered and unique, with zero index-only or
-paired close-time mismatch. The bounded fix inner-aligns exact completed bars
-and leaves every absent row missing. No fill, locked-byte change or acquisition
-rerun is permitted.
+A timestamp-only scan then proved index is an exact subset of mark: BTC has
+1,680 common and 18 mark-only rows; ETH and XRP each have 1,698 common and two
+mark-only rows. Exact inner alignment leaves absent rows missing. The final
+same-manifest read-only review passed at `9b23d05` without changing any byte.
+Acquisition is complete and may not rerun.
 
 ## Completed source audit and active hypothesis
 The metadata-only audit found all twelve source/asset identities, 852 common
@@ -121,22 +117,21 @@ negative result, extra-trees classification, still returned `-34.4499 R` and
 mean `-0.2140 R`. Result SHA-256 is
 `d76bb013c2124672132868752a5bb350a782eb45ef7f062b78b5edcb6d3b3703`.
 
-## Completion gate
-The source audit passed 14 focused and 1,954 total Windows tests, all four
-feasibility gates and an immutable external evidence lock. The hypothesis
-passed 20 focused and 1,974 total Windows tests and was committed at `af0af86`.
-Attempt 4 completed the final lock. The ISO-8601 correction passed 31 focused
-and 2,005 total Windows tests at `245db6b`. Exact alignment recovery now needs
-Windows reproduction, commit and a same-lock read-only review after passing 33
-focused and 2,007 total local tests plus static source binding.
+## Active four-variant runner
+The runner binds the final manifest, hypothesis sources, reader sources and the
+Attempt 4 pass record. It builds one context-complete table shared by all four
+variants, fits only frozen matched histogram-GBT pairs in three nested purged
+folds, records twelve model/calibrator artifacts and applies absolute plus
+incremental gates. The first Windows reproduction exposed text-mode CRLF in
+synthetic and real-output sidecars before data access or Git staging. Binary
+ASCII writes now preserve canonical LF; 17 focused local tests pass.
 
 ## Next deterministic branches
-- current branch: reproduce and commit exact common-bar alignment, then verify
-  the existing Attempt 4 lock without network access;
-- after that independent pass: separately implement the frozen four-variant
-  Development runner;
-- schema or causal-alignment failure: fail closed and repair the reader without
-  changing the hypothesis.
+- current branch: reproduce and commit the reviewed four-variant runner;
+- next: preflight the exact Kraken archive, final context lock and empty result
+  root without opening market values;
+- only after separate operator authorization: execute one Development run;
+- any hash, schema or causal-row mismatch fails closed without changing gates.
 
 ## Permanent nonauthorization
 
