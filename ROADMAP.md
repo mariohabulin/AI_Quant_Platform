@@ -139,20 +139,26 @@ exists.
 - [x] pass the independent same-manifest read-only review without network or
   dataset modification.
 
-### 8. Derivatives-context Development learning — IMPLEMENTED, NOT EXECUTED
+### 8. Derivatives-context Development learning — COMPLETE `HOLD_CASH`
 - [x] bind hypothesis, reader, final manifest and independent pass hashes;
 - [x] rebuild unchanged Kraken labels and nine causal context features;
-- [x] enforce identical context-complete rows for every matched pair and
-  implement four variants, three nested purged folds and twelve artifacts;
+- [x] enforce identical rows, four variants, three folds and twelve artifacts;
 - [x] implement fixed absolute and incremental evidence gates;
-- [x] persist atomic report, OOF predictions and checked hashes while keeping
-  controls non-promotable and automatic selection disabled;
+- [x] persist atomic report, OOF predictions and hashes without auto-selection;
 - [x] correct Windows text-mode CRLF sidecars to binary canonical LF writes;
-- [ ] reproduce focused/full Windows tests and static review, then commit/push;
-- [ ] preflight inputs, request separate authorization, execute once and then
-  independently review immutable evidence.
+- [x] pass Windows tests/static review and commit at `4e3867d`;
+- [x] execute Attempt 1 on 3,793 labeled rows, twelve models and 8,468 OOF rows;
+- [x] independently verify report SHA-256 `bddb6f7c0a9b056dcf8a4ca79fc3b8128dbf4ded4aac47e19022a84222215fb4`;
+- [x] record zero context selections and terminal `HOLD_CASH`.
 
-Calibration, Evaluation, Candidate v2, PAPER and live remain closed.
+### 9. Context score forensics — IMPLEMENTED, NOT RUN
+- [x] freeze score quantiles, rank association and equal-count deciles;
+- [x] report raw/non-overlapping economics by fold and asset;
+- [x] bind matched rows and artifacts without model unpickling;
+- [x] prohibit threshold simulation, refitting and automatic Experiment 2;
+- [ ] reproduce focused/full Windows tests, commit and run read-only;
+- [ ] choose one pre-registered Experiment 2 or close the hypothesis.
+
 ## Retired active work
 AI-Driven Crypto Research v2, State Machine, Risk and Execution,
 Development/Evaluation Partition and Development Runner; both rule-discovery
@@ -171,27 +177,19 @@ rounds; and Reference A are the closed Rule Discovery Foundation, not candidates
 - [x] Forensically confirm that native 4h begins on 2024-01-01.
 
 ## Immutable lineage
-Preserved IDs cover causal feature, state, risk, partition, Development runner, hybrid/Round 1/Round 2, True Learning Contract, Learning Core, 12h learning and
-economic review, Alpha Research Lab and derivatives-context components.
+Preserved IDs cover causal feature, state, risk, partition, Development, hybrid rounds, True Learning, Learning Core, 12h and derivatives-context components.
 
-Evidence hashes include BTC episode `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`,
-Reference A `f537410d2a237be207951b638518d80e861289dafa7db9b5c2322ffa32d4e594`,
-Round 1 `3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`, Round 2 `5f9acde53d0e2cf35cd1010d0002222182670d7255bdf44e18715f4902c85a01`, Stage 2 and Learning Attempt 3
-`30d020bd9c30306f3e8931b47c0958fea7e11a33bff3795c3473806ddcaa09cf`.
+Evidence hashes remain in immutable result documents and Git history, including Learning Attempt 3 `30d020bd9c30306f3e8931b47c0958fea7e11a33bff3795c3473806ddcaa09cf`.
 
-Historical milestones include Provider and Historical Availability Audit v1,
-Sealed Preflight Completed, Supervised Blinded Replay v1 and AI-Driven v2
-Partition Protocol. `SEALED PREFLIGHT PASS` did not authorize a real replay,
-Candidate v2 or live execution.
+Historical milestones include Provider and Historical Availability Audit v1, Sealed Preflight Completed, Supervised Blinded Replay v1 and Partition Protocol. `SEALED PREFLIGHT PASS` authorized no real replay, Candidate or live execution.
 
-Reference A closure status:
-`KRAKEN_AI_V2_DEVELOPMENT_REFERENCE_A_CLOSED_NO_TRADE_HOLD_CASH`.
-Exact partition boundaries: `2024-04-01T00:00:00Z`,
-`2025-04-01T00:00:00Z`, `2026-04-01T00:00:00Z`.
+Reference A closure: `KRAKEN_AI_V2_DEVELOPMENT_REFERENCE_A_CLOSED_NO_TRADE_HOLD_CASH`.
+Partition boundaries: `2024-04-01T00:00:00Z`, `2025-04-01T00:00:00Z`, `2026-04-01T00:00:00Z`.
 
 Historical compatibility terms: Kraken daily, three-class, no model training, Round 1 Discovery Runner, Round 2 Family Execution, True Learning Engine and
 the former statement that the resolution remains unselected.
 Legacy exact marker: resolution remains unselected.
+Compatibility evidence: BTC `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`; Reference A `f537410d2a237be207951b638518d80e861289dafa7db9b5c2322ffa32d4e594`; Round 1 `3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`; Round 2 `5f9acde53d0e2cf35cd1010d0002222182670d7255bdf44e18715f4902c85a01`.
 
 ## Authorization state
 Candidate v2 is false. Calibration/Evaluation are unopened; PAPER, cloud, real

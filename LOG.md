@@ -3,25 +3,22 @@
 This concise decision log retains detailed history through Git commit
 `8c51695` and immutable protocol/evidence files.
 
-## 2026-09-05 — Dataset Lock passed; four-variant runner implemented
-- Attempt 4 at `40b5943` revalidated 695 cached pairs, downloaded 2,113 and
-  atomically locked all 2,808 objects plus twelve normalized files in 728.63
-  minutes. Manifest SHA-256 is
+## 2026-09-05 — Context learning complete; score forensics frozen
+- Attempt 4 locked 2,808 source objects; manifest SHA-256 is
   `db4dde045d9fce22bee1389fe8c7ad13d3e3ccc5e5c4ace7c433f5461ba11916`.
-- First review isolated valid mixed-precision ISO-8601 parsing; its correction
-  passed 31 focused and 2,005 total Windows tests at `245db6b`.
-- Second review proved index timestamps are exact mark subsets: BTC has 18
-  mark-only bars, ETH/XRP two each, and no index-only, duplicate, ordering or
-  common close-time mismatch. Exact inner alignment retains gaps without fill.
-- Exact common-bar alignment was committed at `9b23d05`; the final same-lock
-  read-only review passed without network, dataset mutation or fitting.
-- Acquisition is complete and must not repeat.
-- Added the hash-bound runner for exactly four pre-registered variants. It enforces
-  identical rows, three nested purged folds, twelve artifacts and
-  fixed absolute plus incremental gates.
-- The first Windows focused run exposed CRLF sidecars from text-mode writes
-  before Git staging or data access. Binary ASCII sidecar writes now freeze LF;
-  real training remains unopened pending recovery reproduction and commit.
+  ISO-8601 and exact mark/index subset corrections passed independently;
+  acquisition is closed.
+- The four-variant runner was reviewed and committed at `4e3867d` with
+  canonical binary-LF sidecars.
+- Attempt 1 trained twelve models on 3,793 context-complete rows and recorded
+  8,468 OOF predictions. Independent byte review passed for report SHA-256
+  `bddb6f7c0a9b056dcf8a4ca79fc3b8128dbf4ded4aac47e19022a84222215fb4`.
+- Both context variants selected zero rows and failed absolute gates. Their
+  incremental wins only beat losing controls; action remains `HOLD_CASH`.
+- Froze a read-only score-forensic review: fixed quantiles, rank association,
+  deciles, non-overlap, fold/asset stability, support and event duration.
+- It cannot sweep thresholds, refit, unpickle models, modify evidence or
+  automatically choose Experiment 2.
 
 ## 2026-09-02 — Derivatives-context Dataset Lock Attempt 1 incident
 - Attempt 1 at `970ce17` failed on exact blanks in four unused ratio fields;

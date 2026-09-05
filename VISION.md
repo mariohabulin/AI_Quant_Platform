@@ -107,11 +107,14 @@ ETH/XRP mark-only bars, with no opposite, duplicate or close-time mismatch.
 Exact common-bar alignment leaves missing context missing. The final immutable
 read-only review passed at `9b23d05`; acquisition is closed.
 
-The active runner implements four variants; each context model matches a spot-only control
-on identical rows, parameters and folds. A context result must pass absolute
-after-cost stability and incremental attribution gates. The runner is inert:
-binary LF sidecars preserve exact hashes across operating systems, while data,
-labels and models remain unopened pending separate one-shot authorization.
+The runner committed at `4e3867d` trained twelve models on 3,793 rows and wrote
+8,468 OOF predictions. Report SHA `bddb6f7c0a9b056dcf8a4ca79fc3b8128dbf4ded4aac47e19022a84222215fb4`
+passed review. Both context models selected zero trades; beating losing controls
+incrementally did not pass absolute gates. Result: `HOLD_CASH`, no candidate.
+
+The active forensic asks whether OOF scores rank net outcomes consistently by
+decile, fold and asset. It cannot fit, sweep thresholds, open later partitions
+or choose Experiment 2. Evidence permits one frozen experiment or closure.
 
 ## Permanent safety boundary
 
@@ -161,12 +164,9 @@ Detailed append-only history remains recoverable in Git through parent commit
 - True Learning Contract V1: `kraken-btc-eth-xrp-ai-driven-v2-true-learning-contract-v1` at `70e7bca` and `796c8de`;
 - Stage 2 compared 1d, 12h and 4h with a timestamp-only reader and no model training;
 - Learning Core: `kraken-btc-eth-xrp-ai-driven-v2-learning-core-v1`.
-- 12h learner/economic review: `kraken-btc-eth-xrp-ai-driven-v2-12h-development-learning-runner-v1`
-  and `kraken-btc-eth-xrp-ai-driven-v2-12h-development-economic-evidence-review-v1`.
-- frozen Alpha Research Lab:
-  `kraken-btc-eth-xrp-ai-driven-v2-alpha-research-lab-v1`.
-- derivatives-context source feasibility:
-  `kraken-btc-eth-xrp-ai-v2-derivatives-context-feasibility-v1`.
+- 12h learner/review: `kraken-btc-eth-xrp-ai-driven-v2-12h-development-learning-runner-v1` and its economic evidence review.
+- frozen Alpha Research Lab: `kraken-btc-eth-xrp-ai-driven-v2-alpha-research-lab-v1`.
+- derivatives-context feasibility: `kraken-btc-eth-xrp-ai-v2-derivatives-context-feasibility-v1`.
 - derivatives-context learning hypothesis:
   `kraken-btc-eth-xrp-ai-v2-derivatives-context-learning-hypothesis-v1`.
 - derivatives-context dataset lock and reader:
@@ -184,9 +184,7 @@ Immutable hashes retained for traceability:
 
 Reference A closure status:
 `KRAKEN_AI_V2_DEVELOPMENT_REFERENCE_A_CLOSED_NO_TRADE_HOLD_CASH`.
-Exact partition boundaries retained for compatibility are
-`2024-04-01T00:00:00Z`, `2025-04-01T00:00:00Z` and
-`2026-04-01T00:00:00Z`.
+Partition boundaries: `2024-04-01T00:00:00Z`, `2025-04-01T00:00:00Z`, `2026-04-01T00:00:00Z`.
 
 Historical Round 1 Causal Signals, Round 1 Family Execution, Round 1 Discovery
 Runner, Round 1 Closure, Round 2 Causal Signals, Round 2 Family Execution,

@@ -2,21 +2,20 @@
 
 ## Mission
 
-Preserve the closed spot-OHLCV result and the independently verified Attempt 4
-derivatives-context lock. Implement and review the exact pre-registered
-four-variant Development runner. Do not reacquire data or execute training;
-Calibration, Evaluation and Candidate v2 remain closed.
+Preserve the closed spot-OHLCV result, verified derivatives-context lock and
+completed four-variant Development evidence. Implement a hash-bound read-only
+score-forensic review before deciding whether one Experiment 2 is justified.
+Do not reacquire data, refit or search thresholds; later partitions stay closed.
 
 Status:
-`KRAKEN_AI_V2_DERIVATIVES_CONTEXT_DEVELOPMENT_LEARNING_RUNNER_REVIEWED_EXECUTION_AUTHORIZATION_REQUIRED`
+`KRAKEN_AI_V2_CONTEXT_SCORE_FORENSIC_REVIEW_REVIEWED_EXTERNAL_EVIDENCE_REQUIRED`
 Attempt 4 execution milestone: `40b5943`
 Final manifest SHA-256:
 `db4dde045d9fce22bee1389fe8c7ad13d3e3ccc5e5c4ace7c433f5461ba11916`
 Hypothesis parent milestone: `af0af86`
 Feasibility evidence SHA-256:
 `3c84fba6034790ae59761f3fba23affca80fca0c8b7d29b3e3f3762c789d8e29`
-Active protocol:
-`kraken-btc-eth-xrp-ai-v2-derivatives-context-dataset-lock-reader-v1`
+Active protocol: `kraken-btc-eth-xrp-ai-v2-context-score-forensic-review-v1`
 
 ## Implemented dataset lock and reader
 The component freezes exactly 2,808 official Binance USD-M archive objects:
@@ -117,25 +116,30 @@ negative result, extra-trees classification, still returned `-34.4499 R` and
 mean `-0.2140 R`. Result SHA-256 is
 `d76bb013c2124672132868752a5bb350a782eb45ef7f062b78b5edcb6d3b3703`.
 
-## Active four-variant runner
-The runner binds the final manifest, hypothesis sources, reader sources and the
-Attempt 4 pass record. It builds one context-complete table shared by all four
-variants, fits only frozen matched histogram-GBT pairs in three nested purged
-folds, records twelve model/calibrator artifacts and applies absolute plus
-incremental gates. The first Windows reproduction exposed text-mode CRLF in
-synthetic and real-output sidecars before data access or Git staging. Binary
-ASCII writes now preserve canonical LF; 17 focused local tests pass.
+## Completed context learning and active forensics
+The runner committed at `4e3867d` completed Attempt 1 on 3,793 identical
+context-complete rows, trained twelve fold models and recorded 8,468 OOF
+predictions. Report SHA-256 is
+`bddb6f7c0a9b056dcf8a4ca79fc3b8128dbf4ded4aac47e19022a84222215fb4`.
+Both context variants selected zero rows and failed absolute support/economic
+gates. Losing controls made zero-selection context variants look better on
+incremental gates, which is not a tradable pass. The action remains
+`KRAKEN_AI_V2_DERIVATIVES_CONTEXT_NO_VIABLE_HYPOTHESIS_HOLD_CASH`.
+
+The active read-only component verifies every immutable evidence byte without
+unpickling models, then measures score quantiles, rank/outcome association,
+equal-count deciles, fold/asset stability, class support and event duration.
+It cannot try a threshold, refit, modify evidence or select Experiment 2.
 
 ## Next deterministic branches
-- current branch: reproduce and commit the reviewed four-variant runner;
-- next: preflight the exact Kraken archive, final context lock and empty result
-  root without opening market values;
-- only after separate operator authorization: execute one Development run;
-- any hash, schema or causal-row mismatch fails closed without changing gates.
+- reproduce and commit the reviewed forensic component;
+- run it read-only against the exact Attempt 1 final evidence;
+- review whether score ranking is stable and economically positive by fold;
+- freeze exactly one Experiment 2 or close derivatives context with `HOLD_CASH`.
 
 ## Permanent nonauthorization
 
-- model training outside the six-variant Development lab: false;
+- additional model training: false;
 - derivatives market-value access in this pre-registration: false;
 - threshold or parameter search: false;
 - automatic model selection: false;
