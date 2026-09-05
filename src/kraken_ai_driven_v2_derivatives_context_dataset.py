@@ -48,6 +48,13 @@ ATTEMPT_3_STAGING_INVENTORY_SHA256 = (
     "8de82f8905358c79f3e0cb609f8b8ecd782e32e02497e9ef784e85b528aa63dd"
 )
 ATTEMPT_3_RESUME_OBJECT_COUNT = 695
+ATTEMPT_4_EXECUTION_COMMIT = "40b5943442c96d5ef26434db95d9dc955ca41c12"
+ATTEMPT_4_MANIFEST_SHA256 = (
+    "db4dde045d9fce22bee1389fe8c7ad13d3e3ccc5e5c4ace7c433f5461ba11916"
+)
+ATTEMPT_4_READER_INCIDENT_SHA256 = (
+    "33d6e9fc1f2688032ec0f28c986d735f7e71bf009b5856673c32e440915b3020"
+)
 AUTHORIZATION_PHRASE = (
     "EXECUTE_KRAKEN_AI_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_RECOVERY_ATTEMPT_4_ONCE"
 )
@@ -271,6 +278,12 @@ def dataset_lock_declaration():
         "maximum_transport_attempts_per_fetch": MAXIMUM_TRANSPORT_ATTEMPTS,
         "maximum_transport_backoff_seconds": MAXIMUM_TRANSPORT_BACKOFF_SECONDS,
         "recovery_attempt": 4,
+        "attempt_4_authorization_consumed": True,
+        "attempt_4_final_dataset_recorded": True,
+        "attempt_4_execution_commit": ATTEMPT_4_EXECUTION_COMMIT,
+        "attempt_4_manifest_sha256": ATTEMPT_4_MANIFEST_SHA256,
+        "attempt_4_reader_incident_sha256": ATTEMPT_4_READER_INCIDENT_SHA256,
+        "read_only_iso8601_timestamp_recovery_implemented": True,
         "authorization_phrase": AUTHORIZATION_PHRASE,
         "authorization_phrase_active": False,
         "asset_order": list(ASSET_SYMBOLS),
@@ -308,8 +321,8 @@ def dataset_lock_declaration():
         "cloud_execution_authorized": False,
         "real_orders_submitted": False,
         "live_execution_authorized": False,
-        "status": "KRAKEN_AI_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_RECOVERY_IMPLEMENTED_NO_ATTEMPT_4_AUTHORIZATION",
-        "next_stage": "SEPARATE_OPERATOR_DECISION_FOR_ONE_SHOT_DERIVATIVES_CONTEXT_DATASET_LOCK_RECOVERY_ATTEMPT_4",
+        "status": "KRAKEN_AI_V2_DERIVATIVES_CONTEXT_DATASET_LOCKED_READ_ONLY_REVIEW_RECOVERY_IMPLEMENTED",
+        "next_stage": "RUN_READ_ONLY_ATTEMPT_4_FINAL_LOCK_REVIEW_AFTER_ISO8601_READER_FIX",
     }
 
 
@@ -954,6 +967,16 @@ def _verify_file(root, record, path_field, hash_field, bytes_field=None):
     return payload
 
 
+def _parse_normalized_utc(values, name):
+    try:
+        parsed = pd.to_datetime(values, format="ISO8601", utc=True, errors="raise")
+    except (TypeError, ValueError) as exc:
+        raise RuntimeError(f"Locked {name} timestamp format mismatch.") from exc
+    if parsed.isna().any():
+        raise RuntimeError(f"Locked {name} contains a missing timestamp.")
+    return parsed
+
+
 def read_locked_derivatives_context_dataset(
     dataset_root, *, expected_manifest_sha256=None, verify_raw=True
 ):
@@ -1145,12 +1168,14 @@ def read_locked_derivatives_context_dataset(
     sources = {}
     for asset in ASSET_SYMBOLS:
         funding = normalized[("FUNDING_RATE", asset)].copy()
-        funding.index = pd.to_datetime(funding.pop("source_timestamp"), utc=True)
+        funding.index = _parse_normalized_utc(
+            funding.pop("source_timestamp"), "funding"
+        )
         funding["funding_rate"] = pd.to_numeric(funding["funding_rate"], errors="raise")
 
         open_interest = normalized[("OPEN_INTEREST_METRICS", asset)].copy()
-        open_interest.index = pd.to_datetime(
-            open_interest.pop("source_timestamp"), utc=True
+        open_interest.index = _parse_normalized_utc(
+            open_interest.pop("source_timestamp"), "open-interest"
         )
         open_interest["open_interest"] = pd.to_numeric(
             open_interest["open_interest"], errors="raise"
@@ -1160,12 +1185,20 @@ def read_locked_derivatives_context_dataset(
 
         mark = normalized[("MARK_PRICE_12H", asset)].copy()
         index = normalized[("INDEX_PRICE_12H", asset)].copy()
-        mark.index = pd.to_datetime(mark.pop("open_timestamp"), utc=True)
-        index.index = pd.to_datetime(index.pop("open_timestamp"), utc=True)
+        mark.index = _parse_normalized_utc(
+            mark.pop("open_timestamp"), "mark open"
+        )
+        index.index = _parse_normalized_utc(
+            index.pop("open_timestamp"), "index open"
+        )
         if not mark.index.equals(index.index):
             raise RuntimeError(f"Mark/index timestamp mismatch for {asset}.")
-        mark_close_time = pd.to_datetime(mark.pop("close_timestamp"), utc=True)
-        index_close_time = pd.to_datetime(index.pop("close_timestamp"), utc=True)
+        mark_close_time = _parse_normalized_utc(
+            mark.pop("close_timestamp"), "mark close"
+        )
+        index_close_time = _parse_normalized_utc(
+            index.pop("close_timestamp"), "index close"
+        )
         if not mark_close_time.equals(index_close_time):
             raise RuntimeError(f"Mark/index completion-time mismatch for {asset}.")
         mark_index = pd.DataFrame(

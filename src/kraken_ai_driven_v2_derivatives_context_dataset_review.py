@@ -17,6 +17,9 @@ try:
         ATTEMPT_3_STAGING_FILE_COUNT,
         ATTEMPT_3_STAGING_INVENTORY_SHA256,
         ATTEMPT_3_STAGING_TOTAL_BYTES,
+        ATTEMPT_4_EXECUTION_COMMIT,
+        ATTEMPT_4_MANIFEST_SHA256,
+        ATTEMPT_4_READER_INCIDENT_SHA256,
         AUTHORIZATION_PHRASE,
         COMPONENT_ID,
         DATASET_ID,
@@ -42,6 +45,9 @@ except ImportError:  # pragma: no cover
         ATTEMPT_3_STAGING_FILE_COUNT,
         ATTEMPT_3_STAGING_INVENTORY_SHA256,
         ATTEMPT_3_STAGING_TOTAL_BYTES,
+        ATTEMPT_4_EXECUTION_COMMIT,
+        ATTEMPT_4_MANIFEST_SHA256,
+        ATTEMPT_4_READER_INCIDENT_SHA256,
         AUTHORIZATION_PHRASE,
         COMPONENT_ID,
         DATASET_ID,
@@ -61,7 +67,7 @@ except ImportError:  # pragma: no cover
 
 SCHEMA_VERSION = 1
 STATUS = (
-    "KRAKEN_AI_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_RECOVERY_REVIEWED_ATTEMPT_4_AUTHORIZATION_REQUIRED"
+    "KRAKEN_AI_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_READER_RECOVERY_REVIEWED_READ_ONLY_RERUN_REQUIRED"
 )
 EXPECTED_PARENT_COMMIT = "af0af86"
 EXPECTED_RECOVERY_PARENT_COMMIT = "25d55b6"
@@ -89,11 +95,20 @@ EXPECTED_ATTEMPT_2_INCIDENT_SHA256 = (
 EXPECTED_ATTEMPT_3_INCIDENT_SHA256 = (
     "ce08144f2e27788a17b23bb0fbbfdf0728854b6332b82c98378e79b09e201cc6"
 )
+EXPECTED_ATTEMPT_4_EXECUTION_COMMIT = (
+    "40b5943442c96d5ef26434db95d9dc955ca41c12"
+)
+EXPECTED_ATTEMPT_4_MANIFEST_SHA256 = (
+    "db4dde045d9fce22bee1389fe8c7ad13d3e3ccc5e5c4ace7c433f5461ba11916"
+)
+EXPECTED_ATTEMPT_4_READER_INCIDENT_SHA256 = (
+    "33d6e9fc1f2688032ec0f28c986d735f7e71bf009b5856673c32e440915b3020"
+)
 EXPECTED_PROTOCOL_SHA256 = (
-    "6de2c2534021926d0303ec8e1dae11e25bb50c792410cb99661d47ec486710ca"
+    "51aeef000af0a2f311cace28c2ef9ccfe006075340d90226312aa56e3fa736dc"
 )
 EXPECTED_COMPONENT_SHA256 = (
-    "961b954f06ca41734ca02b7a1ce09f15ad0c13b593182b0bafb7f84c9e7f1298"
+    "e948493b88068985e2a4e3041213979fde3c7424863a853833f07d601214a4d8"
 )
 
 
@@ -123,6 +138,8 @@ def review_derivatives_context_dataset_lock(root=None):
         / "KRAKEN_AI_DRIVEN_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_ATTEMPT_2_INCIDENT.md",
         "attempt_3_incident": root
         / "KRAKEN_AI_DRIVEN_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_ATTEMPT_3_INCIDENT.md",
+        "attempt_4_reader_incident": root
+        / "KRAKEN_AI_DRIVEN_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_ATTEMPT_4_READER_INCIDENT.md",
     }
     expected = {
         "parent_protocol": EXPECTED_PARENT_PROTOCOL_SHA256,
@@ -133,6 +150,7 @@ def review_derivatives_context_dataset_lock(root=None):
         "attempt_1_incident": EXPECTED_ATTEMPT_1_INCIDENT_SHA256,
         "attempt_2_incident": EXPECTED_ATTEMPT_2_INCIDENT_SHA256,
         "attempt_3_incident": EXPECTED_ATTEMPT_3_INCIDENT_SHA256,
+        "attempt_4_reader_incident": EXPECTED_ATTEMPT_4_READER_INCIDENT_SHA256,
     }
     observed = {name: _sha256(path) for name, path in paths.items()}
     for name, digest in expected.items():
@@ -151,6 +169,12 @@ def review_derivatives_context_dataset_lock(root=None):
         raise RuntimeError("Derivatives-context Attempt 2 incident mismatch.")
     if ATTEMPT_3_INCIDENT_SHA256 != EXPECTED_ATTEMPT_3_INCIDENT_SHA256:
         raise RuntimeError("Derivatives-context Attempt 3 incident mismatch.")
+    if ATTEMPT_4_EXECUTION_COMMIT != EXPECTED_ATTEMPT_4_EXECUTION_COMMIT:
+        raise RuntimeError("Derivatives-context Attempt 4 execution mismatch.")
+    if ATTEMPT_4_MANIFEST_SHA256 != EXPECTED_ATTEMPT_4_MANIFEST_SHA256:
+        raise RuntimeError("Derivatives-context Attempt 4 manifest mismatch.")
+    if ATTEMPT_4_READER_INCIDENT_SHA256 != EXPECTED_ATTEMPT_4_READER_INCIDENT_SHA256:
+        raise RuntimeError("Derivatives-context Attempt 4 reader incident mismatch.")
     if PARENT_PROTOCOL_ID != EXPECTED_PARENT_PROTOCOL_ID:
         raise RuntimeError("Derivatives-context dataset parent protocol mismatch.")
     if PARENT_FEASIBILITY_REPORT_SHA256 != EXPECTED_PARENT_FEASIBILITY_REPORT_SHA256:
@@ -182,6 +206,7 @@ def review_derivatives_context_dataset_lock(root=None):
         "optional_metrics_blank_policy_implemented",
         "optional_metrics_blank_counts_recorded",
         "open_interest_zero_sentinel_policy_implemented",
+        "read_only_iso8601_timestamp_recovery_implemented",
     )
     if any(declaration[field] is not True for field in required_true):
         raise RuntimeError("Derivatives-context dataset integrity boundary mismatch.")
@@ -223,6 +248,19 @@ def review_derivatives_context_dataset_lock(root=None):
         raise RuntimeError("Derivatives-context Attempt 3 final-state mismatch.")
     if declaration["attempt_3_staging_required"] is not True:
         raise RuntimeError("Derivatives-context Attempt 3 staging mismatch.")
+    if declaration["attempt_4_authorization_consumed"] is not True:
+        raise RuntimeError("Derivatives-context Attempt 4 consumption mismatch.")
+    if declaration["attempt_4_final_dataset_recorded"] is not True:
+        raise RuntimeError("Derivatives-context Attempt 4 final-state mismatch.")
+    if declaration["attempt_4_execution_commit"] != ATTEMPT_4_EXECUTION_COMMIT:
+        raise RuntimeError("Derivatives-context Attempt 4 execution binding mismatch.")
+    if declaration["attempt_4_manifest_sha256"] != ATTEMPT_4_MANIFEST_SHA256:
+        raise RuntimeError("Derivatives-context Attempt 4 manifest binding mismatch.")
+    if (
+        declaration["attempt_4_reader_incident_sha256"]
+        != ATTEMPT_4_READER_INCIDENT_SHA256
+    ):
+        raise RuntimeError("Derivatives-context Attempt 4 reader binding mismatch.")
     if declaration["recovery_attempt"] != 4:
         raise RuntimeError("Derivatives-context recovery attempt mismatch.")
     if (
@@ -269,12 +307,16 @@ def review_derivatives_context_dataset_lock(root=None):
         "attempt_1_incident_sha256_match": True,
         "attempt_2_incident_sha256_match": True,
         "attempt_3_incident_sha256_match": True,
+        "attempt_4_reader_incident_sha256_match": True,
+        "attempt_4_acquisition_completed": True,
+        "acquisition_rerun_authorized": False,
+        "explicit_iso8601_normalized_timestamp_parser_implemented": True,
         "complete_metrics_forensic_scan_recorded": True,
         "recovery_new_root_required": True,
         "prior_staging_inventory_implemented": True,
         "verified_resume_staging_binding_implemented": True,
         "bounded_transport_retry_implemented": True,
-        "next_stage": "SEPARATE_OPERATOR_DECISION_FOR_ONE_SHOT_DERIVATIVES_CONTEXT_DATASET_LOCK_RECOVERY_ATTEMPT_4",
+        "next_stage": "RUN_READ_ONLY_ATTEMPT_4_FINAL_LOCK_REVIEW_AFTER_ISO8601_READER_FIX",
     }
 
 

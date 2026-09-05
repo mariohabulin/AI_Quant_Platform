@@ -27,6 +27,10 @@ def test_review_binds_parent_hypothesis_and_new_lock_component():
     assert review["parent_commit"] == "af0af86"
     assert review["recovery_parent_commit"] == "25d55b6"
     assert review["recovery_attempt"] == 4
+    assert review["attempt_4_execution_commit"].startswith("40b5943")
+    assert review["attempt_4_manifest_sha256"] == (
+        "db4dde045d9fce22bee1389fe8c7ad13d3e3ccc5e5c4ace7c433f5461ba11916"
+    )
     assert review["parent_protocol_sha256"] == EXPECTED_PARENT_PROTOCOL_SHA256
     assert review["parent_protocol_sha256_match"] is True
     assert review["parent_component_sha256"] == EXPECTED_PARENT_COMPONENT_SHA256
@@ -82,6 +86,13 @@ def test_review_confirms_exact_2808_object_integrity_and_reader_boundary():
     assert review["open_interest_zero_sentinel_count_per_asset"] == 133
     assert review["recovery_new_root_required"] is True
     assert review["prior_staging_inventory_implemented"] is True
+    assert review["attempt_4_authorization_consumed"] is True
+    assert review["attempt_4_final_dataset_recorded"] is True
+    assert review["attempt_4_acquisition_completed"] is True
+    assert review["attempt_4_reader_incident_sha256_match"] is True
+    assert review["read_only_iso8601_timestamp_recovery_implemented"] is True
+    assert review["explicit_iso8601_normalized_timestamp_parser_implemented"] is True
+    assert review["acquisition_rerun_authorized"] is False
 
 
 def test_review_keeps_download_values_learning_and_later_stages_closed():
@@ -117,6 +128,7 @@ def test_review_fails_closed_if_parent_or_new_component_changes(tmp_path):
         "KRAKEN_AI_DRIVEN_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_ATTEMPT_1_INCIDENT.md",
         "KRAKEN_AI_DRIVEN_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_ATTEMPT_2_INCIDENT.md",
         "KRAKEN_AI_DRIVEN_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_ATTEMPT_3_INCIDENT.md",
+        "KRAKEN_AI_DRIVEN_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_ATTEMPT_4_READER_INCIDENT.md",
     )
     for relative in relatives:
         source = ROOT / relative

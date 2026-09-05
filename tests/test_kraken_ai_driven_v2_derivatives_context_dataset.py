@@ -188,6 +188,13 @@ def test_declaration_freezes_exact_registry_and_keeps_run_inert():
     assert declaration["public_download_object_count"] == 2113
     assert declaration["maximum_transport_attempts_per_fetch"] == 12
     assert declaration["recovery_attempt"] == 4
+    assert declaration["attempt_4_authorization_consumed"] is True
+    assert declaration["attempt_4_final_dataset_recorded"] is True
+    assert declaration["attempt_4_execution_commit"].startswith("40b5943")
+    assert declaration["attempt_4_manifest_sha256"] == (
+        "db4dde045d9fce22bee1389fe8c7ad13d3e3ccc5e5c4ace7c433f5461ba11916"
+    )
+    assert declaration["read_only_iso8601_timestamp_recovery_implemented"] is True
     assert declaration["open_interest_zero_sentinel_count"] == 399
     assert declaration["open_interest_zero_sentinel_count_per_asset"] == 133
     assert len(OPEN_INTEREST_ZERO_SENTINEL_TIMESTAMPS) == 133
@@ -199,6 +206,27 @@ def test_declaration_freezes_exact_registry_and_keeps_run_inert():
     assert declaration["source_objects_downloaded"] is False
     assert declaration["market_values_opened"] is False
     assert declaration["model_training_executed"] is False
+
+
+def test_normalized_timestamp_parser_accepts_mixed_iso8601_precision():
+    values = pd.Series(
+        [
+            "2021-12-01T00:00:00Z",
+            "2021-12-01T16:00:00.001000Z",
+            "2021-12-02T00:00:00.123456Z",
+        ]
+    )
+
+    parsed = dataset._parse_normalized_utc(values, "funding")
+
+    assert str(parsed.dt.tz) == "UTC"
+    assert parsed.iloc[1] == pd.Timestamp("2021-12-01T16:00:00.001000Z")
+    assert parsed.iloc[2] == pd.Timestamp("2021-12-02T00:00:00.123456Z")
+
+
+def test_normalized_timestamp_parser_rejects_malformed_text():
+    with pytest.raises(RuntimeError, match="timestamp format mismatch"):
+        dataset._parse_normalized_utc(pd.Series(["not-a-timestamp"]), "funding")
 
 
 def test_frozen_zero_sentinel_list_matches_its_canonical_hash():

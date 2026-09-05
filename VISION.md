@@ -98,11 +98,16 @@ non-finite or alternate invalid open-interest values. Attempt 3 passed this
 bounded correction, then a DNS outage stopped acquisition at object 696. Its
 695 complete pairs are preserved, but no final lock exists.
 
-Attempt 4 does not restart blindly: it requires the exact Attempt 3 inventory,
-fully revalidates and copies those 695 pairs to a new root, then downloads the
-remaining 2,113 with bounded exponential retry. Every source and causal gate
-is unchanged; all three earlier staging directories remain immutable. Model
-training remains closed pending a complete, independently reviewed lock.
+Attempt 4 revalidated the exact Attempt 3 prefix, downloaded the remaining
+2,113 objects and atomically completed the 2,808-object lock. Manifest SHA-256
+is `db4dde045d9fce22bee1389fe8c7ad13d3e3ccc5e5c4ace7c433f5461ba11916`;
+all three earlier staging directories remain immutable.
+
+The independent reader verified the lock through normalized hashes, then
+encountered a Pandas compatibility error on valid mixed-precision ISO-8601
+text. Explicit ISO-8601 UTC parsing is the sole correction. Acquisition does
+not repeat and no locked data changes. Model training remains closed until the
+same final lock passes its read-only review.
 
 ## Permanent safety boundary
 

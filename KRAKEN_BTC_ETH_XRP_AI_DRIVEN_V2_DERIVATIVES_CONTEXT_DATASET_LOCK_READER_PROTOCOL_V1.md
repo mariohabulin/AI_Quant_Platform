@@ -17,13 +17,16 @@ Implementation and static review open no source object. Attempts 1 and 2
 consumed their authorizations and exposed two real source-schema conditions:
 optional blank ratio cells and frozen paired `0E-8` open-interest sentinels.
 Attempt 3 passed those corrections, then stopped on a transient DNS failure
-after locking 695 complete object pairs. No attempt produced a final lock; all
-three staging directories remain incident evidence.
+after locking 695 complete object pairs. All three staging directories remain
+incident evidence.
 
-Recovery Attempt 4 requires the exact phrase
+Recovery Attempt 4 used the exact phrase
 `EXECUTE_KRAKEN_AI_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_RECOVERY_ATTEMPT_4_ONCE`
-after an independent clean preflight. It may write only to a new Attempt 4
-root. Earlier authorizations cannot be reused.
+after an independent clean preflight. It completed at commit `40b5943`, wrote
+the final Attempt 4 lock atomically and consumed that authorization. The final
+manifest SHA-256 is
+`db4dde045d9fce22bee1389fe8c7ad13d3e3ccc5e5c4ace7c433f5461ba11916`.
+Acquisition must not be repeated.
 
 ## Exact source registry
 
@@ -137,14 +140,40 @@ every raw artifact and every normalized file before constructing the exact
 funding, open-interest and mark/index frames required by the parent feature
 engine. It never downloads missing data while reading a lock.
 
+## Completed Attempt 4 and read-only reader recovery
+
+Attempt 4 completed all 2,808 source objects and twelve normalized files in
+728.63 minutes. It independently revalidated the 695 cached pairs, downloaded
+the remaining 2,113 objects, recorded exactly 399 frozen zero sentinels and
+preserved the three prior staging inventories. The final directory exists and
+its staging directory does not, proving the atomic publication completed.
+
+The first independent read-only review verified the manifest identity and
+sidecar, the complete object registry, acquisition origins, prior-staging
+inventories, all raw ZIP/checksum/source-schema evidence and all normalized
+file hashes. Frame construction then failed because Pandas inferred one fixed
+datetime layout from valid ISO-8601 strings containing mixed second and
+fractional-second precision, including
+`2021-12-01T16:00:00.001000Z`. This is a reader compatibility defect, not a
+dataset, checksum, source-schema or strategy failure.
+
+The bounded correction parses every normalized timestamp column with explicit
+Pandas `format="ISO8601"`, `utc=True` and fail-closed errors. It applies to
+funding and open-interest source timestamps and mark/index open and close
+timestamps. It does not modify a raw object, normalized CSV, manifest, hash,
+feature, label, model or economic gate. Mixed-precision and malformed-input
+regression tests freeze both the accepted format and the rejection boundary.
+
 ## Safety boundary
 
-This recovery implementation does not execute acquisition, open values,
-generate labels or fit a model. Attempt 3 authorization is consumed. A later
-authorized Attempt 4 lock run may open only Development source values and may
-not generate labels or train.
+Attempt 4 acquisition is complete and its authorization is consumed. The
+read-only recovery implementation does not execute acquisition. Neither its
+static review nor the next lock review may download an object, modify the
+final lock, generate labels or fit a model. The next action is only to run the
+corrected independent reader against the existing final directory with the
+exact manifest SHA-256 above.
 
 Calibration, Evaluation, threshold or hyperparameter search, automatic model
 selection, Candidate v2, PAPER, cloud, real orders and live execution remain
-unauthorized. After a successful independently reviewed lock, the only next
-implementation is the already frozen four-variant Development learning runner.
+unauthorized. Only after the existing lock passes independent read-only review
+may the already frozen four-variant Development learning runner be considered.

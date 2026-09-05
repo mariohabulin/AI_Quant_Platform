@@ -17,9 +17,7 @@ and independently reviewed.
 - [x] Add deterministic synthetic learning and leakage tests.
 - [x] Reproduce focused and full Windows tests.
 - [x] Commit and push the exact Learning Core milestone.
-
 ### 2. Hash-Bound 12h Development Learning Runner — ATTEMPT 3 COMPLETED
-
 - [x] Implement Development-only reader for exact official native 12h members.
 - [x] Implement archive, member-byte and timestamp-identity hashes.
 - [x] Implement one-shot label generation and censoring diagnostics.
@@ -48,13 +46,11 @@ and independently reviewed.
 - [x] Record 10,712 labels, six trained artifacts and 11,856 OOF predictions.
 - [x] Lock report SHA-256
   `30d020bd9c30306f3e8931b47c0958fea7e11a33bff3795c3473806ddcaa09cf`.
-
 Baseline labels already include adverse commission, spread and slippage. A
 read-only economic/stress decision layer follows the immutable OOF evidence;
 it is not allowed to refit or automatically select a model.
 
 This stage ends with a real learned result, not another protocol-only loop.
-
 ### 3. Read-only Development economic evidence review — COMPLETED `HOLD_CASH`
 
 - [x] Freeze one payoff-derived eligibility rule before opening economic OOF
@@ -71,7 +67,6 @@ This stage ends with a real learned result, not another protocol-only loop.
   unchanged.
 - [x] Record zero positive folds/assets for both families and retain
   `HOLD_CASH`.
-
 ### 4. Frozen Alpha Research Lab V1 — COMPLETED `HOLD_CASH`
 
 - [x] Freeze 12h, the existing feature/label/cost boundary and three outer folds.
@@ -89,14 +84,12 @@ This stage ends with a real learned result, not another protocol-only loop.
 - [x] Record result SHA-256
   `d76bb013c2124672132868752a5bb350a782eb45ef7f062b78b5edcb6d3b3703`.
 - [x] Close all six as non-viable without adding a seventh variant.
-
 Exactly one branch follows:
 
 - observed branch: no stable evidence; 12h OHLCV closes with `HOLD_CASH`.
 
 No automatic Round 3, resolution change, seventh variant or unbounded search
 exists.
-
 ### 5. Derivatives-context source feasibility — COMPLETED `SOURCE_FEASIBLE`
 
 - [x] preserve Alpha Research Lab Attempt 1 and its `HOLD_CASH` result;
@@ -123,7 +116,7 @@ exists.
 - [x] commit and push the pre-registration milestone at `af0af86`;
 - [x] implement the hash-bound derivatives-context dataset lock and reader;
 - [x] validate source schemas synthetically before any network execution.
-### 7. Derivatives-context dataset lock and reader — ATTEMPTS 1–3 FAILED CLOSED
+### 7. Derivatives-context dataset lock — ATTEMPT 4 COMPLETE
 - [x] freeze 2,808 exact Development objects and every official checksum;
 - [x] hash raw/member/normalized bytes and freeze all three source schemas;
 - [x] reject unsafe ZIPs, foreign periods, duplicates, inversions and bad grids;
@@ -148,8 +141,15 @@ exists.
 - [x] bind 1,390 files, 7,317,431 bytes and the exact staging inventory hash;
 - [x] implement full revalidation and reuse of only that contiguous prefix;
 - [x] fetch only the remaining 2,113 objects with bounded exponential retry;
-- [ ] reproduce focused/full Windows Attempt 4 tests and static review;
-- [ ] commit/push, preflight and separately authorize Recovery Attempt 4.
+- [x] reproduce focused/full Windows Attempt 4 tests and static review;
+- [x] commit/push, preflight and separately authorize Recovery Attempt 4;
+- [x] revalidate 695 cached pairs and download the remaining 2,113 objects;
+- [x] atomically publish 2,808 objects and twelve normalized files;
+- [x] lock manifest SHA-256
+  `db4dde045d9fce22bee1389fe8c7ad13d3e3ccc5e5c4ace7c433f5461ba11916`;
+- [x] isolate the post-lock mixed-precision ISO-8601 reader defect;
+- [ ] review/commit the explicit ISO-8601 UTC reader correction;
+- [ ] rerun only the independent read-only review on the existing final lock.
 
 Calibration, Evaluation, Candidate v2, PAPER and live remain closed.
 ## Retired active work

@@ -4,15 +4,16 @@ This is the concise active decision log. Detailed historical implementation
 notes remain recoverable in Git through commit `8c51695` and in the immutable
 protocol/evidence files.
 
-## 2026-09-04 — Dataset Lock Attempt 3 transport incident
-- Attempt 3 at `25d55b6` passed both source-schema corrections, then DNS failed
-  while fetching object 696. No final lock, label or model exists.
-- Its immutable staging holds a contiguous prefix of 695 complete ZIP/checksum
-  pairs: 1,390 files, 7,317,431 bytes, inventory SHA-256
-  `8de82f8905358c79f3e0cb609f8b8ecd782e32e02497e9ef784e85b528aa63dd`.
-- Attempt 4 must preserve all three prior stagings, fully revalidate and copy
-  those 695 pairs, fetch only the remaining 2,113, and use twelve-attempt
-  bounded exponential transport retry. It needs review, commit and preflight.
+## 2026-09-05 — Dataset Lock Attempt 4 completed; reader recovery bounded
+- Attempt 4 at `40b5943` revalidated 695 cached pairs, downloaded 2,113 and
+  atomically locked all 2,808 objects plus twelve normalized files in 728.63
+  minutes. Manifest SHA-256 is
+  `db4dde045d9fce22bee1389fe8c7ad13d3e3ccc5e5c4ace7c433f5461ba11916`.
+- Independent review verified all evidence through normalized hashes, then
+  failed on valid mixed-precision ISO-8601 timestamps during Pandas frame
+  construction. The reader now uses explicit ISO-8601 UTC parsing.
+- Acquisition is complete and must not repeat. Next is the same-lock read-only
+  review; labels, fitting, later partitions and execution remain closed.
 
 ## 2026-09-02 — Derivatives-context Dataset Lock Attempt 1 incident
 - Attempt 1 at `970ce17` failed before object 114; no final lock exists and staging is preserved.
@@ -31,7 +32,6 @@ protocol/evidence files.
 - Kept values, fitting, later partitions and execution closed for the source lock.
 
 ## 2026-09-02 — Derivatives-context source feasibility frozen
-
 - Preserved Alpha Research Lab Attempt 1 result SHA-256
   `d76bb013c2124672132868752a5bb350a782eb45ef7f062b78b5edcb6d3b3703`
   and the terminal 12h spot-OHLCV `HOLD_CASH` conclusion.

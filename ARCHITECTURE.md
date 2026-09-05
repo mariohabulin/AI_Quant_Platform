@@ -6,20 +6,16 @@ AI-Driven V2 is an offline supervised-learning pipeline with a later immutable
 inference runtime. Its first real learned path used locked Kraken 12h OHLCV,
 causal features, cost-aware labels and purged walk-forward evidence; that
 hypothesis is permanently closed with `HOLD_CASH`.
-
 The next path is intentionally short:
-
 1. inventory new public derivatives-context history without opening values;
 2. stop for insufficient history or freeze one causal information hypothesis;
 3. only then acquire and lock Development funding, open interest and basis;
 4. reuse proven label, walk-forward and economic-evidence boundaries;
 5. open later stages only after an independent Development pass.
-
 Manual strategy-family generation and another spot-OHLCV model search are not
 part of this path.
 
 ## Data and partition boundary
-
 The research universe is `BTC-USD`, `ETH-USD`, `XRP-USD` in that order.
 
 | Partition | UTC interval | Active use |
@@ -27,7 +23,6 @@ The research universe is `BTC-USD`, `ETH-USD`, `XRP-USD` in that order.
 | Development | 2019-01-01 to 2024-04-01 exclusive | feature, label, fit and walk-forward validation |
 | Calibration | 2024-04-01 to 2025-04-01 exclusive | unopened; later frozen-candidate confirmation only |
 | Evaluation | 2025-04-01 to 2026-04-01 exclusive | unopened sealed one-time evaluation |
-
 No preprocessing state, label path or model parameter crosses a partition.
 Provider gaps split causal segments and invalidate any event that crosses them.
 
@@ -44,7 +39,6 @@ It does not repair, interpolate or manufacture rows.
 `kraken_ai_driven_v2_learning_core.py` constructs a fixed low-dimensional
 schema from returns, ATR, volatility, EMA distances, prior structure, relative
 volume, RSI, same-timestamp market context and asset identity.
-
 All rolling state ends at the completed decision bar. Prior support/resistance
 excludes the current bar. Cross-asset context is joined only at a common already
 completed timestamp.
@@ -168,12 +162,18 @@ identical timestamps per asset and no other invalid open interest. Attempt 3
 passed that correction but stopped on transient DNS after 695 complete pairs;
 its final lock is absent and exact staging inventory remains immutable.
 
-Attempt 4 revalidates that contiguous 695-object prefix using every original
-checksum, ZIP, schema, chronology, period and value rule before copying it to a
-new staging root. It downloads only objects 696–2,808 with at most twelve
-transport attempts and bounded exponential backoff. The manifest records each
-origin and all three prior inventories. Any inventory change, invalid cache,
-continued outage or source defect fails closed; no prior staging is modified.
+Attempt 4 revalidated the 695-object prefix, downloaded objects 696–2,808 and
+atomically published all 2,808 objects plus twelve normalized files. Manifest
+SHA-256 is
+`db4dde045d9fce22bee1389fe8c7ad13d3e3ccc5e5c4ace7c433f5461ba11916`;
+all prior staging inventories remain immutable.
+
+The first independent read verified the lock through normalized-file hashes,
+then Pandas rejected valid mixed second/fractional-second ISO-8601 text during
+frame construction. The reader now specifies `format="ISO8601"`, UTC and
+fail-closed errors for every normalized timestamp column. This compatibility
+fix cannot acquire data or change a locked byte. Only a read-only rerun against
+the same manifest follows; labels and model fitting remain closed.
 ## Runtime and risk boundary
 An approved runtime may load an immutable artifact but cannot fit, mutate,
 rank, promote or submit orders; Risk and Synthetic Execution remains later.

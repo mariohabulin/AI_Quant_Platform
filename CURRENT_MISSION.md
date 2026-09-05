@@ -2,35 +2,30 @@
 
 ## Mission
 
-Preserve the closed spot-OHLCV result, frozen derivatives-context hypothesis
-and three fail-closed Dataset Lock attempts. Review a bounded Attempt 4
-recovery that revalidates and resumes the exact 695-object prefix preserved by
-Attempt 3, downloads only the remaining 2,113 objects and tolerates transient
-transport outages without weakening any data rule. Do not execute recovery,
-generate labels, fit models, open Calibration/Evaluation or promote Candidate
-v2.
+Preserve the closed spot-OHLCV result, frozen derivatives-context hypothesis,
+three fail-closed attempts and the completed Attempt 4 dataset lock. Correct
+the independent reader's mixed-precision ISO-8601 parsing defect, then rerun
+only read-only verification against the existing manifest. Do not reacquire
+data, generate labels, fit models, open Calibration/Evaluation or promote
+Candidate v2.
 
 Status:
-`KRAKEN_AI_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_RECOVERY_ATTEMPT_4_IMPLEMENTATION_REVIEW_REQUIRED`
-
-Recovery parent execution milestone: `25d55b6`
-
+`KRAKEN_AI_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_READER_RECOVERY_IMPLEMENTATION_REVIEW_REQUIRED`
+Attempt 4 execution milestone: `40b5943`
+Final manifest SHA-256:
+`db4dde045d9fce22bee1389fe8c7ad13d3e3ccc5e5c4ace7c433f5461ba11916`
 Hypothesis parent milestone: `af0af86`
-
 Feasibility evidence SHA-256:
 `3c84fba6034790ae59761f3fba23affca80fca0c8b7d29b3e3f3762c789d8e29`
-
 Active protocol:
 `kraken-btc-eth-xrp-ai-v2-derivatives-context-dataset-lock-reader-v1`
 
 ## Implemented dataset lock and reader
-
 The component freezes exactly 2,808 official Binance USD-M archive objects:
 84 funding, 2,556 daily open-interest metrics, 84 native 12h mark-price and 84
 native 12h index-price ZIPs across BTCUSDT, ETHUSDT and XRPUSDT. Every object
 must match its official `.CHECKSUM` and exact schema before it can enter the
 lock.
-
 Attempt 1 exposed exact blanks in unused ratio fields. Attempt 2 then reached
 object 181 and exposed an official paired `0E-8` open-interest sentinel. Neither
 attempt created a final lock, label or model; both non-final staging directories
@@ -38,13 +33,18 @@ remain preserved. A complete scan of all 2,556 metrics ZIPs found exactly 399
 sentinel rows: the same 133 timestamps for each asset and no negative, blank,
 non-finite or other invalid open-interest value.
 
-Attempt 3 passed the source-schema corrections, then DNS failed after 695
-complete pairs; no final lock exists. Its exact 1,390-file inventory is frozen.
-Attempt 4 uses a new root, preserves all three prior staging directories,
-revalidates every cached pair against its official checksum and full schema,
-and fetches objects 696–2,808 with bounded exponential retry. The manifest
-records each object's acquisition origin. Positive open interest, exact `0E-8`
-allowlisting, no fill and every causal rule remain unchanged.
+Attempt 3 stopped on DNS after 695 complete pairs. Attempt 4 revalidated that
+prefix, downloaded the remaining 2,113 objects and atomically published all
+2,808 objects plus twelve normalized files in 728.63 minutes. Its final lock
+exists, staging does not, the prior staging inventories are unchanged and the
+399 exact `0E-8` sentinels remain recorded without fill.
+
+The independent review verified the manifest, registries, raw evidence and
+normalized hashes, then failed while Pandas inferred one format for valid
+timestamps containing both whole seconds and fractional seconds. The bounded
+fix uses explicit `format="ISO8601"` with UTC for every normalized timestamp.
+It changes no locked byte or research rule. Next is one read-only review of the
+existing final lock; Attempt 4 acquisition is complete and must not be rerun.
 
 ## Completed source audit and active hypothesis
 
@@ -122,18 +122,18 @@ mean `-0.2140 R`. Result SHA-256 is
 `d76bb013c2124672132868752a5bb350a782eb45ef7f062b78b5edcb6d3b3703`.
 
 ## Completion gate
-
 The source audit passed 14 focused and 1,954 total Windows tests, all four
 feasibility gates and an immutable external evidence lock. The hypothesis
 passed 20 focused and 1,974 total Windows tests and was committed at `af0af86`.
-The Attempt 4 recovery component is synthetic-only pending Windows
-reproduction, static review and commit.
+Attempt 4 completed the final lock. The ISO-8601 reader correction passes 31
+focused and 2,005 total local tests and now requires Windows reproduction,
+static review, commit and a same-lock read-only review.
 
 ## Next deterministic branches
 
-- current branch: reproduce and commit the resumable Attempt 4 recovery, then
-  stop for a separate one-shot acquisition authorization;
-- after a successful independently reviewed lock: separately implement the frozen four-variant
+- current branch: reproduce and commit the read-only ISO-8601 correction, then
+  verify the existing Attempt 4 lock without network access;
+- after that independent pass: separately implement the frozen four-variant
   Development runner;
 - schema or causal-alignment failure: fail closed and repair the reader without
   changing the hypothesis.
