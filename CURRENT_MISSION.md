@@ -10,7 +10,7 @@ data, generate labels, fit models, open Calibration/Evaluation or promote
 Candidate v2.
 
 Status:
-`KRAKEN_AI_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_READER_RECOVERY_IMPLEMENTATION_REVIEW_REQUIRED`
+`KRAKEN_AI_V2_DERIVATIVES_CONTEXT_MARK_INDEX_ALIGNMENT_RECOVERY_IMPLEMENTATION_REVIEW_REQUIRED`
 Attempt 4 execution milestone: `40b5943`
 Final manifest SHA-256:
 `db4dde045d9fce22bee1389fe8c7ad13d3e3ccc5e5c4ace7c433f5461ba11916`
@@ -39,15 +39,16 @@ prefix, downloaded the remaining 2,113 objects and atomically published all
 exists, staging does not, the prior staging inventories are unchanged and the
 399 exact `0E-8` sentinels remain recorded without fill.
 
-The independent review verified the manifest, registries, raw evidence and
-normalized hashes, then failed while Pandas inferred one format for valid
-timestamps containing both whole seconds and fractional seconds. The bounded
-fix uses explicit `format="ISO8601"` with UTC for every normalized timestamp.
-It changes no locked byte or research rule. Next is one read-only review of the
-existing final lock; Attempt 4 acquisition is complete and must not be rerun.
+The first reader correction made mixed-precision ISO-8601 parsing explicit.
+The next read-only review reached a real mark/index alignment gate. A
+timestamp-only scan proved index is an exact subset of mark: BTC has 1,680
+common and 18 mark-only rows; ETH and XRP each have 1,698 common and two
+mark-only rows. All sources are ordered and unique, with zero index-only or
+paired close-time mismatch. The bounded fix inner-aligns exact completed bars
+and leaves every absent row missing. No fill, locked-byte change or acquisition
+rerun is permitted.
 
 ## Completed source audit and active hypothesis
-
 The metadata-only audit found all twelve source/asset identities, 852 common
 days from 2021-12-01 through 2024-04-01, 100% common period coverage and no
 duplicates. It opened no market value and made no profitability claim.
@@ -60,7 +61,6 @@ the existing support, all-fold, asset-breadth and overall-net-R gates and also
 beat its matched control. Controls can never become candidates.
 
 ## Completed real learning milestone
-
 The Development Learning Runner Recovery Attempt 3 completed successfully on
 locked Kraken native 12h Development data:
 
@@ -125,14 +125,14 @@ mean `-0.2140 R`. Result SHA-256 is
 The source audit passed 14 focused and 1,954 total Windows tests, all four
 feasibility gates and an immutable external evidence lock. The hypothesis
 passed 20 focused and 1,974 total Windows tests and was committed at `af0af86`.
-Attempt 4 completed the final lock. The ISO-8601 reader correction passes 31
-focused and 2,005 total local tests and now requires Windows reproduction,
-static review, commit and a same-lock read-only review.
+Attempt 4 completed the final lock. The ISO-8601 correction passed 31 focused
+and 2,005 total Windows tests at `245db6b`. Exact alignment recovery now needs
+Windows reproduction, commit and a same-lock read-only review after passing 33
+focused and 2,007 total local tests plus static source binding.
 
 ## Next deterministic branches
-
-- current branch: reproduce and commit the read-only ISO-8601 correction, then
-  verify the existing Attempt 4 lock without network access;
+- current branch: reproduce and commit exact common-bar alignment, then verify
+  the existing Attempt 4 lock without network access;
 - after that independent pass: separately implement the frozen four-variant
   Development runner;
 - schema or causal-alignment failure: fail closed and repair the reader without

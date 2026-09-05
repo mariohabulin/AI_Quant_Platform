@@ -195,6 +195,15 @@ def test_declaration_freezes_exact_registry_and_keeps_run_inert():
         "db4dde045d9fce22bee1389fe8c7ad13d3e3ccc5e5c4ace7c433f5461ba11916"
     )
     assert declaration["read_only_iso8601_timestamp_recovery_implemented"] is True
+    assert declaration["exact_common_mark_index_alignment_implemented"] is True
+    assert declaration["mark_index_unmatched_rows_filled"] is False
+    assert declaration["attempt_4_mark_index_alignment"]["BTC-USD"] == {
+        "mark_row_count": 1698,
+        "index_row_count": 1680,
+        "common_row_count": 1680,
+        "mark_only_count": 18,
+        "index_only_count": 0,
+    }
     assert declaration["open_interest_zero_sentinel_count"] == 399
     assert declaration["open_interest_zero_sentinel_count_per_asset"] == 133
     assert len(OPEN_INTEREST_ZERO_SENTINEL_TIMESTAMPS) == 133
@@ -227,6 +236,58 @@ def test_normalized_timestamp_parser_accepts_mixed_iso8601_precision():
 def test_normalized_timestamp_parser_rejects_malformed_text():
     with pytest.raises(RuntimeError, match="timestamp format mismatch"):
         dataset._parse_normalized_utc(pd.Series(["not-a-timestamp"]), "funding")
+
+
+def test_mark_index_reader_uses_only_exact_common_bars_without_fill():
+    mark = pd.DataFrame(
+        {
+            "open_timestamp": [
+                "2022-01-01T00:00:00Z",
+                "2022-01-01T12:00:00Z",
+                "2022-01-02T00:00:00Z",
+            ],
+            "close_timestamp": [
+                "2022-01-01T11:59:59.999000Z",
+                "2022-01-01T23:59:59.999000Z",
+                "2022-01-02T11:59:59.999000Z",
+            ],
+            "close": ["101", "102", "103"],
+        }
+    )
+    index = mark.iloc[[0, 2]].copy()
+    index["close"] = ["100", "102"]
+
+    aligned = dataset._align_exact_mark_index_frames(mark, index, "BTC-USD")
+
+    assert aligned.index.tolist() == [
+        pd.Timestamp("2022-01-01T00:00:00Z"),
+        pd.Timestamp("2022-01-02T00:00:00Z"),
+    ]
+    assert aligned["mark_close"].tolist() == [101, 103]
+    assert aligned["index_close"].tolist() == [100, 102]
+    assert dict(aligned.attrs) == {
+        "mark_row_count": 3,
+        "index_row_count": 2,
+        "common_row_count": 2,
+        "mark_only_count": 1,
+        "index_only_count": 0,
+    }
+    assert pd.Timestamp("2022-01-01T12:00:00Z") not in aligned.index
+
+
+def test_mark_index_reader_rejects_close_time_mismatch_on_common_bar():
+    mark = pd.DataFrame(
+        {
+            "open_timestamp": ["2022-01-01T00:00:00Z"],
+            "close_timestamp": ["2022-01-01T11:59:59.999000Z"],
+            "close": ["101"],
+        }
+    )
+    index = mark.copy()
+    index.loc[0, "close_timestamp"] = "2022-01-01T12:00:00Z"
+
+    with pytest.raises(RuntimeError, match="completion-time mismatch"):
+        dataset._align_exact_mark_index_frames(mark, index, "BTC-USD")
 
 
 def test_frozen_zero_sentinel_list_matches_its_canonical_hash():

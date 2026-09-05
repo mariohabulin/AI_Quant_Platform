@@ -4,14 +4,16 @@ This is the concise active decision log. Detailed historical implementation
 notes remain recoverable in Git through commit `8c51695` and in the immutable
 protocol/evidence files.
 
-## 2026-09-05 — Dataset Lock Attempt 4 completed; reader recovery bounded
+## 2026-09-05 — Dataset Lock complete; two reader defects bounded
 - Attempt 4 at `40b5943` revalidated 695 cached pairs, downloaded 2,113 and
   atomically locked all 2,808 objects plus twelve normalized files in 728.63
   minutes. Manifest SHA-256 is
   `db4dde045d9fce22bee1389fe8c7ad13d3e3ccc5e5c4ace7c433f5461ba11916`.
-- Independent review verified all evidence through normalized hashes, then
-  failed on valid mixed-precision ISO-8601 timestamps during Pandas frame
-  construction. The reader now uses explicit ISO-8601 UTC parsing.
+- First review isolated valid mixed-precision ISO-8601 parsing; its correction
+  passed 31 focused and 2,005 total Windows tests at `245db6b`.
+- Second review proved index timestamps are exact mark subsets: BTC has 18
+  mark-only bars, ETH/XRP two each, and no index-only, duplicate, ordering or
+  common close-time mismatch. Exact inner alignment retains gaps without fill.
 - Acquisition is complete and must not repeat. Next is the same-lock read-only
   review; labels, fitting, later partitions and execution remain closed.
 
@@ -64,9 +66,7 @@ protocol/evidence files.
 ## 2026-09-01 — Timestamp forensic conclusion
 - The authorized timestamp-only scan found 4,383 native 4h rows per asset but
   only 545 Development rows; no reader defect or hidden earlier history existed.
-
 ## 2026-09-01 — AI-Driven V2 Learning Core
-
 - Added `kraken-btc-eth-xrp-ai-driven-v2-learning-core-v1`.
 - Implemented strict 12h Development frame validation.
 - Implemented 16 causal market-context features plus asset identity.

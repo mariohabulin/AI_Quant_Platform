@@ -147,16 +147,16 @@ exists.
 - [x] atomically publish 2,808 objects and twelve normalized files;
 - [x] lock manifest SHA-256
   `db4dde045d9fce22bee1389fe8c7ad13d3e3ccc5e5c4ace7c433f5461ba11916`;
-- [x] isolate the post-lock mixed-precision ISO-8601 reader defect;
-- [ ] review/commit the explicit ISO-8601 UTC reader correction;
-- [ ] rerun only the independent read-only review on the existing final lock.
+- [x] isolate, test and commit explicit ISO-8601 UTC parsing at `245db6b`;
+- [x] prove exact index-subset alignment without duplicates or close mismatch;
+- [ ] review/commit exact common-bar alignment with no fill;
+- [ ] rerun only independent read-only review on the existing final lock.
 
 Calibration, Evaluation, Candidate v2, PAPER and live remain closed.
 ## Retired active work
 AI-Driven Crypto Research v2, State Machine, Risk and Execution,
 Development/Evaluation Partition and Development Runner; both rule-discovery
 rounds; and Reference A are the closed Rule Discovery Foundation, not candidates.
-
 ## Completed evidence controls
 
 - [x] Audit official provider/history evidence.

@@ -164,14 +164,29 @@ timestamps. It does not modify a raw object, normalized CSV, manifest, hash,
 feature, label, model or economic gate. Mixed-precision and malformed-input
 regression tests freeze both the accepted format and the rejection boundary.
 
+That correction passed and the second read-only review reached the mark/index
+alignment gate. A timestamp-only scan proved that each index series is an
+exact subset of its mark series: BTC has 1,698 mark rows, 1,680 index/common
+rows and 18 mark-only rows; ETH and XRP each have 1,700 mark rows, 1,698
+index/common rows and two mark-only rows. There are zero index-only rows, zero
+duplicates, monotonic order and zero close-time mismatches on common bars.
+
+The frozen hypothesis requires mark and index from the exact same completed
+12h bar and already declares an absent source invalid. The reader therefore
+inner-aligns on exact open timestamps, requires identical close timestamps on
+every common row and records per-asset source, common and unmatched counts.
+It never fills, interpolates, shifts or approximately matches an unmatched
+bar. Reindexing the paired frame onto Kraken decisions retains missing bars as
+missing, so the existing 60-consecutive-context-bar rule remains unchanged.
+
 ## Safety boundary
 
 Attempt 4 acquisition is complete and its authorization is consumed. The
 read-only recovery implementation does not execute acquisition. Neither its
 static review nor the next lock review may download an object, modify the
 final lock, generate labels or fit a model. The next action is only to run the
-corrected independent reader against the existing final directory with the
-exact manifest SHA-256 above.
+ISO-8601 and exact-alignment corrected independent reader against the existing
+final directory with the exact manifest SHA-256 above.
 
 Calibration, Evaluation, threshold or hyperparameter search, automatic model
 selection, Candidate v2, PAPER, cloud, real orders and live execution remain

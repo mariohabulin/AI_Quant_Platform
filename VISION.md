@@ -103,11 +103,12 @@ Attempt 4 revalidated the exact Attempt 3 prefix, downloaded the remaining
 is `db4dde045d9fce22bee1389fe8c7ad13d3e3ccc5e5c4ace7c433f5461ba11916`;
 all three earlier staging directories remain immutable.
 
-The independent reader verified the lock through normalized hashes, then
-encountered a Pandas compatibility error on valid mixed-precision ISO-8601
-text. Explicit ISO-8601 UTC parsing is the sole correction. Acquisition does
-not repeat and no locked data changes. Model training remains closed until the
-same final lock passes its read-only review.
+The first reader recovery made mixed-precision ISO-8601 UTC parsing explicit.
+The next review proved index timestamps are exact mark subsets: 18 BTC and two
+ETH/XRP mark-only bars, with no opposite, duplicate or close-time mismatch.
+Exact common-bar alignment leaves missing context missing; it never fills or
+approximates. Acquisition does not repeat and no locked data changes. Model
+training remains closed until the same final lock passes read-only review.
 
 ## Permanent safety boundary
 
@@ -119,7 +120,6 @@ same final lock passes its read-only review.
 - Real orders are never an implicit consequence of a research result.
 
 ## Preserved foundations
-
 These components remain useful even though manual strategy discovery is
 retired from the active path:
 

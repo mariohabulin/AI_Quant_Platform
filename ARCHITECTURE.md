@@ -27,9 +27,7 @@ No preprocessing state, label path or model parameter crosses a partition.
 Provider gaps split causal segments and invalidate any event that crosses them.
 
 ## Learning Core components
-
 ### Frame validator
-
 Accepts exactly three timezone-aware, ordered 12h OHLCV frames. It checks
 numeric values, OHLC geometry, timestamp alignment and the Development boundary.
 It does not repair, interpolate or manufacture rows.
@@ -168,12 +166,14 @@ SHA-256 is
 `db4dde045d9fce22bee1389fe8c7ad13d3e3ccc5e5c4ace7c433f5461ba11916`;
 all prior staging inventories remain immutable.
 
-The first independent read verified the lock through normalized-file hashes,
-then Pandas rejected valid mixed second/fractional-second ISO-8601 text during
-frame construction. The reader now specifies `format="ISO8601"`, UTC and
-fail-closed errors for every normalized timestamp column. This compatibility
-fix cannot acquire data or change a locked byte. Only a read-only rerun against
-the same manifest follows; labels and model fitting remain closed.
+The first independent read isolated mixed-precision ISO-8601 parsing and the
+next exposed source alignment. Index is an exact mark subset: BTC has 18
+mark-only bars; ETH/XRP have two each; common opens have identical closes and
+both sources are ordered and unique. The reader parses explicit ISO-8601 UTC,
+then inner-aligns only exact completed bars and records unmatched counts. It
+never fills or approximates. Reindexing onto decisions preserves gaps, so the
+60-consecutive-context rule remains active. Only a same-manifest read-only
+rerun follows; labels and fitting remain closed.
 ## Runtime and risk boundary
 An approved runtime may load an immutable artifact but cannot fit, mutate,
 rank, promote or submit orders; Risk and Synthetic Execution remains later.

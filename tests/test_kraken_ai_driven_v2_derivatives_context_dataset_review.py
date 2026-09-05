@@ -90,8 +90,19 @@ def test_review_confirms_exact_2808_object_integrity_and_reader_boundary():
     assert review["attempt_4_final_dataset_recorded"] is True
     assert review["attempt_4_acquisition_completed"] is True
     assert review["attempt_4_reader_incident_sha256_match"] is True
+    assert review["attempt_4_alignment_incident_sha256_match"] is True
     assert review["read_only_iso8601_timestamp_recovery_implemented"] is True
     assert review["explicit_iso8601_normalized_timestamp_parser_implemented"] is True
+    assert review["exact_common_mark_index_alignment_implemented"] is True
+    assert review["exact_common_mark_index_alignment_reviewed"] is True
+    assert review["mark_index_unmatched_rows_filled"] is False
+    assert review["attempt_4_mark_index_alignment"]["ETH-USD"] == {
+        "mark_row_count": 1700,
+        "index_row_count": 1698,
+        "common_row_count": 1698,
+        "mark_only_count": 2,
+        "index_only_count": 0,
+    }
     assert review["acquisition_rerun_authorized"] is False
 
 
@@ -129,6 +140,7 @@ def test_review_fails_closed_if_parent_or_new_component_changes(tmp_path):
         "KRAKEN_AI_DRIVEN_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_ATTEMPT_2_INCIDENT.md",
         "KRAKEN_AI_DRIVEN_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_ATTEMPT_3_INCIDENT.md",
         "KRAKEN_AI_DRIVEN_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_ATTEMPT_4_READER_INCIDENT.md",
+        "KRAKEN_AI_DRIVEN_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_ATTEMPT_4_MARK_INDEX_ALIGNMENT_INCIDENT.md",
     )
     for relative in relatives:
         source = ROOT / relative

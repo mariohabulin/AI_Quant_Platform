@@ -55,6 +55,32 @@ ATTEMPT_4_MANIFEST_SHA256 = (
 ATTEMPT_4_READER_INCIDENT_SHA256 = (
     "33d6e9fc1f2688032ec0f28c986d735f7e71bf009b5856673c32e440915b3020"
 )
+ATTEMPT_4_ALIGNMENT_INCIDENT_SHA256 = (
+    "f325f4f6d585cf70e2ef4315c749a20ebb138652f71792036bfd538bbde9eeb8"
+)
+ATTEMPT_4_MARK_INDEX_ALIGNMENT = {
+    "BTC-USD": {
+        "mark_row_count": 1698,
+        "index_row_count": 1680,
+        "common_row_count": 1680,
+        "mark_only_count": 18,
+        "index_only_count": 0,
+    },
+    "ETH-USD": {
+        "mark_row_count": 1700,
+        "index_row_count": 1698,
+        "common_row_count": 1698,
+        "mark_only_count": 2,
+        "index_only_count": 0,
+    },
+    "XRP-USD": {
+        "mark_row_count": 1700,
+        "index_row_count": 1698,
+        "common_row_count": 1698,
+        "mark_only_count": 2,
+        "index_only_count": 0,
+    },
+}
 AUTHORIZATION_PHRASE = (
     "EXECUTE_KRAKEN_AI_V2_DERIVATIVES_CONTEXT_DATASET_LOCK_RECOVERY_ATTEMPT_4_ONCE"
 )
@@ -283,7 +309,13 @@ def dataset_lock_declaration():
         "attempt_4_execution_commit": ATTEMPT_4_EXECUTION_COMMIT,
         "attempt_4_manifest_sha256": ATTEMPT_4_MANIFEST_SHA256,
         "attempt_4_reader_incident_sha256": ATTEMPT_4_READER_INCIDENT_SHA256,
+        "attempt_4_alignment_incident_sha256": (
+            ATTEMPT_4_ALIGNMENT_INCIDENT_SHA256
+        ),
+        "attempt_4_mark_index_alignment": ATTEMPT_4_MARK_INDEX_ALIGNMENT,
         "read_only_iso8601_timestamp_recovery_implemented": True,
+        "exact_common_mark_index_alignment_implemented": True,
+        "mark_index_unmatched_rows_filled": False,
         "authorization_phrase": AUTHORIZATION_PHRASE,
         "authorization_phrase_active": False,
         "asset_order": list(ASSET_SYMBOLS),
@@ -321,8 +353,8 @@ def dataset_lock_declaration():
         "cloud_execution_authorized": False,
         "real_orders_submitted": False,
         "live_execution_authorized": False,
-        "status": "KRAKEN_AI_V2_DERIVATIVES_CONTEXT_DATASET_LOCKED_READ_ONLY_REVIEW_RECOVERY_IMPLEMENTED",
-        "next_stage": "RUN_READ_ONLY_ATTEMPT_4_FINAL_LOCK_REVIEW_AFTER_ISO8601_READER_FIX",
+        "status": "KRAKEN_AI_V2_DERIVATIVES_CONTEXT_DATASET_LOCKED_MARK_INDEX_ALIGNMENT_RECOVERY_IMPLEMENTED",
+        "next_stage": "RUN_READ_ONLY_ATTEMPT_4_FINAL_LOCK_REVIEW_AFTER_EXACT_ALIGNMENT_FIX",
     }
 
 
@@ -977,6 +1009,48 @@ def _parse_normalized_utc(values, name):
     return parsed
 
 
+def _align_exact_mark_index_frames(mark, index, asset):
+    mark = mark.copy()
+    index = index.copy()
+    for name, frame in (("Mark", mark), ("Index", index)):
+        frame.index = _parse_normalized_utc(
+            frame.pop("open_timestamp"), f"{name.lower()} open"
+        )
+        if not frame.index.is_monotonic_increasing or not frame.index.is_unique:
+            raise RuntimeError(f"Locked {name.lower()} chronology mismatch for {asset}.")
+        frame["close_timestamp"] = _parse_normalized_utc(
+            frame["close_timestamp"], f"{name.lower()} close"
+        )
+        frame["close"] = pd.to_numeric(frame["close"], errors="raise")
+
+    common = mark.index.intersection(index.index, sort=False)
+    if len(common) == 0:
+        raise RuntimeError(f"No exact mark/index timestamp pair exists for {asset}.")
+    aligned_mark = mark.loc[common]
+    aligned_index = index.loc[common]
+    if not aligned_mark["close_timestamp"].equals(
+        aligned_index["close_timestamp"]
+    ):
+        raise RuntimeError(f"Mark/index completion-time mismatch for {asset}.")
+
+    diagnostics = {
+        "mark_row_count": len(mark),
+        "index_row_count": len(index),
+        "common_row_count": len(common),
+        "mark_only_count": len(mark.index.difference(index.index)),
+        "index_only_count": len(index.index.difference(mark.index)),
+    }
+    aligned = pd.DataFrame(
+        {
+            "mark_close": aligned_mark["close"],
+            "index_close": aligned_index["close"],
+        },
+        index=common,
+    )
+    aligned.attrs.update(diagnostics)
+    return aligned
+
+
 def read_locked_derivatives_context_dataset(
     dataset_root, *, expected_manifest_sha256=None, verify_raw=True
 ):
@@ -1185,29 +1259,14 @@ def read_locked_derivatives_context_dataset(
 
         mark = normalized[("MARK_PRICE_12H", asset)].copy()
         index = normalized[("INDEX_PRICE_12H", asset)].copy()
-        mark.index = _parse_normalized_utc(
-            mark.pop("open_timestamp"), "mark open"
-        )
-        index.index = _parse_normalized_utc(
-            index.pop("open_timestamp"), "index open"
-        )
-        if not mark.index.equals(index.index):
-            raise RuntimeError(f"Mark/index timestamp mismatch for {asset}.")
-        mark_close_time = _parse_normalized_utc(
-            mark.pop("close_timestamp"), "mark close"
-        )
-        index_close_time = _parse_normalized_utc(
-            index.pop("close_timestamp"), "index close"
-        )
-        if not mark_close_time.equals(index_close_time):
-            raise RuntimeError(f"Mark/index completion-time mismatch for {asset}.")
-        mark_index = pd.DataFrame(
-            {
-                "mark_close": pd.to_numeric(mark["close"], errors="raise"),
-                "index_close": pd.to_numeric(index["close"], errors="raise"),
-            },
-            index=mark.index,
-        )
+        mark_index = _align_exact_mark_index_frames(mark, index, asset)
+        if (
+            digest == ATTEMPT_4_MANIFEST_SHA256
+            and dict(mark_index.attrs) != ATTEMPT_4_MARK_INDEX_ALIGNMENT[asset]
+        ):
+            raise RuntimeError(
+                f"Locked Attempt 4 mark/index alignment evidence mismatch for {asset}."
+            )
         for name, frame in (
             ("funding", funding),
             ("open_interest", open_interest),
@@ -1271,6 +1330,10 @@ def main(argv=None):
             "optional_metrics_blank_counts": manifest[
                 "optional_metrics_blank_counts"
             ],
+            "mark_index_alignment": {
+                asset: dict(sources[asset]["mark_index_12h"].attrs)
+                for asset in sources
+            },
             "labels_generated": False,
             "model_training_executed": False,
             "candidate_v2_authorized": False,
