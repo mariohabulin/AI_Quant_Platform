@@ -112,9 +112,13 @@ The runner committed at `4e3867d` trained twelve models on 3,793 rows and wrote
 passed review. Both context models selected zero trades; beating losing controls
 incrementally did not pass absolute gates. Result: `HOLD_CASH`, no candidate.
 
-The active forensic asks whether OOF scores rank net outcomes consistently by
-decile, fold and asset. It cannot fit, sweep thresholds, open later partitions
-or choose Experiment 2. Evidence permits one frozen experiment or closure.
+Read-only score forensics report SHA-256
+`ed4ee096a9d45eee4d1ee0970dbb062473e74c9caad3597f20eda17cb4dba91f`
+found negative overall rank association and net R in every score decile. The
+long-only context hypothesis closes with `HOLD_CASH`, without threshold rescue.
+One frozen bidirectional hypothesis reuses all 25 features and changes only to
+symmetric LONG/SHORT outcomes plus `HOLD_CASH`; horizon, risk, barriers, costs
+and folds stay fixed. Real fitting needs a reviewed runner and authorization.
 
 ## Permanent safety boundary
 
@@ -139,13 +143,8 @@ retired from the active path:
 - supervised and one-episode-at-a-time blinded replay controls; and
 - Rule Discovery Foundation evidence from Reference A, Round 1 and Round 2.
 
-Selected timestamps were protected during blinded review; fabricated rows were
-prohibited, and sealed review was not a performance result.
-The supervised boundary exposed one asset episode at a time.
-Historical compatibility terms: selected timestamps, Kraken daily,
-three-class, no model training, Round 1 Discovery Runner, Round 2 Family
-Execution, True Learning Engine and the former statement that the resolution
-remains unselected.
+Selected timestamps were protected during blinded review; fabricated rows were prohibited, sealed review was not a performance result and the supervised boundary exposed one asset episode at a time.
+Historical compatibility terms: selected timestamps, Kraken daily, three-class, no model training, Round 1 Discovery Runner, Round 2 Family Execution, True Learning Engine and the former statement that the resolution remains unselected.
 Legacy exact marker: resolution remains unselected.
 
 ## Historical evidence index

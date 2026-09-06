@@ -2,20 +2,25 @@
 
 ## Mission
 
-Preserve the closed spot-OHLCV result, verified derivatives-context lock and
-completed four-variant Development evidence. Implement a hash-bound read-only
-score-forensic review before deciding whether one Experiment 2 is justified.
-Do not reacquire data, refit or search thresholds; later partitions stay closed.
+Preserve the closed spot-OHLCV and long-only derivatives-context results. Freeze
+one bidirectional Development hypothesis that reuses the exact 16 spot and nine
+context features while learning separate LONG and SHORT net-R outcomes. Do not
+add indicators, reacquire data, fit real models or search thresholds; later
+partitions stay closed.
 
 Status:
-`KRAKEN_AI_V2_CONTEXT_SCORE_FORENSIC_REVIEW_REVIEWED_EXTERNAL_EVIDENCE_REQUIRED`
+`KRAKEN_AI_V2_BIDIRECTIONAL_DEVELOPMENT_HYPOTHESIS_FROZEN_REVIEW_REQUIRED`
+Context forensic execution milestone: `bde314d`
+Context forensic report SHA-256:
+`ed4ee096a9d45eee4d1ee0970dbb062473e74c9caad3597f20eda17cb4dba91f`
 Attempt 4 execution milestone: `40b5943`
 Final manifest SHA-256:
 `db4dde045d9fce22bee1389fe8c7ad13d3e3ccc5e5c4ace7c433f5461ba11916`
 Hypothesis parent milestone: `af0af86`
 Feasibility evidence SHA-256:
 `3c84fba6034790ae59761f3fba23affca80fca0c8b7d29b3e3f3762c789d8e29`
-Active protocol: `kraken-btc-eth-xrp-ai-v2-context-score-forensic-review-v1`
+Active protocol:
+`kraken-btc-eth-xrp-ai-v2-bidirectional-development-hypothesis-v1`
 
 ## Implemented dataset lock and reader
 The component freezes exactly 2,808 official Binance USD-M archive objects:
@@ -116,26 +121,27 @@ negative result, extra-trees classification, still returned `-34.4499 R` and
 mean `-0.2140 R`. Result SHA-256 is
 `d76bb013c2124672132868752a5bb350a782eb45ef7f062b78b5edcb6d3b3703`.
 
-## Completed context learning and active forensics
-The runner committed at `4e3867d` completed Attempt 1 on 3,793 identical
-context-complete rows, trained twelve fold models and recorded 8,468 OOF
-predictions. Report SHA-256 is
+## Completed context learning and forensic conclusion
+Runner `4e3867d` trained twelve models on 3,793 identical rows and recorded
+8,468 OOF predictions; report SHA-256 is
 `bddb6f7c0a9b056dcf8a4ca79fc3b8128dbf4ded4aac47e19022a84222215fb4`.
-Both context variants selected zero rows and failed absolute support/economic
-gates. Losing controls made zero-selection context variants look better on
-incremental gates, which is not a tradable pass. The action remains
-`KRAKEN_AI_V2_DERIVATIVES_CONTEXT_NO_VIABLE_HYPOTHESIS_HOLD_CASH`.
+Both context variants selected zero rows. Read-only forensics changed no
+evidence and found negative overall association and all-negative deciles;
+top-decile means were `-0.6837 R` and `-0.9903 R`. Long-only closes
+`KRAKEN_AI_V2_DERIVATIVES_CONTEXT_NO_VIABLE_HYPOTHESIS_HOLD_CASH` without tuning.
 
-The active read-only component verifies every immutable evidence byte without
-unpickling models, then measures score quantiles, rank/outcome association,
-equal-count deciles, fold/asset stability, class support and event duration.
-It cannot try a threshold, refit, modify evidence or select Experiment 2.
+## Frozen bidirectional Development hypothesis
+
+Experiment 2 changes only the action/label space: same 16+9 features,
+12h/60-bar/`1.5 ATR`/`3R:1R`/cost boundary; separate LONG/SHORT net-R targets;
+spot-only and spot-plus-context histogram-GBT regressors; three purged folds and
+twelve maximum fits; `max(LONG, SHORT, 0)` action with `HOLD_CASH` ties; absolute
+and context-incremental gates. Synthetic-only implementation cannot open real
+values, label or fit before a separately reviewed and authorized runner.
 
 ## Next deterministic branches
-- reproduce and commit the reviewed forensic component;
-- run it read-only against the exact Attempt 1 final evidence;
-- review whether score ranking is stable and economically positive by fold;
-- freeze exactly one Experiment 2 or close derivatives context with `HOLD_CASH`.
+- reproduce Windows tests, commit and push the exact pre-registration;
+- implement a hash-bound runner, then require preflight and one-shot authorization.
 
 ## Permanent nonauthorization
 
@@ -150,10 +156,7 @@ It cannot try a threshold, refit, modify evidence or select Experiment 2.
 
 ## Historical state
 
-Git history through `8c51695` preserves Provider, Partition, Reference A, Round
-1, Round 2, scope correction and Stage 2 work. Manual strategy-family discovery
-is retired. Learning Core committed at `2a09363`; the first Development Learning
-Runner at `cc8ae44`; recoveries at `203b4c5` and `9c1156e`.
+Git history through `8c51695` preserves Provider, Partition, Reference A, Round 1, Round 2, scope correction and Stage 2. Learning Core committed at `2a09363`; the first Development Learning Runner at `cc8ae44`; recoveries at `203b4c5` and `9c1156e`.
 
 Exact historical compatibility markers retained for regression:
 
@@ -184,10 +187,7 @@ Historical protocol identifiers:
 
 Historical evidence: BTC episode `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`; Reference A `f537410d2a237be207951b638518d80e861289dafa7db9b5c2322ffa32d4e594`; Round 1 `3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`; Round 2 `5f9acde53d0e2cf35cd1010d0002222182670d7255bdf44e18715f4902c85a01`. Partition boundaries: `2024-04-01T00:00:00Z`, `2025-04-01T00:00:00Z`, `2026-04-01T00:00:00Z`.
 
-Reference A closure status is
-`KRAKEN_AI_V2_DEVELOPMENT_REFERENCE_A_CLOSED_NO_TRADE_HOLD_CASH`.
-Reference A, Round 1 and Round 2 remain historical `HOLD_CASH` evidence, not
-learned model candidates.
+Reference A closure status is `KRAKEN_AI_V2_DEVELOPMENT_REFERENCE_A_CLOSED_NO_TRADE_HOLD_CASH`; Reference A, Round 1 and Round 2 remain historical `HOLD_CASH` evidence, not learned candidates.
 
 True Learning Contract V1 began at `70e7bca` and was integrated at `796c8de`.
 Stage 2 compared 1d, 12h and 4h with timestamp-only access and no model training.

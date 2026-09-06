@@ -1,7 +1,15 @@
 # LOG
 
-This concise decision log retains detailed history through Git commit
-`8c51695` and immutable protocol/evidence files.
+This concise decision log retains detailed history through Git commit `8c51695` and immutable protocol/evidence files.
+
+## 2026-09-06 — Long-only context closed; bidirectional hypothesis frozen
+- Read-only forensics passed unchanged; report SHA-256 is
+  `ed4ee096a9d45eee4d1ee0970dbb062473e74c9caad3597f20eda17cb4dba91f`.
+- Negative association and all-negative deciles close long-only as `HOLD_CASH`.
+- Froze unchanged 16+9 features and 12h/60-bar/`1.5 ATR`/`3R:1R`/cost inputs.
+- Added symmetric LONG/SHORT labels and `max(LONG, SHORT, 0)` with cash ties.
+- Future scope is two net-R variants, two directions, three folds, twelve fits;
+  real values and training await Windows reproduction and a separate runner.
 
 ## 2026-09-05 — Context learning complete; score forensics frozen
 - Attempt 4 locked 2,808 source objects; manifest SHA-256 is
@@ -154,16 +162,13 @@ This concise decision log retains detailed history through Git commit
 
 ## 2026-09-01 — Alpha Research Lab completed `HOLD_CASH`
 
-- Completed the immutable V1 review: logistic selected 659 non-overlapping
-  events for `-378.32 R`; histogram boosting selected 240 for `-82.93 R`.
+- Completed V1 review: logistic selected 659 events for `-378.32 R`; histogram boosting selected 240 for `-82.93 R`.
 - Both families had zero positive folds and zero positive assets; V1 action is
   `KRAKEN_AI_V2_12H_DEVELOPMENT_ECONOMIC_REVIEW_HOLD_CASH`.
-- Executed all six frozen Alpha Research Lab variants across three folds and
-  10,712 labels from commit `3dcfb2e`.
+- Executed all six Alpha Lab variants across three folds and 10,712 labels at `3dcfb2e`.
 - All six produced negative cumulative and mean non-overlapping net R; every
   positive-asset count was zero and none passed all-fold stability.
-- Recorded result SHA-256
-  `d76bb013c2124672132868752a5bb350a782eb45ef7f062b78b5edcb6d3b3703`.
+- Recorded result SHA-256 `d76bb013c2124672132868752a5bb350a782eb45ef7f062b78b5edcb6d3b3703`.
 - Closed the 12h spot-OHLCV hypothesis with `HOLD_CASH`; there is no seventh
   variant, threshold relaxation or Calibration/Evaluation access.
 
@@ -174,9 +179,7 @@ Hybrid foundation `kraken-btc-eth-xrp-ai-driven-v2-hybrid-strategy-discovery-lea
 `3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`;
 Round 2 Causal Signals, Round 2 Family Execution, Round 2 Discovery Runner and Round 2 Closure (`kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-2-v1`) covered three paths/7 routes and retained
 `5f9acde53d0e2cf35cd1010d0002222182670d7255bdf44e18715f4902c85a01`.
-True Learning Contract V1 (`70e7bca`, `796c8de`) separated learning from the
-Rule Discovery Foundation; Stage 2 compared 1d, 12h and 4h timestamp-only support without
-model training. Legacy wording that the resolution remains unselected is kept.
+True Learning Contract V1 (`70e7bca`, `796c8de`) separated learning from the Rule Discovery Foundation; Stage 2 compared 1d, 12h and 4h timestamp-only support without model training. Legacy wording that the resolution remains unselected is kept.
 
 ## Immutable identifiers
 IDs cover causal feature, state, risk, partition, Development runner (`kraken-ai-v2-ccvr-reference-a-v1`, `kraken-ai-v2-risk-execution-reference-a-v1`, `kraken-btc-eth-xrp-ai-driven-v2-partition-v1`, `kraken-btc-eth-xrp-ai-driven-v2-development-runner-v1`),

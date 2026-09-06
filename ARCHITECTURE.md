@@ -7,8 +7,10 @@ inference runtime. Its first real learned path used locked Kraken 12h OHLCV,
 causal features, cost-aware labels and purged walk-forward evidence; that
 hypothesis is permanently closed with `HOLD_CASH`.
 The 2,808-object derivatives lock passed independent review and its matched
-four-variant experiment completed without an absolute economic passer. The
-active component diagnoses immutable OOF scores without refitting or moving gates.
+four-variant long-only experiment completed without an absolute economic
+passer. Read-only forensics found no stable hidden ranking. The active component
+freezes one bidirectional Development experiment while keeping the information,
+cost and validation boundaries unchanged.
 
 ## Data and partition boundary
 The research universe is `BTC-USD`, `ETH-USD`, `XRP-USD` in that order.
@@ -131,23 +133,13 @@ context variants on identical rows and three 30-day-purged folds. Only context
 variants can pass absolute and incremental gates. No values are opened or
 models fitted.
 ### Derivatives Context Dataset Lock and Reader
-`kraken_ai_driven_v2_derivatives_context_dataset.py` freezes 2,808 Binance
-USD-M Development objects: 84 funding, 2,556 daily open-interest metrics, 84
-native 12h mark and 84 native 12h index archives. Every ZIP must match its
-adjacent official checksum and one safe expected CSV member.
-The adapter validates exact schemas, mandatory finite learning values, symbol,
-chronology, period and 12h grid; fallback and fill fail closed. Exact blanks are
-allowed only in four unused ratio columns and counted. Attempt 1 exposed the
-old all-columns-finite assumption. Attempt 2 exposed paired official `0E-8`
-sentinels at object 181; both staging directories remain immutable incidents.
-A complete scan of all 2,556 metrics archives found exactly 399 such rows: 133
-identical timestamps per asset and no other invalid open interest. Attempt 3
-passed that correction but stopped on transient DNS after 695 complete pairs;
-its final lock is absent and exact staging inventory remains immutable.
-
-Attempt 4 revalidated the 695-object prefix, downloaded objects 696–2,808 and
-atomically published all 2,808 objects plus twelve normalized files. Manifest
-SHA-256 is
+`kraken_ai_driven_v2_derivatives_context_dataset.py` freezes 2,808 checksummed
+Binance USD-M objects: 84 funding, 2,556 open-interest, 84 mark and 84 index
+archives. Exact schemas, values, symbols, chronology, periods and grids are
+validated without fill. Attempts 1–3 preserve immutable blank, `0E-8` sentinel
+and DNS incidents; the full metrics scan found exactly 399 sentinels at 133
+timestamps per asset. Attempt 4 revalidated its 695-object prefix and atomically
+published all objects plus twelve normalized files. Manifest SHA-256 is
 `db4dde045d9fce22bee1389fe8c7ad13d3e3ccc5e5c4ace7c433f5461ba11916`;
 all prior staging inventories remain immutable.
 
@@ -175,8 +167,17 @@ Attempt 1 at `4e3867d` trained twelve models on 3,793 rows and wrote 8,468 OOF p
 passed byte review. Both context variants selected zero rows; controls lost `-15.1346 R` and `-1.0 R`. Absolute gates retained `HOLD_CASH`.
 
 ### Context Score Forensic Review
-`kraken_ai_driven_v2_context_score_forensic_review.py` verifies report, prediction and model hashes without unpickling. It reports fixed quantiles, rank/net-R
-association, deciles, non-overlap, fold/asset stability, support and event duration; it cannot decompose costs, simulate thresholds, refit or select.
+`kraken_ai_driven_v2_context_score_forensic_review.py` verifies all hashes without unpickling and reports fixed ranking/economic diagnostics. Attempt 1 passed with report SHA-256
+`ed4ee096a9d45eee4d1ee0970dbb062473e74c9caad3597f20eda17cb4dba91f`.
+Both context variants had negative rank association and every decile lost;
+top-decile means were `-0.6837 R` and `-0.9903 R`. Long-only closes `HOLD_CASH`.
+
+### Frozen Bidirectional Development Hypothesis
+`kraken_ai_driven_v2_bidirectional_hypothesis.py` adds no indicator. It reuses 16 spot plus nine context features, three purged folds, 12h/60 bars, adverse costs and `3R/1R`, creating LONG and SHORT outcomes from one next-open path.
+Spot-only and spot-plus-context net-R learners yield at most twelve fits. The
+strictly positive better direction trades; nonpositive values or ties return
+`HOLD_CASH`. Absolute and context-incremental gates remain. Synthetic-only code
+cannot open values, fit a real model or promote a candidate.
 ## Runtime and risk boundary
 An approved runtime may load an immutable artifact but cannot fit, mutate, rank, promote or submit orders; Risk and Synthetic Execution remains later.
 
@@ -191,8 +192,7 @@ Core IDs include causal feature, state, risk, partition, Development, hybrid, Tr
 
 Reference A is `KRAKEN_AI_V2_DEVELOPMENT_REFERENCE_A_CLOSED_NO_TRADE_HOLD_CASH`.
 Legacy boundaries: `2024-04-01T00:00:00Z`, `2025-04-01T00:00:00Z`, `2026-04-01T00:00:00Z` exclusive.
-Compatibility: Kraken daily, no model training, Round 1 Discovery Runner, Round
-2 Family Execution, True Learning Engine and three-class Learning Core.
+Compatibility: Kraken daily, no model training, Round 1 Discovery Runner, Round 2 Family Execution, True Learning Engine and three-class Learning Core.
 Exact compatibility: AI-Driven v2 State Machine; AI-Driven v2 Risk and Execution; AI-Driven v2 Development/Evaluation Partition; AI-Driven v2 Development Runner; True Learning Contract V1 (`70e7bca`, `796c8de`).
 Legacy exact marker: resolution remains unselected.
 Compatibility registry: Stage 2 at `796c8de` compared 1d, 12h and 4h timestamp-only with no model training; `kraken-ai-v2-ccvr-reference-a-v1`; `kraken-ai-v2-risk-execution-reference-a-v1`; `kraken-btc-eth-xrp-ai-driven-v2-partition-v1`; `kraken-btc-eth-xrp-ai-driven-v2-development-runner-v1`; `kraken-btc-eth-xrp-ai-driven-v2-hybrid-strategy-discovery-learning-v1`; `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-1-v1`; `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-2-v1`; BTC `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`; Reference A `f537410d2a237be207951b638518d80e861289dafa7db9b5c2322ffa32d4e594`; Round 1 `3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`; Round 2 `5f9acde53d0e2cf35cd1010d0002222182670d7255bdf44e18715f4902c85a01`.
