@@ -2,14 +2,10 @@
 
 ## Active architecture
 
-AI-Driven V2 is an offline supervised-learning pipeline with a later immutable inference runtime. Its first real learned path used locked Kraken 12h OHLCV,
-causal features, cost-aware labels and purged walk-forward evidence; that
-hypothesis is permanently closed with `HOLD_CASH`.
-The 2,808-object derivatives lock passed independent review and its matched
-four-variant long-only experiment completed without an absolute economic
-passer. Read-only forensics found no stable hidden ranking. The hypothesis is
-frozen at `82ea7f1`; the active component is its inert hash-bound Development
-runner, with information, cost and validation boundaries unchanged.
+AI-Driven V2 is an offline supervised-learning pipeline with a later immutable
+inference runtime. Its Kraken 12h OHLCV and derivatives-context Development
+hypotheses used causal features, cost-aware labels and purged walk-forward
+evidence; both are permanently closed with `HOLD_CASH`.
 
 ## Data and partition boundary
 The research universe is `BTC-USD`, `ETH-USD`, `XRP-USD` in that order.
@@ -175,10 +171,12 @@ was `-0.7388`; context was `-0.6568` but worsened the worst fold. SHORT was
 `7176ca3a005b7bdbfbdcbc2259fafd11c154ee45b0517eab26894e675aa26b3f`.
 
 ### Bidirectional Score and Polarity Forensics
-The read-only consumer binds all inputs, validates label signs, recomputes each
-action and reports matched-row score, error, rank, decile and policy economics.
-It cannot unpickle/refit, sweep thresholds, flip polarity or choose an experiment;
-external evidence execution requires a separate decision.
+The read-only consumer binds all inputs, validates label signs, recomputes
+actions and reports score, error, rank, decile and policy economics. Authorized
+Attempt 1 passed with zero mismatches and unchanged evidence. All top deciles
+were negative; positive SHORT scores were dominated by false positives. The 12h
+hypothesis is closed `HOLD_CASH` without refit, threshold sweep or polarity flip.
+A future hypothesis requires its own contract, budget and stop condition.
 ## Runtime and risk boundary
 An approved runtime may load an immutable artifact but cannot fit, mutate, rank, promote or submit orders; Risk and Synthetic Execution remains later.
 

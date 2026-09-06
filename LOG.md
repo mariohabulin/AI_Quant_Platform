@@ -173,16 +173,16 @@ This concise decision log retains detailed history through Git commit `8c51695` 
   variant, threshold relaxation or Calibration/Evaluation access.
 
 ## 2026-09-06 — Bidirectional Development learning and forensics
-- Runner `ca1cd91` completed one authorized attempt: 3,793 decisions, 7,586
-  directional labels, 4,210 OOF predictions and twelve model artifacts.
-- Both variants lost in every fold and asset; context mean `-0.6568 R` improved
-  control `-0.7388 R` but failed worst-fold stability. SHORT dominated both.
-- Evidence report `7176ca3a005b7bdbfbdcbc2259fafd11c154ee45b0517eab26894e675aa26b3f`
-  passed the independent no-unpickle reader and remains `HOLD_CASH`.
-- Added a hash-bound read-only score/polarity forensic contract: fixed action,
-  sign, matched-row, calibration, rank, decile and policy diagnostics only.
-- Refitting, threshold search, polarity flip, automatic selection and all later
-  partitions/execution remain prohibited.
+- Runner `ca1cd91` produced 3,793 decisions, 7,586 directional labels, 4,210 OOF
+  predictions and twelve models; both variants lost in every fold and asset.
+- Report `7176ca3a005b7bdbfbdcbc2259fafd11c154ee45b0517eab26894e675aa26b3f`
+  passed no-unpickle review and remains `HOLD_CASH`.
+- Read-only forensic Attempt 1 at `8f51ab4` reconstructed all actions with zero
+  mismatches, validated label polarity and left the sixteen evidence files intact.
+- False positives dominated positive SHORT scores: 680/765 context and 602/674
+  control. All four overall top-decile means were negative.
+- Human review closed the hypothesis `HOLD_CASH`. No refit, threshold/polarity
+  rescue or successor without separate registration and a terminal stop condition.
 
 ## Compact historical milestone index
 Provider and Historical Availability Audit v1, Sealed Preflight Completed, Supervised Blinded Replay v1, AI-Driven v2 Causal Feature Contract, AI-Driven v2 State Machine, AI-Driven v2 Risk and Execution, AI-Driven v2 Partition Protocol and AI-Driven v2 Development Runner remain immutable as `kraken-ai-v2-ccvr-reference-a-v1`, `kraken-ai-v2-risk-execution-reference-a-v1`, `kraken-btc-eth-xrp-ai-driven-v2-partition-v1` and `kraken-btc-eth-xrp-ai-driven-v2-development-runner-v1`. Reference A closed `HOLD_CASH`; Round 1 Causal Signals, Round 1 Family Execution, Round 1 Discovery Runner and Round 1 Closure belong to `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-1-v1`; Round 2 Causal Signals, Round 2 Family Execution, Round 2 Discovery Runner and Round 2 Closure belong to `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-2-v1`; both follow `kraken-btc-eth-xrp-ai-driven-v2-hybrid-strategy-discovery-learning-v1`. Reports remain `3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b` and `5f9acde53d0e2cf35cd1010d0002222182670d7255bdf44e18715f4902c85a01`. True Learning Contract V1 (`70e7bca`, `796c8de`) separated learning from the Rule Discovery Foundation; Stage 2 compared 1d, 12h and 4h timestamp-only without model training.

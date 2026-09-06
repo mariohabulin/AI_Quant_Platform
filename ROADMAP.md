@@ -1,7 +1,8 @@
 # ROADMAP
 
 ## Current objective
-Keep prior failures closed. Reproduce, commit and preflight the hash-bound bidirectional Development runner without executing real training.
+Record the completed bidirectional forensics, then require a separate decision
+before any materially different and bounded Development hypothesis.
 ## Active sequence
 ### 1. V2 Learning Core — COMMITTED AT `2a09363`
 
@@ -33,18 +34,15 @@ Keep prior failures closed. Reproduce, commit and preflight the hash-bound bidir
 - [x] Run clean Attempt 2 preflight and receive a separate recovery authorization.
 - [x] Preserve fail-closed Attempt 2 staging after the contradictory endpoint check.
 - [x] Record that no frame reached the Learning Core and no label/model was created.
-- [x] Replace endpoint presence with full-grid missing-timestamp validation while retaining exact archive hash, row counts and missing counts.
+- [x] Replace endpoint presence with full-grid missing-timestamp validation.
 - [x] Require both untouched prior markers and a new Attempt 3 authorization.
 - [x] Reproduce focused/full Windows Attempt 3 recovery tests and static review.
 - [x] Commit/push the reviewed Attempt 3 recovery at `9c1156e`.
 - [x] Run clean Attempt 3 preflight and receive separate recovery authorization.
 - [x] Execute exactly one authorized real Recovery Attempt 3.
 - [x] Record 10,712 labels, six trained artifacts and 11,856 OOF predictions.
-- [x] Lock report SHA-256
-  `30d020bd9c30306f3e8931b47c0958fea7e11a33bff3795c3473806ddcaa09cf`.
-Baseline labels already include adverse commission, spread and slippage. A
-read-only economic/stress decision layer follows the immutable OOF evidence;
-it is not allowed to refit or automatically select a model.
+- [x] Lock report SHA-256 `30d020bd9c30306f3e8931b47c0958fea7e11a33bff3795c3473806ddcaa09cf`.
+The read-only economic layer cannot refit or automatically select a model.
 
 This stage ends with a real learned result, not another protocol-only loop.
 ### 3. Read-only Development economic evidence review — COMPLETED `HOLD_CASH`
@@ -171,12 +169,14 @@ exists.
 - [x] verify report `7176ca3a005b7bdbfbdcbc2259fafd11c154ee45b0517eab26894e675aa26b3f`;
 - [x] retain `HOLD_CASH`: both variants, all folds and all assets were negative.
 
-### 12. Bidirectional score/polarity forensics — IMPLEMENTED, REVIEW REQUIRED
-- [x] bind the exact Attempt 1 result, report, runner, protocol and reviewer;
-- [x] freeze action, polarity, matched-row, calibration, decile and economics checks;
-- [x] prohibit refit, threshold search, polarity flip and automatic next choice;
-- [ ] reproduce Windows tests/static review, commit and run read-only preflight;
-- [ ] separately authorize one immutable evidence review and inspect its result.
+### 12. Bidirectional score/polarity forensics — COMPLETE `HOLD_CASH`
+- [x] bind all sources and freeze action, polarity, rank and economics checks;
+- [x] prohibit refit, threshold/polarity search and automatic next choice;
+- [x] reproduce, commit at `8f51ab4` and run the authorized immutable review;
+- [x] verify zero mismatches, unchanged evidence and close `HOLD_CASH`.
+
+### 13. Materially different bounded hypothesis — NOT YET FROZEN
+- [ ] separately freeze one regime-gated hypothesis; stop the Kraken 12h branch if its fixed gates fail.
 ## Retired active work
 AI-Driven Crypto Research v2, State/Risk/Partition, both rounds and Reference A are closed Rule Discovery Foundation components, not candidates.
 ## Completed evidence controls

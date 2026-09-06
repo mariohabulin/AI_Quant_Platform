@@ -125,10 +125,16 @@ the overall mean from `-0.7388 R` to `-0.6568 R`, but its worst fold deteriorate
 and 148/154 non-overlapping choices were SHORT. Report SHA-256 is
 `7176ca3a005b7bdbfbdcbc2259fafd11c154ee45b0517eab26894e675aa26b3f`.
 
-The next frozen step is read-only score/polarity forensics. It reconstructs
-every action, validates LONG/SHORT label signs and reports fixed calibration,
-rank, decile and action economics without fitting, threshold search or polarity
-flips. Its purpose is diagnosis, not retrospective rescue of a failed model.
+The authorized read-only score/polarity review passed at `8f51ab4`. It
+reconstructed every action with zero mismatches, validated LONG/SHORT label
+signs and left all evidence unchanged. SHORT predictions were materially
+optimistic: 680/765 positive context SHORT scores and 602/674 positive control
+SHORT scores were false positives. All four overall top-decile means were
+negative and none was positive in every fold. The frozen bidirectional
+hypothesis therefore closes `HOLD_CASH`, without threshold or polarity rescue.
+
+There is no active successor. Any later experiment must be materially different,
+separately pre-registered and bounded by a terminal research stop condition.
 
 ## Permanent safety boundary
 

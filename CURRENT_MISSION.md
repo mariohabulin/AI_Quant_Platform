@@ -2,24 +2,20 @@
 
 ## Mission
 
-Preserve the closed spot-OHLCV and long-only derivatives-context results. Review one hash-bound runner for the bidirectional Development hypothesis committed at
-`82ea7f1`. It reuses the exact 16 spot and nine context features and learns
-separate LONG and SHORT net-R outcomes. Do not execute real fitting before a
-separate authorization; all later partitions stay closed.
+Preserve all closed 12h Development results. Score/polarity forensics closed the
+bidirectional hypothesis `HOLD_CASH`; no reinterpretation, refit or successor is
+allowed without separate pre-registration. All later partitions stay closed.
 
-Status: `KRAKEN_AI_V2_BIDIRECTIONAL_DEVELOPMENT_LEARNING_RUNNER_REVIEW_REQUIRED`
+Status: `KRAKEN_AI_V2_BIDIRECTIONAL_SCORE_POLARITY_FORENSIC_REVIEW_COMPLETED_HOLD_CASH`
+Bidirectional forensic execution milestone: `8f51ab4`
 Bidirectional hypothesis milestone: `82ea7f1`
 Context forensic execution milestone: `bde314d`
-Context forensic report SHA-256:
-`ed4ee096a9d45eee4d1ee0970dbb062473e74c9caad3597f20eda17cb4dba91f`
+Context forensic report SHA-256: `ed4ee096a9d45eee4d1ee0970dbb062473e74c9caad3597f20eda17cb4dba91f`
 Attempt 4 execution milestone: `40b5943`
-Final manifest SHA-256:
-`db4dde045d9fce22bee1389fe8c7ad13d3e3ccc5e5c4ace7c433f5461ba11916`
+Final manifest SHA-256: `db4dde045d9fce22bee1389fe8c7ad13d3e3ccc5e5c4ace7c433f5461ba11916`
 Hypothesis parent milestone: `af0af86`
-Feasibility evidence SHA-256:
-`3c84fba6034790ae59761f3fba23affca80fca0c8b7d29b3e3f3762c789d8e29`
-Active protocol:
-`kraken-btc-eth-xrp-ai-v2-bidirectional-development-learning-runner-v1`
+Feasibility evidence SHA-256: `3c84fba6034790ae59761f3fba23affca80fca0c8b7d29b3e3f3762c789d8e29`
+Active protocol: `kraken-btc-eth-xrp-ai-v2-bidirectional-score-polarity-forensic-review-v1`
 
 ## Implemented dataset lock and reader
 The component freezes exactly 2,808 official Binance USD-M archive objects:
@@ -145,14 +141,15 @@ two fold means and the overall mean but worsened the worst fold. SHORT dominated
 143/153 and 148/154 actions. The independent hash-only reader passed; result is
 `KRAKEN_AI_V2_BIDIRECTIONAL_NO_VIABLE_HYPOTHESIS_HOLD_CASH`.
 
-## Current mission: read-only score/polarity forensics
-Freeze and reproduce a single diagnostic that binds report SHA-256
-`7176ca3a005b7bdbfbdcbc2259fafd11c154ee45b0517eab26894e675aa26b3f`.
-It must reconstruct actions, prove label polarity, compare matched rows and
-report fixed direction distributions, calibration error, rank correlation,
-deciles and policy economics. It may not unpickle, train, sweep a threshold,
-flip prediction signs or automatically choose the next hypothesis. After commit
-and preflight, external read-only execution requires separate authorization.
+## Completed bidirectional score/polarity forensics
+
+Attempt 1 at `8f51ab4` reconstructed every action with zero mismatches, validated
+both label polarities and changed no evidence. False positives dominated positive
+SHORT scores: 680/765 context and 602/674 control. Association was weak and every
+overall top decile was negative; the best was context LONG at `-0.1832 R`, with
+only one positive fold. Result:
+`KRAKEN_AI_V2_BIDIRECTIONAL_NO_VIABLE_HYPOTHESIS_HOLD_CASH`. No threshold search,
+polarity flip or refit is allowed. No successor is active or authorized.
 
 ## Permanent nonauthorization
 

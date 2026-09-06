@@ -67,3 +67,23 @@ def test_static_review_rejects_tampered_forensic_component(tmp_path):
     target.write_text(target.read_text(encoding="utf-8") + "tamper\n", encoding="utf-8")
     with pytest.raises(RuntimeError, match="forensic_component"):
         review_bidirectional_score_polarity_forensics(copy)
+
+
+def test_attempt_1_result_closes_bidirectional_hypothesis_without_rescue():
+    result_record = (
+        ROOT
+        / "KRAKEN_AI_DRIVEN_V2_BIDIRECTIONAL_SCORE_POLARITY_FORENSIC_REVIEW_ATTEMPT_1_RESULT.md"
+    ).read_text(encoding="utf-8")
+
+    for marker in (
+        "8f51ab4f52725ab7529009a0f9fcc934a3159f69",
+        "7176ca3a005b7bdbfbdcbc2259fafd11c154ee45b0517eab26894e675aa26b3f",
+        "KRAKEN_AI_V2_BIDIRECTIONAL_SCORE_POLARITY_FORENSIC_REVIEW_PASS",
+        "KRAKEN_AI_V2_BIDIRECTIONAL_NO_VIABLE_HYPOTHESIS_HOLD_CASH",
+        "680 of 765 positive context SHORT scores",
+        "602 of 674 positive control SHORT",
+        "There is no threshold reinterpretation",
+        "It is not authorized by this result",
+        "explicit research stop condition",
+    ):
+        assert marker in result_record
