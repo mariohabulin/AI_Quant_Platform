@@ -1,8 +1,7 @@
 # ROADMAP
 
 ## Current objective
-Keep the failed 12h spot-OHLCV and long-only derivatives-context hypotheses closed. Reproduce and commit one frozen bidirectional Development hypothesis
-before implementing any real-data runner.
+Keep prior failures closed. Reproduce, commit and preflight the hash-bound bidirectional Development runner without executing real training.
 ## Active sequence
 ### 1. V2 Learning Core — COMMITTED AT `2a09363`
 
@@ -34,8 +33,7 @@ before implementing any real-data runner.
 - [x] Run clean Attempt 2 preflight and receive a separate recovery authorization.
 - [x] Preserve fail-closed Attempt 2 staging after the contradictory endpoint check.
 - [x] Record that no frame reached the Learning Core and no label/model was created.
-- [x] Replace endpoint presence with full-grid missing-timestamp validation while
-  retaining exact archive hash, row counts and missing counts.
+- [x] Replace endpoint presence with full-grid missing-timestamp validation while retaining exact archive hash, row counts and missing counts.
 - [x] Require both untouched prior markers and a new Attempt 3 authorization.
 - [x] Reproduce focused/full Windows Attempt 3 recovery tests and static review.
 - [x] Commit/push the reviewed Attempt 3 recovery at `9c1156e`.
@@ -158,16 +156,18 @@ exists.
 - [x] record report SHA-256 `ed4ee096a9d45eee4d1ee0970dbb062473e74c9caad3597f20eda17cb4dba91f`;
 - [x] close unstable, all-negative long-only score rankings with `HOLD_CASH`.
 
-### 10. Bidirectional Development hypothesis — FROZEN, REVIEW REQUIRED
-- [x] retain 16+9 features and 12h/60-bar/`1.5 ATR`/`3R:1R`/cost boundaries;
-- [x] implement symmetric next-open LONG and SHORT labels synthetically;
-- [x] freeze one spot-only and one spot-plus-context direct-net-R learner;
-- [x] freeze two directions, three folds, twelve fits and positive-max action;
-- [x] retain support, stability, breadth and context-incremental gates;
-- [x] prohibit new indicators, search, real fitting and later partitions;
-- [ ] reproduce focused/full Windows tests and static review;
-- [ ] commit and push the exact pre-registration;
-- [ ] implement a separate hash-bound bidirectional Development runner.
+### 10. Bidirectional Development hypothesis — COMMITTED AT `82ea7f1`
+- [x] retain 16+9 features, 12h/60-bar/`1.5 ATR`/`3R:1R`/cost boundaries;
+- [x] implement symmetric next-open LONG/SHORT labels and positive-max action;
+- [x] freeze two learners, two directions, three folds and twelve fits;
+- [x] retain fixed gates; prohibit indicators, search, fitting and later data;
+- [x] reproduce 23 focused and 2,058 full tests, review, commit and push.
+
+### 11. Bidirectional Development learning runner — IMPLEMENTED, REVIEW REQUIRED
+- [x] bind `82ea7f1`, all sources and inputs; retain paired, correctly purged rows;
+- [x] fit twelve models with fixed gates; persist OOF/model/hash-only evidence;
+- [ ] reproduce Windows tests/review, commit/push and run read-only preflight;
+- [ ] require separate one-shot authorization before real Development fitting.
 
 ## Retired active work
 AI-Driven Crypto Research v2, State Machine, Risk and Execution, Development/Evaluation Partition, AI-Driven v2 Development Runner, both rounds and Reference A are closed Rule Discovery Foundation components, not candidates.

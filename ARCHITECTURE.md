@@ -2,15 +2,14 @@
 
 ## Active architecture
 
-AI-Driven V2 is an offline supervised-learning pipeline with a later immutable
-inference runtime. Its first real learned path used locked Kraken 12h OHLCV,
+AI-Driven V2 is an offline supervised-learning pipeline with a later immutable inference runtime. Its first real learned path used locked Kraken 12h OHLCV,
 causal features, cost-aware labels and purged walk-forward evidence; that
 hypothesis is permanently closed with `HOLD_CASH`.
 The 2,808-object derivatives lock passed independent review and its matched
 four-variant long-only experiment completed without an absolute economic
-passer. Read-only forensics found no stable hidden ranking. The active component
-freezes one bidirectional Development experiment while keeping the information,
-cost and validation boundaries unchanged.
+passer. Read-only forensics found no stable hidden ranking. The hypothesis is
+frozen at `82ea7f1`; the active component is its inert hash-bound Development
+runner, with information, cost and validation boundaries unchanged.
 
 ## Data and partition boundary
 The research universe is `BTC-USD`, `ETH-USD`, `XRP-USD` in that order.
@@ -172,12 +171,13 @@ passed byte review. Both context variants selected zero rows; controls lost `-15
 Both context variants had negative rank association and every decile lost;
 top-decile means were `-0.6837 R` and `-0.9903 R`. Long-only closes `HOLD_CASH`.
 
-### Frozen Bidirectional Development Hypothesis
-`kraken_ai_driven_v2_bidirectional_hypothesis.py` adds no indicator. It reuses 16 spot plus nine context features, three purged folds, 12h/60 bars, adverse costs and `3R/1R`, creating LONG and SHORT outcomes from one next-open path.
-Spot-only and spot-plus-context net-R learners yield at most twelve fits. The
+### Bidirectional Development hypothesis and runner
+`kraken_ai_driven_v2_bidirectional_hypothesis.py` adds no indicator. The runner reuses 16 spot plus nine context features, three purged folds, 12h/60 bars,
+adverse costs and `3R/1R`, creating LONG and SHORT outcomes from one next-open
+path. It purges on the later outcome end and fits at most twelve models. The
 strictly positive better direction trades; nonpositive values or ties return
-`HOLD_CASH`. Absolute and context-incremental gates remain. Synthetic-only code
-cannot open values, fit a real model or promote a candidate.
+`HOLD_CASH`. Absolute and context-incremental gates remain. Atomic report, OOF
+predictions and models have an independent hash-only reader. Real execution still needs separate authorization and cannot promote a candidate.
 ## Runtime and risk boundary
 An approved runtime may load an immutable artifact but cannot fit, mutate, rank, promote or submit orders; Risk and Synthetic Execution remains later.
 

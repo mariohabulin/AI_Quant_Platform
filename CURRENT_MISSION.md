@@ -2,14 +2,13 @@
 
 ## Mission
 
-Preserve the closed spot-OHLCV and long-only derivatives-context results. Freeze
-one bidirectional Development hypothesis that reuses the exact 16 spot and nine
-context features while learning separate LONG and SHORT net-R outcomes. Do not
-add indicators, reacquire data, fit real models or search thresholds; later
-partitions stay closed.
+Preserve the closed spot-OHLCV and long-only derivatives-context results. Review one hash-bound runner for the bidirectional Development hypothesis committed at
+`82ea7f1`. It reuses the exact 16 spot and nine context features and learns
+separate LONG and SHORT net-R outcomes. Do not execute real fitting before a
+separate authorization; all later partitions stay closed.
 
-Status:
-`KRAKEN_AI_V2_BIDIRECTIONAL_DEVELOPMENT_HYPOTHESIS_FROZEN_REVIEW_REQUIRED`
+Status: `KRAKEN_AI_V2_BIDIRECTIONAL_DEVELOPMENT_LEARNING_RUNNER_REVIEW_REQUIRED`
+Bidirectional hypothesis milestone: `82ea7f1`
 Context forensic execution milestone: `bde314d`
 Context forensic report SHA-256:
 `ed4ee096a9d45eee4d1ee0970dbb062473e74c9caad3597f20eda17cb4dba91f`
@@ -20,7 +19,7 @@ Hypothesis parent milestone: `af0af86`
 Feasibility evidence SHA-256:
 `3c84fba6034790ae59761f3fba23affca80fca0c8b7d29b3e3f3762c789d8e29`
 Active protocol:
-`kraken-btc-eth-xrp-ai-v2-bidirectional-development-hypothesis-v1`
+`kraken-btc-eth-xrp-ai-v2-bidirectional-development-learning-runner-v1`
 
 ## Implemented dataset lock and reader
 The component freezes exactly 2,808 official Binance USD-M archive objects:
@@ -130,18 +129,20 @@ evidence and found negative overall association and all-negative deciles;
 top-decile means were `-0.6837 R` and `-0.9903 R`. Long-only closes
 `KRAKEN_AI_V2_DERIVATIVES_CONTEXT_NO_VIABLE_HYPOTHESIS_HOLD_CASH` without tuning.
 
-## Frozen bidirectional Development hypothesis
+## Frozen hypothesis and reviewed bidirectional runner
 
 Experiment 2 changes only the action/label space: same 16+9 features,
 12h/60-bar/`1.5 ATR`/`3R:1R`/cost boundary; separate LONG/SHORT net-R targets;
 spot-only and spot-plus-context histogram-GBT regressors; three purged folds and
 twelve maximum fits; `max(LONG, SHORT, 0)` action with `HOLD_CASH` ties; absolute
-and context-incremental gates. Synthetic-only implementation cannot open real
-values, label or fit before a separately reviewed and authorized runner.
+and context-incremental gates. The hash-bound runner now implements paired-row
+construction, latest-outcome purging, twelve artifacts, canonical OOF evidence,
+atomic locking and an independent no-unpickle reader. Its declaration remains
+inert and has not opened real values, created labels or fitted models.
 
 ## Next deterministic branches
-- reproduce Windows tests, commit and push the exact pre-registration;
-- implement a hash-bound runner, then require preflight and one-shot authorization.
+- reproduce Windows tests/static review, commit and push the exact runner;
+- preflight its external inputs, then require separate one-shot authorization.
 
 ## Permanent nonauthorization
 

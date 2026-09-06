@@ -2,14 +2,14 @@
 
 This concise decision log retains detailed history through Git commit `8c51695` and immutable protocol/evidence files.
 
-## 2026-09-06 — Long-only context closed; bidirectional hypothesis frozen
+## 2026-09-06 — Bidirectional hypothesis frozen; runner implemented
 - Read-only forensics passed unchanged; report SHA-256 is
   `ed4ee096a9d45eee4d1ee0970dbb062473e74c9caad3597f20eda17cb4dba91f`.
 - Negative association and all-negative deciles close long-only as `HOLD_CASH`.
 - Froze unchanged 16+9 features and 12h/60-bar/`1.5 ATR`/`3R:1R`/cost inputs.
-- Added symmetric LONG/SHORT labels and `max(LONG, SHORT, 0)` with cash ties.
-- Future scope is two net-R variants, two directions, three folds, twelve fits;
-  real values and training await Windows reproduction and a separate runner.
+- Committed symmetric LONG/SHORT labels and positive-max action at `82ea7f1`.
+- Implemented a hash-bound runner for two variants, two directions, three folds, twelve artifacts, atomic OOF evidence and independent hash-only review.
+- Real values and fitting await Windows reproduction and separate authorization.
 
 ## 2026-09-05 — Context learning complete; score forensics frozen
 - Attempt 4 locked 2,808 source objects; manifest SHA-256 is

@@ -116,9 +116,11 @@ Read-only score forensics report SHA-256
 `ed4ee096a9d45eee4d1ee0970dbb062473e74c9caad3597f20eda17cb4dba91f`
 found negative overall rank association and net R in every score decile. The
 long-only context hypothesis closes with `HOLD_CASH`, without threshold rescue.
-One frozen bidirectional hypothesis reuses all 25 features and changes only to
-symmetric LONG/SHORT outcomes plus `HOLD_CASH`; horizon, risk, barriers, costs
-and folds stay fixed. Real fitting needs a reviewed runner and authorization.
+The bidirectional hypothesis committed at `82ea7f1` reuses all 25 features and
+changes only to symmetric LONG/SHORT outcomes plus `HOLD_CASH`; horizon, risk,
+barriers, costs and folds stay fixed. Its hash-bound runner now implements
+paired rows, latest-outcome purging, exactly twelve possible fits and immutable
+evidence. The runner remains inert pending reproduction and authorization.
 
 ## Permanent safety boundary
 
