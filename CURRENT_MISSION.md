@@ -129,20 +129,30 @@ evidence and found negative overall association and all-negative deciles;
 top-decile means were `-0.6837 R` and `-0.9903 R`. Long-only closes
 `KRAKEN_AI_V2_DERIVATIVES_CONTEXT_NO_VIABLE_HYPOTHESIS_HOLD_CASH` without tuning.
 
-## Frozen hypothesis and reviewed bidirectional runner
+## Completed bidirectional Development learning
 
 Experiment 2 changes only the action/label space: same 16+9 features,
 12h/60-bar/`1.5 ATR`/`3R:1R`/cost boundary; separate LONG/SHORT net-R targets;
 spot-only and spot-plus-context histogram-GBT regressors; three purged folds and
 twelve maximum fits; `max(LONG, SHORT, 0)` action with `HOLD_CASH` ties; absolute
-and context-incremental gates. The hash-bound runner now implements paired-row
-construction, latest-outcome purging, twelve artifacts, canonical OOF evidence,
-atomic locking and an independent no-unpickle reader. Its declaration remains
-inert and has not opened real values, created labels or fitted models.
+and context-incremental gates.
 
-## Next deterministic branches
-- reproduce Windows tests/static review, commit and push the exact runner;
-- preflight its external inputs, then require separate one-shot authorization.
+Authorized Attempt 1 at `ca1cd91` completed with 3,793 paired decisions, 7,586
+directional labels, 4,210 OOF predictions and twelve fitted models. Spot-only
+selected 153 non-overlapping events for mean `-0.7388 R`; context selected 154
+for `-0.6568 R`. All three folds and all three assets lost. Context improved
+two fold means and the overall mean but worsened the worst fold. SHORT dominated
+143/153 and 148/154 actions. The independent hash-only reader passed; result is
+`KRAKEN_AI_V2_BIDIRECTIONAL_NO_VIABLE_HYPOTHESIS_HOLD_CASH`.
+
+## Current mission: read-only score/polarity forensics
+Freeze and reproduce a single diagnostic that binds report SHA-256
+`7176ca3a005b7bdbfbdcbc2259fafd11c154ee45b0517eab26894e675aa26b3f`.
+It must reconstruct actions, prove label polarity, compare matched rows and
+report fixed direction distributions, calibration error, rank correlation,
+deciles and policy economics. It may not unpickle, train, sweep a threshold,
+flip prediction signs or automatically choose the next hypothesis. After commit
+and preflight, external read-only execution requires separate authorization.
 
 ## Permanent nonauthorization
 
@@ -174,17 +184,7 @@ Exact historical compatibility markers retained for regression:
   and Round 2 Closure used three paths and 7 routes; and
 - Rule Discovery Foundation and True Learning Engine.
 
-Historical protocol identifiers:
-
-- `kraken-btc-eth-xrp-ai-driven-v2-causal-feature-contract-v1`;
-- `kraken-ai-v2-ccvr-reference-a-v1`;
-- `kraken-ai-v2-risk-execution-reference-a-v1`;
-- `kraken-btc-eth-xrp-ai-driven-v2-partition-v1`;
-- `kraken-btc-eth-xrp-ai-driven-v2-development-runner-v1`;
-- `kraken-btc-eth-xrp-ai-driven-v2-hybrid-strategy-discovery-learning-v1`;
-- `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-1-v1`;
-- `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-2-v1`; and
-- `kraken-btc-eth-xrp-ai-driven-v2-true-learning-contract-v1`.
+Historical protocol identifiers retain causal feature, `kraken-ai-v2-ccvr-reference-a-v1`, `kraken-ai-v2-risk-execution-reference-a-v1`, `kraken-btc-eth-xrp-ai-driven-v2-partition-v1`, `kraken-btc-eth-xrp-ai-driven-v2-development-runner-v1`, `kraken-btc-eth-xrp-ai-driven-v2-hybrid-strategy-discovery-learning-v1`, `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-1-v1`, `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-2-v1` and `kraken-btc-eth-xrp-ai-driven-v2-true-learning-contract-v1`.
 
 Historical evidence: BTC episode `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`; Reference A `f537410d2a237be207951b638518d80e861289dafa7db9b5c2322ffa32d4e594`; Round 1 `3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`; Round 2 `5f9acde53d0e2cf35cd1010d0002222182670d7255bdf44e18715f4902c85a01`. Partition boundaries: `2024-04-01T00:00:00Z`, `2025-04-01T00:00:00Z`, `2026-04-01T00:00:00Z`.
 

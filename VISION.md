@@ -116,11 +116,19 @@ Read-only score forensics report SHA-256
 `ed4ee096a9d45eee4d1ee0970dbb062473e74c9caad3597f20eda17cb4dba91f`
 found negative overall rank association and net R in every score decile. The
 long-only context hypothesis closes with `HOLD_CASH`, without threshold rescue.
-The bidirectional hypothesis committed at `82ea7f1` reuses all 25 features and
-changes only to symmetric LONG/SHORT outcomes plus `HOLD_CASH`; horizon, risk,
-barriers, costs and folds stay fixed. Its hash-bound runner now implements
-paired rows, latest-outcome purging, exactly twelve possible fits and immutable
-evidence. The runner remains inert pending reproduction and authorization.
+The bidirectional hypothesis committed at `82ea7f1` reused all 25 features and
+changed only to symmetric LONG/SHORT outcomes plus `HOLD_CASH`; horizon, risk,
+barriers, costs and folds stayed fixed. Runner `ca1cd91` then completed Attempt
+1: 3,793 decisions, 7,586 directional labels, 4,210 OOF predictions and twelve
+models. Both variants failed every economic stability gate. Context improved
+the overall mean from `-0.7388 R` to `-0.6568 R`, but its worst fold deteriorated
+and 148/154 non-overlapping choices were SHORT. Report SHA-256 is
+`7176ca3a005b7bdbfbdcbc2259fafd11c154ee45b0517eab26894e675aa26b3f`.
+
+The next frozen step is read-only score/polarity forensics. It reconstructs
+every action, validates LONG/SHORT label signs and reports fixed calibration,
+rank, decile and action economics without fitting, threshold search or polarity
+flips. Its purpose is diagnosis, not retrospective rescue of a failed model.
 
 ## Permanent safety boundary
 
@@ -150,38 +158,8 @@ Historical compatibility terms: selected timestamps, Kraken daily, three-class, 
 Legacy exact marker: resolution remains unselected.
 
 ## Historical evidence index
-
-Detailed append-only history remains recoverable in Git through parent commit
-`8c51695`. The active documents keep only this compact immutable lineage:
-
-- provider dataset: `kraken-spot-btc-eth-xrp-native-1d-20190101-20260401-archive-only-v2`;
-- partition/features/state/risk: `kraken-btc-eth-xrp-ai-driven-v2-partition-v1`,
-  `kraken-btc-eth-xrp-ai-driven-v2-causal-feature-contract-v1`,
-  `kraken-ai-v2-ccvr-reference-a-v1`, `kraken-ai-v2-risk-execution-reference-a-v1`;
-- Development runner: `kraken-btc-eth-xrp-ai-driven-v2-development-runner-v1`;
-- hybrid foundation: `kraken-btc-eth-xrp-ai-driven-v2-hybrid-strategy-discovery-learning-v1`;
-- Round 1: `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-1-v1`;
-- Round 2: `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-2-v1`;
-- True Learning Contract V1: `kraken-btc-eth-xrp-ai-driven-v2-true-learning-contract-v1` at `70e7bca` and `796c8de`;
-- Stage 2 compared 1d, 12h and 4h with a timestamp-only reader and no model training;
-- Learning Core: `kraken-btc-eth-xrp-ai-driven-v2-learning-core-v1`.
-- 12h learner/review: `kraken-btc-eth-xrp-ai-driven-v2-12h-development-learning-runner-v1` and its economic evidence review.
-- frozen Alpha Research Lab: `kraken-btc-eth-xrp-ai-driven-v2-alpha-research-lab-v1`.
-- derivatives-context feasibility: `kraken-btc-eth-xrp-ai-v2-derivatives-context-feasibility-v1`.
-- derivatives-context learning hypothesis:
-  `kraken-btc-eth-xrp-ai-v2-derivatives-context-learning-hypothesis-v1`.
-- derivatives-context dataset lock and reader:
-  `kraken-btc-eth-xrp-ai-v2-derivatives-context-dataset-lock-reader-v1`.
-
-Immutable hashes retained for traceability:
-
-- blinded BTC episode: `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`;
-- Reference A report: `f537410d2a237be207951b638518d80e861289dafa7db9b5c2322ffa32d4e594`;
-- Round 1 report: `3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`;
-- Round 2 report: `5f9acde53d0e2cf35cd1010d0002222182670d7255bdf44e18715f4902c85a01`;
-- Stage 2 report: `ca86d49f1dde1d1a8a1e61f07f4c1e98080ab942ab5c32f89880b387edd867d1`.
-- 12h Learning Attempt 3 report:
-  `30d020bd9c30306f3e8931b47c0958fea7e11a33bff3795c3473806ddcaa09cf`.
+Detailed history is recoverable through Git parent `8c51695`. Core IDs retain `kraken-ai-v2-ccvr-reference-a-v1`, `kraken-ai-v2-risk-execution-reference-a-v1`, `kraken-btc-eth-xrp-ai-driven-v2-partition-v1`, AI-Driven v2 Development Runner `kraken-btc-eth-xrp-ai-driven-v2-development-runner-v1`, `kraken-btc-eth-xrp-ai-driven-v2-hybrid-strategy-discovery-learning-v1`, `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-1-v1`, `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-2-v1`, True Learning Contract V1 (`70e7bca`, `796c8de`), Learning Core, 12h learner, Alpha Lab and derivatives-context components. Stage 2 compared 1d, 12h and 4h timestamp-only with no model training.
+Immutable hashes: BTC episode `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`; Reference A `f537410d2a237be207951b638518d80e861289dafa7db9b5c2322ffa32d4e594`; Round 1 `3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`; Round 2 `5f9acde53d0e2cf35cd1010d0002222182670d7255bdf44e18715f4902c85a01`; Stage 2 `ca86d49f1dde1d1a8a1e61f07f4c1e98080ab942ab5c32f89880b387edd867d1`; 12h Learning Attempt 3 `30d020bd9c30306f3e8931b47c0958fea7e11a33bff3795c3473806ddcaa09cf`.
 
 Reference A closure status:
 `KRAKEN_AI_V2_DEVELOPMENT_REFERENCE_A_CLOSED_NO_TRADE_HOLD_CASH`.

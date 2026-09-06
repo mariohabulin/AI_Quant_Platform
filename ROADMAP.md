@@ -163,33 +163,33 @@ exists.
 - [x] retain fixed gates; prohibit indicators, search, fitting and later data;
 - [x] reproduce 23 focused and 2,058 full tests, review, commit and push.
 
-### 11. Bidirectional Development learning runner — IMPLEMENTED, REVIEW REQUIRED
+### 11. Bidirectional Development learning — COMPLETE `HOLD_CASH`
 - [x] bind `82ea7f1`, all sources and inputs; retain paired, correctly purged rows;
 - [x] fit twelve models with fixed gates; persist OOF/model/hash-only evidence;
-- [ ] reproduce Windows tests/review, commit/push and run read-only preflight;
-- [ ] require separate one-shot authorization before real Development fitting.
+- [x] reproduce Windows tests/review, commit at `ca1cd91` and pass preflight;
+- [x] execute one authorized run: 3,793 decisions, 7,586 labels, 4,210 OOF rows;
+- [x] verify report `7176ca3a005b7bdbfbdcbc2259fafd11c154ee45b0517eab26894e675aa26b3f`;
+- [x] retain `HOLD_CASH`: both variants, all folds and all assets were negative.
 
+### 12. Bidirectional score/polarity forensics — IMPLEMENTED, REVIEW REQUIRED
+- [x] bind the exact Attempt 1 result, report, runner, protocol and reviewer;
+- [x] freeze action, polarity, matched-row, calibration, decile and economics checks;
+- [x] prohibit refit, threshold search, polarity flip and automatic next choice;
+- [ ] reproduce Windows tests/static review, commit and run read-only preflight;
+- [ ] separately authorize one immutable evidence review and inspect its result.
 ## Retired active work
-AI-Driven Crypto Research v2, State Machine, Risk and Execution, Development/Evaluation Partition, AI-Driven v2 Development Runner, both rounds and Reference A are closed Rule Discovery Foundation components, not candidates.
+AI-Driven Crypto Research v2, State/Risk/Partition, both rounds and Reference A are closed Rule Discovery Foundation components, not candidates.
 ## Completed evidence controls
-
 - [x] Audit official provider/history evidence.
 - [x] Acquire, byte-inventory and lock the v2 archive-only Kraken daily source.
-- [x] Execute one sealed preflight with selected timestamps hidden.
-- [x] Preserve one-episode-at-a-time review and explicitly decide before advance.
-- [x] Preserve opaque source hashes and the Development/Calibration/Evaluation split.
-- [x] Close Reference A, Round 1 and Round 2 as `HOLD_CASH`.
-- [x] Record True Learning Contract V1 at `70e7bca` and `796c8de`.
-- [x] Run Stage 2 over 1d, 12h and 4h using timestamp-only access and no model training.
-
+- [x] Execute one sealed preflight; preserve one-episode-at-a-time review and explicitly decide before advance.
+Development/Calibration/Evaluation partition, Reference A/Rounds 1–2 `HOLD_CASH`, True Learning Contract V1 (`70e7bca`, `796c8de`) and timestamp-only Stage 2 over 1d, 12h and 4h remain complete.
 ## Immutable lineage
 Preserved IDs cover causal feature, state, risk, partition, Development, hybrid rounds, True Learning, Learning Core, 12h and derivatives-context components. Evidence hashes remain in Git, including Learning Attempt 3 `30d020bd9c30306f3e8931b47c0958fea7e11a33bff3795c3473806ddcaa09cf`.
 
 Historical milestones include Provider and Historical Availability Audit v1, Sealed Preflight Completed, Supervised Blinded Replay v1 and Partition Protocol. `SEALED PREFLIGHT PASS` authorized no real replay, Candidate or live execution.
-
 Reference A closure: `KRAKEN_AI_V2_DEVELOPMENT_REFERENCE_A_CLOSED_NO_TRADE_HOLD_CASH`.
 Partition boundaries: `2024-04-01T00:00:00Z`, `2025-04-01T00:00:00Z`, `2026-04-01T00:00:00Z`.
-
 Historical compatibility terms: Kraken daily, three-class, no model training, Round 1 Discovery Runner, Round 2 Family Execution, True Learning Engine and the former statement that the resolution remains unselected.
 Legacy exact marker: resolution remains unselected.
 Compatibility evidence: BTC `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`; Reference A `f537410d2a237be207951b638518d80e861289dafa7db9b5c2322ffa32d4e594`; Round 1 `3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`; Round 2 `5f9acde53d0e2cf35cd1010d0002222182670d7255bdf44e18715f4902c85a01`.

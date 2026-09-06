@@ -134,22 +134,15 @@ models fitted.
 ### Derivatives Context Dataset Lock and Reader
 `kraken_ai_driven_v2_derivatives_context_dataset.py` freezes 2,808 checksummed
 Binance USD-M objects: 84 funding, 2,556 open-interest, 84 mark and 84 index
-archives. Exact schemas, values, symbols, chronology, periods and grids are
-validated without fill. Attempts 1–3 preserve immutable blank, `0E-8` sentinel
-and DNS incidents; the full metrics scan found exactly 399 sentinels at 133
-timestamps per asset. Attempt 4 revalidated its 695-object prefix and atomically
-published all objects plus twelve normalized files. Manifest SHA-256 is
+archives with exact validation and no fill. Attempts 1–3 preserve blank,
+`0E-8` and DNS incidents; exactly 399 sentinels occurred at 133 timestamps per
+asset. Attempt 4 revalidated 695 objects and atomically published the full lock.
+Manifest SHA-256 is
 `db4dde045d9fce22bee1389fe8c7ad13d3e3ccc5e5c4ace7c433f5461ba11916`;
 all prior staging inventories remain immutable.
-
-The first independent read isolated mixed-precision ISO-8601 parsing and the
-next exposed source alignment. Index is an exact mark subset: BTC has 18
-mark-only bars; ETH/XRP have two each; common opens have identical closes and
-both sources are ordered and unique. The reader parses explicit ISO-8601 UTC,
-then inner-aligns only exact completed bars and records unmatched counts. It
-never fills or approximates. Reindexing onto decisions preserves gaps, so the
-60-consecutive-context rule remains active. The same-manifest read-only rerun
-passed at `9b23d05`; acquisition is closed.
+The reader parses explicit ISO-8601 UTC and exact completed common bars. Index
+is a mark subset: BTC has 18 mark-only bars; ETH/XRP two each, with equal common
+closes. Gaps stay missing; the same-manifest review passed at `9b23d05`.
 
 ### Derivatives Context Development Learning Runner
 `kraken_ai_driven_v2_derivatives_context_development_learning_runner.py`
@@ -172,12 +165,20 @@ Both context variants had negative rank association and every decile lost;
 top-decile means were `-0.6837 R` and `-0.9903 R`. Long-only closes `HOLD_CASH`.
 
 ### Bidirectional Development hypothesis and runner
-`kraken_ai_driven_v2_bidirectional_hypothesis.py` adds no indicator. The runner reuses 16 spot plus nine context features, three purged folds, 12h/60 bars,
-adverse costs and `3R/1R`, creating LONG and SHORT outcomes from one next-open
-path. It purges on the later outcome end and fits at most twelve models. The
-strictly positive better direction trades; nonpositive values or ties return
-`HOLD_CASH`. Absolute and context-incremental gates remain. Atomic report, OOF
-predictions and models have an independent hash-only reader. Real execution still needs separate authorization and cannot promote a candidate.
+The runner adds no indicator: it reuses 16 spot plus nine context features,
+three purged folds, 12h/60 bars, adverse costs and `3R/1R`; it creates symmetric
+LONG/SHORT outcomes and selects only the strictly positive better direction.
+Attempt 1 at `ca1cd91` produced 3,793 decisions, 7,586 labels, 4,210 OOF rows
+and twelve models. Both variants failed all folds/assets. Spot-only mean net R
+was `-0.7388`; context was `-0.6568` but worsened the worst fold. SHORT was
+143/153 control and 148/154 context selections. Report SHA-256 is
+`7176ca3a005b7bdbfbdcbc2259fafd11c154ee45b0517eab26894e675aa26b3f`.
+
+### Bidirectional Score and Polarity Forensics
+The read-only consumer binds all inputs, validates label signs, recomputes each
+action and reports matched-row score, error, rank, decile and policy economics.
+It cannot unpickle/refit, sweep thresholds, flip polarity or choose an experiment;
+external evidence execution requires a separate decision.
 ## Runtime and risk boundary
 An approved runtime may load an immutable artifact but cannot fit, mutate, rank, promote or submit orders; Risk and Synthetic Execution remains later.
 
@@ -188,8 +189,7 @@ Historical markers: Provider and Historical Availability Boundary v1; Kraken Bou
 Git through `8c51695` preserves the Rule Discovery Foundation and True Learning Engine scope correction.
 
 ## Immutable lineage index
-Core IDs include causal feature, state, risk, partition, Development, hybrid, True Learning, 12h research and derivatives-context protocols. Evidence hashes remain in immutable result documents and Git history.
-
+Core IDs include causal feature, state, risk, partition, Development, hybrid, True Learning, 12h research and derivatives-context protocols; evidence hashes remain in immutable result documents and Git history.
 Reference A is `KRAKEN_AI_V2_DEVELOPMENT_REFERENCE_A_CLOSED_NO_TRADE_HOLD_CASH`.
 Legacy boundaries: `2024-04-01T00:00:00Z`, `2025-04-01T00:00:00Z`, `2026-04-01T00:00:00Z` exclusive.
 Compatibility: Kraken daily, no model training, Round 1 Discovery Runner, Round 2 Family Execution, True Learning Engine and three-class Learning Core.

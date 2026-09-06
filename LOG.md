@@ -172,24 +172,21 @@ This concise decision log retains detailed history through Git commit `8c51695` 
 - Closed the 12h spot-OHLCV hypothesis with `HOLD_CASH`; there is no seventh
   variant, threshold relaxation or Calibration/Evaluation access.
 
-## Compact historical milestone index
-Provider and Historical Availability Audit v1 established fail-closed Kraken acquisition; Sealed Preflight Completed and Supervised Blinded Replay v1 preserved hidden timestamps and no-live boundaries.
-AI-Driven v2 Causal Feature Contract preceded AI-Driven v2 State Machine, AI-Driven v2 Risk and Execution, AI-Driven v2 Development/Evaluation Partition, AI-Driven v2 Partition Protocol and AI-Driven v2 Development Runner; Reference A closed 13 rejected entries with `HOLD_CASH`.
-Hybrid foundation `kraken-btc-eth-xrp-ai-driven-v2-hybrid-strategy-discovery-learning-v1` preceded both rounds. Round 1 Causal Signals, Round 1 Family Execution, Round 1 Discovery Runner and Round 1 Closure (`kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-1-v1`) covered four paths/12 routes and retained
-`3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`;
-Round 2 Causal Signals, Round 2 Family Execution, Round 2 Discovery Runner and Round 2 Closure (`kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-2-v1`) covered three paths/7 routes and retained
-`5f9acde53d0e2cf35cd1010d0002222182670d7255bdf44e18715f4902c85a01`.
-True Learning Contract V1 (`70e7bca`, `796c8de`) separated learning from the Rule Discovery Foundation; Stage 2 compared 1d, 12h and 4h timestamp-only support without model training. Legacy wording that the resolution remains unselected is kept.
+## 2026-09-06 — Bidirectional Development learning and forensics
+- Runner `ca1cd91` completed one authorized attempt: 3,793 decisions, 7,586
+  directional labels, 4,210 OOF predictions and twelve model artifacts.
+- Both variants lost in every fold and asset; context mean `-0.6568 R` improved
+  control `-0.7388 R` but failed worst-fold stability. SHORT dominated both.
+- Evidence report `7176ca3a005b7bdbfbdcbc2259fafd11c154ee45b0517eab26894e675aa26b3f`
+  passed the independent no-unpickle reader and remains `HOLD_CASH`.
+- Added a hash-bound read-only score/polarity forensic contract: fixed action,
+  sign, matched-row, calibration, rank, decile and policy diagnostics only.
+- Refitting, threshold search, polarity flip, automatic selection and all later
+  partitions/execution remain prohibited.
 
-## Immutable identifiers
-IDs cover causal feature, state, risk, partition, Development runner (`kraken-ai-v2-ccvr-reference-a-v1`, `kraken-ai-v2-risk-execution-reference-a-v1`, `kraken-btc-eth-xrp-ai-driven-v2-partition-v1`, `kraken-btc-eth-xrp-ai-driven-v2-development-runner-v1`),
-hybrid/Rounds, True Learning Contract, Learning Core and 12h learning/economic
-review. Evidence includes `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`,
-`f537410d2a237be207951b638518d80e861289dafa7db9b5c2322ffa32d4e594` and
-`30d020bd9c30306f3e8931b47c0958fea7e11a33bff3795c3473806ddcaa09cf`.
-Reference A status is `KRAKEN_AI_V2_DEVELOPMENT_REFERENCE_A_CLOSED_NO_TRADE_HOLD_CASH`;
-fixed terms include `FLAT -> ARMED -> LONG -> FLAT`, Layer/Signal-State/Risk
-and Synthetic Execution/Partition boundaries and supervised blinded replay.
+## Compact historical milestone index
+Provider and Historical Availability Audit v1, Sealed Preflight Completed, Supervised Blinded Replay v1, AI-Driven v2 Causal Feature Contract, AI-Driven v2 State Machine, AI-Driven v2 Risk and Execution, AI-Driven v2 Partition Protocol and AI-Driven v2 Development Runner remain immutable as `kraken-ai-v2-ccvr-reference-a-v1`, `kraken-ai-v2-risk-execution-reference-a-v1`, `kraken-btc-eth-xrp-ai-driven-v2-partition-v1` and `kraken-btc-eth-xrp-ai-driven-v2-development-runner-v1`. Reference A closed `HOLD_CASH`; Round 1 Causal Signals, Round 1 Family Execution, Round 1 Discovery Runner and Round 1 Closure belong to `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-1-v1`; Round 2 Causal Signals, Round 2 Family Execution, Round 2 Discovery Runner and Round 2 Closure belong to `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-2-v1`; both follow `kraken-btc-eth-xrp-ai-driven-v2-hybrid-strategy-discovery-learning-v1`. Reports remain `3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b` and `5f9acde53d0e2cf35cd1010d0002222182670d7255bdf44e18715f4902c85a01`. True Learning Contract V1 (`70e7bca`, `796c8de`) separated learning from the Rule Discovery Foundation; Stage 2 compared 1d, 12h and 4h timestamp-only without model training.
+Immutable evidence also includes BTC `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`, Reference A `f537410d2a237be207951b638518d80e861289dafa7db9b5c2322ffa32d4e594` and 12h Learning Attempt 3 `30d020bd9c30306f3e8931b47c0958fea7e11a33bff3795c3473806ddcaa09cf`. Reference A status is `KRAKEN_AI_V2_DEVELOPMENT_REFERENCE_A_CLOSED_NO_TRADE_HOLD_CASH`; exact controls retain `FLAT -> ARMED -> LONG -> FLAT`, Layer/Signal-State/Risk, Synthetic Execution/Partition and supervised blinded replay.
 
 Historical compatibility terms: Kraken daily, three-class, no model training, Round 1 Discovery Runner, Round 2 Family Execution, True Learning Engine and
 the former statement that the resolution remains unselected.
