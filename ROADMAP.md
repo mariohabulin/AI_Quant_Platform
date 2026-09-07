@@ -1,7 +1,6 @@
 # ROADMAP
 ## Current objective
-Complete and freeze the hash-bound runner for the final regime-gated
-Development hypothesis before any real value access or economic execution.
+Freeze the valid terminal Kraken 12h `HOLD_CASH`; any new research direction requires a separate pre-registration outside this branch.
 ## Active sequence
 ### 1. V2 Learning Core — COMMITTED AT `2a09363`
 - [x] Freeze the active 12h Development-feasibility path.
@@ -173,10 +172,11 @@ exists.
 - [x] reproduce, commit at `8f51ab4` and run the authorized immutable review;
 - [x] verify zero mismatches, unchanged evidence and close `HOLD_CASH`.
 
-### 13. Regime-gated selective hypothesis — RUNNER IMPLEMENTED AND REVIEWED
+### 13. Regime-gated selective hypothesis — TERMINAL `HOLD_CASH`
 - [x] freeze the hypothesis/static review at `87927ef` and implement its hash-bound one-shot runner plus independent reader;
 - [x] implement purged 75/25 calibration, payoff/Brier/economic gates, unsupported-class fail-close and a 24-fit ceiling;
-- [x] recover the Windows CRLF static-hash incident with bound LF policy; pass 50 focused and 2,141 full tests before recovery commit/push.
+- [x] execute Attempt 1 from `40d9811`: 3,793 decisions, four artifacts, 291 OOF rows and zero selections;
+- [x] verify report `a972088fca185266a4a726b3a4512a90bed15f4e1d3a3467e76bedd171a7f286` and stop Kraken 12h without retry or rescue.
 ## Retired active work
 AI-Driven Crypto Research v2, State/Risk/Partition, both rounds and Reference A are closed Rule Discovery Foundation components, not candidates.
 ## Completed evidence controls

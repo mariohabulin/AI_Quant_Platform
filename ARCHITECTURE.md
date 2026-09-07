@@ -1,9 +1,9 @@
 # ARCHITECTURE
 ## Active architecture
 AI-Driven V2 is an offline supervised-learning pipeline with a later immutable
-inference runtime. Closed Kraken 12h hypotheses remain `HOLD_CASH`; one final
-pre-registered regime-gated selective hypothesis is active without value access,
-fitting or permission to cross the Development boundary.
+inference runtime. Every Kraken BTC/ETH/XRP 12h hypothesis is now closed
+`HOLD_CASH`; any different future research direction requires a separate,
+pre-registered decision outside this terminal branch.
 
 ## Data and partition boundary
 The research universe is `BTC-USD`, `ETH-USD`, `XRP-USD` in that order.
@@ -173,11 +173,11 @@ actions. Attempt 1 passed unchanged: all top deciles were negative and positive
 SHORT scores were dominated by false positives. The hypothesis is closed
 `HOLD_CASH` without refit, threshold sweep or polarity flip.
 
-### Regime-Gated Selective Hypothesis and Runner
-The hash-bound runner filters fixed spot-sign regimes before fitting; derivatives only confirm participation, basis alignment and non-crowded funding.
-Two logistic variants use purged 75/25 base/sigmoid fitting and base-payoff break-even plus `0.05`; unsupported direction-folds fit nothing.
-Three folds permit at most 24 hashed artifacts, LF-stable canonical evidence and no-unpickle review; all-gate failure terminates the branch.
-Its one-shot phrase remains inactive and no real Development, Calibration or Evaluation value was opened during implementation.
+### Regime-Gated Selective Terminal Result
+Attempt 1 from `40d9811` applied fixed spot regimes, context confirmation and purged base/sigmoid calibration to 3,793 decisions.
+Ten of twelve direction-fold cells failed class support; two control SHORT cells produced four models and 291 OOF rows, all below threshold.
+The no-unpickle review reproduced Brier/threshold decisions and verified report `a972088fca185266a4a726b3a4512a90bed15f4e1d3a3467e76bedd171a7f286` unchanged.
+Both variants selected zero; the valid terminal `HOLD_CASH` stops Kraken 12h without retry, rescue or automatic successor.
 ## Runtime and risk boundary
 An approved runtime may load an immutable artifact but cannot fit, mutate, rank, promote or submit orders; Risk and Synthetic Execution remains later.
 

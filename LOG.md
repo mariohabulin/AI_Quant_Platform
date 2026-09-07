@@ -2,11 +2,11 @@
 
 This concise decision log retains detailed history through Git commit `8c51695` and immutable protocol/evidence files.
 
-## 2026-09-07 — Final regime-gated selective hypothesis frozen
-- Preserved bidirectional `HOLD_CASH`; froze spot-sign regimes with derivatives
-  confirmation, two calibrated logistic variants and payoff break-even + `0.05`.
-- Limited work to three purged folds, 24 total fits and one economic Development
-  run; Windows CRLF pre-push review failed closed, then bound LF recovery passed 50 focused and 2,141 full tests with no real values opened.
+## 2026-09-07 — Kraken 12h terminated `HOLD_CASH`
+- Attempt 1 from `40d9811` processed 3,793 decisions; ten of twelve cells failed
+  support and two control SHORT cells produced four artifacts plus 291 OOF rows.
+- All probabilities stayed below threshold; both variants selected zero. Report
+  `a972088fca185266a4a726b3a4512a90bed15f4e1d3a3467e76bedd171a7f286` passed unchanged no-unpickle review and terminally stops Kraken 12h.
 
 ## 2026-09-06 — Bidirectional learning and forensics completed
 - Runner `ca1cd91` produced 3,793 decisions, 7,586 labels and 4,210 OOF rows;

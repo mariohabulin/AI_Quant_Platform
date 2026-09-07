@@ -28,7 +28,7 @@ evidence honestly; a negative result prevents unjustified deployment.
 
 ## Active V2 path
 
-The active feasibility resolution is Kraken native 12h over Development
+The completed feasibility resolution is Kraken native 12h over Development
 `2019-01-01T00:00:00Z` through `2024-04-01T00:00:00Z` exclusive. This is a data-
 support choice, not a profitability claim.
 
@@ -133,25 +133,19 @@ SHORT scores were false positives. All four overall top-decile means were
 negative and none was positive in every fold. The frozen bidirectional
 hypothesis therefore closes `HOLD_CASH`, without threshold or polarity rescue.
 
-One final successor is now pre-registered without opening any source value. It
-tests a sparse decision structure: spot trend signs select LONG, SHORT or
-neutral; derivatives can only confirm or block; and a chronologically calibrated
-profitable-outcome probability must clear a payoff threshold plus `0.05`. No new
-indicator, tree ensemble, class weight, search or top-k rescue is allowed.
+The final regime-gated selective Attempt 1 completed from `40d9811`. Ten of
+twelve variant/fold/direction cells failed frozen class support; only control
+SHORT in folds 1 and 2 fitted, producing four artifacts and 291 OOF rows. Every
+probability remained below its payoff threshold, both variants selected zero
+trades and no hypothesis passed. Report SHA-256 is
+`a972088fca185266a4a726b3a4512a90bed15f4e1d3a3467e76bedd171a7f286`.
 
-This is not a promise of alpha. It is a falsifiable last Kraken 12h question with
-two matched variants, three purged folds, a 24-fit ceiling and exactly one future
-Development execution. If neither variant passes every fixed gate, the entire
-Kraken BTC/ETH/XRP 12h research branch stops.
-
-The hash-bound runner is now implemented and statically reviewed. It rebuilds
-the unchanged paired outcomes, applies the pre-score regime and context gates,
-fits at most twelve base models plus twelve chronological sigmoid calibrators,
-persists canonical evidence and verifies every artifact without unpickling.
-Explicit LF policy stabilizes new source hashes across Windows and Linux;
-missing class support fails the affected direction-fold closed and
-cannot exceed the 24-fit ceiling. Its authorization phrase is inactive: no real
-Development value, label or model was opened or created by implementation.
+The independent read-only review reconstructed every threshold action and
+Brier score, hashed all eight evidence files without unpickling and changed no
+byte. The valid status is
+`KRAKEN_AI_V2_REGIME_GATED_SELECTIVE_NO_VIABLE_HYPOTHESIS_STOP_KRAKEN_12H_RESEARCH`.
+Kraken BTC/ETH/XRP 12h research is terminally closed: no retry, refit, rescue or
+automatic successor is authorized.
 
 ## Permanent safety boundary
 
@@ -195,5 +189,5 @@ former four-path and later three-path results do not constitute learned alpha.
 
 ## Current authorization
 
-Candidate v2: not authorized. Calibration: unopened. Evaluation: unopened.
+Kraken 12h: terminal `HOLD_CASH`. Candidate v2: not authorized. Calibration: unopened. Evaluation: unopened.
 PAPER, cloud, real orders and live execution: not authorized.

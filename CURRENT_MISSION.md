@@ -1,10 +1,9 @@
 # CURRENT MISSION
 ## Mission
-Preserve every closed 12h result and freeze one materially different,
-regime-gated Development hypothesis. One future economic run is allowed; fixed-
-gate failure terminates Kraken 12h research. Later partitions stay closed.
+Freeze the valid terminal regime-gated `HOLD_CASH` result and keep Calibration,
+Evaluation, Candidate and execution boundaries closed.
 
-Status: `KRAKEN_AI_V2_REGIME_GATED_SELECTIVE_RUNNER_WINDOWS_LF_RECOVERY_REVIEWED`
+Status: `KRAKEN_AI_V2_REGIME_GATED_SELECTIVE_NO_VIABLE_HYPOTHESIS_STOP_KRAKEN_12H_RESEARCH`
 Hypothesis parent milestone: `0511fe5`
 Bidirectional forensic execution milestone: `8f51ab4`
 Bidirectional hypothesis milestone: `82ea7f1`
@@ -150,10 +149,10 @@ only one positive fold. Result:
 `KRAKEN_AI_V2_BIDIRECTIONAL_NO_VIABLE_HYPOTHESIS_HOLD_CASH`. No threshold search,
 polarity flip or refit is allowed.
 
-## Frozen regime-gated hypothesis and implemented runner
-The hash-bound runner implements spot-sign regimes, context confirmation, purged 75/25 calibration, payoff/Brier/economic gates and atomic hash-only evidence with bound cross-platform LF policy.
-Two variants and three folds permit at most 24 fits; unsupported classes fail closed and the exact one-shot phrase remains inactive.
-No real source value, label or model was opened; fixed-gate failure returns `KRAKEN_AI_V2_REGIME_GATED_SELECTIVE_NO_VIABLE_HYPOTHESIS_STOP_KRAKEN_12H_RESEARCH`.
+## Completed regime-gated terminal result
+Attempt 1 from `40d9811` processed 3,793 decisions; ten of twelve cells failed class support and two control SHORT cells produced four artifacts plus 291 OOF rows.
+Both variants selected zero. Report `a972088fca185266a4a726b3a4512a90bed15f4e1d3a3467e76bedd171a7f286` passed independent threshold/Brier and no-unpickle review unchanged.
+This valid `HOLD_CASH` consumes the one-shot run and terminates Kraken 12h; retry, rescue and automatic successor are false.
 
 ## Permanent nonauthorization
 - additional model training: false;
