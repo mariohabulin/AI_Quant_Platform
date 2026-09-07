@@ -87,7 +87,10 @@ def test_new_result_sources_are_checkout_stable_across_crlf(tmp_path):
         "result_review_component",
     ):
         target = tmp_path / BOUND_FILES[name]
-        target.write_bytes(target.read_bytes().replace(b"\n", b"\r\n"))
+        lf_payload = target.read_bytes().replace(b"\r\n", b"\n")
+        crlf_payload = lf_payload.replace(b"\n", b"\r\n")
+        assert b"\r\r\n" not in crlf_payload
+        target.write_bytes(crlf_payload)
     result = review_regime_gated_selective_terminal_result_component(tmp_path)
     assert all(result["source_sha256_matches"].values())
 
