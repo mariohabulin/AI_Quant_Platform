@@ -1,4 +1,9 @@
 .gitattributes text eol=lf
+KRAKEN_BTC_ETH_XRP_AI_DRIVEN_V2_REGIME_GATED_SELECTIVE_DEVELOPMENT_RUNNER_PROTOCOL_V1.md text eol=lf
+src/kraken_ai_driven_v2_regime_gated_selective_development_runner.py text eol=lf
+src/kraken_ai_driven_v2_regime_gated_selective_development_runner_review.py text eol=lf
+tests/test_kraken_ai_driven_v2_regime_gated_selective_development_runner.py text eol=lf
+tests/test_kraken_ai_driven_v2_regime_gated_selective_development_runner_review.py text eol=lf
 data/research/**/manifest.json text eol=lf
 data/research/**/manifest.sha256 text eol=lf
 data/research/**/evaluation_report.json text eol=lf

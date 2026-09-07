@@ -1,4 +1,4 @@
-"""Hash-bound regime-gated selective Development runner V1."""
+"""Hash-bound, checkout-stable regime-gated selective Development runner V1."""
 
 from __future__ import annotations
 
@@ -114,6 +114,9 @@ DATASET_MANIFEST_SHA256 = (
     "db4dde045d9fce22bee1389fe8c7ad13d3e3ccc5e5c4ace7c433f5461ba11916"
 )
 SOURCE_BINDING_SHA256 = {
+    "line_ending_policy": (
+        "0cc450c4a2fe9a9fdf974fba4a75e7cd5d63b5897469b4f28e888d7c1bc1185e"
+    ),
     "learning_core_component": (
         "467f2a1913371ef11c9a828770bb6a260708032a9ba2aec142d88cfe7ab79207"
     ),

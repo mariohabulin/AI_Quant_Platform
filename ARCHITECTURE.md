@@ -176,7 +176,7 @@ SHORT scores were dominated by false positives. The hypothesis is closed
 ### Regime-Gated Selective Hypothesis and Runner
 The hash-bound runner filters fixed spot-sign regimes before fitting; derivatives only confirm participation, basis alignment and non-crowded funding.
 Two logistic variants use purged 75/25 base/sigmoid fitting and base-payoff break-even plus `0.05`; unsupported direction-folds fit nothing.
-Three folds permit at most 24 hashed artifacts, canonical OOF/report evidence and no-unpickle review; all-gate failure terminates the branch.
+Three folds permit at most 24 hashed artifacts, LF-stable canonical evidence and no-unpickle review; all-gate failure terminates the branch.
 Its one-shot phrase remains inactive and no real Development, Calibration or Evaluation value was opened during implementation.
 ## Runtime and risk boundary
 An approved runtime may load an immutable artifact but cannot fit, mutate, rank, promote or submit orders; Risk and Synthetic Execution remains later.

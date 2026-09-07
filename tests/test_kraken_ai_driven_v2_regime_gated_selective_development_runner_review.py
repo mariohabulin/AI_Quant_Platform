@@ -17,6 +17,7 @@ from kraken_ai_driven_v2_regime_gated_selective_development_runner_review import
 
 ROOT = Path(__file__).resolve().parents[1]
 BOUND_FILES = {
+    "line_ending_policy": ".gitattributes",
     "learning_core_component": "src/kraken_ai_driven_v2_learning_core.py",
     "spot_reader_component": "src/kraken_ai_driven_v2_12h_development_learning_runner.py",
     "bidirectional_runner_component": "src/kraken_ai_driven_v2_bidirectional_development_learning_runner.py",

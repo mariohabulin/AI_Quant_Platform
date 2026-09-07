@@ -37,6 +37,8 @@ support or insufficient calibrated probability is `HOLD_CASH`.
 The atomic evidence package contains canonical JSON, binary LF SHA-256
 sidecars, OOF rows and 24 separately hashed base/calibrator artifacts. The
 independent reader hashes every byte and never unpickles a model.
+The protocol, runner, review and tests are explicitly checkout-stable LF files
+so their static source hashes are identical on Windows and Linux.
 
 Absolute viability requires in every fold at least 30 raw selections, ten
 chronological per-asset non-overlapping selections and positive mean plus

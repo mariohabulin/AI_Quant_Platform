@@ -176,7 +176,7 @@ exists.
 ### 13. Regime-gated selective hypothesis — RUNNER IMPLEMENTED AND REVIEWED
 - [x] freeze the hypothesis/static review at `87927ef` and implement its hash-bound one-shot runner plus independent reader;
 - [x] implement purged 75/25 calibration, payoff/Brier/economic gates, unsupported-class fail-close and a 24-fit ceiling;
-- [x] reproduce 49 focused and 2,140 complete tests, then commit and push the reviewed runner.
+- [x] recover the Windows CRLF static-hash incident with bound LF policy; pass 50 focused and 2,141 full tests before recovery commit/push.
 ## Retired active work
 AI-Driven Crypto Research v2, State/Risk/Partition, both rounds and Reference A are closed Rule Discovery Foundation components, not candidates.
 ## Completed evidence controls

@@ -6,7 +6,7 @@ This concise decision log retains detailed history through Git commit `8c51695` 
 - Preserved bidirectional `HOLD_CASH`; froze spot-sign regimes with derivatives
   confirmation, two calibrated logistic variants and payoff break-even + `0.05`.
 - Limited work to three purged folds, 24 total fits and one economic Development
-  run; hash-bound runner, atomic/no-unpickle evidence and class-support fail-close passed 49 focused and 2,140 full tests with no real values opened.
+  run; Windows CRLF pre-push review failed closed, then bound LF recovery passed 50 focused and 2,141 full tests with no real values opened.
 
 ## 2026-09-06 — Bidirectional learning and forensics completed
 - Runner `ca1cd91` produced 3,793 decisions, 7,586 labels and 4,210 OOF rows;

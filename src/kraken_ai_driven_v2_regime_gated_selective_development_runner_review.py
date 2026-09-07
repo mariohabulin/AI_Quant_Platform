@@ -46,10 +46,10 @@ EXPECTED_DATASET_MANIFEST_SHA256 = (
 EXPECTED_HASHES = {
     **SOURCE_BINDING_SHA256,
     "runner_protocol": (
-        "b8e89cd9b9a4b8d6f4c207bac96a3b9cd1bcee35420471f2a0b40f52f0499587"
+        "dd1df5ebef5d4e2d73bc4e358307164f270ab83045b18a7aa6264e90289396df"
     ),
     "runner_component": (
-        "04f9ab4a62294e586b5a1c533e78ee5ee827ef7947cb91b3dbd23aa4fa89a560"
+        "d60506b7d753fbc7efc329c77db0327c655ff4002ecefb9f2798ad4bb2c6f732"
     ),
 }
 
@@ -61,6 +61,7 @@ def _sha256(path):
 def review_regime_gated_selective_development_runner(root=None):
     root = Path(__file__).resolve().parents[1] if root is None else Path(root)
     paths = {
+        "line_ending_policy": root / ".gitattributes",
         "learning_core_component": root / "src" / "kraken_ai_driven_v2_learning_core.py",
         "spot_reader_component": root
         / "src"
