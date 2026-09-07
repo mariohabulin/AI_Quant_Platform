@@ -2,9 +2,9 @@
 
 ## Product
 
-AI Quant Platform must become a deterministic AI-driven research agent that
-learns when a cost-aware BTC, ETH or XRP trade has positive evidence and when
-the correct action is `HOLD_CASH`.
+AI Quant Platform must become a deterministic AI-driven research agent for
+selective swing trading. Point-in-time listed equities are the primary research
+market; the completed BTC/ETH/XRP Kraken 12h branch remains preserved evidence.
 
 The product is not a collection of manually written indicator strategies. Its
 versioned model learns from causal context, predicts unseen later data and is
@@ -26,11 +26,17 @@ A successful V2 system must:
 No process can guarantee alpha. The system must test repeatable after-cost
 evidence honestly; a negative result prevents unjustified deployment.
 
-## Active V2 path
+## Active zero-cost equity feasibility path
 
-The completed feasibility resolution is Kraken native 12h over Development
-`2019-01-01T00:00:00Z` through `2024-04-01T00:00:00Z` exclusive. This is a data-
-support choice, not a profitability claim.
+The active milestone asks whether a survivorship-aware, point-in-time US-equity
+dataset can be built at `0 USD` recurring data cost. Only documentation and free
+schema samples may be reviewed; no market value, label, return, model, paid
+subscription or execution is authorized.
+
+## Preserved Kraken V2 path
+
+Kraken native 12h used Development `2019-01-01T00:00:00Z` through
+`2024-04-01T00:00:00Z` exclusive. It is now terminal evidence, not active work.
 
 The Learning Core now implements:
 

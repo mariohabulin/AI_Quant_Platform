@@ -1,9 +1,10 @@
 # ARCHITECTURE
 ## Active architecture
-AI-Driven V2 is an offline supervised-learning pipeline with a later immutable
-inference runtime. Every Kraken BTC/ETH/XRP 12h hypothesis is now closed
-`HOLD_CASH`; any different future research direction requires a separate,
-pre-registered decision outside this terminal branch.
+The active component is a pure zero-cost US-equity source-capability evaluator:
+it accepts reviewed metadata observations, excludes schema-only samples from
+performance eligibility and fails closed on any paid source or missing point-in-
+time capability. Every Kraken BTC/ETH/XRP 12h hypothesis remains closed
+`HOLD_CASH`; no equity market values, labels, models or orders are active.
 
 ## Data and partition boundary
 The research universe is `BTC-USD`, `ETH-USD`, `XRP-USD` in that order.

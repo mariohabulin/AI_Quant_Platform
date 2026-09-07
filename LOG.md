@@ -2,15 +2,15 @@
 
 This concise decision log retains detailed history through Git commit `8c51695` and immutable protocol/evidence files.
 
+## 2026-09-07 — Zero-cost US-equity feasibility started
+- Parent `816deff` preserves terminal Kraken 12h `HOLD_CASH`; 21 focused and 2,179 full tests pass for the `0 USD` equity boundary while paid sources, market values, labels, performance, models and execution stay closed.
+
 ## 2026-09-07 — Kraken 12h terminated `HOLD_CASH`
-- Attempt 1 from `40d9811` processed 3,793 decisions; ten of twelve cells failed
-  support and two control SHORT cells produced four artifacts plus 291 OOF rows.
-- All probabilities stayed below threshold; both variants selected zero. Report
-  `a972088fca185266a4a726b3a4512a90bed15f4e1d3a3467e76bedd171a7f286` passed unchanged no-unpickle review and terminally stops Kraken 12h.
+- Attempt 1 from `40d9811` processed 3,793 decisions; ten of twelve cells failed support and two control SHORT cells produced four artifacts plus 291 OOF rows.
+- All probabilities stayed below threshold; both variants selected zero. Report `a972088fca185266a4a726b3a4512a90bed15f4e1d3a3467e76bedd171a7f286` passed unchanged no-unpickle review and terminally stops Kraken 12h.
 
 ## 2026-09-06 — Bidirectional learning and forensics completed
-- Runner `ca1cd91` produced 3,793 decisions, 7,586 labels and 4,210 OOF rows;
-  both variants lost in every fold and asset.
+- Runner `ca1cd91` produced 3,793 decisions, 7,586 labels and 4,210 OOF rows; both variants lost in every fold and asset.
 - Forensics at `8f51ab4` reconstructed all actions, validated label polarity and
   found false positives dominating SHORT scores. Result remains `HOLD_CASH`.
 

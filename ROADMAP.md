@@ -1,6 +1,6 @@
 # ROADMAP
 ## Current objective
-Freeze the valid terminal Kraken 12h `HOLD_CASH`; any new research direction requires a separate pre-registration outside this branch.
+Prove or reject a zero-cost, point-in-time, survivorship-aware US-equity data foundation before any equity market value, label, model or performance access.
 ## Active sequence
 ### 1. V2 Learning Core — COMMITTED AT `2a09363`
 - [x] Freeze the active 12h Development-feasibility path.
@@ -173,10 +173,11 @@ exists.
 - [x] verify zero mismatches, unchanged evidence and close `HOLD_CASH`.
 
 ### 13. Regime-gated selective hypothesis — TERMINAL `HOLD_CASH`
-- [x] freeze the hypothesis/static review at `87927ef` and implement its hash-bound one-shot runner plus independent reader;
-- [x] implement purged 75/25 calibration, payoff/Brier/economic gates, unsupported-class fail-close and a 24-fit ceiling;
-- [x] execute Attempt 1 from `40d9811`: 3,793 decisions, four artifacts, 291 OOF rows and zero selections;
-- [x] verify report `a972088fca185266a4a726b3a4512a90bed15f4e1d3a3467e76bedd171a7f286` and stop Kraken 12h without retry or rescue.
+- [x] freeze, execute and verify the one-shot runner from `40d9811`: 3,793 decisions, four artifacts, 291 OOF rows, zero selections, report `a972088fca185266a4a726b3a4512a90bed15f4e1d3a3467e76bedd171a7f286` and terminal Kraken 12h stop.
+
+### 14. Zero-cost US-equity data feasibility — ACTIVE
+- [x] freeze `0 USD` and no-paid-fallback rules, implement the 12-capability evaluator/review and reproduce 21 focused plus 2,179 full tests;
+- [ ] commit/push, then separately authorize a read-only no-cost source audit.
 ## Retired active work
 AI-Driven Crypto Research v2, State/Risk/Partition, both rounds and Reference A are closed Rule Discovery Foundation components, not candidates.
 ## Completed evidence controls
@@ -186,7 +187,6 @@ AI-Driven Crypto Research v2, State/Risk/Partition, both rounds and Reference A 
 Development/Calibration/Evaluation partition, Reference A/Rounds 1–2 `HOLD_CASH`, True Learning Contract V1 (`70e7bca`, `796c8de`) and timestamp-only Stage 2 over 1d, 12h and 4h remain complete.
 ## Immutable lineage
 Preserved IDs cover causal feature, state, risk, partition, Development, hybrid rounds, True Learning, Learning Core, 12h and derivatives-context components. Evidence hashes remain in Git, including Learning Attempt 3 `30d020bd9c30306f3e8931b47c0958fea7e11a33bff3795c3473806ddcaa09cf`.
-
 Historical milestones include Provider and Historical Availability Audit v1, Sealed Preflight Completed, Supervised Blinded Replay v1 and Partition Protocol. `SEALED PREFLIGHT PASS` authorized no real replay, Candidate or live execution.
 Reference A closure: `KRAKEN_AI_V2_DEVELOPMENT_REFERENCE_A_CLOSED_NO_TRADE_HOLD_CASH`.
 Partition boundaries: `2024-04-01T00:00:00Z`, `2025-04-01T00:00:00Z`, `2026-04-01T00:00:00Z`.

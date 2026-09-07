@@ -1,19 +1,16 @@
 # CURRENT MISSION
 ## Mission
-Freeze the valid terminal regime-gated `HOLD_CASH` result and keep Calibration,
-Evaluation, Candidate and execution boundaries closed.
+Implement and statically bind the zero-cost US-equity point-in-time data
+feasibility boundary while preserving terminal Kraken evidence and keeping all
+performance and execution stages closed.
 
-Status: `KRAKEN_AI_V2_REGIME_GATED_SELECTIVE_NO_VIABLE_HYPOTHESIS_STOP_KRAKEN_12H_RESEARCH`
-Hypothesis parent milestone: `0511fe5`
-Bidirectional forensic execution milestone: `8f51ab4`
-Bidirectional hypothesis milestone: `82ea7f1`
-Context forensic execution milestone: `bde314d`
-Context forensic report SHA-256: `ed4ee096a9d45eee4d1ee0970dbb062473e74c9caad3597f20eda17cb4dba91f`
-Attempt 4 execution milestone: `40b5943`
-Final manifest SHA-256: `db4dde045d9fce22bee1389fe8c7ad13d3e3ccc5e5c4ace7c433f5461ba11916`
-Derivatives hypothesis milestone: `af0af86`
-Feasibility evidence SHA-256: `3c84fba6034790ae59761f3fba23affca80fca0c8b7d29b3e3f3762c789d8e29`
-Active protocol: `kraken-btc-eth-xrp-ai-v2-regime-gated-selective-development-hypothesis-v1`
+Status: `US_EQUITY_POINT_IN_TIME_NO_COST_FEASIBILITY_IMPLEMENTED_READ_ONLY_AUDIT_REQUIRED`
+Parent milestone: `816deff3bef51b3ddd8cf51ab89144587721a196`
+Parent report SHA-256: `a972088fca185266a4a726b3a4512a90bed15f4e1d3a3467e76bedd171a7f286`
+Active protocol: `us-equity-point-in-time-data-feasibility-v1`
+Monthly data budget: `0 USD`; paid subscription/API key: false.
+Market values, labels, performance, fitting, Calibration, Evaluation, Candidate,
+PAPER, cloud strategy execution, real orders and live execution: false.
 
 ## Implemented dataset lock and reader
 The component freezes exactly 2,808 official Binance USD-M archive objects:
