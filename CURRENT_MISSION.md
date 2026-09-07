@@ -4,7 +4,7 @@ Preserve every closed 12h result and freeze one materially different,
 regime-gated Development hypothesis. One future economic run is allowed; fixed-
 gate failure terminates Kraken 12h research. Later partitions stay closed.
 
-Status: `KRAKEN_AI_V2_REGIME_GATED_SELECTIVE_DEVELOPMENT_HYPOTHESIS_FROZEN_IMPLEMENTATION_REVIEW_REQUIRED`
+Status: `KRAKEN_AI_V2_REGIME_GATED_SELECTIVE_DEVELOPMENT_RUNNER_REVIEWED_AUTHORIZATION_REQUIRED`
 Hypothesis parent milestone: `0511fe5`
 Bidirectional forensic execution milestone: `8f51ab4`
 Bidirectional hypothesis milestone: `82ea7f1`
@@ -150,12 +150,10 @@ only one positive fold. Result:
 `KRAKEN_AI_V2_BIDIRECTIONAL_NO_VIABLE_HYPOTHESIS_HOLD_CASH`. No threshold search,
 polarity flip or refit is allowed.
 
-## Frozen regime-gated selective hypothesis
-Spot signs across return-14, two EMA relationships define direction or neutral;
-context then confirms participation, aligned basis and non-crowded funding.
-Chronologically calibrated logistic probabilities must clear payoff break-even
-plus `0.05`. Two variants, three folds and 24 total fits are the ceiling. Failure:
-`KRAKEN_AI_V2_REGIME_GATED_SELECTIVE_NO_VIABLE_HYPOTHESIS_STOP_KRAKEN_12H_RESEARCH`.
+## Frozen regime-gated hypothesis and implemented runner
+The hash-bound runner implements spot-sign regimes, context confirmation, purged 75/25 calibration, payoff floor plus `0.05`, Brier/economic gates and atomic hash-only evidence.
+Two variants and three folds permit at most 24 fits; unsupported classes fail closed and the exact one-shot phrase remains inactive.
+No real source value, label or model was opened; fixed-gate failure returns `KRAKEN_AI_V2_REGIME_GATED_SELECTIVE_NO_VIABLE_HYPOTHESIS_STOP_KRAKEN_12H_RESEARCH`.
 
 ## Permanent nonauthorization
 - additional model training: false;

@@ -144,6 +144,14 @@ two matched variants, three purged folds, a 24-fit ceiling and exactly one futur
 Development execution. If neither variant passes every fixed gate, the entire
 Kraken BTC/ETH/XRP 12h research branch stops.
 
+The hash-bound runner is now implemented and statically reviewed. It rebuilds
+the unchanged paired outcomes, applies the pre-score regime and context gates,
+fits at most twelve base models plus twelve chronological sigmoid calibrators,
+persists canonical OOF and model evidence and verifies every artifact without
+unpickling. Missing class support fails the affected direction-fold closed and
+cannot exceed the 24-fit ceiling. Its authorization phrase is inactive: no real
+Development value, label or model was opened or created by implementation.
+
 ## Permanent safety boundary
 
 - Development may train and validate.

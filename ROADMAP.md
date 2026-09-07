@@ -1,7 +1,7 @@
 # ROADMAP
 ## Current objective
-Freeze one final materially different regime-gated Development hypothesis with
-an explicit terminal stop before any runner or value access.
+Complete and freeze the hash-bound runner for the final regime-gated
+Development hypothesis before any real value access or economic execution.
 ## Active sequence
 ### 1. V2 Learning Core — COMMITTED AT `2a09363`
 - [x] Freeze the active 12h Development-feasibility path.
@@ -173,10 +173,10 @@ exists.
 - [x] reproduce, commit at `8f51ab4` and run the authorized immutable review;
 - [x] verify zero mismatches, unchanged evidence and close `HOLD_CASH`.
 
-### 13. Regime-gated selective hypothesis — FROZEN; RUNNER REQUIRED
-- [x] freeze spot regimes, context confirmation, two calibrated logistic
-  variants, payoff threshold plus `0.05`, 24-fit ceiling and terminal stop;
-- [ ] reproduce static review, commit, then implement the hash-bound runner.
+### 13. Regime-gated selective hypothesis — RUNNER IMPLEMENTED AND REVIEWED
+- [x] freeze the hypothesis/static review at `87927ef` and implement its hash-bound one-shot runner plus independent reader;
+- [x] implement purged 75/25 calibration, payoff/Brier/economic gates, unsupported-class fail-close and a 24-fit ceiling;
+- [x] reproduce 49 focused and 2,140 complete tests, then commit and push the reviewed runner.
 ## Retired active work
 AI-Driven Crypto Research v2, State/Risk/Partition, both rounds and Reference A are closed Rule Discovery Foundation components, not candidates.
 ## Completed evidence controls
