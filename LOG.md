@@ -8,6 +8,7 @@ This concise decision log retains detailed history through Git commit `8c51695` 
 - SEC proved six capabilities; security lineage, delisted-inclusive master/OHLCV, point-in-time industry and benchmark history remain missing.
 - Report `8f2348138376438129f3db1a94d0321e6b10177cd486f5436c935a167de0d2cb` passed independent hash, sidecar and capability-union review unchanged.
 - Action is `HOLD_RESEARCH_OR_FIND_ANOTHER_NO_COST_SOURCE`; no purchase, hypothesis, model or execution follows automatically.
+- First Windows reproduction stopped safely at 38/39 focused tests because its temporary text-mode sidecar became CRLF; evidence stayed valid, push stayed false and recovery requires canonical binary-LF test fixtures.
 
 ## 2026-09-07 — Kraken 12h terminated `HOLD_CASH`
 - Attempt 1 from `40d9811` processed 3,793 decisions; ten of twelve cells failed support and two control SHORT cells produced four artifacts plus 291 OOF rows.
@@ -15,8 +16,7 @@ This concise decision log retains detailed history through Git commit `8c51695` 
 
 ## 2026-09-06 — Bidirectional learning and forensics completed
 - Runner `ca1cd91` produced 3,793 decisions, 7,586 labels and 4,210 OOF rows; both variants lost in every fold and asset.
-- Forensics at `8f51ab4` reconstructed all actions, validated label polarity and
-  found false positives dominating SHORT scores. Result remains `HOLD_CASH`.
+- Forensics at `8f51ab4` reconstructed all actions, validated label polarity and found false positives dominating SHORT scores. Result remains `HOLD_CASH`.
 
 ## 2026-09-05 — Context learning complete; score forensics frozen
 - Attempt 4 locked 2,808 source objects; manifest SHA-256 is

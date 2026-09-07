@@ -68,8 +68,8 @@ def _write_package(root, observations=None, evidence=None, report=None):
         path.write_bytes(payload)
         digest = hashlib.sha256(payload).hexdigest()
         hashes[filename] = digest
-        (root / f"{filename}.sha256").write_text(
-            f"{digest}  {filename}\n", encoding="ascii"
+        (root / f"{filename}.sha256").write_bytes(
+            f"{digest}  {filename}\n".encode("ascii")
         )
     return observations, evidence, report, hashes
 
@@ -170,6 +170,29 @@ def test_external_reader_hashes_sidecars_recomputes_and_writes_nothing(
     assert result["market_values_opened"] is False
     assert result["model_training_executed"] is False
     assert result["next_stage"] == "OPERATOR_DECISION_NO_AUTOMATIC_PURCHASE"
+
+
+def test_package_fixture_writes_canonical_lf_sidecars_on_windows(
+    tmp_path, monkeypatch
+):
+    original_write_text = Path.write_text
+
+    def windows_write_text(path, data, *args, **kwargs):
+        return original_write_text(
+            path,
+            data.replace("\n", "\r\n"),
+            *args,
+            **kwargs,
+        )
+
+    monkeypatch.setattr(Path, "write_text", windows_write_text)
+    root = tmp_path / review.EVIDENCE_DIRECTORY_NAME
+    _, _, _, hashes = _write_package(root)
+
+    for filename, digest in hashes.items():
+        assert (root / f"{filename}.sha256").read_bytes() == (
+            f"{digest}  {filename}\n".encode("ascii")
+        )
 
 
 def test_external_reader_rejects_sidecar_and_extra_file(tmp_path, monkeypatch):

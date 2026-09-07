@@ -18,6 +18,7 @@ from us_equity_point_in_time_data_feasibility_result_review_review import (
 ROOT = Path(__file__).resolve().parents[1]
 BOUND_FILES = {
     "line_ending_policy": ".gitattributes",
+    "windows_sidecar_incident": "US_EQUITY_POINT_IN_TIME_DATA_FEASIBILITY_RESULT_REVIEW_WINDOWS_CRLF_INCIDENT.md",
     "feasibility_protocol": "US_EQUITY_POINT_IN_TIME_DATA_FEASIBILITY_PROTOCOL_V1.md",
     "feasibility_component": "src/us_equity_point_in_time_data_feasibility.py",
     "feasibility_review": "src/us_equity_point_in_time_data_feasibility_review.py",

@@ -37,6 +37,9 @@ EXPECTED_HASHES = {
     "line_ending_policy": (
         "0cc450c4a2fe9a9fdf974fba4a75e7cd5d63b5897469b4f28e888d7c1bc1185e"
     ),
+    "windows_sidecar_incident": (
+        "35705f4ca3e1411e8574721832cc46b470a7b60541fdeb479edd33f9a88a66cf"
+    ),
     "feasibility_protocol": (
         "8b860e2e282f38e13a2195b451d5d7359ae1a8321f12dc302478ce455d0d77bd"
     ),
@@ -67,6 +70,8 @@ def review_zero_cost_source_audit_result_component(root=None):
     root = Path(__file__).resolve().parents[1] if root is None else Path(root)
     paths = {
         "line_ending_policy": root / ".gitattributes",
+        "windows_sidecar_incident": root
+        / "US_EQUITY_POINT_IN_TIME_DATA_FEASIBILITY_RESULT_REVIEW_WINDOWS_CRLF_INCIDENT.md",
         "feasibility_protocol": root
         / "US_EQUITY_POINT_IN_TIME_DATA_FEASIBILITY_PROTOCOL_V1.md",
         "feasibility_component": root
