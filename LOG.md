@@ -2,14 +2,17 @@
 
 This concise decision log retains detailed history through Git commit `8c51695` and immutable protocol/evidence files.
 
-## 2026-09-06 — Bidirectional hypothesis frozen; runner implemented
-- Read-only forensics passed unchanged; report SHA-256 is
-  `ed4ee096a9d45eee4d1ee0970dbb062473e74c9caad3597f20eda17cb4dba91f`.
-- Negative association and all-negative deciles close long-only as `HOLD_CASH`.
-- Froze unchanged 16+9 features and 12h/60-bar/`1.5 ATR`/`3R:1R`/cost inputs.
-- Committed symmetric LONG/SHORT labels and positive-max action at `82ea7f1`.
-- Implemented a hash-bound runner for two variants, two directions, three folds, twelve artifacts, atomic OOF evidence and independent hash-only review.
-- Real values and fitting await Windows reproduction and separate authorization.
+## 2026-09-07 — Final regime-gated selective hypothesis frozen
+- Preserved bidirectional `HOLD_CASH`; froze spot-sign regimes with derivatives
+  confirmation, two calibrated logistic variants and payoff break-even + `0.05`.
+- Limited work to three purged folds, 24 total fits and one economic Development
+  run; failure of all fixed gates terminates Kraken 12h research.
+
+## 2026-09-06 — Bidirectional learning and forensics completed
+- Runner `ca1cd91` produced 3,793 decisions, 7,586 labels and 4,210 OOF rows;
+  both variants lost in every fold and asset.
+- Forensics at `8f51ab4` reconstructed all actions, validated label polarity and
+  found false positives dominating SHORT scores. Result remains `HOLD_CASH`.
 
 ## 2026-09-05 — Context learning complete; score forensics frozen
 - Attempt 4 locked 2,808 source objects; manifest SHA-256 is

@@ -1,11 +1,9 @@
 # ROADMAP
-
 ## Current objective
-Record the completed bidirectional forensics, then require a separate decision
-before any materially different and bounded Development hypothesis.
+Freeze one final materially different regime-gated Development hypothesis with
+an explicit terminal stop before any runner or value access.
 ## Active sequence
 ### 1. V2 Learning Core — COMMITTED AT `2a09363`
-
 - [x] Freeze the active 12h Development-feasibility path.
 - [x] Implement causal multi-asset features.
 - [x] Implement next-open cost-aware three-class labels.
@@ -175,8 +173,10 @@ exists.
 - [x] reproduce, commit at `8f51ab4` and run the authorized immutable review;
 - [x] verify zero mismatches, unchanged evidence and close `HOLD_CASH`.
 
-### 13. Materially different bounded hypothesis — NOT YET FROZEN
-- [ ] separately freeze one regime-gated hypothesis; stop the Kraken 12h branch if its fixed gates fail.
+### 13. Regime-gated selective hypothesis — FROZEN; RUNNER REQUIRED
+- [x] freeze spot regimes, context confirmation, two calibrated logistic
+  variants, payoff threshold plus `0.05`, 24-fit ceiling and terminal stop;
+- [ ] reproduce static review, commit, then implement the hash-bound runner.
 ## Retired active work
 AI-Driven Crypto Research v2, State/Risk/Partition, both rounds and Reference A are closed Rule Discovery Foundation components, not candidates.
 ## Completed evidence controls

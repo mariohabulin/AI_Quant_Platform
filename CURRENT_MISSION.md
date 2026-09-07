@@ -1,21 +1,20 @@
 # CURRENT MISSION
-
 ## Mission
+Preserve every closed 12h result and freeze one materially different,
+regime-gated Development hypothesis. One future economic run is allowed; fixed-
+gate failure terminates Kraken 12h research. Later partitions stay closed.
 
-Preserve all closed 12h Development results. Score/polarity forensics closed the
-bidirectional hypothesis `HOLD_CASH`; no reinterpretation, refit or successor is
-allowed without separate pre-registration. All later partitions stay closed.
-
-Status: `KRAKEN_AI_V2_BIDIRECTIONAL_SCORE_POLARITY_FORENSIC_REVIEW_COMPLETED_HOLD_CASH`
+Status: `KRAKEN_AI_V2_REGIME_GATED_SELECTIVE_DEVELOPMENT_HYPOTHESIS_FROZEN_IMPLEMENTATION_REVIEW_REQUIRED`
+Hypothesis parent milestone: `0511fe5`
 Bidirectional forensic execution milestone: `8f51ab4`
 Bidirectional hypothesis milestone: `82ea7f1`
 Context forensic execution milestone: `bde314d`
 Context forensic report SHA-256: `ed4ee096a9d45eee4d1ee0970dbb062473e74c9caad3597f20eda17cb4dba91f`
 Attempt 4 execution milestone: `40b5943`
 Final manifest SHA-256: `db4dde045d9fce22bee1389fe8c7ad13d3e3ccc5e5c4ace7c433f5461ba11916`
-Hypothesis parent milestone: `af0af86`
+Derivatives hypothesis milestone: `af0af86`
 Feasibility evidence SHA-256: `3c84fba6034790ae59761f3fba23affca80fca0c8b7d29b3e3f3762c789d8e29`
-Active protocol: `kraken-btc-eth-xrp-ai-v2-bidirectional-score-polarity-forensic-review-v1`
+Active protocol: `kraken-btc-eth-xrp-ai-v2-regime-gated-selective-development-hypothesis-v1`
 
 ## Implemented dataset lock and reader
 The component freezes exactly 2,808 official Binance USD-M archive objects:
@@ -149,10 +148,16 @@ SHORT scores: 680/765 context and 602/674 control. Association was weak and ever
 overall top decile was negative; the best was context LONG at `-0.1832 R`, with
 only one positive fold. Result:
 `KRAKEN_AI_V2_BIDIRECTIONAL_NO_VIABLE_HYPOTHESIS_HOLD_CASH`. No threshold search,
-polarity flip or refit is allowed. No successor is active or authorized.
+polarity flip or refit is allowed.
+
+## Frozen regime-gated selective hypothesis
+Spot signs across return-14, two EMA relationships define direction or neutral;
+context then confirms participation, aligned basis and non-crowded funding.
+Chronologically calibrated logistic probabilities must clear payoff break-even
+plus `0.05`. Two variants, three folds and 24 total fits are the ceiling. Failure:
+`KRAKEN_AI_V2_REGIME_GATED_SELECTIVE_NO_VIABLE_HYPOTHESIS_STOP_KRAKEN_12H_RESEARCH`.
 
 ## Permanent nonauthorization
-
 - additional model training: false;
 - derivatives market-value access in this pre-registration: false;
 - threshold or parameter search: false;
@@ -163,11 +168,9 @@ polarity flip or refit is allowed. No successor is active or authorized.
 - PAPER, cloud, real orders and live execution: false.
 
 ## Historical state
-
 Git history through `8c51695` preserves Provider, Partition, Reference A, Round 1, Round 2, scope correction and Stage 2. Learning Core committed at `2a09363`; the first Development Learning Runner at `cc8ae44`; recoveries at `203b4c5` and `9c1156e`.
 
 Exact historical compatibility markers retained for regression:
-
 - fail-closed Kraken daily acquisition;
 - `SEALED PREFLIGHT PASS` and `SUPERVISED REPLAY PREPARATION`;
 - `AI-DRIVEN V2 CAUSAL FEATURE CONTRACT`;

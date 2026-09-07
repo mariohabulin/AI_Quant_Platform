@@ -133,8 +133,16 @@ SHORT scores were false positives. All four overall top-decile means were
 negative and none was positive in every fold. The frozen bidirectional
 hypothesis therefore closes `HOLD_CASH`, without threshold or polarity rescue.
 
-There is no active successor. Any later experiment must be materially different,
-separately pre-registered and bounded by a terminal research stop condition.
+One final successor is now pre-registered without opening any source value. It
+tests a sparse decision structure: spot trend signs select LONG, SHORT or
+neutral; derivatives can only confirm or block; and a chronologically calibrated
+profitable-outcome probability must clear a payoff threshold plus `0.05`. No new
+indicator, tree ensemble, class weight, search or top-k rescue is allowed.
+
+This is not a promise of alpha. It is a falsifiable last Kraken 12h question with
+two matched variants, three purged folds, a 24-fit ceiling and exactly one future
+Development execution. If neither variant passes every fixed gate, the entire
+Kraken BTC/ETH/XRP 12h research branch stops.
 
 ## Permanent safety boundary
 

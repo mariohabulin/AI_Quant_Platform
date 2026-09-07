@@ -1,11 +1,9 @@
 # ARCHITECTURE
-
 ## Active architecture
-
 AI-Driven V2 is an offline supervised-learning pipeline with a later immutable
-inference runtime. Its Kraken 12h OHLCV and derivatives-context Development
-hypotheses used causal features, cost-aware labels and purged walk-forward
-evidence; both are permanently closed with `HOLD_CASH`.
+inference runtime. Closed Kraken 12h hypotheses remain `HOLD_CASH`; one final
+pre-registered regime-gated selective hypothesis is active without value access,
+fitting or permission to cross the Development boundary.
 
 ## Data and partition boundary
 The research universe is `BTC-USD`, `ETH-USD`, `XRP-USD` in that order.
@@ -25,7 +23,6 @@ numeric values, OHLC geometry, timestamp alignment and the Development boundary.
 It does not repair, interpolate or manufacture rows.
 
 ### Causal feature engine
-
 `kraken_ai_driven_v2_learning_core.py` constructs a fixed low-dimensional
 schema from returns, ATR, volatility, EMA distances, prior structure, relative
 volume, RSI, same-timestamp market context and asset identity.
@@ -171,12 +168,17 @@ was `-0.7388`; context was `-0.6568` but worsened the worst fold. SHORT was
 `7176ca3a005b7bdbfbdcbc2259fafd11c154ee45b0517eab26894e675aa26b3f`.
 
 ### Bidirectional Score and Polarity Forensics
-The read-only consumer binds all inputs, validates label signs, recomputes
-actions and reports score, error, rank, decile and policy economics. Authorized
-Attempt 1 passed with zero mismatches and unchanged evidence. All top deciles
-were negative; positive SHORT scores were dominated by false positives. The 12h
-hypothesis is closed `HOLD_CASH` without refit, threshold sweep or polarity flip.
-A future hypothesis requires its own contract, budget and stop condition.
+The read-only consumer binds all inputs, validates label signs and recomputes
+actions. Attempt 1 passed unchanged: all top deciles were negative and positive
+SHORT scores were dominated by false positives. The hypothesis is closed
+`HOLD_CASH` without refit, threshold sweep or polarity flip.
+
+### Regime-Gated Selective Development Hypothesis
+No indicator is added. Signs of return-14 and two EMA relationships choose
+direction or neutral; derivatives only confirm participation, aligned basis and
+non-crowded funding. Two natural-frequency logistic variants use chronological
+sigmoid calibration and training-payoff break-even plus `0.05`. Three purged
+folds permit 24 fits and one economic run; all-gate failure terminates the branch.
 ## Runtime and risk boundary
 An approved runtime may load an immutable artifact but cannot fit, mutate, rank, promote or submit orders; Risk and Synthetic Execution remains later.
 
