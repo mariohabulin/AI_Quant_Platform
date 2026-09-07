@@ -1,14 +1,20 @@
 # CURRENT MISSION
 ## Mission
-Implement and statically bind the zero-cost US-equity point-in-time data
-feasibility boundary while preserving terminal Kraken evidence and keeping all
-performance and execution stages closed.
+Preserve the exact zero-cost US-equity source gap, await an operator decision
+and keep acquisition, performance and execution closed.
 
-Status: `US_EQUITY_POINT_IN_TIME_NO_COST_FEASIBILITY_IMPLEMENTED_READ_ONLY_AUDIT_REQUIRED`
-Parent milestone: `816deff3bef51b3ddd8cf51ab89144587721a196`
-Parent report SHA-256: `a972088fca185266a4a726b3a4512a90bed15f4e1d3a3467e76bedd171a7f286`
-Active protocol: `us-equity-point-in-time-data-feasibility-v1`
-Monthly data budget: `0 USD`; paid subscription/API key: false.
+Status: `US_EQUITY_POINT_IN_TIME_NO_COST_SOURCE_GAP_RECORDED_NO_PURCHASE_AUTHORIZED`
+Execution milestone: `6a185e6d0dd9a7e31513f951a234601cfb9b06fa`
+Audit report SHA-256: `8f2348138376438129f3db1a94d0321e6b10177cd486f5436c935a167de0d2cb`
+Active protocol: `us-equity-point-in-time-data-feasibility-result-review-v1`
+Monthly data cost/budget: `0 USD`; paid subscription/API key: false.
+
+SEC/EDGAR proved filing availability, as-filed fundamentals, material-event and
+institutional-filing timestamps, ten-year history and reusable bulk export.
+Missing: stable security identity, active/delisted master and daily OHLCV,
+corporate-action/ticker lineage, point-in-time industry and benchmark/calendar
+history. Action: `HOLD_RESEARCH_OR_FIND_ANOTHER_NO_COST_SOURCE`.
+
 Market values, labels, performance, fitting, Calibration, Evaluation, Candidate,
 PAPER, cloud strategy execution, real orders and live execution: false.
 

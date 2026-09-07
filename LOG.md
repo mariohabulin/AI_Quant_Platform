@@ -2,8 +2,12 @@
 
 This concise decision log retains detailed history through Git commit `8c51695` and immutable protocol/evidence files.
 
-## 2026-09-07 — Zero-cost US-equity feasibility started
-- Parent `816deff` preserves terminal Kraken 12h `HOLD_CASH`; 21 focused and 2,179 full tests pass for the `0 USD` equity boundary while paid sources, market values, labels, performance, models and execution stay closed.
+## 2026-09-07 — Zero-cost US-equity source gap recorded
+- Commit `6a185e6` preserved terminal Kraken 12h `HOLD_CASH` and froze the `0 USD` twelve-capability boundary.
+- The authorized documentation/schema audit reviewed SEC/EDGAR, Nasdaq symbol directories and the Sharadar schema-only sample without market values.
+- SEC proved six capabilities; security lineage, delisted-inclusive master/OHLCV, point-in-time industry and benchmark history remain missing.
+- Report `8f2348138376438129f3db1a94d0321e6b10177cd486f5436c935a167de0d2cb` passed independent hash, sidecar and capability-union review unchanged.
+- Action is `HOLD_RESEARCH_OR_FIND_ANOTHER_NO_COST_SOURCE`; no purchase, hypothesis, model or execution follows automatically.
 
 ## 2026-09-07 — Kraken 12h terminated `HOLD_CASH`
 - Attempt 1 from `40d9811` processed 3,793 decisions; ten of twelve cells failed support and two control SHORT cells produced four artifacts plus 291 OOF rows.
@@ -176,10 +180,7 @@ This concise decision log retains detailed history through Git commit `8c51695` 
   variant, threshold relaxation or Calibration/Evaluation access.
 
 ## 2026-09-06 — Bidirectional Development learning and forensics
-- Runner `ca1cd91` produced 3,793 decisions, 7,586 directional labels, 4,210 OOF
-  predictions and twelve models; both variants lost in every fold and asset.
-- Report `7176ca3a005b7bdbfbdcbc2259fafd11c154ee45b0517eab26894e675aa26b3f`
-  passed no-unpickle review and remains `HOLD_CASH`.
+- Runner `ca1cd91` produced 3,793 decisions, 7,586 labels, 4,210 OOF rows and twelve models; report `7176ca3a005b7bdbfbdcbc2259fafd11c154ee45b0517eab26894e675aa26b3f` passed no-unpickle review and remains `HOLD_CASH`.
 - Read-only forensic Attempt 1 at `8f51ab4` reconstructed all actions with zero
   mismatches, validated label polarity and left the sixteen evidence files intact.
 - False positives dominated positive SHORT scores: 680/765 context and 602/674
@@ -194,6 +195,5 @@ Immutable evidence also includes BTC `56710a21a423a63963e5c97ab6ca956021f9cd7a7d
 Historical compatibility terms: Kraken daily, three-class, no model training, Round 1 Discovery Runner, Round 2 Family Execution, True Learning Engine and
 the former statement that the resolution remains unselected.
 Legacy exact marker: resolution remains unselected.
-Development/Calibration/Evaluation end at `2024-04-01T00:00:00Z`,
-`2025-04-01T00:00:00Z` and `2026-04-01T00:00:00Z`.
+Development/Calibration/Evaluation end at `2024-04-01T00:00:00Z`, `2025-04-01T00:00:00Z` and `2026-04-01T00:00:00Z`.
 Candidate v2, PAPER, cloud, real orders and live execution remain unauthorized.

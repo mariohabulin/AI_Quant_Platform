@@ -26,12 +26,15 @@ A successful V2 system must:
 No process can guarantee alpha. The system must test repeatable after-cost
 evidence honestly; a negative result prevents unjustified deployment.
 
-## Active zero-cost equity feasibility path
+## Active zero-cost equity feasibility result
 
-The active milestone asks whether a survivorship-aware, point-in-time US-equity
-dataset can be built at `0 USD` recurring data cost. Only documentation and free
-schema samples may be reviewed; no market value, label, return, model, paid
-subscription or execution is authorized.
+The authorized documentation/schema audit proved six of twelve required
+capabilities and recorded the other six as an exact source gap. SEC/EDGAR can
+support causal filings and fundamentals, but the reviewed zero-cost stack lacks
+a proven security lineage, delisted-inclusive daily OHLCV/universe,
+point-in-time industry history and benchmark history. Research is held pending
+an operator decision; no paid fallback, value, label, model or execution is
+authorized.
 
 ## Preserved Kraken V2 path
 
@@ -184,14 +187,9 @@ Legacy exact marker: resolution remains unselected.
 Detailed history is recoverable through Git parent `8c51695`. Core IDs retain `kraken-ai-v2-ccvr-reference-a-v1`, `kraken-ai-v2-risk-execution-reference-a-v1`, `kraken-btc-eth-xrp-ai-driven-v2-partition-v1`, AI-Driven v2 Development Runner `kraken-btc-eth-xrp-ai-driven-v2-development-runner-v1`, `kraken-btc-eth-xrp-ai-driven-v2-hybrid-strategy-discovery-learning-v1`, `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-1-v1`, `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-2-v1`, True Learning Contract V1 (`70e7bca`, `796c8de`), Learning Core, 12h learner, Alpha Lab and derivatives-context components. Stage 2 compared 1d, 12h and 4h timestamp-only with no model training.
 Immutable hashes: BTC episode `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`; Reference A `f537410d2a237be207951b638518d80e861289dafa7db9b5c2322ffa32d4e594`; Round 1 `3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`; Round 2 `5f9acde53d0e2cf35cd1010d0002222182670d7255bdf44e18715f4902c85a01`; Stage 2 `ca86d49f1dde1d1a8a1e61f07f4c1e98080ab942ab5c32f89880b387edd867d1`; 12h Learning Attempt 3 `30d020bd9c30306f3e8931b47c0958fea7e11a33bff3795c3473806ddcaa09cf`.
 
-Reference A closure status:
-`KRAKEN_AI_V2_DEVELOPMENT_REFERENCE_A_CLOSED_NO_TRADE_HOLD_CASH`.
-Partition boundaries: `2024-04-01T00:00:00Z`, `2025-04-01T00:00:00Z`, `2026-04-01T00:00:00Z`.
+Reference A closure is `KRAKEN_AI_V2_DEVELOPMENT_REFERENCE_A_CLOSED_NO_TRADE_HOLD_CASH`; partition boundaries are `2024-04-01T00:00:00Z`, `2025-04-01T00:00:00Z`, `2026-04-01T00:00:00Z`.
 
-Historical Round 1 Causal Signals, Round 1 Family Execution, Round 1 Discovery
-Runner, Round 1 Closure, Round 2 Causal Signals, Round 2 Family Execution,
-Round 2 Discovery Runner and Round 2 Closure remain immutable evidence. The
-former four-path and later three-path results do not constitute learned alpha.
+Historical Round 1 Causal Signals, Round 1 Family Execution, Round 1 Discovery Runner and Round 1 Closure; Round 2 Causal Signals, Round 2 Family Execution, Round 2 Discovery Runner and Round 2 Closure remain immutable non-alpha evidence.
 
 ## Current authorization
 

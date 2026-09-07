@@ -1,10 +1,13 @@
 # ARCHITECTURE
 ## Active architecture
-The active component is a pure zero-cost US-equity source-capability evaluator:
-it accepts reviewed metadata observations, excludes schema-only samples from
-performance eligibility and fails closed on any paid source or missing point-in-
-time capability. Every Kraken BTC/ETH/XRP 12h hypothesis remains closed
-`HOLD_CASH`; no equity market values, labels, models or orders are active.
+The pure zero-cost US-equity evaluator and independent result reader now bind a
+three-source metadata audit. SEC/EDGAR is the sole eligible source and provides
+six of twelve capabilities. The exact gap is security identity, active/delisted
+master/OHLCV, corporate-action/ticker lineage, point-in-time industry and
+market-calendar/benchmark history. The reader recomputes the union, verifies
+all hashes/sidecars and writes nothing. Result: source-infeasible hold with no
+automatic purchase. Kraken remains terminal `HOLD_CASH`; no equity values,
+labels, models or orders are active.
 
 ## Data and partition boundary
 The research universe is `BTC-USD`, `ETH-USD`, `XRP-USD` in that order.
@@ -187,11 +190,8 @@ Invalid data, boundary crossings, incomplete support, changed hashes or
 unstable after-cost evidence fail closed to `HOLD_CASH`.
 Historical markers: Provider and Historical Availability Boundary v1; Kraken Bounded Blinded Replay Review Boundary v1; Supervised Blinded Replay Execution Boundary v1; AI-Driven v2 Layer Boundary; AI-Driven v2 Signal-State Layer; AI-Driven v2 Risk and Synthetic Execution Layer; AI-Driven v2 Partition Boundary; Development-Only Evidence Runner. Round 1 Causal Signals, Round 1 Family Execution, Round 1 Discovery Runner and Round 1 Closure used four paths; Round 2 Causal Signals, Round 2 Family Execution, Round 2 Discovery Runner and Round 2 Closure used three paths.
 Git through `8c51695` preserves the Rule Discovery Foundation and True Learning Engine scope correction.
-
 ## Immutable lineage index
-Core IDs include causal feature, state, risk, partition, Development, hybrid, True Learning, 12h research and derivatives-context protocols; evidence hashes remain in immutable result documents and Git history.
-Reference A is `KRAKEN_AI_V2_DEVELOPMENT_REFERENCE_A_CLOSED_NO_TRADE_HOLD_CASH`.
-Legacy boundaries: `2024-04-01T00:00:00Z`, `2025-04-01T00:00:00Z`, `2026-04-01T00:00:00Z` exclusive.
+Core IDs include causal feature, state, risk, partition, Development, hybrid, True Learning, 12h and derivatives-context protocols; evidence hashes remain in Git. Reference A is `KRAKEN_AI_V2_DEVELOPMENT_REFERENCE_A_CLOSED_NO_TRADE_HOLD_CASH`; legacy boundaries are `2024-04-01T00:00:00Z`, `2025-04-01T00:00:00Z`, `2026-04-01T00:00:00Z` exclusive.
 Compatibility: Kraken daily, no model training, Round 1 Discovery Runner, Round 2 Family Execution, True Learning Engine and three-class Learning Core.
 Exact compatibility: AI-Driven v2 State Machine; AI-Driven v2 Risk and Execution; AI-Driven v2 Development/Evaluation Partition; AI-Driven v2 Development Runner; True Learning Contract V1 (`70e7bca`, `796c8de`).
 Legacy exact marker: resolution remains unselected.
