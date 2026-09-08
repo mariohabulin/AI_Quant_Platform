@@ -67,7 +67,11 @@ def test_bound_sources_are_checkout_stable_across_crlf(tmp_path):
     _copy_bound_files(tmp_path)
     for relative in BOUND_PATHS.values():
         target = tmp_path / relative
-        target.write_bytes(target.read_bytes().replace(b"\n", b"\r\n"))
+        source_bytes = target.read_bytes()
+        canonical_lf = source_bytes.replace(b"\r\n", b"\n").replace(
+            b"\r", b"\n"
+        )
+        target.write_bytes(canonical_lf.replace(b"\n", b"\r\n"))
 
     result = review_weekly_persistent_up_momentum_hypothesis(tmp_path)
 
