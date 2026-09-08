@@ -1,6 +1,6 @@
 # ROADMAP
 ## Current objective
-Preserve the zero-cost US-equity source gap and the design-only Kraken weekly hypothesis before any value, performance or execution access.
+Preserve the zero-cost US-equity source gap and synthetic-only Kraken weekly engine before any real value, performance or execution access.
 ## Active sequence
 ### 1. V2 Learning Core — COMMITTED AT `2a09363`
 - [x] Freeze the active 12h Development-feasibility path.
@@ -177,8 +177,8 @@ exists.
 - [x] commit/push at `6a185e6`, separately authorize the read-only audit and inspect three documentation/schema sources;
 - [x] independently verify report `8f2348138376438129f3db1a94d0321e6b10177cd486f5436c935a167de0d2cb`: six capabilities proven, six missing, no values or model;
 - [ ] operator chooses another bounded zero-cost source search or pause; no automatic purchase or hypothesis.
-### 15. Kraken Weekly Persistent-UP Momentum V1 — DESIGN FROZEN
-- [x] freeze complete weeks, `UP -> UP` plus four-week asset momentum, fixed next-week costs/outcomes, two controls, five slices, gates and pure static/synthetic review; [ ] separate authorization is required for synthetic implementation and data/run remain false.
+### 15. Kraken Weekly Persistent-UP Momentum V1 — SYNTHETIC ENGINE COMPLETE
+- [x] freeze and implement complete weeks, gap reset, `UP -> UP` plus asset momentum, controls and exact next-week costs on synthetic fixtures with hash/AST review; [ ] a hash-bound runner design needs separate authorization and real data/run remain false.
 ## Retired active work
 AI-Driven Crypto Research v2 12h and its Rule Discovery Foundation are closed; Weekly Persistent-UP V1 is a separate unexecuted design, not a rescue or candidate.
 ## Completed evidence controls
