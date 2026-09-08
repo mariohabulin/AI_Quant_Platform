@@ -28,13 +28,15 @@ evidence honestly; a negative result prevents unjustified deployment.
 
 ## Active zero-cost equity feasibility result
 
-The authorized documentation/schema audit proved six of twelve required
-capabilities and recorded the other six as an exact source gap. SEC/EDGAR can
-support causal filings and fundamentals, but the reviewed zero-cost stack lacks
-a proven security lineage, delisted-inclusive daily OHLCV/universe,
-point-in-time industry history and benchmark history. Research is held pending
-an operator decision; no paid fallback, value, label, model or execution is
-authorized.
+The audit proved six of twelve capabilities. SEC/EDGAR supports causal filings
+and fundamentals; security lineage, delisted-inclusive daily OHLCV/universe,
+point-in-time industry and benchmark history remain missing. Research is held
+without paid fallback, value, label, model or execution authorization.
+
+## Frozen weekly persistent-UP momentum hypothesis
+
+The distinct design freezes complete UTC weeks, an `UP -> UP` market state plus positive four-week asset momentum, Open `t+1` to Open `t+2` adverse-cost outcomes, two non-promotable controls and fixed gates.
+It is not a 12h rescue: no archive value, weekly bar, outcome, model or Development run exists; only a separately authorized synthetic implementation may follow.
 
 ## Preserved Kraken V2 path
 
@@ -193,5 +195,5 @@ Historical Round 1 Causal Signals, Round 1 Family Execution, Round 1 Discovery R
 
 ## Current authorization
 
-Kraken 12h: terminal `HOLD_CASH`. Candidate v2: not authorized. Calibration: unopened. Evaluation: unopened.
+Kraken 12h is terminal `HOLD_CASH`; Weekly Persistent-UP V1 is design-only with data/run closed. Candidate v2 is not authorized; Calibration/Evaluation are unopened.
 PAPER, cloud, real orders and live execution: not authorized.

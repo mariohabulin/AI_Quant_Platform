@@ -1,14 +1,14 @@
 # LOG
-
 This concise decision log retains detailed history through Git commit `8c51695` and immutable protocol/evidence files.
 
+## 2026-09-08 — Weekly Persistent-UP Momentum V1 design frozen
+- Froze complete UTC weeks, `UP -> UP` plus four-week asset momentum, fixed next-week adverse-cost outcomes, two controls, five slices and CRLF-stable static/synthetic review; archive values, aggregation, models and Development run remain false pending a separate decision.
 ## 2026-09-07 — Zero-cost US-equity source gap recorded
 - Commit `6a185e6` preserved terminal Kraken 12h `HOLD_CASH` and froze the `0 USD` twelve-capability boundary.
 - The authorized documentation/schema audit reviewed SEC/EDGAR, Nasdaq symbol directories and the Sharadar schema-only sample without market values.
-- SEC proved six capabilities; security lineage, delisted-inclusive master/OHLCV, point-in-time industry and benchmark history remain missing.
-- Report `8f2348138376438129f3db1a94d0321e6b10177cd486f5436c935a167de0d2cb` passed independent hash, sidecar and capability-union review unchanged.
+- SEC proved six capabilities; lineage, delisted master/OHLCV, point-in-time industry and benchmark history remain missing; report `8f2348138376438129f3db1a94d0321e6b10177cd486f5436c935a167de0d2cb` passed unchanged.
 - Action is `HOLD_RESEARCH_OR_FIND_ANOTHER_NO_COST_SOURCE`; no purchase, hypothesis, model or execution follows automatically.
-- First Windows reproduction stopped safely at 38/39 focused tests because its temporary text-mode sidecar became CRLF; evidence stayed valid, push stayed false and recovery requires canonical binary-LF test fixtures.
+- First Windows reproduction stopped at 38/39 on a CRLF fixture; evidence/push stayed unchanged and binary-LF recovery was required.
 
 ## 2026-09-07 — Kraken 12h terminated `HOLD_CASH`
 - Attempt 1 from `40d9811` processed 3,793 decisions; ten of twelve cells failed support and two control SHORT cells produced four artifacts plus 291 OOF rows.

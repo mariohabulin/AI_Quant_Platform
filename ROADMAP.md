@@ -1,6 +1,6 @@
 # ROADMAP
 ## Current objective
-Prove or reject a zero-cost, point-in-time, survivorship-aware US-equity data foundation before any equity market value, label, model or performance access.
+Preserve the zero-cost US-equity source gap and the design-only Kraken weekly hypothesis before any value, performance or execution access.
 ## Active sequence
 ### 1. V2 Learning Core — COMMITTED AT `2a09363`
 - [x] Freeze the active 12h Development-feasibility path.
@@ -165,13 +165,11 @@ exists.
 - [x] execute one authorized run: 3,793 decisions, 7,586 labels, 4,210 OOF rows;
 - [x] verify report `7176ca3a005b7bdbfbdcbc2259fafd11c154ee45b0517eab26894e675aa26b3f`;
 - [x] retain `HOLD_CASH`: both variants, all folds and all assets were negative.
-
 ### 12. Bidirectional score/polarity forensics — COMPLETE `HOLD_CASH`
 - [x] bind all sources and freeze action, polarity, rank and economics checks;
 - [x] prohibit refit, threshold/polarity search and automatic next choice;
 - [x] reproduce, commit at `8f51ab4` and run the authorized immutable review;
 - [x] verify zero mismatches, unchanged evidence and close `HOLD_CASH`.
-
 ### 13. Regime-gated selective hypothesis — TERMINAL `HOLD_CASH`
 - [x] freeze, execute and verify the one-shot runner from `40d9811`: 3,793 decisions, four artifacts, 291 OOF rows, zero selections, report `a972088fca185266a4a726b3a4512a90bed15f4e1d3a3467e76bedd171a7f286` and terminal Kraken 12h stop.
 ### 14. Zero-cost US-equity data feasibility — SOURCE GAP RECORDED
@@ -179,8 +177,10 @@ exists.
 - [x] commit/push at `6a185e6`, separately authorize the read-only audit and inspect three documentation/schema sources;
 - [x] independently verify report `8f2348138376438129f3db1a94d0321e6b10177cd486f5436c935a167de0d2cb`: six capabilities proven, six missing, no values or model;
 - [ ] operator chooses another bounded zero-cost source search or pause; no automatic purchase or hypothesis.
+### 15. Kraken Weekly Persistent-UP Momentum V1 — DESIGN FROZEN
+- [x] freeze complete weeks, `UP -> UP` plus four-week asset momentum, fixed next-week costs/outcomes, two controls, five slices, gates and pure static/synthetic review; [ ] separate authorization is required for synthetic implementation and data/run remain false.
 ## Retired active work
-AI-Driven Crypto Research v2, State/Risk/Partition, both rounds and Reference A are closed Rule Discovery Foundation components, not candidates.
+AI-Driven Crypto Research v2 12h and its Rule Discovery Foundation are closed; Weekly Persistent-UP V1 is a separate unexecuted design, not a rescue or candidate.
 ## Completed evidence controls
 - [x] Audit official provider/history evidence.
 - [x] Acquire, byte-inventory and lock the v2 archive-only Kraken daily source.
@@ -195,5 +195,5 @@ Legacy exact marker: resolution remains unselected.
 Compatibility evidence: BTC `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`; Reference A `f537410d2a237be207951b638518d80e861289dafa7db9b5c2322ffa32d4e594`; Round 1 `3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`; Round 2 `5f9acde53d0e2cf35cd1010d0002222182670d7255bdf44e18715f4902c85a01`.
 
 ## Authorization state
-Candidate v2 is false; Calibration/Evaluation are unopened and PAPER, cloud, real orders and live execution are unauthorized.
+Weekly design only is authorized; archive/value access, aggregation, outcomes, Development, Candidate v2, PAPER, cloud, orders and live are false; Calibration/Evaluation are unopened.
 Compatibility: AI-Driven v2 State Machine; AI-Driven v2 Risk and Execution; AI-Driven v2 Development/Evaluation Partition; AI-Driven v2 Development Runner; Round 1 Causal Signals; Round 1 Family Execution; four paths; Round 1 Closure; Round 2 Causal Signals; Round 2 Discovery Runner; Round 2 Closure; `kraken-ai-v2-ccvr-reference-a-v1`; `kraken-ai-v2-risk-execution-reference-a-v1`; `kraken-btc-eth-xrp-ai-driven-v2-partition-v1`; `kraken-btc-eth-xrp-ai-driven-v2-development-runner-v1`; `kraken-btc-eth-xrp-ai-driven-v2-hybrid-strategy-discovery-learning-v1`; `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-1-v1`; `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-2-v1`.

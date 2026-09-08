@@ -1,13 +1,10 @@
 # ARCHITECTURE
 ## Active architecture
-The pure zero-cost US-equity evaluator and independent result reader now bind a
-three-source metadata audit. SEC/EDGAR is the sole eligible source and provides
-six of twelve capabilities. The exact gap is security identity, active/delisted
-master/OHLCV, corporate-action/ticker lineage, point-in-time industry and
-market-calendar/benchmark history. The reader recomputes the union, verifies
-all hashes/sidecars and writes nothing. Result: source-infeasible hold with no
-automatic purchase. Kraken remains terminal `HOLD_CASH`; no equity values,
-labels, models or orders are active.
+The zero-cost US-equity reader proves six of twelve capabilities and preserves
+the exact source gap without automatic purchase. Kraken 12h remains terminal
+`HOLD_CASH`. A separate pure declaration freezes complete UTC weeks, `UP -> UP`
+plus asset momentum, fixed next-week adverse-cost outcomes, controls and gates;
+it reads no Kraken value and authorizes no aggregation, model, run or order.
 
 ## Data and partition boundary
 The research universe is `BTC-USD`, `ETH-USD`, `XRP-USD` in that order.
@@ -182,6 +179,7 @@ Attempt 1 from `40d9811` applied fixed spot regimes, context confirmation and pu
 Ten of twelve direction-fold cells failed class support; two control SHORT cells produced four models and 291 OOF rows, all below threshold.
 The no-unpickle review reproduced Brier/threshold decisions and verified report `a972088fca185266a4a726b3a4512a90bed15f4e1d3a3467e76bedd171a7f286` unchanged.
 Both variants selected zero; the valid terminal `HOLD_CASH` stops Kraken 12h without retry, rescue or automatic successor.
+
 ## Runtime and risk boundary
 An approved runtime may load an immutable artifact but cannot fit, mutate, rank, promote or submit orders; Risk and Synthetic Execution remains later.
 

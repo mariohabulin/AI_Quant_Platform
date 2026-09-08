@@ -1,7 +1,6 @@
 # CURRENT MISSION
 ## Mission
-Preserve the exact zero-cost US-equity source gap, await an operator decision
-and keep acquisition, performance and execution closed.
+Preserve the zero-cost US-equity source gap and freeze one distinct Kraken weekly design while keeping value, performance and execution closed.
 
 Status: `US_EQUITY_POINT_IN_TIME_NO_COST_SOURCE_GAP_RECORDED_NO_PURCHASE_AUTHORIZED`
 Execution milestone: `6a185e6d0dd9a7e31513f951a234601cfb9b06fa`
@@ -9,11 +8,9 @@ Audit report SHA-256: `8f2348138376438129f3db1a94d0321e6b10177cd486f5436c935a167
 Active protocol: `us-equity-point-in-time-data-feasibility-result-review-v1`
 Monthly data cost/budget: `0 USD`; paid subscription/API key: false.
 
-SEC/EDGAR proved filing availability, as-filed fundamentals, material-event and
-institutional-filing timestamps, ten-year history and reusable bulk export.
-Missing: stable security identity, active/delisted master and daily OHLCV,
-corporate-action/ticker lineage, point-in-time industry and benchmark/calendar
-history. Action: `HOLD_RESEARCH_OR_FIND_ANOTHER_NO_COST_SOURCE`.
+Kraken design: `KRAKEN_WEEKLY_PERSISTENT_UP_MOMENTUM_HYPOTHESIS_FROZEN_NO_DATA_OR_RUN`; protocol `kraken-btc-eth-xrp-weekly-persistent-up-momentum-hypothesis-v1`.
+
+SEC/EDGAR proved filings, as-filed fundamentals, timestamps, ten-year history and bulk export. Security identity, delisted master/OHLCV, lineage, point-in-time industry and benchmark/calendar history remain missing. Action: `HOLD_RESEARCH_OR_FIND_ANOTHER_NO_COST_SOURCE`.
 
 Market values, labels, performance, fitting, Calibration, Evaluation, Candidate,
 PAPER, cloud strategy execution, real orders and live execution: false.
@@ -156,6 +153,8 @@ polarity flip or refit is allowed.
 Attempt 1 from `40d9811` processed 3,793 decisions; ten of twelve cells failed class support and two control SHORT cells produced four artifacts plus 291 OOF rows.
 Both variants selected zero. Report `a972088fca185266a4a726b3a4512a90bed15f4e1d3a3467e76bedd171a7f286` passed independent threshold/Brier and no-unpickle review unchanged.
 This valid `HOLD_CASH` consumes the one-shot run and terminates Kraken 12h; retry, rescue and automatic successor are false.
+
+Weekly Persistent-UP V1 does not reopen 12h/daily closures: it freezes complete weeks, one `UP -> UP` plus asset-momentum rule, two controls, fixed Open `t+1`/`t+2` costs and gates. Static design only; next is `SEPARATE_SYNTHETIC_ONLY_IMPLEMENTATION_DECISION`, while data/run remain false.
 
 ## Permanent nonauthorization
 - additional model training: false;
