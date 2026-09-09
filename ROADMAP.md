@@ -1,199 +1,22 @@
-# ROADMAP
-## Current objective
-Preserve the zero-cost US-equity source gap and implemented inert Kraken weekly runner before any real value, performance or execution access.
-## Active sequence
-### 1. V2 Learning Core — COMMITTED AT `2a09363`
-- [x] Freeze the active 12h Development-feasibility path.
-- [x] Implement causal multi-asset features.
-- [x] Implement next-open cost-aware three-class labels.
-- [x] Implement three expanding walk-forward folds.
-- [x] Implement one logistic baseline and one constrained tree challenger.
-- [x] Prohibit automatic model selection and Candidate promotion.
-- [x] Add deterministic synthetic learning and leakage tests.
-- [x] Reproduce focused and full Windows tests.
-- [x] Commit and push the exact Learning Core milestone.
-### 2. Hash-Bound 12h Development Learning Runner — ATTEMPT 3 COMPLETED
-- [x] Implement Development-only reader for exact official native 12h members.
-- [x] Implement archive, member-byte and timestamp-identity hashes.
-- [x] Implement one-shot label generation and censoring diagnostics.
-- [x] Implement pre-fit fold/class support report and `HOLD_CASH` branch.
-- [x] Persist both models from all three folds as six verifiable artifacts.
-- [x] Persist canonical OOF probabilities and predictive metrics.
-- [x] Implement atomic evidence package and independent lock.
-- [x] Reproduce focused/full Windows tests and static review.
-- [x] Commit/push the reviewed runner at `cc8ae44`.
-- [x] Run clean Attempt 1 preflight and receive separate authorization.
-- [x] Preserve fail-closed Attempt 1 staging after the eight-column adapter error.
-- [x] Record the incident and correct to the frozen seven-column Kraken schema.
-- [x] Require the untouched Attempt 1 marker and a new recovery authorization.
-- [x] Reproduce focused/full Windows Attempt 2 recovery tests and static review.
-- [x] Commit/push the reviewed Attempt 2 recovery at `203b4c5`.
-- [x] Run clean Attempt 2 preflight and receive a separate recovery authorization.
-- [x] Preserve fail-closed Attempt 2 staging after the contradictory endpoint check.
-- [x] Record that no frame reached the Learning Core and no label/model was created.
-- [x] Replace endpoint presence with full-grid missing-timestamp validation.
-- [x] Require both untouched prior markers and a new Attempt 3 authorization.
-- [x] Reproduce focused/full Windows Attempt 3 recovery tests and static review.
-- [x] Commit/push the reviewed Attempt 3 recovery at `9c1156e`.
-- [x] Run clean Attempt 3 preflight and receive separate recovery authorization.
-- [x] Execute exactly one authorized real Recovery Attempt 3.
-- [x] Record 10,712 labels, six trained artifacts and 11,856 OOF predictions.
-- [x] Lock report SHA-256 `30d020bd9c30306f3e8931b47c0958fea7e11a33bff3795c3473806ddcaa09cf`.
-The read-only economic layer cannot refit or automatically select a model.
+# Roadmap
 
-This stage ends with a real learned result, not another protocol-only loop.
-### 3. Read-only Development economic evidence review — COMPLETED `HOLD_CASH`
+## Completed
 
-- [x] Freeze one payoff-derived eligibility rule before opening economic OOF
-  outcomes: `3 * P(target) - P(stop) > 0`.
-- [x] Prohibit threshold sweep, top-k tuning and automatic model selection.
-- [x] Implement raw and per-asset non-overlapping event views.
-- [x] Freeze fold support, all-fold stability, asset breadth and PR-AUC-lift
-  gates.
-- [x] Implement strict prediction-schema, probability and chronology checks.
-- [x] Add synthetic positive, `HOLD_CASH`, overlap and tamper tests.
-- [x] Reproduce focused and complete Windows regression.
-- [x] Commit/push the reviewed economic-review component at `dd7735f`.
-- [x] Run it read-only against exact Attempt 3 evidence and prove evidence
-  unchanged.
-- [x] Record zero positive folds/assets for both families and retain
-  `HOLD_CASH`.
-### 4. Frozen Alpha Research Lab V1 — COMPLETED `HOLD_CASH`
+- Built and tested the reusable research, risk, paper-trading and monitoring core.
+- Locked the Kraken BTC/ETH/XRP archive and separated Development, Calibration and Evaluation.
+- Rejected the Kraken 12-hour AI/regime-gated path: no viable hypothesis; `HOLD_CASH`.
+- Rejected Weekly Persistent-UP Momentum V1 on 341 valid events: no asset passed all gates; `HOLD_CASH`.
+- Audited zero-cost US equity sources and found six missing point-in-time capabilities.
+- Sent Alpaca support a written request covering delisted history, identifiers, storage rights and Croatian eligibility.
+- Removed closed experiment machinery from the active tree; full history remains at commit `2aaef5420915ffdd386c5fac7295f87ef1045e8d`.
 
-- [x] Freeze 12h, the existing feature/label/cost boundary and three outer folds.
-- [x] Freeze exactly six variants: three calibrated classifiers and three direct
-  expected-net-R regressors.
-- [x] Freeze chronological 75/25 inner fit/calibration without leakage.
-- [x] Freeze zero eligibility threshold, support, all-fold, asset-breadth and
-  overall-net-R gates.
-- [x] Implement deterministic ranking among gate passers only.
-- [x] Implement an executable Development runner with one atomic result.
-- [x] Add synthetic leakage, six-variant, economic-gate and `HOLD_CASH` tests.
-- [x] Reproduce 10 focused and 1,939 complete Windows tests.
-- [x] Commit and push the reviewed lab at `3dcfb2e`.
-- [x] Execute all six variants across three folds and 10,712 labels.
-- [x] Record result SHA-256
-  `d76bb013c2124672132868752a5bb350a782eb45ef7f062b78b5edcb6d3b3703`.
-- [x] Close all six as non-viable without adding a seventh variant.
-Exactly one branch follows:
+## Current decision
 
-- observed branch: no stable evidence; 12h OHLCV closes with `HOLD_CASH`.
+Pause research expansion. Do not create another crypto variation, runner, protocol or evidence wrapper.
 
-No automatic Round 3, resolution change, seventh variant or unbounded search
-exists.
-### 5. Derivatives-context source feasibility — COMPLETED `SOURCE_FEASIBLE`
+## Next
 
-- [x] preserve Alpha Research Lab Attempt 1 and its `HOLD_CASH` result;
-- [x] freeze funding, open-interest metrics and mark/index basis inputs as the
-  only first information bundle;
-- [x] implement official public-object listing without opening market values;
-- [x] freeze all-assets, 730-day, 98%-coverage and no-duplicate source gates;
-- [x] prohibit labels, fitting, tuning, Calibration, Evaluation and Candidate
-  promotion inside the audit;
-- [x] add deterministic pagination, coverage, missing-source and tamper tests;
-- [x] reproduce 14 focused and 1,954 complete Windows tests;
-- [x] commit and push the reviewed audit component at `99f6242`;
-- [x] run the read-only metadata audit and record report SHA-256
-  `3c84fba6034790ae59761f3fba23affca80fca0c8b7d29b3e3f3762c789d8e29`;
-- [x] confirm 852 common days, 100% common coverage and zero duplicates.
-
-### 6. Derivatives-context learning hypothesis — COMMITTED AT `af0af86`
-
-- [x] freeze nine causal funding, open-interest and basis features;
-- [x] freeze causal availability, no-fill rules and three 30-day-purged folds;
-- [x] freeze two matched pairs, identical rows and 12 maximum fold fits;
-- [x] freeze absolute and incremental gates with no sweeps/control promotion;
-- [x] reproduce 20 focused and 1,974 complete Windows tests and static review;
-- [x] commit and push the pre-registration milestone at `af0af86`;
-- [x] implement the hash-bound derivatives-context dataset lock and reader;
-- [x] validate source schemas synthetically before any network execution.
-### 7. Derivatives-context dataset lock — ATTEMPT 4 COMPLETE
-- [x] freeze 2,808 exact Development objects and every official checksum;
-- [x] hash raw/member/normalized bytes and freeze all three source schemas;
-- [x] reject unsafe ZIPs, foreign periods, duplicates, inversions and bad grids;
-- [x] implement atomic manifest locking and an independent full-hash reader;
-- [x] keep labels, fitting and every later stage unauthorized;
-- [x] reproduce focused/full Windows tests and static review;
-- [x] commit and push the reviewed reader milestone at `970ce17`;
-- [x] preserve three fail-closed staging incidents without labels or models;
-- [x] record optional blanks without fill and exactly 399 paired `0E-8`
-  sentinels at the same 133 timestamps per asset;
-- [x] bind and revalidate Attempt 3's 695-object prefix after its DNS failure;
-- [x] fetch only the remaining 2,113 objects with bounded transport retry;
-- [x] reproduce focused/full Windows Attempt 4 tests and static review;
-- [x] commit/push, preflight and separately authorize Recovery Attempt 4;
-- [x] revalidate 695 cached pairs and download the remaining 2,113 objects;
-- [x] atomically publish 2,808 objects and twelve normalized files;
-- [x] lock manifest SHA-256
-  `db4dde045d9fce22bee1389fe8c7ad13d3e3ccc5e5c4ace7c433f5461ba11916`;
-- [x] isolate, test and commit explicit ISO-8601 UTC parsing at `245db6b`;
-- [x] prove exact index-subset alignment without duplicates or close mismatch;
-- [x] review/commit exact common-bar alignment with no fill at `9b23d05`;
-- [x] pass the independent same-manifest read-only review without network or
-  dataset modification.
-
-### 8. Derivatives-context Development learning — COMPLETE `HOLD_CASH`
-- [x] bind hypothesis, reader, final manifest and independent pass hashes;
-- [x] rebuild unchanged Kraken labels and nine causal context features;
-- [x] enforce identical rows, four variants, three folds and twelve artifacts;
-- [x] implement fixed absolute and incremental evidence gates;
-- [x] persist atomic report, OOF predictions and hashes without auto-selection;
-- [x] correct Windows text-mode CRLF sidecars to binary canonical LF writes;
-- [x] pass Windows tests/static review and commit at `4e3867d`;
-- [x] execute Attempt 1 on 3,793 labeled rows, twelve models and 8,468 OOF rows;
-- [x] independently verify report SHA-256 `bddb6f7c0a9b056dcf8a4ca79fc3b8128dbf4ded4aac47e19022a84222215fb4`;
-- [x] record zero context selections and terminal `HOLD_CASH`.
-
-### 9. Context score forensics — COMPLETE `HOLD_CASH`
-- [x] freeze quantiles, rank/decile/fold/asset economics and bind every artifact;
-- [x] prohibit threshold simulation, refitting and automatic Experiment 2;
-- [x] reproduce, commit at `bde314d` and run read-only without changing evidence;
-- [x] record report SHA-256 `ed4ee096a9d45eee4d1ee0970dbb062473e74c9caad3597f20eda17cb4dba91f`;
-- [x] close unstable, all-negative long-only score rankings with `HOLD_CASH`.
-
-### 10. Bidirectional Development hypothesis — COMMITTED AT `82ea7f1`
-- [x] retain 16+9 features, 12h/60-bar/`1.5 ATR`/`3R:1R`/cost boundaries;
-- [x] implement symmetric next-open LONG/SHORT labels and positive-max action;
-- [x] freeze two learners, two directions, three folds and twelve fits;
-- [x] retain fixed gates; prohibit indicators, search, fitting and later data;
-- [x] reproduce 23 focused and 2,058 full tests, review, commit and push.
-
-### 11. Bidirectional Development learning — COMPLETE `HOLD_CASH`
-- [x] bind `82ea7f1`, all sources and inputs; retain paired, correctly purged rows;
-- [x] fit twelve models with fixed gates; persist OOF/model/hash-only evidence;
-- [x] reproduce Windows tests/review, commit at `ca1cd91` and pass preflight;
-- [x] execute one authorized run: 3,793 decisions, 7,586 labels, 4,210 OOF rows;
-- [x] verify report `7176ca3a005b7bdbfbdcbc2259fafd11c154ee45b0517eab26894e675aa26b3f`;
-- [x] retain `HOLD_CASH`: both variants, all folds and all assets were negative.
-### 12. Bidirectional score/polarity forensics — COMPLETE `HOLD_CASH`
-- [x] bind all sources and freeze action, polarity, rank and economics checks;
-- [x] prohibit refit, threshold/polarity search and automatic next choice;
-- [x] reproduce, commit at `8f51ab4` and run the authorized immutable review;
-- [x] verify zero mismatches, unchanged evidence and close `HOLD_CASH`.
-### 13. Regime-gated selective hypothesis — TERMINAL `HOLD_CASH`
-- [x] freeze, execute and verify the one-shot runner from `40d9811`: 3,793 decisions, four artifacts, 291 OOF rows, zero selections, report `a972088fca185266a4a726b3a4512a90bed15f4e1d3a3467e76bedd171a7f286` and terminal Kraken 12h stop.
-### 14. Zero-cost US-equity data feasibility — SOURCE GAP RECORDED
-- [x] freeze `0 USD` and no-paid-fallback rules, implement the 12-capability evaluator/review and reproduce 21 focused plus 2,179 full tests;
-- [x] commit/push at `6a185e6`, separately authorize the read-only audit and inspect three documentation/schema sources;
-- [x] independently verify report `8f2348138376438129f3db1a94d0321e6b10177cd486f5436c935a167de0d2cb`: six capabilities proven, six missing, no values or model;
-- [ ] operator chooses another bounded zero-cost source search or pause; no automatic purchase or hypothesis.
-### 15. Kraken Weekly Persistent-UP Momentum V1 — RUNNER IMPLEMENTED, NO RUN
-- [x] freeze hypothesis/synthetic engine and design; [x] implement hash-bound reader, trusted Decimal adapter, gates, atomic evidence and independent recomputation using only synthetic fixtures; [ ] separately decide read-only preflight while real data/run remain false.
-## Retired active work
-AI-Driven Crypto Research v2 12h and its Rule Discovery Foundation are closed; Weekly Persistent-UP V1 is a separate unexecuted design, not a rescue or candidate.
-## Completed evidence controls
-- [x] Audit official provider/history evidence.
-- [x] Acquire, byte-inventory and lock the v2 archive-only Kraken daily source.
-- [x] Execute one sealed preflight; preserve one-episode-at-a-time review and explicitly decide before advance.
-Development/Calibration/Evaluation partition, Reference A/Rounds 1–2 `HOLD_CASH`, True Learning Contract V1 (`70e7bca`, `796c8de`) and timestamp-only Stage 2 over 1d, 12h and 4h remain complete.
-## Immutable lineage
-Preserved IDs cover causal feature, state, risk, partition, Development, hybrid rounds, True Learning, Learning Core, 12h and derivatives-context components. Evidence hashes remain in Git, including Learning Attempt 3 `30d020bd9c30306f3e8931b47c0958fea7e11a33bff3795c3473806ddcaa09cf`.
-Historical milestones include Provider and Historical Availability Audit v1, Sealed Preflight Completed, Supervised Blinded Replay v1 and Partition Protocol. `SEALED PREFLIGHT PASS` authorized no real replay, Candidate or live execution.
-Reference A closure is `KRAKEN_AI_V2_DEVELOPMENT_REFERENCE_A_CLOSED_NO_TRADE_HOLD_CASH`; partition boundaries are `2024-04-01T00:00:00Z`, `2025-04-01T00:00:00Z`, `2026-04-01T00:00:00Z`.
-Historical compatibility terms: Kraken daily, three-class, no model training, Round 1 Discovery Runner, Round 2 Family Execution, True Learning Engine and the former statement that the resolution remains unselected.
-Legacy exact marker: resolution remains unselected.
-Compatibility evidence: BTC `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`; Reference A `f537410d2a237be207951b638518d80e861289dafa7db9b5c2322ffa32d4e594`; Round 1 `3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`; Round 2 `5f9acde53d0e2cf35cd1010d0002222182670d7255bdf44e18715f4902c85a01`.
-
-## Authorization state
-Weekly runner implementation only is authorized; archive/value access, real aggregation/outcomes, Development, Candidate v2, PAPER, cloud, orders and live are false; Calibration/Evaluation are unopened.
-Compatibility: AI-Driven v2 State Machine; AI-Driven v2 Risk and Execution; AI-Driven v2 Development/Evaluation Partition; AI-Driven v2 Development Runner; Round 1 Causal Signals; Round 1 Family Execution; four paths; Round 1 Closure; Round 2 Causal Signals; Round 2 Discovery Runner; Round 2 Closure; `kraken-ai-v2-ccvr-reference-a-v1`; `kraken-ai-v2-risk-execution-reference-a-v1`; `kraken-btc-eth-xrp-ai-driven-v2-partition-v1`; `kraken-btc-eth-xrp-ai-driven-v2-development-runner-v1`; `kraken-btc-eth-xrp-ai-driven-v2-hybrid-strategy-discovery-learning-v1`; `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-1-v1`; `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-2-v1`.
+1. Review Alpaca's written answer when it arrives.
+2. Decide `GO`, `PIVOT`, or `STOP` for the whole project.
+3. If `GO`, prove one minimum data path before writing strategy-specific infrastructure.
+4. Open Calibration, Evaluation, paper trading or live trading only under separate explicit authorization.

@@ -1,197 +1,30 @@
-# ARCHITECTURE
-## Active architecture
-The zero-cost US-equity reader proves six of twelve capabilities and preserves
-the exact source gap without automatic purchase. Kraken 12h remains terminal
-`HOLD_CASH`. Weekly Persistent-UP has a pure synthetic engine and an implemented
-hash-bound Development reader, trusted adapter, gate evaluator, atomic evidence
-writer and independent reader; no real value, aggregation, model, run or order exists.
+# Architecture
 
-## Data and partition boundary
-The research universe is `BTC-USD`, `ETH-USD`, `XRP-USD` in that order.
+## Active repository
 
-| Partition | UTC interval | Active use |
-|---|---|---|
-| Development | 2019-01-01 to 2024-04-01 exclusive | feature, label, fit and walk-forward validation |
-| Calibration | 2024-04-01 to 2025-04-01 exclusive | unopened; later frozen-candidate confirmation only |
-| Evaluation | 2025-04-01 to 2026-04-01 exclusive | unopened sealed one-time evaluation |
-No preprocessing state, label path or model parameter crosses a partition.
-Provider gaps split causal segments and invalidate any event that crosses them.
+The active tree contains only reusable components:
 
-## Learning Core components
-### Frame validator
-Accepts exactly three timezone-aware, ordered 12h OHLCV frames. It checks
-numeric values, OHLC geometry, timestamp alignment and the Development boundary.
-It does not repair, interpolate or manufacture rows.
+- market-data validation and feed health;
+- features, regimes, strategies, backtesting, walk-forward and out-of-sample checks;
+- risk, protective exits, paper broker and paper-readiness controls;
+- operational monitoring, replay consistency and compact research evidence;
+- focused tests for the retained core.
 
-### Causal feature engine
-`kraken_ai_driven_v2_learning_core.py` constructs a fixed low-dimensional
-schema from returns, ATR, volatility, EMA distances, prior structure, relative
-volume, RSI, same-timestamp market context and asset identity.
-All rolling state ends at the completed decision bar. Prior support/resistance
-excludes the current bar. Cross-asset context is joined only at a common already
-completed timestamp.
+The five root documents are the project control plane: `VISION.md`, `ARCHITECTURE.md`, `ROADMAP.md`, `CURRENT_MISSION.md`, and `LOG.md`.
 
-### Label engine
+## Data boundary
 
-The label engine enters at the next observed open. Baseline adverse commission,
-spread and slippage are included. One risk unit is `1.5 ×` signal-time ATR-14.
-It records target-first, stop-first or timeout; same-bar ambiguity is stop-first.
-Insufficient future history and provider gaps are censored, reported and never
-fitted.
+Large market archives, source locks, trained artifacts and immutable evidence packages stay outside Git. The repository stores code and short state summaries, not raw datasets or generated research reports.
 
-### Walk-forward learner
+## Research boundary
 
-Each fold creates a new preprocessing pipeline and model instance. Training
-events must finish before the training boundary. Validation begins later and no
-validation row can refit the model that predicts it.
+The generic lifecycle is:
 
-V1 contains exactly:
+1. Development may inspect only authorized Development data.
+2. Calibration and Evaluation remain sealed until separately authorized.
+3. A result must include realistic costs, stability checks and a checksum.
+4. Paper or live execution requires a new explicit decision.
 
-- `LOGISTIC_BASELINE`;
-- `HIST_GBT_CHALLENGER`.
+## History
 
-There is no automatic winner. The output is probabilities, metrics and model
-artifact hashes for operator review.
-
-### Development Learning Runner and completed evidence
-
-`kraken_ai_driven_v2_12h_development_learning_runner.py` read only the three
-native Kraken 12h members inside Development, hashed the archive and complete
-member bytes, called the Learning Core and atomically recorded label
-diagnostics, fold support, OOF predictions, metrics and learned model files.
-
-The native adapter accepts the frozen seven source fields `Unix time, Open,
-High, Low, Close, Volume, Trades`. Attempts 1 and 2 exposed fixture assumptions
-before any learning result. The corrected reader validates the full aligned
-grid, records missing timestamps and retains archive hash, row and gap counts.
-
-Every completed training branch contains exactly six `.pkl` artifacts: two
-models fitted independently in each of three folds. The lock hashes them
-without unpickling. If a fold lacks all three classes, fitting does not begin
-and immutable evidence closes with `HOLD_CASH`. The runner never selects a
-winner or promotes a Candidate.
-
-Recovery Attempt 3 completed with 10,712 labeled rows, six fold-model artifacts
-and 11,856 OOF predictions. Its immutable report SHA-256 is
-`30d020bd9c30306f3e8931b47c0958fea7e11a33bff3795c3473806ddcaa09cf`;
-Calibration and Evaluation remained unopened.
-
-### Development Economic Evidence Review
-
-`kraken_ai_driven_v2_12h_development_economic_review.py` is a deterministic
-read-only consumer of the locked Attempt 3 evidence. It does not open source
-OHLCV, generate labels, unpickle models or refit parameters.
-
-The sole entry-interest rule is the untuned payoff floor
-`3 * P(target) - P(stop) > 0`. It reports both every eligible OOF decision and a
-chronological view with at most one overlapping event per asset. Development
-interest requires support, positive net R in all three folds, positive breadth
-across at least two assets and positive target PR-AUC lift in every fold. A pass
-requires operator review; it cannot select a family or authorize Candidate v2.
-A failure returns `HOLD_CASH`. The completed review found zero positive folds
-and assets for both V1 families: logistic produced 659 non-overlapping events
-and `-378.32 R`; histogram boosting produced 240 and `-82.93 R`.
-
-This is not a portfolio simulation. Capital allocation, cross-asset concurrency,
-drawdown and stress execution remain later work only if evidence warrants it.
-
-### Frozen Alpha Research Lab
-
-The frozen lab tested six classifier/regressor variants on the same 12h causal
-features, labels and three nested folds without a sweep. Attempt 1 produced no
-passer: all six had negative net R, zero positive assets and no all-fold
-stability. Result SHA-256
-`d76bb013c2124672132868752a5bb350a782eb45ef7f062b78b5edcb6d3b3703`
-closes this 12h spot-OHLCV architecture with `HOLD_CASH`. Calibration,
-Evaluation and Candidate v2 remain sealed.
-
-### Derivatives Context Source Feasibility
-`kraken_ai_driven_v2_derivatives_context_feasibility.py` lists official archive
-object metadata for monthly funding, daily futures metrics and monthly native
-12h mark/index price files for BTCUSDT, ETHUSDT and XRPUSDT. Separate mark and
-index legs permit a later causal basis feature.
-
-It opens no values and records coverage across all twelve identities.
-Feasibility requires 730 common days, 98% period coverage and no duplicates.
-These source gates claim no alpha: pass means a separate learning protocol;
-failure means another source or stop, never relaxed economic gates.
-
-### Frozen Derivatives Context Hypothesis
-The audit passed with 852 shared days, 100% coverage and no duplicates; report
-SHA-256 is `3c84fba6034790ae59761f3fba23affca80fca0c8b7d29b3e3f3762c789d8e29`.
-The synthetic-only hypothesis implements nine causal context features with
-bounded backward-as-of joins, exact completed-bar basis and no fill. Two
-spot-only histogram-GBT controls are matched to classification and net-R
-context variants on identical rows and three 30-day-purged folds. Only context
-variants can pass absolute and incremental gates. No values are opened or
-models fitted.
-### Derivatives Context Dataset Lock and Reader
-`kraken_ai_driven_v2_derivatives_context_dataset.py` freezes 2,808 checksummed
-Binance USD-M objects: 84 funding, 2,556 open-interest, 84 mark and 84 index
-archives with exact validation and no fill. Attempts 1–3 preserve blank,
-`0E-8` and DNS incidents; exactly 399 sentinels occurred at 133 timestamps per
-asset. Attempt 4 revalidated 695 objects and atomically published the full lock.
-Manifest SHA-256 is
-`db4dde045d9fce22bee1389fe8c7ad13d3e3ccc5e5c4ace7c433f5461ba11916`;
-all prior staging inventories remain immutable.
-The reader parses explicit ISO-8601 UTC and exact completed common bars. Index
-is a mark subset: BTC has 18 mark-only bars; ETH/XRP two each, with equal common
-closes. Gaps stay missing; the same-manifest review passed at `9b23d05`.
-
-### Derivatives Context Development Learning Runner
-`kraken_ai_driven_v2_derivatives_context_development_learning_runner.py`
-implements the pre-registered four-variant experiment. It rebuilds unchanged
-Kraken labels, joins nine causal context features and forces each matched pair
-to use identical row identities. Three nested purged folds produce exactly
-twelve model/calibrator artifacts plus OOF predictions.
-Absolute gates test support, after-cost net R and asset breadth. Incremental
-gates require better overall and worst-fold mean net R plus a primary-metric
-win in at least two folds. Controls cannot pass as candidates. Windows SHA-256
-sidecars are binary ASCII with canonical LF.
-
-Attempt 1 at `4e3867d` trained twelve models on 3,793 rows and wrote 8,468 OOF predictions. Report SHA `bddb6f7c0a9b056dcf8a4ca79fc3b8128dbf4ded4aac47e19022a84222215fb4`
-passed byte review. Both context variants selected zero rows; controls lost `-15.1346 R` and `-1.0 R`. Absolute gates retained `HOLD_CASH`.
-
-### Context Score Forensic Review
-`kraken_ai_driven_v2_context_score_forensic_review.py` verifies all hashes without unpickling and reports fixed ranking/economic diagnostics. Attempt 1 passed with report SHA-256
-`ed4ee096a9d45eee4d1ee0970dbb062473e74c9caad3597f20eda17cb4dba91f`.
-Both context variants had negative rank association and every decile lost;
-top-decile means were `-0.6837 R` and `-0.9903 R`. Long-only closes `HOLD_CASH`.
-
-### Bidirectional Development hypothesis and runner
-The runner adds no indicator: it reuses 16 spot plus nine context features,
-three purged folds, 12h/60 bars, adverse costs and `3R/1R`; it creates symmetric
-LONG/SHORT outcomes and selects only the strictly positive better direction.
-Attempt 1 at `ca1cd91` produced 3,793 decisions, 7,586 labels, 4,210 OOF rows
-and twelve models. Both variants failed all folds/assets. Spot-only mean net R
-was `-0.7388`; context was `-0.6568` but worsened the worst fold. SHORT was
-143/153 control and 148/154 context selections. Report SHA-256 is
-`7176ca3a005b7bdbfbdcbc2259fafd11c154ee45b0517eab26894e675aa26b3f`.
-
-### Bidirectional Score and Polarity Forensics
-The read-only consumer binds all inputs, validates label signs and recomputes
-actions. Attempt 1 passed unchanged: all top deciles were negative and positive
-SHORT scores were dominated by false positives. The hypothesis is closed
-`HOLD_CASH` without refit, threshold sweep or polarity flip.
-
-### Regime-Gated Selective Terminal Result
-Attempt 1 from `40d9811` applied fixed spot regimes, context confirmation and purged base/sigmoid calibration to 3,793 decisions.
-Ten of twelve direction-fold cells failed class support; two control SHORT cells produced four models and 291 OOF rows, all below threshold.
-The no-unpickle review reproduced Brier/threshold decisions and verified report `a972088fca185266a4a726b3a4512a90bed15f4e1d3a3467e76bedd171a7f286` unchanged.
-Both variants selected zero; the valid terminal `HOLD_CASH` stops Kraken 12h without retry, rescue or automatic successor.
-
-## Runtime and risk boundary
-An approved runtime may load an immutable artifact but cannot fit, mutate, rank, promote or submit orders; Risk and Synthetic Execution remains later.
-
-## Failure behavior
-Invalid data, boundary crossings, incomplete support, changed hashes or
-unstable after-cost evidence fail closed to `HOLD_CASH`.
-Historical markers: Provider and Historical Availability Boundary v1; Kraken Bounded Blinded Replay Review Boundary v1; Supervised Blinded Replay Execution Boundary v1; AI-Driven v2 Layer Boundary; AI-Driven v2 Signal-State Layer; AI-Driven v2 Risk and Synthetic Execution Layer; AI-Driven v2 Partition Boundary; Development-Only Evidence Runner. Round 1 Causal Signals, Round 1 Family Execution, Round 1 Discovery Runner and Round 1 Closure used four paths; Round 2 Causal Signals, Round 2 Family Execution, Round 2 Discovery Runner and Round 2 Closure used three paths.
-Git through `8c51695` preserves the Rule Discovery Foundation and True Learning Engine scope correction.
-## Immutable lineage index
-Core IDs include causal feature, state, risk, partition, Development, hybrid, True Learning, 12h and derivatives-context protocols; evidence hashes remain in Git. Reference A is `KRAKEN_AI_V2_DEVELOPMENT_REFERENCE_A_CLOSED_NO_TRADE_HOLD_CASH`; legacy boundaries are `2024-04-01T00:00:00Z`, `2025-04-01T00:00:00Z`, `2026-04-01T00:00:00Z` exclusive.
-Compatibility: Kraken daily, no model training, Round 1 Discovery Runner, Round 2 Family Execution, True Learning Engine and three-class Learning Core.
-Exact compatibility: AI-Driven v2 State Machine; AI-Driven v2 Risk and Execution; AI-Driven v2 Development/Evaluation Partition; AI-Driven v2 Development Runner; True Learning Contract V1 (`70e7bca`, `796c8de`).
-Legacy exact marker: resolution remains unselected.
-Compatibility registry: Stage 2 at `796c8de` compared 1d, 12h and 4h timestamp-only with no model training; `kraken-ai-v2-ccvr-reference-a-v1`; `kraken-ai-v2-risk-execution-reference-a-v1`; `kraken-btc-eth-xrp-ai-driven-v2-partition-v1`; `kraken-btc-eth-xrp-ai-driven-v2-development-runner-v1`; `kraken-btc-eth-xrp-ai-driven-v2-hybrid-strategy-discovery-learning-v1`; `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-1-v1`; `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-2-v1`; BTC `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`; Reference A `f537410d2a237be207951b638518d80e861289dafa7db9b5c2322ffa32d4e594`; Round 1 `3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`; Round 2 `5f9acde53d0e2cf35cd1010d0002222182670d7255bdf44e18715f4902c85a01`.
-Candidate v2, Calibration, Evaluation, PAPER, cloud and live remain unauthorized.
+Commit `2aaef5420915ffdd386c5fac7295f87ef1045e8d` is the complete pre-cleanup archive containing every former protocol, experiment runner, test and tracked result. Deleted active-tree files can be recovered from that commit without keeping them in day-to-day work.
