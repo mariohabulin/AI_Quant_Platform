@@ -1,6 +1,6 @@
 # ROADMAP
 ## Current objective
-Preserve the zero-cost US-equity source gap and synthetic-only Kraken weekly engine before any real value, performance or execution access.
+Preserve the zero-cost US-equity source gap and frozen Kraken weekly runner design before any real value, performance or execution access.
 ## Active sequence
 ### 1. V2 Learning Core — COMMITTED AT `2a09363`
 - [x] Freeze the active 12h Development-feasibility path.
@@ -177,8 +177,8 @@ exists.
 - [x] commit/push at `6a185e6`, separately authorize the read-only audit and inspect three documentation/schema sources;
 - [x] independently verify report `8f2348138376438129f3db1a94d0321e6b10177cd486f5436c935a167de0d2cb`: six capabilities proven, six missing, no values or model;
 - [ ] operator chooses another bounded zero-cost source search or pause; no automatic purchase or hypothesis.
-### 15. Kraken Weekly Persistent-UP Momentum V1 — SYNTHETIC ENGINE COMPLETE
-- [x] freeze and implement complete weeks, gap reset, `UP -> UP` plus asset momentum, controls and exact next-week costs on synthetic fixtures with hash/AST review; [ ] a hash-bound runner design needs separate authorization and real data/run remain false.
+### 15. Kraken Weekly Persistent-UP Momentum V1 — RUNNER DESIGN FROZEN
+- [x] freeze the hypothesis and synthetic engine; [x] design exact archive/member/gap validation, Decimal adapter, Development gates and atomic evidence; [ ] implementation needs separate authorization and real data/run remain false.
 ## Retired active work
 AI-Driven Crypto Research v2 12h and its Rule Discovery Foundation are closed; Weekly Persistent-UP V1 is a separate unexecuted design, not a rescue or candidate.
 ## Completed evidence controls
@@ -195,5 +195,5 @@ Legacy exact marker: resolution remains unselected.
 Compatibility evidence: BTC `56710a21a423a63963e5c97ab6ca956021f9cd7a7d494c3f29a197068367ff60`; Reference A `f537410d2a237be207951b638518d80e861289dafa7db9b5c2322ffa32d4e594`; Round 1 `3ce14fda95f657c0b671b74c702d55ec4102da303e9e033ebaf0e02ff5c2fa9b`; Round 2 `5f9acde53d0e2cf35cd1010d0002222182670d7255bdf44e18715f4902c85a01`.
 
 ## Authorization state
-Weekly design only is authorized; archive/value access, aggregation, outcomes, Development, Candidate v2, PAPER, cloud, orders and live are false; Calibration/Evaluation are unopened.
+Weekly runner design only is authorized; reader implementation, archive/value access, aggregation, outcomes, Development, Candidate v2, PAPER, cloud, orders and live are false; Calibration/Evaluation are unopened.
 Compatibility: AI-Driven v2 State Machine; AI-Driven v2 Risk and Execution; AI-Driven v2 Development/Evaluation Partition; AI-Driven v2 Development Runner; Round 1 Causal Signals; Round 1 Family Execution; four paths; Round 1 Closure; Round 2 Causal Signals; Round 2 Discovery Runner; Round 2 Closure; `kraken-ai-v2-ccvr-reference-a-v1`; `kraken-ai-v2-risk-execution-reference-a-v1`; `kraken-btc-eth-xrp-ai-driven-v2-partition-v1`; `kraken-btc-eth-xrp-ai-driven-v2-development-runner-v1`; `kraken-btc-eth-xrp-ai-driven-v2-hybrid-strategy-discovery-learning-v1`; `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-1-v1`; `kraken-btc-eth-xrp-ai-driven-v2-hybrid-discovery-round-2-v1`.

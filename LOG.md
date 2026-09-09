@@ -1,8 +1,8 @@
 # LOG
 This concise decision log retains detailed history through Git commit `8c51695` and immutable protocol/evidence files.
 
-## 2026-09-08 — Weekly Persistent-UP Momentum V1 synthetic engine completed
-- Implemented complete weeks, gap reset, `UP -> UP` plus asset momentum, controls and exact next-week adverse-cost outcomes in memory; hash/AST and synthetic tests open no archive, model or Development run, and a real runner still needs separate design authorization.
+## 2026-09-09 — Weekly Persistent-UP Momentum V1 runner design frozen
+- Bound the exact Development archive, daily member names, known gaps, Decimal adapter, five slices, gates and atomic evidence contract; the component is declarative and no reader, market value, model or Development run exists.
 ## 2026-09-07 — Zero-cost US-equity source gap recorded
 - Commit `6a185e6` preserved terminal Kraken 12h `HOLD_CASH` and froze the `0 USD` twelve-capability boundary.
 - The authorized documentation/schema audit reviewed SEC/EDGAR, Nasdaq symbol directories and the Sharadar schema-only sample without market values.

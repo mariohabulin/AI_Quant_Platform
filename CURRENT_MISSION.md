@@ -1,6 +1,6 @@
 # CURRENT MISSION
 ## Mission
-Preserve the zero-cost US-equity source gap and freeze one distinct Kraken weekly design while keeping value, performance and execution closed.
+Preserve the zero-cost US-equity source gap and frozen Kraken weekly runner design while keeping value, performance and execution closed.
 
 Status: `US_EQUITY_POINT_IN_TIME_NO_COST_SOURCE_GAP_RECORDED_NO_PURCHASE_AUTHORIZED`
 Execution milestone: `6a185e6d0dd9a7e31513f951a234601cfb9b06fa`
@@ -8,7 +8,7 @@ Audit report SHA-256: `8f2348138376438129f3db1a94d0321e6b10177cd486f5436c935a167
 Active protocol: `us-equity-point-in-time-data-feasibility-result-review-v1`
 Monthly data cost/budget: `0 USD`; paid subscription/API key: false.
 
-Kraken synthetic status: `KRAKEN_WEEKLY_PERSISTENT_UP_MOMENTUM_SYNTHETIC_ENGINE_FROZEN_NO_REAL_DATA_OR_RUN`; protocol `kraken-btc-eth-xrp-weekly-persistent-up-momentum-synthetic-implementation-v1`.
+Kraken runner status: `KRAKEN_WEEKLY_PERSISTENT_UP_MOMENTUM_DEVELOPMENT_RUNNER_DESIGN_FROZEN_NO_DATA_OR_RUN`; protocol `kraken-btc-eth-xrp-weekly-persistent-up-momentum-development-runner-design-v1`.
 
 SEC/EDGAR proved filings, as-filed fundamentals, timestamps, ten-year history and bulk export. Security identity, delisted master/OHLCV, lineage, point-in-time industry and benchmark/calendar history remain missing. Action: `HOLD_RESEARCH_OR_FIND_ANOTHER_NO_COST_SOURCE`.
 
@@ -154,7 +154,7 @@ Attempt 1 from `40d9811` processed 3,793 decisions; ten of twelve cells failed c
 Both variants selected zero. Report `a972088fca185266a4a726b3a4512a90bed15f4e1d3a3467e76bedd171a7f286` passed independent threshold/Brier and no-unpickle review unchanged.
 This valid `HOLD_CASH` consumes the one-shot run and terminates Kraken 12h; retry, rescue and automatic successor are false.
 
-Weekly Persistent-UP V1 does not reopen 12h/daily closures: its pure engine now validates and aggregates synthetic rows, resets gaps, derives `UP -> UP` actions and computes exact next-week costs. Next is `SEPARATE_HASH_BOUND_DEVELOPMENT_RUNNER_DESIGN_DECISION`; real data/run remain false.
+Weekly Persistent-UP V1 does not reopen 12h/daily closures: its frozen runner design binds the exact archive, daily members, known gaps, Decimal adapter, five slices, gates and four-file evidence package. Next is `SEPARATE_HASH_BOUND_DEVELOPMENT_RUNNER_IMPLEMENTATION_DECISION`; real data/run remain false.
 
 ## Permanent nonauthorization
 - additional model training: false;
