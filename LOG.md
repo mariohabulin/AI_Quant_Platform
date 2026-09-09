@@ -1,8 +1,8 @@
 # LOG
 This concise decision log retains detailed history through Git commit `8c51695` and immutable protocol/evidence files.
 
-## 2026-09-09 — Weekly Persistent-UP Momentum V1 runner design frozen
-- Bound the exact Development archive, daily member names, known gaps, Decimal adapter, five slices, gates and atomic evidence contract; the component is declarative and no reader, market value, model or Development run exists.
+## 2026-09-09 — Weekly Persistent-UP Momentum V1 runner implemented inertly
+- Implemented the hash-bound Development reader, trusted Decimal adapter, exact gates, atomic evidence and independent recomputation against generated rows and temporary ZIPs only; no real archive value, model or Development run was opened.
 ## 2026-09-07 — Zero-cost US-equity source gap recorded
 - Commit `6a185e6` preserved terminal Kraken 12h `HOLD_CASH` and froze the `0 USD` twelve-capability boundary.
 - The authorized documentation/schema audit reviewed SEC/EDGAR, Nasdaq symbol directories and the Sharadar schema-only sample without market values.

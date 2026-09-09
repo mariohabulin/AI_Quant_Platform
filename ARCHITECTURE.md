@@ -2,9 +2,9 @@
 ## Active architecture
 The zero-cost US-equity reader proves six of twelve capabilities and preserves
 the exact source gap without automatic purchase. Kraken 12h remains terminal
-`HOLD_CASH`. Weekly Persistent-UP has a pure synthetic engine and a hash-bound
-Development runner design for exact archive/member/gap, adapter, gate and
-evidence contracts; no real reader, aggregation, outcome, model, run or order exists.
+`HOLD_CASH`. Weekly Persistent-UP has a pure synthetic engine and an implemented
+hash-bound Development reader, trusted adapter, gate evaluator, atomic evidence
+writer and independent reader; no real value, aggregation, model, run or order exists.
 
 ## Data and partition boundary
 The research universe is `BTC-USD`, `ETH-USD`, `XRP-USD` in that order.

@@ -33,10 +33,10 @@ and fundamentals; security lineage, delisted-inclusive daily OHLCV/universe,
 point-in-time industry and benchmark history remain missing. Research is held
 without paid fallback, value, label, model or execution authorization.
 
-## Frozen weekly persistent-UP momentum hypothesis
+## Implemented weekly persistent-UP Development runner
 
 The pure in-memory engine implements complete UTC weeks, `UP -> UP` plus positive four-week asset momentum, Open `t+1` to Open `t+2` adverse-cost outcomes and two controls on synthetic fixtures.
-Its hash-bound Development runner design now freezes the exact archive, members, gaps, adapter, gates and evidence shape. No reader, archive value, real week/outcome, model or run exists; implementation requires a separate decision.
+Its hash-bound runner now implements the exact archive/member/gap reader, trusted Decimal adapter, frozen gates, atomic four-file evidence and independent recomputation. Only synthetic fixtures were used; no real value, week/outcome, model or Development run was opened.
 
 ## Preserved Kraken V2 path
 
@@ -195,5 +195,5 @@ Historical Round 1 Causal Signals, Round 1 Family Execution, Round 1 Discovery R
 
 ## Current authorization
 
-Kraken 12h is terminal `HOLD_CASH`; Weekly Persistent-UP V1 has a frozen runner design but no real reader or run. Candidate v2 is not authorized; Calibration/Evaluation are unopened.
+Kraken 12h is terminal `HOLD_CASH`; Weekly Persistent-UP V1 has an inert hash-bound runner awaiting a separate read-only preflight decision. No real run exists; Candidate v2 is unauthorized and Calibration/Evaluation are unopened.
 PAPER, cloud, real orders and live execution: not authorized.
